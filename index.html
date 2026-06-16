@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Therapist Toolkit | Rise Against Suicide × CU Boulder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- SVG SPRITE -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.87 3.58-7 8-7s8 3.13 8 7"/>
+  </symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/>
+  </symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>
+  </symbol>
+  <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="19" y1="12" x2="5" y2="12"/><polyline points="11 18 5 12 11 6"/>
+  </symbol>
+  <symbol id="i-gap" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 3L2 12l3 9M19 3l3 9-3 9"/><line x1="5" y1="12" x2="19" y2="12"/>
+  </symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2L4 5v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V5l-8-3z"/>
+    <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+  </symbol>
+  <symbol id="i-help-circle" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+    <line x1="12" y1="17" x2="12.01" y2="17"/>
+  </symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+  </symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+    <rect x="8" y="2" width="8" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/>
+  </symbol>
+  <symbol id="i-map-pin" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+  </symbol>
+  <symbol id="i-family" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+  </symbol>
+  <symbol id="i-file-text" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+  </symbol>
+  <symbol id="i-school" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 20h20M4 20V9l8-5 8 5v11"/><path d="M9 20v-5h6v5"/><line x1="12" y1="4" x2="12" y2="9"/>
+  </symbol>
+  <symbol id="i-share-2" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+  </symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+  </symbol>
+  <symbol id="i-play-circle" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>
+  </symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+    <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+  </symbol>
+  <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+  </symbol>
+  <symbol id="i-message" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </symbol>
+  <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+  </symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round">
+    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+  </symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round">
+    <line x1="5" y1="12" x2="19" y2="12"/>
+  </symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+  </symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </symbol>
+</svg>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- NAV -->
+<header class="nav" id="mainNav">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <span class="logo-rise">Therapist Toolkit</span>
+      <span class="logo-sub">Rise Against Suicide × CU Boulder</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#about">About</a>
+      <a href="#toolkit">Toolkit</a>
+      <a href="#research">Research</a>
+      <a href="#team">Team</a>
+    </nav>
+    <button class="nav-hamburger" aria-label="Open menu" id="hamburgerBtn">
+      <svg class="icon"><use href="#i-menu"/></svg>
+    </button>
+  </div>
+  <div class="nav-mobile" id="navMobile">
+    <a href="#about">About</a>
+    <a href="#toolkit">Toolkit</a>
+    <a href="#research">Research</a>
+    <a href="#team">Team</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-blob hero-blob-tl"></div>
+  <div class="hero-blob hero-blob-br"></div>
+  <div class="hero-dots hero-dots-tr"></div>
+  <div class="hero-dots hero-dots-bl"></div>
+  <div class="hero-content" data-fade>
+    <div class="hero-badges">
+      <span class="badge badge-teal">Rise Against Suicide</span>
+      <span class="badge badge-green">University of Colorado Boulder</span>
+    </div>
+    <h1>Supporting Therapists.<br/>Protecting Youth.</h1>
+    <p class="hero-sub">
+      A co-designed online toolkit providing evidence-based resources, clinical support, and community for therapists treating youth with suicidal ideation — built <em>for</em> and <em>by</em> therapists.
+    </p>
+    <div class="hero-actions">
+      <a href="#toolkit" class="btn btn-primary">Explore the Toolkit</a>
+      <a href="#about" class="btn btn-outline">Learn More</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-card">
+      <span class="stat-num" data-count="529" data-suffix="">529</span>
+      <span class="stat-label">Youth served by Rise in FY 24–25</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num" data-count="40" data-suffix="%">40%</span>
+      <span class="stat-label">Referrals from the BIPOC community</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num" data-count="50" data-suffix="%+">50%+</span>
+      <span class="stat-label">Of detected at-risk youth receive no follow-up care</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num stat-text">Ages 3–19</span>
+      <span class="stat-label">Range served, average age 13</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="section-inner">
+    <div class="section-label" data-fade>Our Partnership</div>
+    <h2 data-fade data-delay="1">Youth at the Center.<br/>The Ecosystem is Essential.</h2>
+    <p class="section-intro" data-fade data-delay="2">
+      Rise Against Suicide pairs youth at risk with community therapists who deliver free, short-term therapy in schools and other community settings. CU Boulder brings research expertise to help strengthen that system — starting with the therapists doing the work.
+    </p>
+
+    <div class="ecosystem" data-fade data-delay="3">
+      <p class="eco-hint">Hover or click any ring to explore each layer of support.</p>
+      <div class="eco-layout">
+
+        <!-- SVG DIAGRAM -->
+        <div class="eco-diagram">
+          <svg viewBox="0 0 280 280" class="eco-svg" id="ecoSvg" role="img" aria-label="Concentric circle diagram showing the support ecosystem around youth">
+            <!-- Rings drawn largest-to-smallest so hover targets work naturally -->
+            <circle class="eco-ring" data-layer="systems"   cx="140" cy="140" r="130" aria-label="Systems and settings"/>
+            <circle class="eco-ring" data-layer="providers" cx="140" cy="140" r="95"  aria-label="Clinical providers"/>
+            <circle class="eco-ring" data-layer="network"   cx="140" cy="140" r="60"  aria-label="Close personal network"/>
+            <circle class="eco-ring" data-layer="youth"     cx="140" cy="140" r="32"  aria-label="Youth"/>
+            <!-- Center label (pointer-events:none so clicks pass through to circle) -->
+            <text x="140" y="136" class="eco-center-label" style="pointer-events:none">Youth</text>
+            <text x="140" y="150" class="eco-center-sub"   style="pointer-events:none">at the center</text>
+          </svg>
+        </div>
+
+        <!-- LEGEND -->
+        <div class="eco-legend" id="ecoLegend">
+          <div class="eco-legend-item" data-layer="youth">
+            <div class="eco-swatch eco-swatch-youth"></div>
+            <div class="eco-legend-body">
+              <strong>Youth</strong>
+              <p>The young person receiving care. Their needs, strengths, and wellbeing drive every decision in this model.</p>
+            </div>
+          </div>
+          <div class="eco-legend-item" data-layer="network">
+            <div class="eco-swatch eco-swatch-network"></div>
+            <div class="eco-legend-body">
+              <strong>Close Personal Network</strong>
+              <p>The people immediately surrounding the youth in their daily life.</p>
+              <ul class="eco-tags"><li>Parents</li><li>Peers</li></ul>
+            </div>
+          </div>
+          <div class="eco-legend-item" data-layer="providers">
+            <div class="eco-swatch eco-swatch-providers"></div>
+            <div class="eco-legend-body">
+              <strong>Clinical Providers</strong>
+              <p>Trained professionals who directly deliver or coordinate mental health care.</p>
+              <ul class="eco-tags"><li>Therapists</li><li>Counselors</li><li>Psychiatrists</li><li>Other Providers</li></ul>
+            </div>
+          </div>
+          <div class="eco-legend-item" data-layer="systems">
+            <div class="eco-swatch eco-swatch-systems"></div>
+            <div class="eco-legend-body">
+              <strong>Systems &amp; Settings</strong>
+              <p>The institutions and organizations where youth encounter support and receive care.</p>
+              <ul class="eco-tags"><li>Schools</li><li>Clinics</li><li>Hospitals</li><li>Community Orgs</li></ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="model-steps">
+      <div class="model-step" data-fade data-delay="1">
+        <div class="step-icon-wrap step-teal">
+          <svg class="icon"><use href="#i-user"/></svg>
+        </div>
+        <p>Youth referred to Rise</p>
+      </div>
+      <div class="step-arrow" data-fade data-delay="2">
+        <svg class="icon icon-sm"><use href="#i-arrow-right"/></svg>
+      </div>
+      <div class="model-step" data-fade data-delay="2">
+        <div class="step-icon-wrap step-teal">
+          <svg class="icon"><use href="#i-users"/></svg>
+        </div>
+        <p>Paired with a therapist from the Rise roster</p>
+      </div>
+      <div class="step-arrow" data-fade data-delay="3">
+        <svg class="icon icon-sm"><use href="#i-arrow-right"/></svg>
+      </div>
+      <div class="model-step" data-fade data-delay="3">
+        <div class="step-icon-wrap step-teal">
+          <svg class="icon"><use href="#i-chat"/></svg>
+        </div>
+        <p>Therapist provides up to 10 sessions</p>
+      </div>
+      <div class="step-arrow" data-fade data-delay="4">
+        <svg class="icon icon-sm"><use href="#i-arrow-right"/></svg>
+      </div>
+      <div class="model-step" data-fade data-delay="4">
+        <div class="step-icon-wrap step-green">
+          <svg class="icon"><use href="#i-check-circle"/></svg>
+        </div>
+        <p>Youth completes treatment or is referred for follow-up</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="why" id="why">
+  <div class="section-inner">
+    <div class="section-label" data-fade>Study Rationale</div>
+    <h2 data-fade data-delay="1">Why This Toolkit?</h2>
+    <div class="why-grid">
+      <div class="why-card" data-fade data-delay="1">
+        <div class="why-icon why-icon-red">
+          <svg class="icon"><use href="#i-gap"/></svg>
+        </div>
+        <p><strong>Large gaps in care.</strong> More than 50% of youth with detected suicide risk receive no follow-up care <em>(Kim et al., 2019)</em>.</p>
+      </div>
+      <div class="why-card" data-fade data-delay="2">
+        <div class="why-icon why-icon-orange">
+          <svg class="icon"><use href="#i-shield"/></svg>
+        </div>
+        <p><strong>Structural &amp; attitudinal barriers.</strong> Cost, insurance, waitlists, stigma, and negative beliefs all block access to treatment <em>(Kodish et al., 2020)</em>.</p>
+      </div>
+      <div class="why-card" data-fade data-delay="3">
+        <div class="why-icon why-icon-yellow">
+          <svg class="icon"><use href="#i-help-circle"/></svg>
+        </div>
+        <p><strong>Therapist hesitancy.</strong> Many therapists feel unsure, uncomfortable, or fearful about doing this work <em>(Schmidt et al., 2016; Singer et al., 2011)</em>.</p>
+      </div>
+      <div class="why-card" data-fade data-delay="4">
+        <div class="why-icon why-icon-teal">
+          <svg class="icon"><use href="#i-zap"/></svg>
+        </div>
+        <p><strong>Therapist burnout is real.</strong> Therapists doing this work report high exhaustion and emotional demand, and need more support <em>(Villarreal-Otalora et al., 2023)</em>.</p>
+      </div>
+    </div>
+    <blockquote class="pull-quote" data-fade>
+      "Burnout is challenging. It's very hard seeing people in really difficult places over and over, especially when your entire caseload looks like that."
+      <cite>— Rise therapist</cite>
+    </blockquote>
+  </div>
+</section>
+
+<!-- TOOLKIT -->
+<section class="toolkit" id="toolkit">
+  <div class="section-inner">
+    <div class="section-label" data-fade>The Toolkit</div>
+    <h2 data-fade data-delay="1">Four Core Sections</h2>
+    <p class="section-intro" data-fade data-delay="2">
+      Built from therapist-led co-design sessions, the toolkit organizes support into four interconnected areas — each designed to be practical, "grab-and-go," and grounded in evidence.
+    </p>
+
+    <div class="toolkit-tabs" data-fade data-delay="3">
+      <button class="tab-btn active" data-tab="roadmap">1. Treatment Roadmap</button>
+      <button class="tab-btn" data-tab="library">2. Resource Library</button>
+      <button class="tab-btn" data-tab="schools">3. Navigating Schools</button>
+      <button class="tab-btn" data-tab="selfcare">4. Therapist Self-Care</button>
+    </div>
+
+    <!-- TAB: ROADMAP -->
+    <div class="tab-panel active" id="tab-roadmap">
+      <div class="tab-layout">
+        <div class="tab-text">
+          <h3>Treatment Planning / Roadmap</h3>
+          <p>An interactive visual map that guides therapists through a structured 12-session arc. Click any phase to expand it and see sample evidence-based interventions for that stage of treatment.</p>
+        </div>
+        <div class="tab-visual">
+          <div class="roadmap">
+            <div class="roadmap-phase phase-1">
+              <div class="phase-top">
+                <div class="phase-header">Phase 1: Assess &amp; Understand</div>
+                <div class="phase-sessions">Sessions 1–4</div>
+                <ul class="phase-items">
+                  <li>Suicide Risk Assessment &amp; Safety Planning</li>
+                  <li>Case Conceptualization &amp; Treatment Plan</li>
+                </ul>
+              </div>
+              <button class="phase-expand-btn" aria-expanded="false">
+                <span>Sample interventions</span>
+                <svg class="icon icon-xs expand-icon"><use href="#i-plus"/></svg>
+              </button>
+              <div class="phase-expanded" hidden>
+                <ul>
+                  <li>Columbia Suicide Severity Rating Scale (C-SSRS)</li>
+                  <li>Stanley-Brown Safety Planning Intervention</li>
+                  <li>Crisis response planning</li>
+                  <li>Means restriction counseling</li>
+                  <li>Family/caregiver psychoeducation</li>
+                </ul>
+              </div>
+            </div>
+            <div class="phase-arrow">
+              <svg class="icon"><use href="#i-arrow-right"/></svg>
+            </div>
+            <div class="roadmap-phase phase-2">
+              <div class="phase-top">
+                <div class="phase-header">Phase 2: Train &amp; Teach Skills</div>
+                <div class="phase-sessions">Sessions 5–8</div>
+                <ul class="phase-items">
+                  <li>Teach and Practice Skills</li>
+                </ul>
+              </div>
+              <button class="phase-expand-btn" aria-expanded="false">
+                <span>Sample interventions</span>
+                <svg class="icon icon-xs expand-icon"><use href="#i-plus"/></svg>
+              </button>
+              <div class="phase-expanded" hidden>
+                <ul>
+                  <li>DBT skills: distress tolerance &amp; emotion regulation</li>
+                  <li>CBT cognitive restructuring techniques</li>
+                  <li>ACT and mindfulness exercises</li>
+                  <li>Somatic grounding interventions</li>
+                  <li>Coping card development</li>
+                  <li>Behavioral activation</li>
+                </ul>
+              </div>
+            </div>
+            <div class="phase-arrow">
+              <svg class="icon"><use href="#i-arrow-right"/></svg>
+            </div>
+            <div class="roadmap-phase phase-3">
+              <div class="phase-top">
+                <div class="phase-header">Phase 3: Consolidate &amp; Next Steps</div>
+                <div class="phase-sessions">Sessions 9–12</div>
+                <ul class="phase-items">
+                  <li>Relapse Prevention</li>
+                  <li>Linkage to Care</li>
+                  <li>Termination</li>
+                </ul>
+              </div>
+              <button class="phase-expand-btn" aria-expanded="false">
+                <span>Sample interventions</span>
+                <svg class="icon icon-xs expand-icon"><use href="#i-plus"/></svg>
+              </button>
+              <div class="phase-expanded" hidden>
+                <ul>
+                  <li>Warning sign identification &amp; review</li>
+                  <li>Updated safety plan review</li>
+                  <li>Warm handoff to ongoing care provider</li>
+                  <li>Family/caregiver transition support</li>
+                  <li>Termination rituals &amp; strengths review</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: LIBRARY -->
+    <div class="tab-panel" id="tab-library">
+      <div class="tab-layout">
+        <div class="tab-text">
+          <h3>Resource Library</h3>
+          <p>A curated, vetted, and regularly updated library of clinical and community resources — organized by who they are for and what they address.</p>
+        </div>
+        <div class="tab-visual">
+          <div class="library-grid">
+            <div class="lib-card lib-teal">
+              <div class="lib-icon">
+                <svg class="icon"><use href="#i-clipboard"/></svg>
+              </div>
+              <h4>Clinician Resources</h4>
+              <ul>
+                <li>EBP worksheets &amp; handouts</li>
+                <li>Training videos &amp; manuals</li>
+                <li>Links to key papers</li>
+                <li>Visual research summaries</li>
+              </ul>
+            </div>
+            <div class="lib-card lib-green">
+              <div class="lib-icon">
+                <svg class="icon"><use href="#i-map-pin"/></svg>
+              </div>
+              <h4>Community Referrals</h4>
+              <ul>
+                <li>Vetted mental health referrals</li>
+                <li>Post-Rise therapy options</li>
+                <li>Community support resources</li>
+              </ul>
+            </div>
+            <div class="lib-card lib-yellow">
+              <div class="lib-icon">
+                <svg class="icon"><use href="#i-family"/></svg>
+              </div>
+              <h4>Parent &amp; Family</h4>
+              <ul>
+                <li>Psychoeducation materials</li>
+                <li>How to support your teen</li>
+                <li>Family engagement guides</li>
+              </ul>
+            </div>
+            <div class="lib-card lib-purple">
+              <div class="lib-icon">
+                <svg class="icon"><use href="#i-star"/></svg>
+              </div>
+              <h4>Youth-Facing</h4>
+              <ul>
+                <li>Coping skills worksheets</li>
+                <li>Safety planning templates</li>
+                <li>Mindfulness &amp; grounding tools</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: SCHOOLS -->
+    <div class="tab-panel" id="tab-schools">
+      <div class="tab-layout">
+        <div class="tab-text">
+          <h3>Navigating Schools</h3>
+          <p>Community-based therapy in school settings comes with unique complexity. This section provides practical guidance for working within school systems, including district-specific information for Rise partners.</p>
+          <blockquote class="mini-quote">"We're definitely navigating 50 systems every time we walk into a school."<cite>— Rise therapist</cite></blockquote>
+        </div>
+        <div class="tab-visual">
+          <div class="schools-cards">
+            <div class="school-item">
+              <div class="school-icon-wrap">
+                <svg class="icon"><use href="#i-file-text"/></svg>
+              </div>
+              <div>
+                <h4>Tip Sheets</h4>
+                <p>How to navigate school partnership complexities, coordinate with counselors, and manage referrals.</p>
+              </div>
+            </div>
+            <div class="school-item">
+              <div class="school-icon-wrap">
+                <svg class="icon"><use href="#i-school"/></svg>
+              </div>
+              <div>
+                <h4>District-Specific Info</h4>
+                <p>Detailed guides for the schools and districts Rise frequently partners with.</p>
+              </div>
+            </div>
+            <div class="school-item">
+              <div class="school-icon-wrap">
+                <svg class="icon"><use href="#i-share-2"/></svg>
+              </div>
+              <div>
+                <h4>Multi-System Coordination</h4>
+                <p>Resources for collaborating across hospitals, clinics, and school teams.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: SELF-CARE -->
+    <div class="tab-panel" id="tab-selfcare">
+      <div class="tab-layout">
+        <div class="tab-text">
+          <h3>Therapist Support &amp; Self-Care</h3>
+          <p>Doing this work is hard. This section centers therapist wellbeing — with resources curated by and for therapists treating suicidal youth, plus access to peer consultation and supervisory support.</p>
+          <blockquote class="mini-quote">"I can tolerate darkness."<cite>— Rise therapist</cite></blockquote>
+        </div>
+        <div class="tab-visual">
+          <div class="selfcare-grid">
+            <div class="sc-item">
+              <div class="sc-icon-wrap">
+                <svg class="icon"><use href="#i-heart"/></svg>
+              </div>
+              <h4>Self-Care Tip Sheets</h4>
+              <p>Ideas curated for and by therapists doing high-acuity work.</p>
+            </div>
+            <div class="sc-item">
+              <div class="sc-icon-wrap">
+                <svg class="icon"><use href="#i-play-circle"/></svg>
+              </div>
+              <h4>Therapist Stories</h4>
+              <p>Videos and testimonials from therapists sharing real challenges and how they navigated them.</p>
+            </div>
+            <div class="sc-item">
+              <div class="sc-icon-wrap">
+                <svg class="icon"><use href="#i-moon"/></svg>
+              </div>
+              <h4>Pre-Session Mindfulness</h4>
+              <p>Brief grounding practices to prepare for emotionally demanding sessions.</p>
+            </div>
+            <div class="sc-item">
+              <div class="sc-icon-wrap">
+                <svg class="icon"><use href="#i-calendar"/></svg>
+              </div>
+              <h4>Schedule a Consultation</h4>
+              <p>Book time with a clinical psychologist or Rise team member for peer support.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section class="research" id="research">
+  <div class="section-inner">
+    <div class="section-label" data-fade>Research Process</div>
+    <h2 data-fade data-delay="1">Discover. Design. Test.</h2>
+    <p class="section-intro" data-fade data-delay="2">This toolkit is being co-designed through a rigorous, community-engaged research process with Rise therapists — not built for them, but <em>with</em> them.</p>
+
+    <div class="aims-row">
+      <div class="aim-card aim-teal" data-fade data-delay="1">
+        <div class="aim-num">01</div>
+        <h3>Discover</h3>
+        <p>Focus groups and interviews with 10 Rise therapists, analyzed across 9 domains covering strengths, challenges, interventions, and toolkit vision.</p>
+      </div>
+      <div class="aim-arrow" data-fade data-delay="2">
+        <svg class="icon"><use href="#i-arrow-right"/></svg>
+      </div>
+      <div class="aim-card aim-green" data-fade data-delay="2">
+        <div class="aim-num">02</div>
+        <h3>Design &amp; Build</h3>
+        <p>Two two-session co-design workshop sequences with Rise therapists, creating and refining toolkit prototypes based on real needs.</p>
+      </div>
+      <div class="aim-arrow" data-fade data-delay="3">
+        <svg class="icon"><use href="#i-arrow-right"/></svg>
+      </div>
+      <div class="aim-card aim-lime" data-fade data-delay="3">
+        <div class="aim-num">03</div>
+        <h3>Test</h3>
+        <p>Mixed-method pilot testing through interviews and surveys with community therapists to assess feasibility and acceptability.</p>
+      </div>
+    </div>
+
+    <!-- QUOTE CAROUSEL -->
+    <h3 class="quotes-heading" data-fade>What Therapists Told Us</h3>
+    <div class="carousel" id="quoteCarousel" data-fade data-delay="1">
+      <button class="carousel-btn carousel-prev" aria-label="Previous quote">
+        <svg class="icon"><use href="#i-arrow-left"/></svg>
+      </button>
+      <div class="carousel-viewport">
+        <div class="carousel-track">
+          <div class="carousel-slide">
+            <p class="slide-quote">"We go to them. They choose us, we work for them."</p>
+            <footer class="slide-footer">
+              <span class="slide-cite">Rise therapist</span>
+              <span class="quote-domain">Positives of Rise</span>
+            </footer>
+          </div>
+          <div class="carousel-slide">
+            <p class="slide-quote">"I feel like it's almost impossible to work with kids and not also work with their parents."</p>
+            <footer class="slide-footer">
+              <span class="slide-cite">Rise therapist</span>
+              <span class="quote-domain">Challenges</span>
+            </footer>
+          </div>
+          <div class="carousel-slide">
+            <p class="slide-quote">"I literally bring in several handouts from DBT, CBT, because I don't know how much time I'm going to have with that person."</p>
+            <footer class="slide-footer">
+              <span class="slide-cite">Rise therapist</span>
+              <span class="quote-domain">Interventions</span>
+            </footer>
+          </div>
+          <div class="carousel-slide">
+            <p class="slide-quote">"Be another trusted adult that's not their parents, that's not gonna judge them — really just give space to listen."</p>
+            <footer class="slide-footer">
+              <span class="slide-cite">Rise therapist</span>
+              <span class="quote-domain">Mechanisms of Change</span>
+            </footer>
+          </div>
+          <div class="carousel-slide">
+            <p class="slide-quote">"A community, like, maybe a therapist forum or something."</p>
+            <footer class="slide-footer">
+              <span class="slide-cite">Rise therapist</span>
+              <span class="quote-domain">Needed Supports</span>
+            </footer>
+          </div>
+          <div class="carousel-slide">
+            <p class="slide-quote">"Having some sort of list or… if there was a provider database… and it's all in one."</p>
+            <footer class="slide-footer">
+              <span class="slide-cite">Rise therapist</span>
+              <span class="quote-domain">Toolkit Vision</span>
+            </footer>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-btn carousel-next" aria-label="Next quote">
+        <svg class="icon"><use href="#i-arrow-right"/></svg>
+      </button>
+      <div class="carousel-dots" id="carouselDots"></div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team" id="team">
+  <div class="section-inner">
+    <div class="section-label" data-fade>The Team</div>
+    <h2 data-fade data-delay="1">Community-Engaged Research</h2>
+    <p class="section-intro" data-fade data-delay="2">This project is a collaboration between the University of Colorado Boulder and Rise Against Suicide, funded through community-engaged scholarship.</p>
+    <div class="team-cards">
+      <div class="team-card" data-fade data-delay="1">
+        <div class="team-logo cu-logo">CU<br/><span>Boulder</span></div>
+        <h3>University of Colorado Boulder</h3>
+        <p>Led by Dr. Tamar, Assistant Professor in Psychology and Neuroscience. Research-driven co-design, qualitative analysis, and evidence-based resource development.</p>
+        <div class="funding-tag">Funded by CU Boulder Office for Public &amp; Community Engaged Scholarship</div>
+      </div>
+      <div class="team-card" data-fade data-delay="2">
+        <div class="team-logo rise-logo">RISE</div>
+        <h3>Rise Against Suicide</h3>
+        <p>A Boulder-based nonprofit providing timely, free therapy to youth with suicide risk through partnerships with schools and community organizations.</p>
+        <div class="funding-tag">Funded by Colorado Clinical Translational Science Institute</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-left">
+      <strong>Therapist Toolkit</strong>
+      <span>Rise Against Suicide × University of Colorado Boulder</span>
+    </div>
+    <div class="footer-right">
+      <p>Funded by the CU Boulder Office for Public &amp; Community Engaged Scholarship.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>
