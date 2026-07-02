@@ -1,0 +1,253 @@
+backend:
+  name: github
+  repo: eds81/therapist_toolkit
+  branch: main
+  base_url: https://therapist-toolkit-vcoq.vercel.app
+  auth_endpoint: api/auth
+
+publish_mode: simple # switch to editorial_workflow later if you want a draft/review step before changes go live
+
+media_folder: "images"
+public_folder: "/images"
+
+collections:
+  - name: "content"
+    label: "Site Content"
+    files:
+      - file: "content/site.json"
+        name: "homepage"
+        label: "Homepage"
+        fields:
+
+          - label: "Hero"
+            name: "hero"
+            widget: "object"
+            fields:
+              - {label: "Badges", name: "badges", widget: "list", field: {label: "Badge", name: "badge", widget: "string"}}
+              - {label: "Headline — Line 1", name: "headlineLine1", widget: "string"}
+              - {label: "Headline — Line 2", name: "headlineLine2", widget: "string"}
+              - {label: "Subheading", name: "sub", widget: "text", hint: "You can use <em>word</em> to italicize a word."}
+              - label: "Primary Button"
+                name: "ctaPrimary"
+                widget: "object"
+                fields:
+                  - {label: "Text", name: "text", widget: "string"}
+                  - {label: "Link", name: "href", widget: "string"}
+              - label: "Secondary Button"
+                name: "ctaSecondary"
+                widget: "object"
+                fields:
+                  - {label: "Text", name: "text", widget: "string"}
+                  - {label: "Link", name: "href", widget: "string"}
+              - label: "Stat Cards"
+                name: "stats"
+                widget: "list"
+                fields:
+                  - {label: "Number (leave blank for a text-only stat)", name: "count", widget: "number", required: false}
+                  - {label: "Suffix (e.g. %, %+)", name: "suffix", widget: "string", required: false}
+                  - {label: "Text (used instead of Number, e.g. 'Ages 3–19')", name: "text", widget: "string", required: false}
+                  - {label: "Label", name: "label", widget: "string"}
+
+          - label: "About / Ecosystem Section"
+            name: "about"
+            widget: "object"
+            fields:
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Heading — Line 1", name: "headingLine1", widget: "string"}
+              - {label: "Heading — Line 2", name: "headingLine2", widget: "string"}
+              - {label: "Intro Paragraph", name: "intro", widget: "text"}
+              - {label: "Ecosystem Diagram Hint", name: "ecosystemHint", widget: "string"}
+              - label: "Ecosystem Layers (fixed set of 4 — do not add or remove)"
+                name: "ecosystemLegend"
+                widget: "list"
+                fields:
+                  - {label: "Layer key (do not change)", name: "layer", widget: "string"}
+                  - {label: "Title", name: "title", widget: "string"}
+                  - {label: "Description", name: "body", widget: "text"}
+                  - {label: "Tags", name: "tags", widget: "list", field: {label: "Tag", name: "tag", widget: "string"}, required: false}
+              - label: "Model Steps (fixed set of 4 — do not add or remove)"
+                name: "modelSteps"
+                widget: "list"
+                fields:
+                  - label: "Icon"
+                    name: "icon"
+                    widget: "select"
+                    options: &icon_options
+                      - i-user
+                      - i-users
+                      - i-chat
+                      - i-check-circle
+                      - i-gap
+                      - i-shield
+                      - i-help-circle
+                      - i-zap
+                      - i-clipboard
+                      - i-map-pin
+                      - i-family
+                      - i-star
+                      - i-file-text
+                      - i-school
+                      - i-share-2
+                      - i-heart
+                      - i-play-circle
+                      - i-moon
+                      - i-calendar
+                      - i-code
+                      - i-message
+                      - i-book
+                  - {label: "Color", name: "colorClass", widget: "select", options: ["step-teal", "step-green"]}
+                  - {label: "Text", name: "text", widget: "string"}
+
+          - label: "Why This Toolkit Section"
+            name: "why"
+            widget: "object"
+            fields:
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Heading", name: "heading", widget: "string"}
+              - label: "Cards (fixed set of 4 — do not add or remove)"
+                name: "cards"
+                widget: "list"
+                fields:
+                  - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
+                  - {label: "Color", name: "colorClass", widget: "select", options: ["why-icon-red", "why-icon-orange", "why-icon-yellow", "why-icon-teal"]}
+                  - {label: "Bold Lead-in", name: "lead", widget: "string"}
+                  - {label: "Body", name: "body", widget: "text"}
+                  - {label: "Citation", name: "citation", widget: "string"}
+              - label: "Pull Quote"
+                name: "pullQuote"
+                widget: "object"
+                fields:
+                  - {label: "Quote", name: "text", widget: "text"}
+                  - {label: "Citation", name: "cite", widget: "string"}
+
+          - label: "Toolkit Section"
+            name: "toolkit"
+            widget: "object"
+            fields:
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Intro Paragraph", name: "intro", widget: "text"}
+              - label: "Tabs"
+                name: "tabs"
+                widget: "object"
+                fields:
+                  - label: "1. Treatment Roadmap"
+                    name: "roadmap"
+                    widget: "object"
+                    fields:
+                      - {label: "Tab Button Label", name: "tabLabel", widget: "string"}
+                      - {label: "Heading", name: "heading", widget: "string"}
+                      - {label: "Intro", name: "intro", widget: "text"}
+                      - label: "Phases (fixed set of 3 — do not add or remove)"
+                        name: "phases"
+                        widget: "list"
+                        fields:
+                          - {label: "Title", name: "title", widget: "string"}
+                          - {label: "Session Range", name: "sessions", widget: "string"}
+                          - {label: "Focus Items", name: "items", widget: "list", field: {label: "Item", name: "item", widget: "string"}}
+                          - {label: "Sample Interventions", name: "interventions", widget: "list", field: {label: "Intervention", name: "intervention", widget: "string"}}
+                  - label: "2. Resource Library"
+                    name: "library"
+                    widget: "object"
+                    fields:
+                      - {label: "Tab Button Label", name: "tabLabel", widget: "string"}
+                      - {label: "Heading", name: "heading", widget: "string"}
+                      - {label: "Intro", name: "intro", widget: "text"}
+                      - label: "Cards (fixed set of 4 — do not add or remove)"
+                        name: "cards"
+                        widget: "list"
+                        fields:
+                          - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
+                          - {label: "Color", name: "colorClass", widget: "select", options: ["lib-teal", "lib-green", "lib-yellow", "lib-purple"]}
+                          - {label: "Title", name: "title", widget: "string"}
+                          - {label: "Items", name: "items", widget: "list", field: {label: "Item", name: "item", widget: "string"}}
+                  - label: "3. Navigating Schools"
+                    name: "schools"
+                    widget: "object"
+                    fields:
+                      - {label: "Tab Button Label", name: "tabLabel", widget: "string"}
+                      - {label: "Heading", name: "heading", widget: "string"}
+                      - {label: "Intro", name: "intro", widget: "text"}
+                      - label: "Pull Quote"
+                        name: "quote"
+                        widget: "object"
+                        fields:
+                          - {label: "Quote", name: "text", widget: "text"}
+                          - {label: "Citation", name: "cite", widget: "string"}
+                      - label: "Items (fixed set of 3 — do not add or remove)"
+                        name: "items"
+                        widget: "list"
+                        fields:
+                          - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
+                          - {label: "Title", name: "title", widget: "string"}
+                          - {label: "Body", name: "body", widget: "text"}
+                  - label: "4. Therapist Self-Care"
+                    name: "selfcare"
+                    widget: "object"
+                    fields:
+                      - {label: "Tab Button Label", name: "tabLabel", widget: "string"}
+                      - {label: "Heading", name: "heading", widget: "string"}
+                      - {label: "Intro", name: "intro", widget: "text"}
+                      - label: "Pull Quote"
+                        name: "quote"
+                        widget: "object"
+                        fields:
+                          - {label: "Quote", name: "text", widget: "text"}
+                          - {label: "Citation", name: "cite", widget: "string"}
+                      - label: "Items (fixed set of 4 — do not add or remove)"
+                        name: "items"
+                        widget: "list"
+                        fields:
+                          - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
+                          - {label: "Title", name: "title", widget: "string"}
+                          - {label: "Body", name: "body", widget: "text"}
+
+          - label: "Research Section"
+            name: "research"
+            widget: "object"
+            fields:
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Intro", name: "intro", widget: "text", hint: "You can use <em>word</em> to italicize a word."}
+              - label: "Research Aims (fixed set of 3 — do not add or remove)"
+                name: "aims"
+                widget: "list"
+                fields:
+                  - {label: "Number", name: "num", widget: "string"}
+                  - {label: "Color", name: "colorClass", widget: "select", options: ["aim-teal", "aim-green", "aim-lime"]}
+                  - {label: "Title", name: "title", widget: "string"}
+                  - {label: "Body", name: "body", widget: "text"}
+              - {label: "Quotes Heading", name: "quotesHeading", widget: "string"}
+              - label: "Therapist Quotes (add or remove freely)"
+                name: "quotes"
+                widget: "list"
+                fields:
+                  - {label: "Quote", name: "text", widget: "text"}
+                  - {label: "Citation", name: "cite", widget: "string"}
+                  - {label: "Topic Tag", name: "domain", widget: "string"}
+
+          - label: "Team Section"
+            name: "team"
+            widget: "object"
+            fields:
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Intro", name: "intro", widget: "text"}
+              - label: "Team Members (fixed set of 2 — do not add or remove)"
+                name: "members"
+                widget: "list"
+                fields:
+                  - {label: "Logo Style", name: "logoClass", widget: "select", options: ["cu-logo", "rise-logo"]}
+                  - {label: "Logo Line 1", name: "logoLine1", widget: "string"}
+                  - {label: "Logo Line 2 (optional)", name: "logoLine2", widget: "string", required: false}
+                  - {label: "Name", name: "title", widget: "string"}
+                  - {label: "Description", name: "body", widget: "text"}
+                  - {label: "Funding Tag", name: "fundingTag", widget: "string"}
+
+          - label: "Footer"
+            name: "footer"
+            widget: "object"
+            fields:
+              - {label: "Org Name", name: "orgName", widget: "string"}
+              - {label: "Sub Line", name: "subLine", widget: "string"}
+              - {label: "Funding Text", name: "fundingText", widget: "string"}
