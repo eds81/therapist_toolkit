@@ -1,0 +1,184 @@
+/* =============================================
+   RESOURCE LIBRARY — search, filter, detail view
+   ============================================= */
+
+function icon(id, extraClass) {
+  return `<svg class="icon${extraClass ? ' ' + extraClass : ''}"><use href="#${id}"/></svg>`;
+}
+
+const TYPE_ICON = {
+  'Assessment Tool': 'i-clipboard',
+  'Worksheet': 'i-file-text',
+  'Handout': 'i-book',
+  'Referral List': 'i-map-pin',
+  'Tip Sheet': 'i-share-2'
+};
+
+const AUDIENCE_ICON = {
+  Clinician: 'i-clipboard',
+  Youth: 'i-star',
+  Family: 'i-family',
+  Community: 'i-map-pin',
+  Schools: 'i-school'
+};
+
+const reslibState = {
+  data: null,
+  search: '',
+  audience: new Set(),
+  type: new Set(),
+  theme: new Set()
+};
+
+function matchesFilters(item) {
+  const q = reslibState.search.trim().toLowerCase();
+  if (q && !(`${item.title} ${item.description}`.toLowerCase().includes(q))) return false;
+  if (reslibState.audience.size && !item.audience.some(a => reslibState.audience.has(a))) return false;
+  if (reslibState.type.size && !reslibState.type.has(item.type)) return false;
+  if (reslibState.theme.size && !item.theme.some(t => reslibState.theme.has(t))) return false;
+  return true;
+}
+
+function cardHtml(item) {
+  return `
+    <button type="button" class="reslib-card" data-id="${item.id}">
+      <div class="reslib-card-icon">${icon(TYPE_ICON[item.type] || 'i-file-text')}</div>
+      <div class="reslib-card-body">
+        <span class="reslib-card-type">${item.type}</span>
+        <h3>${item.title}</h3>
+        <p>${item.description}</p>
+        <div class="reslib-card-theme">
+          ${item.theme.map(t => `<span class="reslib-theme-tag">${t}</span>`).join('')}
+        </div>
+        <div class="reslib-card-audience">
+          ${item.audience.map(a => `<span class="reslib-audience-tag">${a}</span>`).join('')}
+        </div>
+      </div>
+    </button>`;
+}
+
+function renderResults() {
+  const items = reslibState.data.items.filter(matchesFilters);
+  const grid = document.getElementById('reslibGrid');
+  const empty = document.getElementById('reslibEmpty');
+  const count = document.getElementById('reslibCount');
+
+  count.textContent = `${items.length} resource${items.length === 1 ? '' : 's'}`;
+  grid.innerHTML = items.map(cardHtml).join('');
+  empty.hidden = items.length > 0;
+
+  grid.querySelectorAll('.reslib-card').forEach(card => {
+    card.addEventListener('click', () => openDetail(card.dataset.id));
+  });
+}
+
+function renderChips(containerId, options, activeSet, onToggle) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = options.map(opt => `
+    <button type="button" class="reslib-chip${activeSet.has(opt) ? ' active' : ''}" data-value="${opt}">${opt}</button>`).join('');
+  container.querySelectorAll('.reslib-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const val = chip.dataset.value;
+      activeSet.has(val) ? activeSet.delete(val) : activeSet.add(val);
+      chip.classList.toggle('active');
+      renderResults();
+    });
+  });
+}
+
+function openDetail(id) {
+  const item = reslibState.data.items.find(i => i.id === id);
+  if (!item) return;
+
+  document.getElementById('reslibModalBody').innerHTML = `
+    <div class="reslib-modal-icon">${icon(TYPE_ICON[item.type] || 'i-file-text')}</div>
+    <span class="reslib-card-type">${item.type}</span>
+    <h2 id="reslibModalTitle">${item.title}</h2>
+    <div class="reslib-card-theme">
+      ${item.theme.map(t => `<span class="reslib-theme-tag">${t}</span>`).join('')}
+    </div>
+    <div class="reslib-card-audience">
+      ${item.audience.map(a => `<span class="reslib-audience-tag">${icon(AUDIENCE_ICON[a] || 'i-star', 'icon-xs')}${a}</span>`).join('')}
+    </div>
+
+    <h4>Description</h4>
+    <p>${item.description}</p>
+
+    <h4>Why it works</h4>
+    <p>${item.evidence}</p>
+
+    ${item.fileUrl
+      ? `<a class="btn btn-primary reslib-download" href="${item.fileUrl}" target="_blank" rel="noopener">${icon('i-download', 'icon-sm')} Download PDF</a>`
+      : `<span class="reslib-coming-soon">${icon('i-file-text', 'icon-sm')} PDF coming soon</span>`}
+  `;
+
+  document.getElementById('reslibModalBackdrop').hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetail() {
+  document.getElementById('reslibModalBackdrop').hidden = true;
+  document.body.style.overflow = '';
+}
+
+function initModal() {
+  document.getElementById('reslibModalClose').addEventListener('click', closeDetail);
+  document.getElementById('reslibModalBackdrop').addEventListener('click', e => {
+    if (e.target.id === 'reslibModalBackdrop') closeDetail();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeDetail();
+  });
+}
+
+function initSearchAndClear() {
+  const searchInput = document.getElementById('reslibSearch');
+  searchInput.addEventListener('input', () => {
+    reslibState.search = searchInput.value;
+    renderResults();
+  });
+
+  document.getElementById('reslibClearBtn').addEventListener('click', () => {
+    reslibState.search = '';
+    reslibState.audience.clear();
+    reslibState.type.clear();
+    reslibState.theme.clear();
+    searchInput.value = '';
+    document.querySelectorAll('.reslib-chip.active').forEach(c => c.classList.remove('active'));
+    renderResults();
+  });
+}
+
+function initMobileNav() {
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const navMobile = document.getElementById('navMobile');
+  const useEl = hamburgerBtn.querySelector('use');
+  hamburgerBtn.addEventListener('click', () => {
+    const isOpen = navMobile.classList.toggle('open');
+    useEl.setAttribute('href', isOpen ? '#i-x' : '#i-menu');
+  });
+}
+
+fetch('content/resources.json')
+  .then(res => res.json())
+  .then(data => {
+    reslibState.data = data;
+
+    document.getElementById('reslibHeading').textContent = data.intro.heading;
+    document.getElementById('reslibSub').textContent = data.intro.sub;
+    document.getElementById('reslibPdfNotice').textContent = data.intro.pdfNotice;
+    document.getElementById('reslibSearch').placeholder = data.filters.searchPlaceholder;
+    document.getElementById('reslibAudienceLabel').textContent = data.filters.audienceLabel;
+    document.getElementById('reslibTypeLabel').textContent = data.filters.typeLabel;
+    document.getElementById('reslibThemeLabel').textContent = data.filters.themeLabel;
+    document.getElementById('reslibClearBtn').textContent = data.filters.clearLabel;
+
+    renderChips('reslibAudienceChips', data.filters.audienceOptions, reslibState.audience);
+    renderChips('reslibTypeChips', data.filters.typeOptions, reslibState.type);
+    renderChips('reslibThemeChips', data.filters.themeOptions, reslibState.theme);
+    renderResults();
+
+    initSearchAndClear();
+    initModal();
+    initMobileNav();
+  });

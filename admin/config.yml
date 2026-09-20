@@ -48,6 +48,74 @@ collections:
                   - {label: "Text (used instead of Number, e.g. 'Ages 3–19')", name: "text", widget: "string", required: false}
                   - {label: "Label", name: "label", widget: "string"}
 
+          - label: "Toolkit FAQ (verbatim client copy, shown on the home page)"
+            name: "toolkitFaq"
+            widget: "object"
+            fields:
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - label: "1. Goal"
+                name: "goal"
+                widget: "object"
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - label: "Paragraphs"
+                    name: "paragraphs"
+                    widget: "list"
+                    field: {label: "Paragraph", name: "paragraph", widget: "text"}
+              - label: "2. Why"
+                name: "why"
+                widget: "object"
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+              - label: "3. How"
+                name: "how"
+                widget: "object"
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - {label: "Intro", name: "intro", widget: "text"}
+                  - label: "Concern / Solution Pairs"
+                    name: "pairs"
+                    widget: "list"
+                    fields:
+                      - {label: "Therapist Concern", name: "concern", widget: "string"}
+                      - {label: "Toolkit Solution", name: "solution", widget: "text"}
+              - label: "4. What It Includes"
+                name: "includes"
+                widget: "object"
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - label: "Items (fixed set of 4 — do not add or remove)"
+                    name: "items"
+                    widget: "list"
+                    fields:
+                      - {label: "Letter", name: "letter", widget: "string"}
+                      - {label: "Title", name: "title", widget: "string"}
+                      - {label: "Body", name: "body", widget: "text"}
+              - label: "5. How to Use It"
+                name: "useIt"
+                widget: "object"
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - {label: "Intro", name: "intro", widget: "text"}
+                  - label: "Guidance (fixed set of 4 — do not add or remove)"
+                    name: "guidance"
+                    widget: "list"
+                    fields:
+                      - {label: "Title", name: "title", widget: "string"}
+                      - {label: "Body", name: "body", widget: "text"}
+                  - label: "General Tips (add or remove freely)"
+                    name: "tips"
+                    widget: "list"
+                    field: {label: "Tip", name: "tip", widget: "string"}
+                  - label: "Closing Line"
+                    name: "closing"
+                    widget: "object"
+                    fields:
+                      - {label: "Text Before Link", name: "pre", widget: "string"}
+                      - {label: "Link Text", name: "linkText", widget: "string"}
+                      - {label: "Link Target", name: "linkHref", widget: "string"}
+                      - {label: "Text After Link", name: "post", widget: "string"}
+
           - label: "About / Ecosystem Section"
             name: "about"
             widget: "object"
@@ -56,6 +124,13 @@ collections:
               - {label: "Heading — Line 1", name: "headingLine1", widget: "string"}
               - {label: "Heading — Line 2", name: "headingLine2", widget: "string"}
               - {label: "Intro Paragraph", name: "intro", widget: "text"}
+              - label: "Partnership Note (short line + link down to Team section)"
+                name: "partnershipNote"
+                widget: "object"
+                fields:
+                  - {label: "Text", name: "text", widget: "string"}
+                  - {label: "Link Text", name: "linkText", widget: "string"}
+                  - {label: "Link Target (e.g. #team)", name: "linkHref", widget: "string"}
               - {label: "Ecosystem Diagram Hint", name: "ecosystemHint", widget: "string"}
               - label: "Ecosystem Layers (fixed set of 4 — do not add or remove)"
                 name: "ecosystemLegend"
@@ -127,6 +202,7 @@ collections:
               - {label: "Section Label", name: "sectionLabel", widget: "string"}
               - {label: "Heading", name: "heading", widget: "string"}
               - {label: "Intro Paragraph", name: "intro", widget: "text"}
+              - {label: "Resource Library Link Label (button that sends clinicians to the standalone Resource Library page)", name: "libraryLinkLabel", widget: "string"}
               - label: "Tabs"
                 name: "tabs"
                 widget: "object"
@@ -137,6 +213,7 @@ collections:
                     fields:
                       - {label: "Tab Button Label", name: "tabLabel", widget: "string"}
                       - {label: "Heading", name: "heading", widget: "string"}
+                      - {label: "Therapist Concern (quoted)", name: "concern", widget: "string", required: false}
                       - {label: "Intro", name: "intro", widget: "text"}
                       - label: "Phases (fixed set of 3 — do not add or remove)"
                         name: "phases"
@@ -146,27 +223,13 @@ collections:
                           - {label: "Session Range", name: "sessions", widget: "string"}
                           - {label: "Focus Items", name: "items", widget: "list", field: {label: "Item", name: "item", widget: "string"}}
                           - {label: "Sample Interventions", name: "interventions", widget: "list", field: {label: "Intervention", name: "intervention", widget: "string"}}
-                  - label: "2. Resource Library"
-                    name: "library"
-                    widget: "object"
-                    fields:
-                      - {label: "Tab Button Label", name: "tabLabel", widget: "string"}
-                      - {label: "Heading", name: "heading", widget: "string"}
-                      - {label: "Intro", name: "intro", widget: "text"}
-                      - label: "Cards (fixed set of 4 — do not add or remove)"
-                        name: "cards"
-                        widget: "list"
-                        fields:
-                          - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
-                          - {label: "Color", name: "colorClass", widget: "select", options: ["lib-teal", "lib-green", "lib-yellow", "lib-purple"]}
-                          - {label: "Title", name: "title", widget: "string"}
-                          - {label: "Items", name: "items", widget: "list", field: {label: "Item", name: "item", widget: "string"}}
                   - label: "3. Navigating Schools"
                     name: "schools"
                     widget: "object"
                     fields:
                       - {label: "Tab Button Label", name: "tabLabel", widget: "string"}
                       - {label: "Heading", name: "heading", widget: "string"}
+                      - {label: "Therapist Concern (quoted)", name: "concern", widget: "string", required: false}
                       - {label: "Intro", name: "intro", widget: "text"}
                       - label: "Pull Quote"
                         name: "quote"
@@ -187,6 +250,7 @@ collections:
                     fields:
                       - {label: "Tab Button Label", name: "tabLabel", widget: "string"}
                       - {label: "Heading", name: "heading", widget: "string"}
+                      - {label: "Therapist Concern (quoted)", name: "concern", widget: "string", required: false}
                       - {label: "Intro", name: "intro", widget: "text"}
                       - label: "Pull Quote"
                         name: "quote"
@@ -201,6 +265,74 @@ collections:
                           - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
                           - {label: "Title", name: "title", widget: "string"}
                           - {label: "Body", name: "body", widget: "text"}
+              - label: "How to Use This Toolkit"
+                name: "howToUse"
+                widget: "object"
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - {label: "Intro", name: "intro", widget: "text"}
+                  - label: "Steps (fixed set of 4 — do not add or remove)"
+                    name: "steps"
+                    widget: "list"
+                    fields:
+                      - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
+                      - {label: "Title", name: "title", widget: "string"}
+                      - {label: "Body", name: "body", widget: "text"}
+                  - label: "General Tips (add or remove freely)"
+                    name: "tips"
+                    widget: "list"
+                    field: {label: "Tip", name: "tip", widget: "string"}
+                  - label: "Feedback Line"
+                    name: "feedback"
+                    widget: "object"
+                    fields:
+                      - {label: "Text", name: "text", widget: "text"}
+                      - {label: "Link Text", name: "linkText", widget: "string"}
+                      - {label: "Link Target", name: "linkHref", widget: "string", hint: "Currently points to #team as a placeholder — update to a real mailto: or contact link when one exists."}
+
+          - label: "Resource Categories (summary cards used by the Planning Tool's recommendations — for the full searchable library, edit the Resource Library collection instead)"
+            name: "resourceCategories"
+            widget: "list"
+            fields:
+              - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
+              - {label: "Color", name: "colorClass", widget: "select", options: ["lib-teal", "lib-green", "lib-yellow", "lib-purple"]}
+              - {label: "Title", name: "title", widget: "string"}
+              - {label: "Items", name: "items", widget: "list", field: {label: "Item", name: "item", widget: "string"}}
+
+          - label: "Planning Tool Section"
+            name: "planner"
+            widget: "object"
+            fields:
+              - {label: "Nav Label", name: "navLabel", widget: "string"}
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Intro", name: "intro", widget: "text"}
+              - {label: "Disclaimer", name: "disclaimer", widget: "text", hint: "Shown above the tool. Keep this — it's the clinical-judgment safeguard."}
+              - {label: "Risk Column Label", name: "riskColumnLabel", widget: "string"}
+              - {label: "Protective Column Label", name: "protectiveColumnLabel", widget: "string"}
+              - {label: "Center Label", name: "centerLabel", widget: "string"}
+              - {label: "Center Sub-label", name: "centerSub", widget: "string"}
+              - label: "Ecological Levels (fixed set of 5 — do not add or remove; order matters)"
+                name: "rings"
+                widget: "list"
+                fields:
+                  - {label: "Key (do not change)", name: "key", widget: "string"}
+                  - {label: "Label", name: "label", widget: "string"}
+                  - {label: "Risk Placeholder", name: "placeholderRisk", widget: "string"}
+                  - {label: "Protective Placeholder", name: "placeholderProtective", widget: "string"}
+              - {label: "Add Button Label", name: "addButtonLabel", widget: "string"}
+              - {label: "Generate Button Label", name: "generateButtonLabel", widget: "string"}
+              - {label: "Reset Button Label", name: "resetButtonLabel", widget: "string"}
+              - {label: "Download Button Label", name: "downloadButtonLabel", widget: "string"}
+              - {label: "Download Hint", name: "downloadHint", widget: "string"}
+              - {label: "Empty State Text", name: "emptyStateText", widget: "string"}
+              - label: "Output Panel Headings"
+                name: "outputHeadings"
+                widget: "object"
+                fields:
+                  - {label: "Treatment Plan Heading", name: "plan", widget: "string"}
+                  - {label: "Resources Heading", name: "resources", widget: "string"}
+                  - {label: "More EBPs Heading", name: "more", widget: "string"}
 
           - label: "Research Section"
             name: "research"
@@ -251,3 +383,62 @@ collections:
               - {label: "Org Name", name: "orgName", widget: "string"}
               - {label: "Sub Line", name: "subLine", widget: "string"}
               - {label: "Funding Text", name: "fundingText", widget: "string"}
+
+      - file: "content/resources.json"
+        name: "resourceLibrary"
+        label: "Resource Library (full searchable page)"
+        fields:
+          - label: "Page Intro"
+            name: "intro"
+            widget: "object"
+            fields:
+              - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Subheading", name: "sub", widget: "text"}
+              - {label: "PDF Notice", name: "pdfNotice", widget: "text", hint: "Shown at the top of the page — update or remove once PDFs are fully uploaded."}
+          - label: "Search & Filter Labels"
+            name: "filters"
+            widget: "object"
+            fields:
+              - {label: "Search Placeholder", name: "searchPlaceholder", widget: "string"}
+              - {label: "Audience Filter Label", name: "audienceLabel", widget: "string"}
+              - {label: "Type Filter Label", name: "typeLabel", widget: "string"}
+              - {label: "Theme Filter Label", name: "themeLabel", widget: "string"}
+              - {label: "Clear Filters Label", name: "clearLabel", widget: "string"}
+              - label: "Audience Options (must match the Audience values used below)"
+                name: "audienceOptions"
+                widget: "list"
+                field: {label: "Option", name: "option", widget: "string"}
+              - label: "Type Options (must match the Type values used below)"
+                name: "typeOptions"
+                widget: "list"
+                field: {label: "Option", name: "option", widget: "string"}
+              - label: "Theme Options (must match the Theme values used below)"
+                name: "themeOptions"
+                widget: "list"
+                field: {label: "Option", name: "option", widget: "string"}
+          - label: "Resources (add or remove freely)"
+            name: "items"
+            widget: "list"
+            summary: "{{title}}"
+            fields:
+              - {label: "Title", name: "title", widget: "string"}
+              - {label: "Type", name: "type", widget: "select", options: ["Assessment Tool", "Worksheet", "Handout", "Referral List", "Tip Sheet"]}
+              - label: "Who It's For (select all that apply)"
+                name: "audience"
+                widget: "select"
+                multiple: true
+                options: ["Clinician", "Youth", "Family", "Community", "Schools"]
+              - label: "Theme (select all that apply)"
+                name: "theme"
+                widget: "select"
+                multiple: true
+                options: ["Risk Assessment & Safety Planning", "Coping Skills & Emotion Regulation", "Family Engagement", "School Coordination", "Community & Referrals", "Relapse Prevention & Transition"]
+              - {label: "Short Description", name: "description", widget: "text"}
+              - {label: "Why It Works (evidence/research note)", name: "evidence", widget: "text"}
+              - label: "PDF File"
+                name: "fileUrl"
+                widget: "file"
+                required: false
+                media_folder: "/resources"
+                public_folder: "/resources"
+                hint: "Leave blank until the PDF is ready — the page will show a \"PDF coming soon\" badge instead."

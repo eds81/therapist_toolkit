@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Planning Tool | Therapist Toolkit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- SVG SPRITE -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2L4 5v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V5l-8-3z"/>
+    <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+  </symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round">
+    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+  </symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+    <rect x="8" y="2" width="8" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/>
+  </symbol>
+  <symbol id="i-map-pin" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+  </symbol>
+  <symbol id="i-family" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+  </symbol>
+  <symbol id="i-school" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 20h20M4 20V9l8-5 8 5v11"/><path d="M9 20v-5h6v5"/><line x1="12" y1="4" x2="12" y2="9"/>
+  </symbol>
+  <symbol id="i-share-2" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+  </symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+  </symbol>
+</svg>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- NAV -->
+<header class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">
+      <span class="logo-rise">Therapist Toolkit</span>
+      <span class="logo-sub">Rise Against Suicide × CU Boulder</span>
+    </a>
+    <nav class="nav-links">
+      <a href="about.html">About</a>
+      <a href="planning-tool.html" class="active">Planning Tool</a>
+      <a href="resource-library.html">Resource Library</a>
+    </nav>
+    <button class="nav-hamburger" aria-label="Open menu" id="hamburgerBtn">
+      <svg class="icon"><use href="#i-menu"/></svg>
+    </button>
+  </div>
+  <div class="nav-mobile" id="navMobile">
+    <a href="about.html">About</a>
+    <a href="planning-tool.html" class="active">Planning Tool</a>
+    <a href="resource-library.html">Resource Library</a>
+  </div>
+</header>
+
+<!-- PLANNER -->
+<section class="planner" id="planner">
+  <div class="section-inner">
+    <div class="section-label" data-fade id="plannerLabel"></div>
+    <h2 data-fade data-delay="1" id="plannerHeading"></h2>
+    <p class="section-intro" data-fade data-delay="2" id="plannerIntro"></p>
+
+    <div class="planner-disclaimer" data-fade data-delay="3" id="plannerDisclaimer"></div>
+
+    <div class="planner-layout" data-fade data-delay="4" id="plannerLayout">
+      <div class="planner-col planner-col-risk">
+        <h3 class="planner-col-heading planner-col-heading-risk" id="plannerRiskLabel"></h3>
+        <div class="planner-rows" id="plannerRiskRows"></div>
+      </div>
+
+      <div class="planner-diagram-wrap">
+        <div class="planner-ring-labels" id="plannerRingLabels"></div>
+        <svg viewBox="0 0 320 320" class="planner-svg" id="plannerSvg" role="img" aria-label="Concentric circle diagram of client ecological formulation">
+          <circle class="planner-ring" data-ring="community" cx="160" cy="160" r="145"/>
+          <circle class="planner-ring" data-ring="school"    cx="160" cy="160" r="112"/>
+          <circle class="planner-ring" data-ring="family"    cx="160" cy="160" r="79"/>
+          <circle class="planner-ring" data-ring="peer"      cx="160" cy="160" r="46"/>
+          <circle class="planner-ring" data-ring="client"    cx="160" cy="160" r="22"/>
+          <text x="160" y="156" class="planner-center-label" id="plannerCenterLabel" style="pointer-events:none"></text>
+          <text x="160" y="170" class="planner-center-sub"   id="plannerCenterSub"   style="pointer-events:none"></text>
+        </svg>
+      </div>
+
+      <div class="planner-col planner-col-protective">
+        <h3 class="planner-col-heading planner-col-heading-protective" id="plannerProtectiveLabel"></h3>
+        <div class="planner-rows" id="plannerProtectiveRows"></div>
+      </div>
+
+      <svg class="planner-connectors" id="plannerConnectors"></svg>
+    </div>
+
+    <div class="planner-actions">
+      <button class="btn btn-primary" id="plannerGenerateBtn"></button>
+      <button class="btn btn-outline" id="plannerResetBtn"></button>
+      <button class="btn btn-outline" id="plannerDownloadBtn" hidden></button>
+    </div>
+    <p class="planner-empty-state" id="plannerEmptyState"></p>
+    <p class="planner-download-hint" id="plannerDownloadHint" hidden></p>
+
+    <div class="planner-output" id="plannerOutput" hidden>
+      <div class="planner-output-block" id="plannerOutputPlan"></div>
+      <div class="planner-output-block" id="plannerOutputResources"></div>
+      <div class="planner-output-block" id="plannerOutputMore"></div>
+    </div>
+  </div>
+
+  <div class="planner-print-sheet" id="plannerPrintSheet"></div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-left" id="footerLeft"></div>
+    <div class="footer-right" id="footerRight"></div>
+  </div>
+</footer>
+
+<script src="planner.js"></script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+{
+  "intro": {
+    "heading": "Resource Library",
+    "sub": "Your one-stop-shop for therapy resources — vetted clinical assessment tools, community referrals, and youth and family handouts, all searchable in one place.",
+    "pdfNotice": "PDF files for each resource are being finalized and will appear here as they're added. Items below show what each resource is and why it's included, even before its file is uploaded."
+  },
+  "filters": {
+    "searchPlaceholder": "Search resources by name or keyword…",
+    "audienceLabel": "Who it's for",
+    "typeLabel": "Resource type",
+    "themeLabel": "Theme",
+    "clearLabel": "Clear filters",
+    "audienceOptions": ["Clinician", "Youth", "Family", "Community", "Schools"],
+    "typeOptions": ["Assessment Tool", "Worksheet", "Handout", "Referral List", "Tip Sheet"],
+    "themeOptions": ["Risk Assessment & Safety Planning", "Coping Skills & Emotion Regulation", "Family Engagement", "School Coordination", "Community & Referrals", "Relapse Prevention & Transition"]
+  },
+  "items": [
+    {
+      "id": "cssrs",
+      "title": "Columbia Suicide Severity Rating Scale (C-SSRS)",
+      "type": "Assessment Tool",
+      "audience": ["Clinician"],
+      "theme": ["Risk Assessment & Safety Planning"],
+      "description": "A structured interview used to assess the severity and immediacy of suicidal ideation and behavior. Used at intake and re-administered as risk status changes throughout treatment.",
+      "evidence": "A widely adopted, extensively studied risk-assessment instrument used across clinical and research settings for suicide risk stratification.",
+      "fileUrl": ""
+    },
+    {
+      "id": "stanley-brown",
+      "title": "Stanley-Brown Safety Planning Intervention",
+      "type": "Worksheet",
+      "audience": ["Clinician", "Youth", "Family"],
+      "theme": ["Risk Assessment & Safety Planning"],
+      "description": "A brief, collaborative worksheet completed with the client (and caregivers, when appropriate) that identifies warning signs, coping strategies, support contacts, and steps to reduce access to lethal means.",
+      "evidence": "One of the most widely studied and disseminated safety-planning approaches in suicide prevention care.",
+      "fileUrl": ""
+    },
+    {
+      "id": "dbt-skills",
+      "title": "DBT Skills: Distress Tolerance & Emotion Regulation",
+      "type": "Handout",
+      "audience": ["Clinician", "Youth"],
+      "theme": ["Coping Skills & Emotion Regulation"],
+      "description": "Skill-building handouts adapted from Dialectical Behavior Therapy to help clients tolerate intense emotions and reduce crisis-driven behavior.",
+      "evidence": "DBT has a substantial evidence base for reducing self-harm and suicidal behavior, including in adolescent populations.",
+      "fileUrl": ""
+    },
+    {
+      "id": "cbt-restructuring",
+      "title": "CBT Cognitive Restructuring Techniques",
+      "type": "Handout",
+      "audience": ["Clinician", "Youth"],
+      "theme": ["Coping Skills & Emotion Regulation"],
+      "description": "Guided worksheets to help clients identify, examine, and reframe unhelpful thought patterns that contribute to distress.",
+      "evidence": "CBT is one of the most extensively researched therapeutic approaches for youth depression and anxiety.",
+      "fileUrl": ""
+    },
+    {
+      "id": "behavioral-activation",
+      "title": "Behavioral Activation Planning Sheet",
+      "type": "Worksheet",
+      "audience": ["Clinician", "Youth"],
+      "theme": ["Coping Skills & Emotion Regulation"],
+      "description": "Helps clients schedule small, achievable, values-aligned activities to counter withdrawal and low mood.",
+      "evidence": "Behavioral activation is a well-established, evidence-based component of depression treatment.",
+      "fileUrl": ""
+    },
+    {
+      "id": "mh-referrals",
+      "title": "Vetted Mental Health Referrals",
+      "type": "Referral List",
+      "audience": ["Clinician", "Community"],
+      "theme": ["Community & Referrals"],
+      "description": "A curated, regularly updated list of community mental health providers for step-down or ongoing care once Rise treatment ends.",
+      "evidence": "Maintained and vetted directly by the Rise and CU Boulder team based on client feedback and provider responsiveness.",
+      "fileUrl": ""
+    },
+    {
+      "id": "post-rise-options",
+      "title": "Post-Rise Therapy Options",
+      "type": "Referral List",
+      "audience": ["Clinician", "Family", "Community"],
+      "theme": ["Community & Referrals", "Relapse Prevention & Transition"],
+      "description": "A guide to what happens after the Rise treatment window ends, including options by insurance status and geography.",
+      "evidence": "Compiled from partner agency intake criteria and updated as availability changes.",
+      "fileUrl": ""
+    },
+    {
+      "id": "family-support-guide",
+      "title": "How to Support Your Teen: A Family Guide",
+      "type": "Handout",
+      "audience": ["Family"],
+      "theme": ["Family Engagement"],
+      "description": "Plain-language psychoeducation for caregivers on what to expect during treatment and how to support a teen at home.",
+      "evidence": "Grounded in family-inclusive treatment literature; detailed citations to be added.",
+      "fileUrl": ""
+    },
+    {
+      "id": "family-engagement-guide",
+      "title": "Family Engagement Guide",
+      "type": "Tip Sheet",
+      "audience": ["Family", "Clinician"],
+      "theme": ["Family Engagement"],
+      "description": "Suggestions for clinicians on involving caregivers productively in treatment, even in higher-conflict households.",
+      "evidence": "Grounded in family-inclusive treatment literature; detailed citations to be added.",
+      "fileUrl": ""
+    },
+    {
+      "id": "youth-coping-worksheet",
+      "title": "Youth Coping Skills Worksheet",
+      "type": "Worksheet",
+      "audience": ["Youth"],
+      "theme": ["Coping Skills & Emotion Regulation"],
+      "description": "A self-guided worksheet helping youth identify and practice personal coping strategies for distress.",
+      "evidence": "Grounded in CBT/DBT coping-skills literature; detailed citations to be added.",
+      "fileUrl": ""
+    },
+    {
+      "id": "youth-safety-plan",
+      "title": "Youth Safety Planning Template",
+      "type": "Worksheet",
+      "audience": ["Youth"],
+      "theme": ["Risk Assessment & Safety Planning"],
+      "description": "A youth-facing version of the safety plan, written in accessible language for the client to keep and reference.",
+      "evidence": "Adapted from the Stanley-Brown Safety Planning Intervention for a youth reading level.",
+      "fileUrl": ""
+    },
+    {
+      "id": "mindfulness-grounding",
+      "title": "Mindfulness & Grounding Tools",
+      "type": "Worksheet",
+      "audience": ["Youth"],
+      "theme": ["Coping Skills & Emotion Regulation"],
+      "description": "Brief grounding exercises youth can use independently between sessions to manage acute distress.",
+      "evidence": "Grounded in mindfulness-based intervention literature; detailed citations to be added.",
+      "fileUrl": ""
+    },
+    {
+      "id": "school-tip-sheet",
+      "title": "School Navigation Tip Sheet",
+      "type": "Tip Sheet",
+      "audience": ["Clinician", "Schools"],
+      "theme": ["School Coordination"],
+      "description": "Practical guidance for navigating school partnership complexities, coordinating with counselors, and managing referrals.",
+      "evidence": "Compiled from therapist co-design sessions on real school-coordination challenges.",
+      "fileUrl": ""
+    },
+    {
+      "id": "district-info",
+      "title": "District-Specific Info Guides",
+      "type": "Tip Sheet",
+      "audience": ["Clinician", "Schools"],
+      "theme": ["School Coordination"],
+      "description": "Detailed guides for the schools and districts Rise frequently partners with, including key contacts and procedures.",
+      "evidence": "Compiled and maintained directly by the Rise team.",
+      "fileUrl": ""
+    },
+    {
+      "id": "multi-system-coordination",
+      "title": "Multi-System Coordination Guide",
+      "type": "Tip Sheet",
+      "audience": ["Clinician", "Schools", "Community"],
+      "theme": ["School Coordination", "Community & Referrals"],
+      "description": "Resources for collaborating across hospitals, clinics, and school teams when a case spans multiple systems.",
+      "evidence": "Compiled from therapist co-design sessions on real multi-system cases.",
+      "fileUrl": ""
+    }
+  ]
+}
