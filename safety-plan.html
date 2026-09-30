@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Make A Safety Plan | Therapist Toolkit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- SVG SPRITE -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2L4 5v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V5l-8-3z"/>
+    <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+  </symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+  </symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round">
+    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+  </symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+  </symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+  </symbol>
+</svg>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- NAV -->
+<header class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">
+      <span class="logo-rise">Therapist Toolkit</span>
+      <span class="logo-sub">Rise Against Suicide × CU Boulder</span>
+    </a>
+    <nav class="nav-links">
+      <a href="about.html">About</a>
+      <a href="planning-tool.html">Planning Tool</a>
+      <a href="resource-library.html">Resource Library</a>
+      <a href="self-care.html">Self-Care &amp; Support</a>
+      <a href="safety-plan.html" class="active">Make A Safety Plan</a>
+    </nav>
+    <button class="nav-hamburger" aria-label="Open menu" id="hamburgerBtn">
+      <svg class="icon"><use href="#i-menu"/></svg>
+    </button>
+  </div>
+  <div class="nav-mobile" id="navMobile">
+    <a href="about.html">About</a>
+    <a href="planning-tool.html">Planning Tool</a>
+    <a href="resource-library.html">Resource Library</a>
+    <a href="self-care.html">Self-Care &amp; Support</a>
+    <a href="safety-plan.html" class="active">Make A Safety Plan</a>
+  </div>
+</header>
+
+<!-- SAFETY PLAN -->
+<section class="safetyplan" id="safetyPlan">
+  <div class="section-inner">
+    <div class="section-label" data-fade id="spLabel"></div>
+    <h2 data-fade data-delay="1" id="spHeading"></h2>
+    <p class="section-intro" data-fade data-delay="2" id="spIntro"></p>
+
+    <div class="sp-crisis-banner" data-fade data-delay="3" id="spCrisisBanner"></div>
+    <div class="planner-disclaimer" data-fade data-delay="3" id="spDisclaimer"></div>
+
+    <div class="planner-stepper-row">
+      <div class="planner-stepper" id="spStepper"></div>
+      <button type="button" class="planner-restart-link" id="spRestartLink"></button>
+    </div>
+
+    <div class="planner-step-header" id="spStepHeader">
+      <h3 id="spStepTitle"></h3>
+      <p id="spStepHint"></p>
+    </div>
+
+    <div class="sp-steps" id="spSteps"></div>
+
+    <div class="planner-step-nav" id="spStepNav">
+      <button class="btn btn-outline" id="spBackBtn"></button>
+      <button class="btn btn-primary" id="spNextBtn"></button>
+    </div>
+
+    <div class="planner-review-header" id="spReviewHeader" hidden>
+      <h3 id="spReviewHeading"></h3>
+      <p id="spReviewIntro"></p>
+    </div>
+
+    <div class="planner-actions" id="spActions" hidden>
+      <button class="btn btn-primary" id="spDownloadBtn"></button>
+      <button class="btn btn-outline" id="spResetBtn"></button>
+    </div>
+    <p class="planner-empty-state" id="spEmptyState"></p>
+    <p class="planner-download-hint" id="spDownloadHint" hidden></p>
+  </div>
+
+  <div class="sp-print-sheet" id="spPrintSheet"></div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-left" id="footerLeft"></div>
+    <div class="footer-right" id="footerRight"></div>
+  </div>
+</footer>
+
+<script src="safetyplan.js"></script>
+</body>
+</html>

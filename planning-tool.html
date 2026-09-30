@@ -63,6 +63,8 @@
       <a href="about.html">About</a>
       <a href="planning-tool.html" class="active">Planning Tool</a>
       <a href="resource-library.html">Resource Library</a>
+    <a href="self-care.html">Self-Care &amp; Support</a>
+    <a href="safety-plan.html">Make A Safety Plan</a>
     </nav>
     <button class="nav-hamburger" aria-label="Open menu" id="hamburgerBtn">
       <svg class="icon"><use href="#i-menu"/></svg>
@@ -72,6 +74,8 @@
     <a href="about.html">About</a>
     <a href="planning-tool.html" class="active">Planning Tool</a>
     <a href="resource-library.html">Resource Library</a>
+    <a href="self-care.html">Self-Care &amp; Support</a>
+    <a href="safety-plan.html">Make A Safety Plan</a>
   </div>
 </header>
 
@@ -83,6 +87,16 @@
     <p class="section-intro" data-fade data-delay="2" id="plannerIntro"></p>
 
     <div class="planner-disclaimer" data-fade data-delay="3" id="plannerDisclaimer"></div>
+
+    <div class="planner-stepper-row">
+      <div class="planner-stepper" id="plannerStepper"></div>
+      <button type="button" class="planner-restart-link" id="plannerRestartLink"></button>
+    </div>
+
+    <div class="planner-step-header" id="plannerStepHeader">
+      <h3 id="plannerStepTitle"></h3>
+      <p id="plannerStepHint"></p>
+    </div>
 
     <div class="planner-layout" data-fade data-delay="4" id="plannerLayout">
       <div class="planner-col planner-col-risk">
@@ -111,7 +125,17 @@
       <svg class="planner-connectors" id="plannerConnectors"></svg>
     </div>
 
-    <div class="planner-actions">
+    <div class="planner-step-nav" id="plannerStepNav">
+      <button class="btn btn-outline" id="plannerBackBtn"></button>
+      <button class="btn btn-primary" id="plannerNextBtn"></button>
+    </div>
+
+    <div class="planner-review-header" id="plannerReviewHeader" hidden>
+      <h3 id="plannerReviewHeading"></h3>
+      <p id="plannerReviewIntro"></p>
+    </div>
+
+    <div class="planner-actions" id="plannerActions" hidden>
       <button class="btn btn-primary" id="plannerGenerateBtn"></button>
       <button class="btn btn-outline" id="plannerResetBtn"></button>
       <button class="btn btn-outline" id="plannerDownloadBtn" hidden></button>
@@ -121,6 +145,7 @@
 
     <div class="planner-output" id="plannerOutput" hidden>
       <div class="planner-output-block" id="plannerOutputPlan"></div>
+      <div class="planner-output-block" id="plannerOutputSafetyPlan"></div>
       <div class="planner-output-block" id="plannerOutputResources"></div>
       <div class="planner-output-block" id="plannerOutputMore"></div>
     </div>

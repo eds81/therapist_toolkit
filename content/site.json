@@ -292,6 +292,61 @@
     }
   ],
 
+  "selfCarePage": {
+    "navLabel": "Self-Care & Support",
+    "sectionLabel": "Self-Care and Support",
+    "heading": "Self-Care and Support",
+    "concern": "This work takes a personal toll.",
+    "intro": "Working with youth at risk for suicide is some of the hardest clinical work there is. These tools help you spot burnout early, build resilience into your practice, provide tips and tricks from your peers, and let you schedule a consultation call with our licensed clinical psychologist.",
+    "quote": { "text": "I can tolerate darkness.", "cite": "Rise therapist" },
+    "tabs": { "overview": "Overview", "why": "Why It Matters", "wins": "Wall of Wins", "consult": "Talk to Someone" },
+    "items": [
+      { "icon": "i-heart",       "title": "Self-Care Tip Sheets",   "body": "Ideas curated for and by therapists doing high-acuity work." },
+      { "icon": "i-play-circle", "title": "Therapist Stories",      "body": "Videos and testimonials from therapists sharing real challenges and how they navigated them." },
+      { "icon": "i-moon",        "title": "Pre-Session Mindfulness", "body": "Brief grounding practices to prepare for emotionally demanding sessions." },
+      { "icon": "i-calendar",    "title": "Schedule a Consultation", "body": "Book time with a clinical psychologist or Rise team member for peer support." }
+    ],
+    "why": {
+      "heading": "Why This Matters",
+      "intro": "Building resilience into your practice isn't a luxury — it's part of doing this work well and staying in it for the long haul.",
+      "cards": [
+        { "colorClass": "why-icon-teal",   "icon": "i-heart", "lead": "This work is hard — and that's not a reflection of your skill.", "body": "Vicarious trauma and compassion fatigue are a normal response to sustained high-acuity work, not a sign you're doing something wrong.", "citation": null },
+        { "colorClass": "why-icon-orange", "icon": "i-users", "lead": "You're not doing this alone.", "body": "Every therapist on the Rise roster carries a caseload like yours — peer support and consultation exist because this work is genuinely heavier when carried solo.", "citation": null },
+        { "colorClass": "why-icon-yellow", "icon": "i-zap",   "lead": "Therapist burnout is real, and support helps.", "body": "Therapists doing this work report high exhaustion and emotional demand, and need more support", "citation": "Villarreal-Otalora et al., 2023" }
+      ]
+    },
+    "testimonialsHeading": "What Therapists Are Saying",
+    "testimonials": [
+      { "text": "Burnout is challenging. It's very hard seeing people in really difficult places over and over, especially when your entire caseload looks like that.", "cite": "Rise therapist", "theme": "ON BURNOUT" },
+      { "text": "Having someone else to call when a case gets heavy makes all the difference. I don't have to carry it by myself anymore.", "cite": "Rise therapist", "theme": "ON CONSULTATION" },
+      { "text": "I started blocking ten minutes before my hardest sessions just to breathe. It sounds small, but it changed how I show up.", "cite": "Rise therapist", "theme": "ON SELF-CARE" }
+    ],
+    "wallOfWins": {
+      "heading": "Wall of Wins",
+      "intro": "A place to celebrate the small (and big) wins — share one, or just read what others have shared.",
+      "prototypeNote": "Prototype preview: entries you add here are visible only in your browser and reset when you reload the page. Nothing is saved or shared with other therapists yet.",
+      "nameFieldPlaceholder": "Your name or initials (optional)",
+      "formPlaceholder": "Share a win, a moment of pride, or just how you're doing today...",
+      "submitLabel": "Share",
+      "defaultAuthor": "Rise therapist",
+      "seedPosts": [
+        { "author": "Rise therapist", "text": "A client I've been worried about for months came in today and told me she signed up for the school play. Small thing, huge thing." },
+        { "author": "Rise therapist", "text": "First time a family thanked me for \"just listening.\" Reminder that showing up consistently is the intervention sometimes." },
+        { "author": "Rise therapist", "text": "Made it through a really hard termination session today. Proud of how far we got in 12 sessions." }
+      ]
+    },
+    "consult": {
+      "heading": "Talk to Someone",
+      "intro": "You don't have to carry a hard case — or a hard week — alone. Choose who makes sense to reach out to.",
+      "options": [
+        { "icon": "i-users",  "title": "Peer Therapist", "body": "Connect with another Rise therapist for informal case consultation or just to talk through a hard week.", "linkHref": "mailto:peersupport@riseagainstsuicide.org", "linkText": "Request a peer consult" },
+        { "icon": "i-user",   "title": "Dr. Tamar", "body": "Schedule time with Dr. Tamar, our licensed clinical psychologist, for clinical consultation or support.", "linkHref": "mailto:tamar@riseagainstsuicide.org", "linkText": "Schedule with Dr. Tamar" },
+        { "icon": "i-shield", "title": "Rise Team", "body": "Reach out to the Rise team directly for case support, resources, or general check-ins.", "linkHref": "mailto:team@riseagainstsuicide.org", "linkText": "Contact the Rise team" }
+      ],
+      "placeholderNote": "Contact links below are placeholders for this prototype — swap in real addresses or scheduling links via the CMS."
+    }
+  },
+
   "planner": {
     "navLabel": "Planning Tool",
     "sectionLabel": "Interactive Tool",
@@ -317,9 +372,48 @@
     "emptyStateText": "Add at least one risk or protective factor above, then generate a plan.",
     "outputHeadings": {
       "plan": "Recommended Treatment Plan",
+      "safetyPlan": "Draft Safety Plan",
       "resources": "Recommended Resources",
       "more": "Explore More Evidence-Based Practices"
+    },
+    "safetyPlan": {
+      "disclaimer": "This is a starting draft built from what you entered — complete it collaboratively with the client (and caregivers, when appropriate) using the full Stanley-Brown Safety Planning Intervention.",
+      "sections": [
+        { "key": "warningSigns",   "title": "Warning Signs",                              "emptyText": "No risk factors entered yet — add some in the steps above to auto-populate this section." },
+        { "key": "internalCoping", "title": "Internal Coping Strategies",                 "emptyText": "No individual-level coping strengths entered yet." },
+        { "key": "distraction",    "title": "People & Settings That Provide Distraction", "emptyText": "No peer, family, or school supports entered yet." },
+        { "key": "askForHelp",     "title": "People I Can Ask for Help",                  "emptyText": "No trusted family or peer contacts entered yet." },
+        { "key": "professionals", "title": "Professionals & Agencies to Contact", "emptyText": "No community resources entered yet — the Rise care team is always a fallback contact." },
+        { "key": "environment",   "title": "Making the Environment Safe", "staticText": "Discuss means restriction with the family (e.g. securing or removing access to lethal means) as part of safety planning." }
+      ]
     }
+  },
+
+  "safetyPlanPage": {
+    "navLabel": "Make A Safety Plan",
+    "sectionLabel": "Interactive Tool",
+    "heading": "Make A Safety Plan",
+    "intro": "Build a personalized safety plan step by step, together with the client. Each step focuses on one part of the plan — add as many items as apply, then review the whole plan before printing a copy for the client to keep.",
+    "crisisBanner": "If you or someone you know is in immediate danger, call 911. You can also call or text the 988 Suicide & Crisis Lifeline, available 24/7.",
+    "disclaimer": "This tool is a starting point for completing the Stanley-Brown Safety Planning Intervention together with a client. It saves only in this browser — nothing is sent anywhere.",
+    "steps": [
+      { "key": "warningSigns",   "stepLabel": "Warning Signs",           "heading": "My Warning Signs",           "intro": "A warning sign is something the client thinks, feels, or does as suicidal thoughts are starting to develop.", "placeholder": "e.g. trouble sleeping, pulling away from friends", "addButtonLabel": "Add warning sign" },
+      { "key": "internalCoping", "stepLabel": "Coping Strategies",       "heading": "My Coping Strategies",       "intro": "Coping strategies are things the client can do on their own to feel a little better in the moment, without needing to contact anyone else.", "placeholder": "e.g. listen to music, go for a walk, draw", "addButtonLabel": "Add coping strategy" },
+      { "key": "distraction",    "stepLabel": "Distractions",            "heading": "My Distractions",            "intro": "Distractions are people or places that may offer comfort or help the client take a break from the situation, so they can start feeling or thinking differently.", "placeholder": "e.g. a friend's house, the school gym", "addButtonLabel": "Add distraction" },
+      { "key": "askForHelp",     "stepLabel": "Supports",                "heading": "My Supports",                "intro": "Supports are people the client feels comfortable talking to about what they're going through, and who can help. When possible, it helps to talk with them about being a support before a crisis happens.", "placeholder": "e.g. a parent, sibling, coach, or friend", "addButtonLabel": "Add support" },
+      { "key": "professionals",  "stepLabel": "Professional Supports",   "heading": "My Professional Supports",   "intro": "Professional contacts are people who can provide professional care and support, including therapists, doctors, and crisis lines.", "placeholder": "e.g. therapist name and phone number", "addButtonLabel": "Add professional support" },
+      { "key": "environment",    "stepLabel": "Safer Environment",       "heading": "My Safer Environment",       "intro": "Having items nearby that could be used for self-harm can be dangerous during a crisis. What items might need to be stored safely, given to someone else, or removed — and how?", "placeholder": "e.g. ask a parent to store medications", "addButtonLabel": "Add safety step" }
+    ],
+    "stepHint": "Add as many or as few as apply — you can leave it blank and move on if it isn't relevant yet.",
+    "backButtonLabel": "Back",
+    "nextButtonLabel": "Next",
+    "reviewButtonLabel": "Review Plan",
+    "reviewHeading": "Review the Safety Plan",
+    "reviewIntro": "Here's the full plan from what was entered. Add, remove, or adjust anything before printing.",
+    "downloadButtonLabel": "Download / Print Plan",
+    "downloadHint": "Opens your browser's print dialog — choose “Save as PDF” as the destination to download it.",
+    "resetButtonLabel": "Start Over",
+    "emptyStateText": "Nothing entered yet — fill in at least one step to download or print the plan."
   },
 
   "research": {

@@ -59,13 +59,13 @@ function render(data) {
   document.getElementById('toolkitHeading').textContent = data.toolkit.heading;
   document.getElementById('toolkitIntro').textContent = data.toolkit.intro;
 
-  const tabOrder = ['roadmap', 'schools', 'selfcare'];
   const tabs = data.toolkit.tabs;
 
   const roadmapBtn = `<button class="tab-btn active" data-tab="roadmap">${tabs.roadmap.tabLabel}</button>`;
   const libraryLink = `<a class="tab-btn tab-btn-link" href="resource-library.html">${data.toolkit.libraryLinkLabel}${icon('i-arrow-right', 'icon-xs')}</a>`;
-  const restBtns = tabOrder.slice(1).map(key => `<button class="tab-btn" data-tab="${key}">${tabs[key].tabLabel}</button>`).join('');
-  document.getElementById('toolkitTabsNav').innerHTML = roadmapBtn + libraryLink + restBtns;
+  const schoolsBtn = `<button class="tab-btn" data-tab="schools">${tabs.schools.tabLabel}</button>`;
+  const selfCareLink = `<a class="tab-btn tab-btn-link" href="self-care.html">${data.toolkit.selfCareLinkLabel}${icon('i-arrow-right', 'icon-xs')}</a>`;
+  document.getElementById('toolkitTabsNav').innerHTML = roadmapBtn + libraryLink + schoolsBtn + selfCareLink;
 
   const roadmap = tabs.roadmap;
   document.getElementById('tab-roadmap').innerHTML = `
@@ -124,34 +124,15 @@ function render(data) {
       </div>
     </div>`;
 
-  const selfcare = tabs.selfcare;
-  document.getElementById('tab-selfcare').innerHTML = `
-    <div class="tab-layout">
-      <div class="tab-text">
-        ${concernHtml(selfcare)}
-        <h3>${selfcare.heading}</h3>
-        <p>${selfcare.intro}</p>
-        <blockquote class="mini-quote">"${selfcare.quote.text}"<cite>— ${selfcare.quote.cite}</cite></blockquote>
-      </div>
-      <div class="tab-visual">
-        <div class="selfcare-grid">
-          ${selfcare.items.map(it => `
-            <div class="sc-item">
-              <div class="sc-icon-wrap">${icon(it.icon)}</div>
-              <h4>${it.title}</h4>
-              <p>${it.body}</p>
-            </div>`).join('')}
-        </div>
-      </div>
-    </div>`;
-
   // HOW TO USE THIS TOOLKIT
   const howTo = data.toolkit.howToUse;
   document.getElementById('howToUseHeading').textContent = howTo.heading;
   document.getElementById('howToUseIntro').textContent = howTo.intro;
+  const STEP_LINK_HREFS = { library: 'resource-library.html', selfcare: 'self-care.html' };
   document.getElementById('howToUseSteps').innerHTML = howTo.steps.map(step => {
-    const tag = step.tab === 'library' ? 'a' : 'div';
-    const hrefAttr = step.tab === 'library' ? ' href="resource-library.html"' : '';
+    const href = STEP_LINK_HREFS[step.tab];
+    const tag = href ? 'a' : 'div';
+    const hrefAttr = href ? ` href="${href}"` : '';
     return `
       <${tag} class="how-to-use-step" ${hrefAttr}>
         <div class="how-to-use-icon">${icon(step.icon)}</div>
@@ -184,7 +165,7 @@ function render(data) {
   }).join('');
 
   document.getElementById('quotesHeading').textContent = data.research.quotesHeading;
-  document.getElementById('carouselTrack').innerHTML = data.research.quotes.map(q => `
+  document.querySelector('[data-carousel="research"] .carousel-track').innerHTML = data.research.quotes.map(q => `
     <div class="carousel-slide">
       <p class="slide-quote">"${q.text}"</p>
       <footer class="slide-footer">
@@ -312,11 +293,16 @@ function initRoadmapExpand() {
 
 // ── Quote carousel ───────────────────────────
 function initCarousel() {
-  const track   = document.querySelector('.carousel-track');
-  const slides  = document.querySelectorAll('.carousel-slide');
-  const dotsEl  = document.getElementById('carouselDots');
-  const prevBtn = document.querySelector('.carousel-prev');
-  const nextBtn = document.querySelector('.carousel-next');
+  document.querySelectorAll('.carousel').forEach(initCarouselInstance);
+}
+
+
+function initCarouselInstance(carouselEl) {
+  const track   = carouselEl.querySelector('.carousel-track');
+  const slides  = carouselEl.querySelectorAll('.carousel-slide');
+  const dotsEl  = carouselEl.querySelector('.carousel-dots');
+  const prevBtn = carouselEl.querySelector('.carousel-prev');
+  const nextBtn = carouselEl.querySelector('.carousel-next');
 
   if (!track || !slides.length) return;
 
@@ -324,6 +310,7 @@ function initCarousel() {
   let timer;
   const total = slides.length;
 
+  dotsEl.innerHTML = '';
   slides.forEach((_, i) => {
     const dot = document.createElement('button');
     dot.className = 'dot' + (i === 0 ? ' active' : '');
@@ -342,7 +329,7 @@ function initCarousel() {
   prevBtn.addEventListener('click', () => goTo(current - 1));
   nextBtn.addEventListener('click', () => goTo(current + 1));
 
-  document.querySelector('.carousel').addEventListener('keydown', e => {
+  carouselEl.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft')  goTo(current - 1);
     if (e.key === 'ArrowRight') goTo(current + 1);
   });
@@ -352,7 +339,6 @@ function initCarousel() {
     timer = setInterval(() => goTo(current + 1), 6000);
   }
 
-  const carouselEl = document.querySelector('.carousel');
   carouselEl.addEventListener('mouseenter', () => clearInterval(timer));
   carouselEl.addEventListener('mouseleave', resetTimer);
 

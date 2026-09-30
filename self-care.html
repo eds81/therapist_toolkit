@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Self-Care and Support | Therapist Toolkit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- SVG SPRITE -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+  </symbol>
+  <symbol id="i-play-circle" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>
+  </symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+    <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+  </symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.87 3.58-7 8-7s8 3.13 8 7"/>
+  </symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2L4 5v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V5l-8-3z"/>
+    <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+  </symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+  </symbol>
+  <symbol id="i-help-circle" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+    <line x1="12" y1="17" x2="12.01" y2="17"/>
+  </symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>
+  </symbol>
+  <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="19" y1="12" x2="5" y2="12"/><polyline points="11 18 5 12 11 6"/>
+  </symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+  </symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </symbol>
+</svg>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- NAV -->
+<header class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">
+      <span class="logo-rise">Therapist Toolkit</span>
+      <span class="logo-sub">Rise Against Suicide × CU Boulder</span>
+    </a>
+    <nav class="nav-links">
+      <a href="about.html">About</a>
+      <a href="planning-tool.html">Planning Tool</a>
+      <a href="resource-library.html">Resource Library</a>
+      <a href="self-care.html" class="active">Self-Care &amp; Support</a>
+      <a href="safety-plan.html">Make A Safety Plan</a>
+    </nav>
+    <button class="nav-hamburger" aria-label="Open menu" id="hamburgerBtn">
+      <svg class="icon"><use href="#i-menu"/></svg>
+    </button>
+  </div>
+  <div class="nav-mobile" id="navMobile">
+    <a href="about.html">About</a>
+    <a href="planning-tool.html">Planning Tool</a>
+    <a href="resource-library.html">Resource Library</a>
+    <a href="self-care.html" class="active">Self-Care &amp; Support</a>
+  </div>
+</header>
+
+<!-- SELF-CARE -->
+<section class="selfcare-page">
+  <div class="section-inner">
+    <div class="section-label" data-fade id="scLabel"></div>
+    <h2 data-fade data-delay="1" id="scHeading"></h2>
+    <p class="section-intro" data-fade data-delay="2" id="scIntro"></p>
+
+    <div class="toolkit-tabs sc-tabs" data-fade data-delay="3" id="scTabsNav"></div>
+
+    <!-- OVERVIEW -->
+    <div class="tab-panel active" id="panel-overview">
+      <div class="tab-concern" id="scConcern"></div>
+      <div class="selfcare-grid" id="scItems"></div>
+    </div>
+
+    <!-- WHY IT MATTERS -->
+    <div class="tab-panel" id="panel-why">
+      <p class="selfcare-sub-intro" id="scWhyIntro"></p>
+      <div class="why-grid" id="scWhyGrid"></div>
+
+      <blockquote class="mini-quote sc-quote" id="scQuote"></blockquote>
+
+      <h4 class="sc-panel-subhead" id="scTestimonialsHeading"></h4>
+      <div class="carousel" data-carousel="selfcare-testimonials">
+        <button class="carousel-btn carousel-prev" aria-label="Previous testimonial">
+          <svg class="icon"><use href="#i-arrow-left"/></svg>
+        </button>
+        <div class="carousel-viewport">
+          <div class="carousel-track" id="scTestimonialTrack"></div>
+        </div>
+        <button class="carousel-btn carousel-next" aria-label="Next testimonial">
+          <svg class="icon"><use href="#i-arrow-right"/></svg>
+        </button>
+        <div class="carousel-dots"></div>
+      </div>
+    </div>
+
+    <!-- WALL OF WINS -->
+    <div class="tab-panel" id="panel-wins">
+      <p class="selfcare-sub-intro" id="scWowIntro"></p>
+      <div class="wow-prototype-note" id="scWowNote">
+        <svg class="icon-sm"><use href="#i-help-circle"/></svg>
+        <span id="scWowNoteText"></span>
+      </div>
+      <div class="wow-form">
+        <input type="text" id="wowNameInput" class="wow-name-input" />
+        <div class="wow-input-row">
+          <input type="text" id="wowTextInput" class="wow-text-input" />
+          <button type="button" class="btn btn-primary" id="wowSubmitBtn"></button>
+        </div>
+      </div>
+      <div class="wow-grid" id="wowGrid"></div>
+    </div>
+
+    <!-- TALK TO SOMEONE -->
+    <div class="tab-panel" id="panel-consult">
+      <p class="selfcare-sub-intro" id="scConsultIntro"></p>
+      <div class="consult-grid" id="scConsultGrid"></div>
+      <p class="consult-placeholder-note" id="scConsultNote"></p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-left" id="footerLeft"></div>
+    <div class="footer-right" id="footerRight"></div>
+  </div>
+</footer>
+
+<script src="selfcare.js"></script>
+</body>
+</html>
