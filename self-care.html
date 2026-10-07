@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=2" />
 </head>
 <body>
 
@@ -57,6 +57,19 @@
   <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round">
     <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
   </symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+  </symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="4"/>
+    <line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+  </symbol>
 </svg>
 
 <!-- SCROLL PROGRESS -->
@@ -73,6 +86,7 @@
       <a href="about.html">About</a>
       <a href="planning-tool.html">Planning Tool</a>
       <a href="resource-library.html">Resource Library</a>
+      <a href="find-referral.html">Find a Referral</a>
       <a href="self-care.html" class="active">Self-Care &amp; Support</a>
       <a href="safety-plan.html">Make A Safety Plan</a>
     </nav>
@@ -84,13 +98,32 @@
     <a href="about.html">About</a>
     <a href="planning-tool.html">Planning Tool</a>
     <a href="resource-library.html">Resource Library</a>
+    <a href="find-referral.html">Find a Referral</a>
     <a href="self-care.html" class="active">Self-Care &amp; Support</a>
   </div>
 </header>
 
+  <!-- Access gate: this is a UX gate for a prototype, not secure authentication. -->
+  <div class="scgate-backdrop" id="scGateBackdrop">
+    <div class="scgate-modal" role="dialog" aria-modal="true" aria-labelledby="scGateHeading">
+      <button type="button" class="scgate-close" id="scGateClose" aria-label="Close and leave this page">
+        <svg class="icon-sm"><use href="#i-x"/></svg>
+      </button>
+      <div class="scgate-icon" aria-hidden="true"><svg class="icon"><use href="#i-lock"/></svg></div>
+      <h2 id="scGateHeading"></h2>
+      <p id="scGateIntro"></p>
+      <form id="scGateForm" novalidate>
+        <label for="scGatePassword" class="scgate-label" id="scGateLabel"></label>
+        <input type="password" id="scGatePassword" class="scgate-input" autocomplete="off" />
+        <p class="scgate-error" id="scGateError" role="alert" hidden></p>
+        <button type="submit" class="btn btn-primary scgate-submit" id="scGateSubmit"></button>
+      </form>
+    </div>
+  </div>
+
 <!-- SELF-CARE -->
 <section class="selfcare-page">
-  <div class="section-inner">
+  <div class="section-inner" id="scMainContent" hidden>
     <div class="section-label" data-fade id="scLabel"></div>
     <h2 data-fade data-delay="1" id="scHeading"></h2>
     <p class="section-intro" data-fade data-delay="2" id="scIntro"></p>
@@ -101,6 +134,16 @@
     <div class="tab-panel active" id="panel-overview">
       <div class="tab-concern" id="scConcern"></div>
       <div class="selfcare-grid" id="scItems"></div>
+
+      <!-- Pre/Post-Session Mindfulness — expandable breathing + prompt practice -->
+      <div class="selfcare-sub" id="scMindfulness">
+        <h4 id="scMindfulnessHeading"></h4>
+        <p class="selfcare-sub-intro" id="scMindfulnessIntro"></p>
+        <div class="mindful-grid">
+          <div class="mindful-card mindful-pre" id="mindfulPre"></div>
+          <div class="mindful-card mindful-post" id="mindfulPost"></div>
+        </div>
+      </div>
     </div>
 
     <!-- WHY IT MATTERS -->
@@ -147,6 +190,14 @@
       <p class="selfcare-sub-intro" id="scConsultIntro"></p>
       <div class="consult-grid" id="scConsultGrid"></div>
       <p class="consult-placeholder-note" id="scConsultNote"></p>
+
+      <!-- Peer Therapist One-on-One Support -->
+      <div class="selfcare-sub" id="scPeerSection">
+        <h4 id="scPeerHeading"></h4>
+        <p class="selfcare-sub-intro" id="scPeerIntro"></p>
+        <p class="consult-placeholder-note" id="scPeerNote"></p>
+        <div class="peer-grid" id="scPeerGrid"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -159,6 +210,6 @@
   </div>
 </footer>
 
-<script src="selfcare.js"></script>
+<script src="selfcare.js?v=2"></script>
 </body>
 </html>

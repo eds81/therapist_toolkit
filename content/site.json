@@ -344,7 +344,73 @@
         { "icon": "i-shield", "title": "Rise Team", "body": "Reach out to the Rise team directly for case support, resources, or general check-ins.", "linkHref": "mailto:team@riseagainstsuicide.org", "linkText": "Contact the Rise team" }
       ],
       "placeholderNote": "Contact links below are placeholders for this prototype — swap in real addresses or scheduling links via the CMS."
+    },
+    "gate": {
+      "heading": "Self-Care and Support",
+      "intro": "Enter password to continue",
+      "label": "Password",
+      "buttonLabel": "Continue",
+      "errorText": "That password didn't work — please try again."
+    },
+    "mindfulness": {
+      "heading": "Session Mindfulness",
+      "intro": "A brief grounding practice before a hard session, and a brief reset after one.",
+      "pre": {
+        "icon": "i-moon",
+        "title": "Pre-Session Mindfulness",
+        "subtitle": "Before you begin",
+        "intro": "Take a minute to ground yourself before you walk in.",
+        "startLabel": "Begin practice",
+        "stopLabel": "I'm ready",
+        "prompts": [
+          "Notice three things you can see in the room around you.",
+          "Unclench your jaw and drop your shoulders.",
+          "Name one thing you want to hold onto from this session."
+        ]
+      },
+      "post": {
+        "icon": "i-sun",
+        "title": "Post-Session Mindfulness",
+        "subtitle": "After you finish",
+        "intro": "Take a minute to reset before you move to the next thing.",
+        "startLabel": "Begin practice",
+        "stopLabel": "Done",
+        "prompts": [
+          "Name one thing from that session you'll let go of before the next one.",
+          "Notice how your body feels right now, without judging it.",
+          "Note anything you want to remember to follow up on later."
+        ]
+      }
+    },
+    "peerTherapists": {
+      "heading": "Peer Therapist One-on-One Support",
+      "intro": "Connect directly with another Rise therapist for informal, one-on-one peer support — not a substitute for supervision, just someone who gets it.",
+      "prototypeNote": "Photos and bios below are placeholders for this prototype. Replace with real peer therapist profiles via the CMS when available.",
+      "list": [
+        { "name": "Peer Therapist Profile", "role": "Role & background to be added", "bio": "Bio coming soon." },
+        { "name": "Peer Therapist Profile", "role": "Role & background to be added", "bio": "Bio coming soon." },
+        { "name": "Peer Therapist Profile", "role": "Role & background to be added", "bio": "Bio coming soon." }
+      ]
     }
+  },
+
+  "referralPage": {
+    "navLabel": "Find a Referral",
+    "sectionLabel": "Referral Search",
+    "heading": "Find a Referral",
+    "intro": "Search for a potential referral based on information from the client — by address, city, ZIP code, or facility name — and see matching locations on the map.",
+    "disclaimer": "This is a prototype search shell. No referral resources have been added yet — results and map pins will populate once a vetted dataset is connected.",
+    "label": "Search for a referral",
+    "placeholder": "Address, city, ZIP code, or facility name",
+    "buttonLabel": "Search",
+    "noInputError": "Please enter an address, city, ZIP code, or facility name to search.",
+    "loadingText": "Searching…",
+    "comingSoonHeading": "Referral resources are currently being developed.",
+    "comingSoonBody": "Please check back soon. In the meantime, see the Resource Library for vetted community referrals.",
+    "resultsHeading": "Results",
+    "mapHeading": "Map",
+    "mapEmptyCaption": "No referral locations to show yet — pins will appear here once resources are added.",
+    "mapAttributionNote": "Map data © OpenStreetMap contributors"
   },
 
   "planner": {
@@ -365,6 +431,12 @@
       { "key": "client",    "label": "Client (Individual)",      "placeholderRisk": "e.g. hopelessness / SI",         "placeholderProtective": "e.g. coping + treatment skills" }
     ],
     "addButtonLabel": "Add",
+    "stepHint": "Enter as many or as few factors as apply at this level — you can leave it blank and move on if it isn't relevant to this client.",
+    "backButtonLabel": "Back",
+    "nextButtonLabel": "Next",
+    "reviewButtonLabel": "Review Plan",
+    "reviewHeading": "Review Your Client Ecological Formulation",
+    "reviewIntro": "Here's the full map from what you entered. Add, remove, or adjust anything before generating the plan.",
     "generateButtonLabel": "Generate Treatment Plan",
     "resetButtonLabel": "Start Over",
     "downloadButtonLabel": "Download Plan (PDF)",
@@ -379,12 +451,12 @@
     "safetyPlan": {
       "disclaimer": "This is a starting draft built from what you entered — complete it collaboratively with the client (and caregivers, when appropriate) using the full Stanley-Brown Safety Planning Intervention.",
       "sections": [
-        { "key": "warningSigns",   "title": "Warning Signs",                              "emptyText": "No risk factors entered yet — add some in the steps above to auto-populate this section." },
-        { "key": "internalCoping", "title": "Internal Coping Strategies",                 "emptyText": "No individual-level coping strengths entered yet." },
-        { "key": "distraction",    "title": "People & Settings That Provide Distraction", "emptyText": "No peer, family, or school supports entered yet." },
-        { "key": "askForHelp",     "title": "People I Can Ask for Help",                  "emptyText": "No trusted family or peer contacts entered yet." },
-        { "key": "professionals", "title": "Professionals & Agencies to Contact", "emptyText": "No community resources entered yet — the Rise care team is always a fallback contact." },
-        { "key": "environment",   "title": "Making the Environment Safe", "staticText": "Discuss means restriction with the family (e.g. securing or removing access to lethal means) as part of safety planning." }
+        { "key": "warningSigns",   "title": "Warning Signs",                              "intro": "A warning sign is something the client thinks, feels, or does as suicidal thoughts are starting to develop.", "emptyText": "No risk factors entered yet — add some in the steps above to auto-populate this section." },
+        { "key": "internalCoping", "title": "Internal Coping Strategies",                 "intro": "Coping strategies are things the client can do on their own to feel a little better in the moment, without needing to contact anyone else.", "emptyText": "No individual-level coping strengths entered yet." },
+        { "key": "distraction",    "title": "People & Settings That Provide Distraction", "intro": "Distractions are people or places that may offer comfort or help the client take a break from the situation, so they can start feeling or thinking differently.", "emptyText": "No peer, family, or school supports entered yet." },
+        { "key": "askForHelp",     "title": "People I Can Ask for Help",                  "intro": "Supports are people the client feels comfortable talking to about what they're going through, and who can help. When possible, it helps to talk with them about being a support before a crisis happens.", "emptyText": "No trusted family or peer contacts entered yet." },
+        { "key": "professionals", "title": "Professionals & Agencies to Contact", "intro": "Professional contacts are people who can provide professional care and support, including therapists, doctors, and crisis lines.", "emptyText": "No community resources entered yet — the Rise care team is always a fallback contact." },
+        { "key": "environment",   "title": "Making the Environment Safe", "intro": "Having items nearby that could be used for self-harm can be dangerous during a crisis. What items might need to be stored safely, given to someone else, or removed — and how?", "staticText": "Discuss means restriction with the family (e.g. securing or removing access to lethal means) as part of safety planning." }
       ]
     }
   },

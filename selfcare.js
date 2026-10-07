@@ -67,10 +67,153 @@ function render(data) {
     </div>`).join('');
   document.getElementById('scConsultNote').textContent = sc.consult.placeholderNote;
 
+  document.getElementById('scGateHeading').textContent = sc.gate.heading;
+  document.getElementById('scGateIntro').textContent = sc.gate.intro;
+  document.getElementById('scGateLabel').textContent = sc.gate.label;
+  document.getElementById('scGateSubmit').textContent = sc.gate.buttonLabel;
+  document.getElementById('scGateError').textContent = sc.gate.errorText;
+
+  document.getElementById('scMindfulnessHeading').textContent = sc.mindfulness.heading;
+  document.getElementById('scMindfulnessIntro').textContent = sc.mindfulness.intro;
+  document.getElementById('mindfulPre').innerHTML = mindfulCardHtml(sc.mindfulness.pre, 'pre');
+  document.getElementById('mindfulPost').innerHTML = mindfulCardHtml(sc.mindfulness.post, 'post');
+
+  document.getElementById('scPeerHeading').textContent = sc.peerTherapists.heading;
+  document.getElementById('scPeerIntro').textContent = sc.peerTherapists.intro;
+  document.getElementById('scPeerNote').textContent = sc.peerTherapists.prototypeNote;
+  document.getElementById('scPeerGrid').innerHTML = sc.peerTherapists.list.map(t => `
+    <div class="peer-card">
+      <div class="peer-avatar" aria-hidden="true">${icon('i-user')}</div>
+      <span class="peer-tag">${icon('i-users', 'icon-xs')}One-on-One Peer Support</span>
+      <h5>${t.name}</h5>
+      <p class="peer-role">${t.role}</p>
+      <p class="peer-bio">${t.bio}</p>
+    </div>`).join('');
+
   document.getElementById('footerLeft').innerHTML =
     `<strong>${data.footer.orgName}</strong><span>${data.footer.subLine}</span>`;
   document.getElementById('footerRight').innerHTML = `<p>${data.footer.fundingText}</p>`;
 }
+
+// ── Pre/Post-Session Mindfulness — same interaction pattern (expand to
+// reveal a paced breathing cycle + short prompts), different accent/copy ──
+function mindfulCardHtml(config, variant) {
+  return `
+    <div class="mindful-card-head">
+      <div class="mindful-icon">${icon(config.icon)}</div>
+      <div>
+        <h5>${config.title}</h5>
+        <p class="mindful-subtitle">${config.subtitle}</p>
+      </div>
+    </div>
+    <p class="mindful-intro">${config.intro}</p>
+    <button type="button" class="btn btn-outline mindful-start-btn" data-mindful-start="${variant}">${config.startLabel}</button>
+    <div class="mindful-practice" data-mindful-practice="${variant}" hidden>
+      <div class="mindful-breath" data-mindful-breath="${variant}">
+        <div class="mindful-breath-circle">
+          <span class="mindful-breath-label" data-mindful-breathlabel="${variant}">Breathe in</span>
+        </div>
+      </div>
+      <ul class="mindful-prompts">${config.prompts.map(p => `<li>${p}</li>`).join('')}</ul>
+      <button type="button" class="btn btn-primary mindful-stop-btn" data-mindful-stop="${variant}">${config.stopLabel}</button>
+    </div>`;
+}
+
+function initMindfulness() {
+  const BREATH_PHASES = [
+    { label: 'Breathe in', ms: 4000 },
+    { label: 'Hold', ms: 2000 },
+    { label: 'Breathe out', ms: 4000 }
+  ];
+  const timers = {};
+
+  function startPractice(variant) {
+    const practice = document.querySelector(`[data-mindful-practice="${variant}"]`);
+    const circle = document.querySelector(`[data-mindful-breath="${variant}"]`);
+    const label = document.querySelector(`[data-mindful-breathlabel="${variant}"]`);
+    if (!practice) return;
+    practice.hidden = false;
+    circle.classList.add('is-breathing');
+    let phaseIndex = 0;
+    (function cyclePhase() {
+      const phase = BREATH_PHASES[phaseIndex % BREATH_PHASES.length];
+      label.textContent = phase.label;
+      timers[variant] = setTimeout(() => { phaseIndex++; cyclePhase(); }, phase.ms);
+    })();
+    practice.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function stopPractice(variant) {
+    const practice = document.querySelector(`[data-mindful-practice="${variant}"]`);
+    const circle = document.querySelector(`[data-mindful-breath="${variant}"]`);
+    clearTimeout(timers[variant]);
+    if (practice) practice.hidden = true;
+    if (circle) circle.classList.remove('is-breathing');
+  }
+
+  document.querySelectorAll('[data-mindful-start]').forEach(btn => {
+    btn.addEventListener('click', () => startPractice(btn.dataset.mindfulStart));
+  });
+  document.querySelectorAll('[data-mindful-stop]').forEach(btn => {
+    btn.addEventListener('click', () => stopPractice(btn.dataset.mindfulStop));
+  });
+}
+
+// ── Access gate — simple client-side UX gate for this prototype, not
+// secure authentication. Unlock state only lives for this browser tab. ──
+const SC_GATE_PASSWORD = '2026';
+const SC_GATE_SESSION_KEY = 'scSelfCareUnlocked';
+
+function initSelfCareGate() {
+  const backdrop = document.getElementById('scGateBackdrop');
+  const mainContent = document.getElementById('scMainContent');
+  const form = document.getElementById('scGateForm');
+  const input = document.getElementById('scGatePassword');
+  const errorEl = document.getElementById('scGateError');
+  const closeBtn = document.getElementById('scGateClose');
+
+  function unlock() {
+    try { sessionStorage.setItem(SC_GATE_SESSION_KEY, '1'); } catch (e) { /* ignore */ }
+    backdrop.hidden = true;
+    mainContent.hidden = false;
+    document.body.classList.remove('scgate-open');
+  }
+
+  let alreadyUnlocked = false;
+  try { alreadyUnlocked = sessionStorage.getItem(SC_GATE_SESSION_KEY) === '1'; } catch (e) { /* ignore */ }
+
+  if (alreadyUnlocked) {
+    unlock();
+  } else {
+    document.body.classList.add('scgate-open');
+    requestAnimationFrame(() => input.focus());
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (input.value === SC_GATE_PASSWORD) {
+      errorEl.hidden = true;
+      input.classList.remove('has-error');
+      unlock();
+    } else {
+      errorEl.hidden = false;
+      input.classList.add('has-error');
+      input.setAttribute('aria-invalid', 'true');
+      input.select();
+      input.focus();
+    }
+  });
+
+  // "X" out of the password screen entirely rather than dismiss it in
+  // place — there's no unlocked content to fall back to, so leave the page.
+  closeBtn.addEventListener('click', () => {
+    window.location.href = 'index.html';
+  });
+}
+
+// Gate doesn't depend on fetched content, so it runs immediately — the
+// page is locked from the very first paint, not just after data loads.
+initSelfCareGate();
 
 // ── Carousel ──────────────────────────────────
 function initCarouselInstance(carouselEl) {
@@ -239,5 +382,6 @@ fetch('content/site.json')
     initTabs();
     initCarousel();
     initWallOfWins(data.selfCarePage.wallOfWins);
+    initMindfulness();
     initFadeObserver();
   });

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Find a Referral | Therapist Toolkit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="styles.css?v=5" />
+</head>
+<body>
+
+<!-- SVG SPRITE -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+  </symbol>
+  <symbol id="i-map-pin" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+  </symbol>
+  <symbol id="i-help-circle" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+    <line x1="12" y1="17" x2="12.01" y2="17"/>
+  </symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+  </symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </symbol>
+</svg>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- NAV -->
+<header class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">
+      <span class="logo-rise">Therapist Toolkit</span>
+      <span class="logo-sub">Rise Against Suicide × CU Boulder</span>
+    </a>
+    <nav class="nav-links">
+      <a href="about.html">About</a>
+      <a href="planning-tool.html">Planning Tool</a>
+      <a href="resource-library.html">Resource Library</a>
+      <a href="find-referral.html" class="active">Find a Referral</a>
+      <a href="self-care.html">Self-Care &amp; Support</a>
+      <a href="safety-plan.html">Make A Safety Plan</a>
+    </nav>
+    <button class="nav-hamburger" aria-label="Open menu" id="hamburgerBtn">
+      <svg class="icon"><use href="#i-menu"/></svg>
+    </button>
+  </div>
+  <div class="nav-mobile" id="navMobile">
+    <a href="about.html">About</a>
+    <a href="planning-tool.html">Planning Tool</a>
+    <a href="resource-library.html">Resource Library</a>
+    <a href="find-referral.html" class="active">Find a Referral</a>
+    <a href="self-care.html">Self-Care &amp; Support</a>
+    <a href="safety-plan.html">Make A Safety Plan</a>
+  </div>
+</header>
+
+<!-- FIND A REFERRAL -->
+<section class="referral-page">
+  <div class="section-inner">
+    <div class="section-label" data-fade id="refLabel"></div>
+    <h2 data-fade data-delay="1" id="refHeading"></h2>
+    <p class="section-intro" data-fade data-delay="2" id="refIntro"></p>
+    <p class="referral-page-disclaimer" id="refDisclaimer"></p>
+
+    <form class="referral-form" id="referralForm" role="search" novalidate>
+      <label for="referralInput" class="referral-label" id="referralLabel"></label>
+      <div class="referral-row">
+        <div class="referral-search">
+          <svg class="icon-sm" aria-hidden="true"><use href="#i-search"/></svg>
+          <input type="text" id="referralInput" />
+        </div>
+        <button type="submit" class="btn btn-primary referral-search-btn" id="referralSearchBtn"></button>
+      </div>
+      <p class="referral-error" id="referralError" role="alert" hidden></p>
+    </form>
+
+    <div class="referral-layout">
+      <div class="referral-results-col">
+        <h4 class="referral-col-heading" id="refResultsHeading"></h4>
+        <div class="referral-results" id="referralResults" aria-live="polite"></div>
+      </div>
+      <div class="referral-map-col">
+        <h4 class="referral-col-heading" id="refMapHeading"></h4>
+        <div class="referral-map" id="referralMap" role="img" aria-label="Map of referral resource locations"></div>
+        <p class="referral-map-caption" id="refMapCaption"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-left" id="footerLeft"></div>
+    <div class="footer-right" id="footerRight"></div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="find-referral.js?v=1"></script>
+</body>
+</html>
