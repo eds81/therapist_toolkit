@@ -57,15 +57,36 @@ function render(data) {
   document.getElementById('wowTextInput').placeholder = sc.wallOfWins.formPlaceholder;
   document.getElementById('wowSubmitBtn').textContent = sc.wallOfWins.submitLabel;
 
+  document.getElementById('scConsultEyebrow').textContent = sc.consult.eyebrow;
+  document.getElementById('scConsultHeading').textContent = sc.consult.heading;
   document.getElementById('scConsultIntro').textContent = sc.consult.intro;
-  document.getElementById('scConsultGrid').innerHTML = sc.consult.options.map(opt => `
-    <div class="consult-card">
-      <div class="consult-icon">${icon(opt.icon)}</div>
-      <h5>${opt.title}</h5>
-      <p>${opt.body}</p>
-      <a class="btn btn-outline" href="${opt.linkHref}">${opt.linkText}</a>
-    </div>`).join('');
-  document.getElementById('scConsultNote').textContent = sc.consult.placeholderNote;
+  document.getElementById('scConsultNeedLabel').textContent = sc.consult.needPicker.label;
+  document.getElementById('scConsultNeedPills').innerHTML = sc.consult.needPicker.options.map((opt, i) => `
+    <button type="button" class="consult-need-pill" data-pill-index="${i}" aria-pressed="false">${opt.label}</button>`).join('');
+  document.getElementById('scConsultGrid').innerHTML = sc.consult.cards.map(card => {
+    const href = (card.schedulingUrl && card.schedulingUrl.trim()) ? card.schedulingUrl.trim() : card.mailto;
+    const secondary = card.secondaryHref
+      ? `<a class="consult-card-secondary" href="${card.secondaryHref}">${card.secondaryText}</a>`
+      : `<span class="consult-card-secondary">${card.secondaryText}</span>`;
+    return `
+    <div class="consult-card" data-key="${card.key}">
+      <span class="consult-card-badge">Best fit</span>
+      <div class="consult-icon">${icon(card.icon)}</div>
+      <h4 class="consult-card-title">${card.title}</h4>
+      <p class="consult-card-subtitle">${card.subtitle}</p>
+      <ul class="consult-card-bestfor">${card.bestFor.map(b => `<li>${b}</li>`).join('')}</ul>
+      <dl class="consult-card-dl">
+        <div class="consult-card-dl-row"><dt>Format</dt><dd>${card.format}</dd></div>
+        <div class="consult-card-dl-row"><dt>Reply</dt><dd>${card.reply}</dd></div>
+        <div class="consult-card-dl-row"><dt>Note</dt><dd>${card.note}</dd></div>
+      </dl>
+      <div class="consult-card-actions">
+        <a class="btn btn-outline consult-card-btn" href="${href}">${card.buttonLabel}</a>
+        ${secondary}
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('scConsultNote').textContent = sc.consult.prototypeNote;
 
   document.getElementById('scGateHeading').textContent = sc.gate.heading;
   document.getElementById('scGateIntro').textContent = sc.gate.intro;
@@ -302,6 +323,43 @@ function initWallOfWins(config) {
   textInput.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
 }
 
+// ── Talk to Someone — need picker ─────────────
+// Highlights whichever contact card best matches the pill the user picked.
+// The "active" pill is tracked by its own index (not by matchKey), since
+// two pills can point at the same card — clicking the already-active pill
+// clears the selection back to the neutral state.
+function initConsultNeedPicker(consult) {
+  const pills = Array.from(document.querySelectorAll('.consult-need-pill'));
+  const cards = Array.from(document.querySelectorAll('.consult-card'));
+  const announceEl = document.getElementById('scConsultAnnounce');
+  if (!pills.length || !cards.length) return;
+
+  let activeIndex = null;
+
+  function update() {
+    const activeKey = activeIndex != null ? consult.needPicker.options[activeIndex].matchKey : null;
+    pills.forEach((pill, i) => pill.setAttribute('aria-pressed', String(i === activeIndex)));
+    cards.forEach(card => {
+      const isMatch = !!activeKey && card.dataset.key === activeKey;
+      card.classList.toggle('is-active', isMatch);
+      card.classList.toggle('is-dimmed', !!activeKey && !isMatch);
+    });
+    if (activeKey) {
+      const card = consult.cards.find(c => c.key === activeKey);
+      announceEl.textContent = card ? `Best fit: ${card.title}` : '';
+    } else {
+      announceEl.textContent = '';
+    }
+  }
+
+  pills.forEach((pill, i) => {
+    pill.addEventListener('click', () => {
+      activeIndex = activeIndex === i ? null : i;
+      update();
+    });
+  });
+}
+
 // ── Tab switching ─────────────────────────────
 function initTabs() {
   document.querySelectorAll('#scTabsNav .tab-btn').forEach(btn => {
@@ -382,6 +440,7 @@ fetch('content/site.json')
     initTabs();
     initCarousel();
     initWallOfWins(data.selfCarePage.wallOfWins);
+    initConsultNeedPicker(data.selfCarePage.consult);
     initMindfulness();
     initFadeObserver();
   });

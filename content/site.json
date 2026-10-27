@@ -336,14 +336,66 @@
       ]
     },
     "consult": {
-      "heading": "Talk to Someone",
-      "intro": "You don't have to carry a hard case — or a hard week — alone. Choose who makes sense to reach out to.",
-      "options": [
-        { "icon": "i-users",  "title": "Peer Therapist", "body": "Connect with another Rise therapist for informal case consultation or just to talk through a hard week.", "linkHref": "mailto:peersupport@riseagainstsuicide.org", "linkText": "Request a peer consult" },
-        { "icon": "i-user",   "title": "Dr. Tamar", "body": "Schedule time with Dr. Tamar, our licensed clinical psychologist, for clinical consultation or support.", "linkHref": "mailto:tamar@riseagainstsuicide.org", "linkText": "Schedule with Dr. Tamar" },
-        { "icon": "i-shield", "title": "Rise Team", "body": "Reach out to the Rise team directly for case support, resources, or general check-ins.", "linkHref": "mailto:team@riseagainstsuicide.org", "linkText": "Contact the Rise team" }
+      "eyebrow": "Talk to Someone",
+      "heading": "You don't have to carry a hard case — or a hard week — alone.",
+      "intro": "Tell us what you need and we'll point you to the right person. Every option below is confidential and none of it counts against you.",
+      "needPicker": {
+        "label": "What do you need right now?",
+        "options": [
+          { "label": "Talk through a case", "matchKey": "peer" },
+          { "label": "Clinical guidance on risk", "matchKey": "tamar" },
+          { "label": "I just need to decompress", "matchKey": "peer" },
+          { "label": "Resources, billing or logistics", "matchKey": "rise" }
+        ]
+      },
+      "cards": [
+        {
+          "key": "peer",
+          "icon": "i-users",
+          "title": "A peer therapist",
+          "subtitle": "Another Rise therapist · informal",
+          "bestFor": ["Gut-check a tricky case", "Talk through a hard week with someone who gets it"],
+          "format": "Phone or video, 20–30 min",
+          "reply": "Within 2 business days",
+          "note": "Not a substitute for supervision",
+          "buttonLabel": "Request a peer consult",
+          "mailto": "mailto:peersupport@riseagainstsuicide.org",
+          "schedulingUrl": "",
+          "secondaryText": "Or browse peer therapists ↓",
+          "secondaryHref": "#peers"
+        },
+        {
+          "key": "tamar",
+          "icon": "i-calendar-check",
+          "title": "Dr. Tamar Kodish",
+          "subtitle": "Licensed clinical psychologist",
+          "bestFor": ["Risk assessment and safety planning questions", "Clinical consultation or personal support"],
+          "format": "Scheduled video call, 30 min",
+          "reply": "Pick a time on the calendar",
+          "note": "Bring de-identified case details",
+          "buttonLabel": "Schedule with Dr. Tamar",
+          "mailto": "mailto:tamar@riseagainstsuicide.org",
+          "schedulingUrl": "",
+          "secondaryText": "Opens the scheduling tool",
+          "secondaryHref": ""
+        },
+        {
+          "key": "rise",
+          "icon": "i-chat",
+          "title": "The RISE team",
+          "subtitle": "Program staff · case support",
+          "bestFor": ["Resources, referrals, or billing questions", "General check-ins or program support"],
+          "format": "Email, reviewed on business days",
+          "reply": "Within 1 business day",
+          "note": "For non-urgent logistics, not crisis response",
+          "buttonLabel": "Email the RISE team",
+          "mailto": "mailto:team@riseagainstsuicide.org",
+          "schedulingUrl": "",
+          "secondaryText": "team@riseagainstsuicide.org",
+          "secondaryHref": "mailto:team@riseagainstsuicide.org"
+        }
       ],
-      "placeholderNote": "Contact links below are placeholders for this prototype — swap in real addresses or scheduling links via the CMS."
+      "prototypeNote": "Contact links and the scheduling link below are placeholders for this prototype — swap in real addresses and links via the CMS."
     },
     "gate": {
       "heading": "Self-Care and Support",

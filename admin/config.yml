@@ -341,22 +341,45 @@ collections:
                     fields:
                       - {label: "Author", name: "author", widget: "string"}
                       - {label: "Text", name: "text", widget: "text"}
-              - label: "Consult (placeholder contact links — update once real ones exist)"
+              - label: "Talk to Someone (placeholder contact links — update once real ones exist)"
                 name: "consult"
                 widget: "object"
                 fields:
+                  - {label: "Eyebrow", name: "eyebrow", widget: "string"}
                   - {label: "Heading", name: "heading", widget: "string"}
                   - {label: "Intro", name: "intro", widget: "text"}
-                  - {label: "Placeholder Note", name: "placeholderNote", widget: "text"}
-                  - label: "Options (fixed set of 3 — do not add or remove)"
-                    name: "options"
+                  - label: "Need Picker"
+                    name: "needPicker"
+                    widget: "object"
+                    fields:
+                      - {label: "Label", name: "label", widget: "string"}
+                      - label: "Options (fixed set of 4 — do not add or remove)"
+                        name: "options"
+                        widget: "list"
+                        fields:
+                          - {label: "Pill Label", name: "label", widget: "string"}
+                          - {label: "Matches Card (peer / tamar / rise — must match a card Key below)", name: "matchKey", widget: "string"}
+                  - label: "Contact Cards (fixed set of 3 — do not add or remove)"
+                    name: "cards"
                     widget: "list"
                     fields:
+                      - {label: "Key (do not change — peer / tamar / rise)", name: "key", widget: "string"}
                       - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
                       - {label: "Title", name: "title", widget: "string"}
-                      - {label: "Body", name: "body", widget: "text"}
-                      - {label: "Link Text", name: "linkText", widget: "string"}
-                      - {label: "Link Target (mailto: or scheduling URL)", name: "linkHref", widget: "string"}
+                      - {label: "Subtitle", name: "subtitle", widget: "string"}
+                      - label: "Best For (fixed set of 2 — do not add or remove)"
+                        name: "bestFor"
+                        widget: "list"
+                        field: {label: "Item", name: "item", widget: "string"}
+                      - {label: "Format", name: "format", widget: "string"}
+                      - {label: "Reply Time", name: "reply", widget: "string"}
+                      - {label: "Note", name: "note", widget: "string"}
+                      - {label: "Button Label", name: "buttonLabel", widget: "string"}
+                      - {label: "Mailto (used if no scheduling URL is set)", name: "mailto", widget: "string"}
+                      - {label: "Scheduling URL (optional — overrides the mailto on the button)", name: "schedulingUrl", widget: "string", required: false}
+                      - {label: "Secondary Line Text", name: "secondaryText", widget: "string"}
+                      - {label: "Secondary Line Link (leave blank for plain text, no link)", name: "secondaryHref", widget: "string", required: false}
+                  - {label: "Prototype Note", name: "prototypeNote", widget: "text"}
 
           - label: "Planning Tool Section"
             name: "planner"
