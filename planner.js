@@ -6,45 +6,28 @@ function icon(id, extraClass) {
   return `<svg class="icon${extraClass ? ' ' + extraClass : ''}"><use href="#${id}"/></svg>`;
 }
 
-const RESOURCE_TYPE_ICON = {
-  'Assessment Tool': 'i-clipboard',
-  'Worksheet': 'i-file-text',
-  'Handout': 'i-book',
-  'Referral List': 'i-map-pin',
-  'Tip Sheet': 'i-share-2'
-};
-
-function triggerTagsHtml(triggers) {
-  const unique = [...new Set(triggers.map(t => `${t.ringLabel}|${t.valence}`))].map(s => {
-    const [ringLabel, valence] = s.split('|');
-    return { ringLabel, valence };
-  });
-  return `<div class="planner-resource-triggers">${unique.map(t => `
-    <span class="planner-note-tag planner-note-tag-${t.valence}">${t.ringLabel} · ${t.valence === 'risk' ? 'Risk' : 'Protective'}</span>`).join('')}</div>`;
-}
-
-function recommendedBadgeHtml() {
-  return `<span class="planner-recommended-badge">${icon('i-star', 'icon-xs')}Recommended</span>`;
-}
-
-// Shared inner markup for a single resource-library item — reused by the
-// Resource Plan pool, its tray, the Review page's "My Resource Plan", and
-// the printable output, so all four stay visually in sync.
-function resourceCardBodyHtml(c) {
-  return `
-    ${c.icon ? icon(c.icon) : ''}
-    <div>
-      ${c.matched ? recommendedBadgeHtml() : ''}
-      <span class="planner-resource-type">${c.type}</span>
-      <strong>${c.title}</strong>
-      ${c.triggers.length ? triggerTagsHtml(c.triggers) : ''}
-      <p class="planner-resource-desc">${c.description}</p>
-    </div>`;
-}
-
-function resourceCardHtml(c) {
-  return `<div class="planner-resource-card${c.matched ? ' is-recommended' : ''}">${resourceCardBodyHtml(c)}</div>`;
-}
+// Phase 2 "Select Intervention" strategy/practice options — order doesn't
+// matter here, the dropdown sorts alphabetically at render time.
+const INTERVENTION_OPTIONS = [
+  'Psychoeducation', "Elicit Client Issues/Concerns", 'Agenda Setting', 'Treatment Goal Setting/Review',
+  "Tracking/Review Client's Progress", 'Homework Assignment/Review', 'Individualized/Flexible Treatment Delivery',
+  'Therapeutic Alliance/Relationship Building', 'Addressing Treatment Barriers', 'Digital/App-Based Tools',
+  'Commitment to Safety', 'Safety Planning', 'Means Safety/Lethal Means Restriction', 'Safety Skills',
+  'Distress Tolerance', 'Emotion Regulation', 'Impulse Control', 'Mindfulness', 'Problem Solving',
+  'Interpersonal Effectiveness Skills', 'Assertiveness Training', 'Behavioral Activation/Activity Scheduling',
+  'Cognitive Restructuring', 'Exposure', 'Trauma Narrative', 'Modeling', 'Skills Practice/Role Play',
+  'Performance Feedback', 'Positive Reinforcement/Rewards', 'Live Caregiver-Youth Coaching', 'Antecedent Management',
+  'Differential Reinforcement/Planned Ignoring', 'Redirection/Distraction', "Following the Child's Lead",
+  'Parent-Child Quality Time', 'Effective Commands', 'Consequences', 'Behavioral Contracting', 'Caregiver Coping',
+  'Youth Education/Academic Support', 'End of Session Positive', 'Progressive Muscle Relaxation', 'If-Then Planning',
+  'Facing Your Inner Critic', 'Self-Compassion', 'Affect Identification/Feeling Thermometer', 'Feeling Thermometer',
+  'Common Reactions to Trauma', 'Caregiver Emotion Coaching', 'Caregiver Support for Safety Plan',
+  'Drawing on Strengths', 'Chain/Functional Analysis', 'Praise/Reinforcement', 'Crisis Survival Skills',
+  'Diary Card (Youth)', 'Motivational Interviewing', 'Pros/Cons', 'Thanks Notes', 'Hope Box',
+  'Dialetical Thinking', 'Cognitive Defusion', 'Diary Card (Parent)', 'Worry Time', 'Silver Linings',
+  'Taking Ownership', 'Gratitude', 'Identifying Thoughts, Feelings, Behaviors', 'Stimulus Control',
+  'Coping Cards', 'Family Album', 'Counseling about Disinhibiting Effects of Substances'
+];
 
 // ── Planner: Client Ecological Formulation & Treatment Plan ──
 const RING_ORDER = ['community', 'school', 'family', 'peer', 'client'];
@@ -63,16 +46,6 @@ const WEIGHT_LEVELS = [
   { value: 5, label: 'Severe' }
 ];
 const DEFAULT_WEIGHT = 3;
-
-// Connector line styling per weight — a gentle, organic progression rather
-// than a harsh jump: soft and faint at 1, fuller and solid at 5.
-const CONNECTOR_STYLE_BY_WEIGHT = {
-  1: { width: 1,    dash: '1 4', opacity: 0.4 },
-  2: { width: 1.75, dash: '3 3', opacity: 0.55 },
-  3: { width: 2.5,  dash: '5 2', opacity: 0.7 },
-  4: { width: 3.5,  dash: null, opacity: 0.85 },
-  5: { width: 5,    dash: null, opacity: 1 }
-};
 
 // Same ramp used for the chip border colors (styles.css .planner-chip-*.w*)
 // — capped at the site's existing risk/protective accent colors (#C0392B /
@@ -94,38 +67,70 @@ const CHIP_COLOR_BY_WEIGHT = {
   }
 };
 
-// Ring outline thickness reflects the heaviest factor mapped to it — a subtle
-// but legible progression, not a bold block.
-const RING_STROKE_BY_WEIGHT = { 1: 2, 2: 2.5, 3: 3.5, 4: 4.5, 5: 6 };
-const RING_STROKE_DEFAULT = 1.5;
+// Small filled/unfilled dot row showing a factor's severity (1–5), colored
+// with the exact same weight ramp used for its pill on the ecological map —
+// reused on Select Interventions so the clinician-assigned severity (and its
+// color darkness) stays visible while picking strategies for that factor.
+function severityDotsHtml(valence, weight) {
+  const label = WEIGHT_LEVELS[weight - 1] ? WEIGHT_LEVELS[weight - 1].label : '';
+  const color = CHIP_COLOR_BY_WEIGHT[valence][weight] || CHIP_COLOR_BY_WEIGHT[valence][DEFAULT_WEIGHT];
+  const dots = [1, 2, 3, 4, 5].map(n => {
+    const filled = n <= weight;
+    return `<span class="intervention-severity-dot${filled ? ' filled' : ''}"${filled ? ` style="background:${color}"` : ''}></span>`;
+  }).join('');
+  return `<span class="intervention-severity" title="Severity: ${label} (${weight}/5)" aria-label="Severity ${weight} of 5, ${label}">${dots}</span>`;
+}
+
+// Every ring outline is drawn at the same thickness — only color changes
+// with what's mapped to a given ring.
+const RING_STROKE_WIDTH = 4;
 
 // ── Ecological map geometry — the whole diagram (rings, ring labels, risk/
 // protective pills, connector lines) is one self-contained SVG computed
 // entirely in viewBox units, so it scales as a single unit and the exact
 // same markup can be reused for the printed/downloaded plan. ──
-const MAP_VB_W = 1000;
-const MAP_RING_CX = 500;
-// Outer rings are compressed more than inner ones (not an even step) so the
-// overall circle reads smaller without shrinking the client ring back down
-// to a size that made "current context" overflow it.
-const MAP_RING_RADII = { community: 182, school: 154, family: 122, peer: 86, client: 46 };
-const MAP_RING_MAX_R = MAP_RING_RADII.community; // anchors the pill zone just outside the outermost ring
-const MAP_PILL_SLOT_H = 46;
-const MAP_PILL_H = 36;
-const MAP_PILL_MIN_W = 90;
-const MAP_PILL_MAX_W = 220;
-const MAP_PILL_MAX_CHARS = 20;
-const MAP_PILL_CHAR_W = 8;
+// Rings are spaced in equal steps outward from the client ring (center) —
+// "space the rings evenly: equal gaps between radii." A ring can still grow
+// past its base radius at render time if that specific ring's own pills
+// need more vertical room than it currently offers (see growRingRadii()).
+const MAP_RING_STEP = 46;
+const MAP_RING_BASE_R = 50; // client ring's starting radius
+const MAP_RING_BASE_RADII = (() => {
+  const deepFirst = RING_ORDER.slice().reverse(); // client..community
+  const radii = {};
+  deepFirst.forEach((ring, i) => { radii[ring] = MAP_RING_BASE_R + i * MAP_RING_STEP; });
+  return radii;
+})();
+const MAP_MIN_RING_GAP = 20; // keeps two rings from ever growing visually indistinct from one another
+const MAP_PILL_LINE_H = 22; // viewBox units per wrapped text line
+const MAP_PILL_V_GAP = 12; // vertical gap between stacked pills
+const MAP_PILL_MIN_W = 100;
+const MAP_PILL_MAX_W = 240;
+const MAP_PILL_CHAR_W = 9;
 const MAP_PILL_GAP = 36; // gap between the outer ring's edge and the pill zone
+// Connector routing: one straight horizontal line, pill to ring — never an
+// elbow. A horizontal line can only reach a ring when the pill's own y sits
+// within that ring's radius, so pills are ordered by ring depth (see
+// splitPillsForLayout()/stackHalf() below) and rings grow to fit (see
+// growRingRadii()) rather than ever bending a connector.
+const MAP_RING_EDGE_MARGIN = 10;  // how far a connector's entry point must stay inside its own ring's edge
+const MAP_CONNECTOR_WIDTH = 3;
+const MAP_ENDPOINT_DOT_R = 4;
+// Pills are laid out top-down: the weight dots sit in their own row above
+// the text, then the (possibly multi-line) text follows below.
+const MAP_PILL_TOP_PAD = 16;   // pill top edge -> dot row
+const MAP_PILL_DOT_TEXT_GAP = 26; // dot row -> first text baseline
+const MAP_PILL_BOTTOM_PAD = 14;   // last text baseline -> pill bottom
+const MAP_PILL_H = MAP_PILL_TOP_PAD + MAP_PILL_DOT_TEXT_GAP + MAP_PILL_BOTTOM_PAD; // minimum (single-line) height
 
-function mapRingRadius(ring) {
-  return MAP_RING_RADII[ring];
+function mapRingRadius(ringRadii, ring) {
+  return ringRadii[ring];
 }
 
 // Midpoint radius between a ring and the next ring inward — where that
 // ring's curved label sits, so it reads inside its own band instead of
 // overlapping the ring line or the next label out.
-function mapRingLabelRadius(ring) {
+function mapRingLabelRadius(ringRadii, ring) {
   // Uppercase glyphs sit above their baseline, so placing the arc at the
   // band's midpoint left the text hugging the outer line with empty space
   // below it. Anchor the baseline near the inner line instead — the glyphs
@@ -133,33 +138,180 @@ function mapRingLabelRadius(ring) {
   const i = RING_ORDER.indexOf(ring);
   const innerRing = RING_ORDER[i + 1];
   const nudge = ring === 'community' ? 4 : 0; // sits a hair high otherwise — pull it down slightly
-  return mapRingRadius(innerRing) + 14 - nudge;
+  return mapRingRadius(ringRadii, innerRing) + 14 - nudge;
 }
 
-// Same "balanced fan" solve used before: aim for an even vertical spread
-// (community highest, client lowest) and work out whatever angle each
-// ring's own radius needs to actually reach it, so every connector line
-// lands on its own ring instead of clustering in one half of the circle.
-function mapRingAngleRad(ring, valence) {
-  const r = mapRingRadius(ring);
-  const i = RING_ORDER.indexOf(ring);
-  const targetY = (i - 2) * 34;
-  const sinA = Math.max(-0.92, Math.min(0.92, targetY / r));
-  return valence === 'risk' ? Math.PI - Math.asin(sinA) : Math.asin(sinA);
+// ── Connector layout: straight horizontal lines only, zero crossings ──
+//
+// Every connector is one straight horizontal line, pill to ring — never an
+// elbow. Horizontal lines at different y-positions can never touch each
+// other, which is what removes the overlap problem entirely, with no lane
+// system needed. That only works, though, if every pill's y actually sits
+// within its own ring's radius (a straight horizontal line can only reach
+// as far as the ring's own circle at that height) — which is what the two
+// pieces below guarantee, together, for one whole side (risk or
+// protective) at a time:
+//
+// 1. Pills are split into a "top" half and a "bottom" half (balanced by
+//    height, splitting a single ring's own pills between the two halves
+//    when it has more than one), each ordered deepest ring (client) at the
+//    circle's own vertical center out to the shallowest ring (community)
+//    at that half's outer extreme. See splitPillsForLayout()/stackHalf().
+// 2. Every ring's actual radius grows, if it needs to, to comfortably
+//    reach whichever of its own pills ended up furthest from the vertical
+//    center — so every pill is guaranteed to fall inside its own ring's
+//    valid span by construction, rather than by relying on how much room
+//    happened to be left over. See growRingRadii().
+
+// Splits one side's pills (still grouped by ring) into top/bottom halves,
+// balanced by height, splitting a single ring's own pills between both
+// halves when it has more than one. Each half comes back already ordered
+// deepest ring (client) first through shallowest (community) last — i.e.
+// in the order stackHalf() needs to stack outward from the circle's own
+// vertical center.
+function splitPillsForLayout(pills) {
+  const byRing = {};
+  RING_ORDER.forEach(r => { byRing[r] = []; });
+  pills.forEach(p => byRing[p.ring].push(p));
+
+  const deepFirst = RING_ORDER.slice().reverse(); // client..community
+  const top = [], bottom = [];
+  let topH = 0, bottomH = 0;
+  deepFirst.forEach(ring => {
+    const list = byRing[ring];
+    if (!list.length) return;
+    if (list.length === 1) {
+      const item = list[0];
+      if (topH <= bottomH) { top.push(item); topH += item.h; }
+      else { bottom.push(item); bottomH += item.h; }
+      return;
+    }
+    // More than one pill in this ring — split its own pills across both
+    // halves instead of piling all of them onto whichever side is lighter.
+    const mid = Math.ceil(list.length / 2);
+    const bigger = list.slice(0, mid), smaller = list.slice(mid);
+    const biggerH = bigger.reduce((s, p) => s + p.h, 0);
+    const smallerH = smaller.reduce((s, p) => s + p.h, 0);
+    if (topH <= bottomH) { top.push(...bigger); topH += biggerH; bottom.push(...smaller); bottomH += smallerH; }
+    else { bottom.push(...bigger); bottomH += biggerH; top.push(...smaller); topH += smallerH; }
+  });
+  return { top, bottom };
+}
+
+// Stacks one half's pills (already in deepest-first order) outward from
+// cy. direction is -1 for the top half (y decreases, growing upward) or
+// +1 for the bottom half (y increases, growing downward) — the first item
+// (deepest ring) always lands nearest cy, and each later item (a
+// shallower ring) lands further out.
+function stackHalf(items, direction, cy) {
+  let cursor = cy + direction * MAP_PILL_V_GAP;
+  return items.map(item => {
+    const y = cursor + direction * (item.h / 2);
+    cursor = y + direction * (item.h / 2 + MAP_PILL_V_GAP);
+    return { item, y };
+  });
+}
+
+// Grows each ring's radius, if needed, so it comfortably reaches whichever
+// of its own pills (on either side, risk or protective — both sides share
+// one set of circles) ended up furthest from the vertical center, while
+// keeping the rings in equally-stepped, strictly-increasing order.
+// neededReach maps ring -> the largest |y - cy| any of its pills actually
+// landed at.
+function growRingRadii(neededReach) {
+  const radii = {};
+  let prev = 0;
+  RING_ORDER.slice().reverse().forEach(ring => { // client..community
+    const base = MAP_RING_BASE_RADII[ring];
+    const need = (neededReach[ring] || 0) + MAP_RING_EDGE_MARGIN;
+    const r = Math.max(base, need, prev + MAP_MIN_RING_GAP);
+    radii[ring] = r;
+    prev = r;
+  });
+  return radii;
+}
+
+// Dev-time safety net: confirms no two connectors (from different factors)
+// ever come within 8px of each other. Since every connector is a single
+// horizontal segment, two can only possibly conflict when their y's are
+// within that 8px AND their x-spans overlap — the layout above is built so
+// this never actually happens, but this still catches any real regression
+// immediately instead of silently shipping an overlap.
+function verifyNoConnectorOverlap(segments) {
+  const pad = 8; // no two connectors may touch or come within this many px
+  const violations = [];
+  for (let i = 0; i < segments.length; i++) {
+    for (let j = i + 1; j < segments.length; j++) {
+      const a = segments[i], b = segments[j];
+      if (a.factorId === b.factorId) continue;
+      if (Math.abs(a.y - b.y) > pad) continue;
+      const aLo = Math.min(a.x1, a.x2), aHi = Math.max(a.x1, a.x2);
+      const bLo = Math.min(b.x1, b.x2), bHi = Math.max(b.x1, b.x2);
+      if (aHi + pad < bLo || bHi + pad < aLo) continue;
+      violations.push([a, b]);
+    }
+  }
+  if (violations.length) console.warn(`Ecological map: ${violations.length} connector pair(s) within 8px or overlapping`, violations);
+  return violations.length === 0;
+}
+
+// Dev-time safety net: confirms no connector's horizontal run passes
+// through the small arc each ring label occupies near the top of its own
+// band. Labels still render after (on top of) the connector lines, so text
+// stays legible even in an edge case this estimate misses — this is a
+// diagnostic, not the only protection.
+function verifyLabelClearance(segments, ringRadii, cx, cy) {
+  const violations = [];
+  RING_ORDER.filter(r => r !== 'client').forEach(ring => {
+    const labelR = mapRingLabelRadius(ringRadii, ring);
+    const labelText = (plannerState.ringLabelByKey[ring] || ring).toUpperCase();
+    const halfWidthPx = Math.max(20, labelText.length * 3.6);
+    const halfAngle = Math.min(1.4, halfWidthPx / labelR);
+    const yTop = cy - labelR, yBottom = cy - labelR * Math.cos(halfAngle);
+    const xHalf = labelR * Math.sin(halfAngle);
+    segments.forEach(seg => {
+      if (seg.ring === ring) return; // a ring's own connectors end right at its edge, not through its label
+      if (seg.y < yTop - 2 || seg.y > yBottom + 2) return;
+      const lo = Math.min(seg.x1, seg.x2), hi = Math.max(seg.x1, seg.x2);
+      if (hi < cx - xHalf || lo > cx + xHalf) return;
+      violations.push({ ring, seg });
+    });
+  });
+  if (violations.length) console.warn(`Ecological map: ${violations.length} connector(s) pass through a ring label's band`, violations);
+  return violations.length === 0;
 }
 
 function escapeXml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function mapTruncate(text) {
-  if (text.length <= MAP_PILL_MAX_CHARS) return text;
-  return text.slice(0, MAP_PILL_MAX_CHARS - 1) + '…';
+// All pills on one side share a single width (see preparedPills() below),
+// so sizing happens in two steps. First, how wide a given factor's text
+// would want to be completely unwrapped (capped) — used only to find the
+// widest pill on a side.
+function mapNaturalWidth(text) {
+  return Math.max(MAP_PILL_MIN_W, Math.min(MAP_PILL_MAX_W, String(text).length * MAP_PILL_CHAR_W + 56));
 }
 
-function mapPillWidth(text) {
-  const w = text.length * MAP_PILL_CHAR_W + 56; // + room for weight dots and padding
-  return Math.max(MAP_PILL_MIN_W, Math.min(MAP_PILL_MAX_W, w));
+// Full factor text always shows — never truncated with "…" — so it wraps
+// onto as many lines as it needs instead, against whatever width every
+// pill on this side ended up sharing. Greedy word-wrap.
+function mapWrapAtWidth(text, w) {
+  const availChars = Math.floor((w - 56) / MAP_PILL_CHAR_W);
+  const words = String(text).split(/\s+/).filter(Boolean);
+  const lines = [];
+  let current = '';
+  words.forEach(word => {
+    const candidate = current ? `${current} ${word}` : word;
+    if (current && candidate.length > availChars) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = candidate;
+    }
+  });
+  if (current) lines.push(current);
+  return lines.length ? lines : [''];
 }
 
 function mapRingVisual(ring) {
@@ -168,12 +320,11 @@ function mapRingVisual(ring) {
   const hasRisk = riskFactors.length > 0, hasProt = protFactors.length > 0;
   const riskMax = hasRisk ? Math.max(...riskFactors.map(f => f.weight)) : 0;
   const protMax = hasProt ? Math.max(...protFactors.map(f => f.weight)) : 0;
-  const overallMax = Math.max(riskMax, protMax);
   let stroke = 'var(--cream-dark)';
   if (hasRisk && hasProt) stroke = 'var(--teal)';
   else if (hasRisk) stroke = CHIP_COLOR_BY_WEIGHT.risk[riskMax];
   else if (hasProt) stroke = CHIP_COLOR_BY_WEIGHT.protective[protMax];
-  return { stroke, strokeWidth: overallMax ? RING_STROKE_BY_WEIGHT[overallMax] : RING_STROKE_DEFAULT, hasRisk, hasProt };
+  return { stroke, strokeWidth: RING_STROKE_WIDTH, hasRisk, hasProt };
 }
 
 // Builds the full map as one <svg> markup string — reused identically for
@@ -183,39 +334,101 @@ function buildEcoMapSvg(opts) {
   const currentRing = opts.currentRing || null;
   const locked = !!opts.locked;
   const idPrefix = opts.idPrefix || 'map';
+  // On a ring step (steps 1–5), only that ring's own factors show as pills —
+  // e.g. School's factors don't appear while working on Peer. Review and the
+  // other curation steps pass this as false and still see every ring.
+  const onlyCurrentRing = !!opts.onlyCurrentRing;
   const p = plannerState.data.planner;
 
   function pillsFor(valence) {
     const list = [];
-    RING_ORDER.forEach(ring => {
-      plannerState.factors[ring][valence].forEach((f, idx) => {
+    const rings = onlyCurrentRing && currentRing ? [currentRing] : RING_ORDER;
+    rings.forEach(ring => {
+      const sameRing = plannerState.factors[ring][valence];
+      sameRing.forEach((f, idx) => {
         list.push({ ring, idx, id: f.id, text: f.text, weight: f.weight });
       });
     });
     return list;
   }
-  const riskPills = pillsFor('risk');
-  const protPills = pillsFor('protective');
-  const maxCount = Math.max(riskPills.length, protPills.length, 1);
-  const vbH = Math.max(560, maxCount * MAP_PILL_SLOT_H + 90);
-  const cx = MAP_RING_CX, cy = vbH / 2;
+  // Every pill on one side shares one width — the widest any of them
+  // naturally wants — so left pills all right-align to one inner edge and
+  // right pills all left-align to the other, instead of staggering at
+  // different x-positions. Each pill's text is then wrapped against that
+  // shared width, which is also what its height (possibly multi-line) ends
+  // up depending on.
+  function preparedPills(valence) {
+    const raw = pillsFor(valence);
+    const uniformW = raw.length ? Math.max(...raw.map(item => mapNaturalWidth(item.text))) : MAP_PILL_MIN_W;
+    return raw.map(item => {
+      const lines = mapWrapAtWidth(item.text, uniformW);
+      const h = MAP_PILL_H + (lines.length - 1) * MAP_PILL_LINE_H;
+      return { ...item, w: uniformW, h, lines };
+    });
+  }
+  const riskPills = preparedPills('risk');
+  const protPills = preparedPills('protective');
 
+  const sumH = list => list.reduce((sum, p) => sum + p.h, 0) + MAP_PILL_V_GAP * Math.max(0, list.length - 1);
+  const riskSplit = splitPillsForLayout(riskPills);
+  const protSplit = splitPillsForLayout(protPills);
+  // The circle stays centered in the canvas; each half just reserves
+  // whatever room its own tallest side needs above/below that center.
+  const vbH = Math.max(560, 2 * (Math.max(sumH(riskSplit.top), sumH(riskSplit.bottom), sumH(protSplit.top), sumH(protSplit.bottom)) + MAP_PILL_V_GAP) + 90);
+  const cy = vbH / 2;
+
+  // Stacking a half only depends on pill heights, not on any ring's
+  // radius, so every pill's y is already final at this point.
+  const riskTopStacked = stackHalf(riskSplit.top, -1, cy);
+  const riskBottomStacked = stackHalf(riskSplit.bottom, 1, cy);
+  const protTopStacked = stackHalf(protSplit.top, -1, cy);
+  const protBottomStacked = stackHalf(protSplit.bottom, 1, cy);
+
+  // Both sides draw the exact same circles, so every ring's radius is
+  // grown (if it needs to be) to fit whichever of its pills — risk or
+  // protective — ended up furthest from the vertical center.
+  const neededReach = {};
+  [...riskTopStacked, ...riskBottomStacked, ...protTopStacked, ...protBottomStacked].forEach(({ item, y }) => {
+    const dy = Math.abs(y - cy);
+    neededReach[item.ring] = Math.max(neededReach[item.ring] || 0, dy);
+  });
+  const ringRadii = growRingRadii(neededReach);
+  const outerR = ringRadii.community; // anchors the pill zone just outside the outermost ring
+
+  // The viewBox width grows along with the rings — a ring that grew to fit
+  // a lot of pills needs a wider canvas too, or its own pills would spill
+  // past the edge. Risk and protective pills can have different uniform
+  // widths, so the circle's own center (cx) isn't necessarily the
+  // viewBox's midpoint — it's wherever the risk-side margin puts it.
+  const riskW = riskPills.length ? riskPills[0].w : MAP_PILL_MIN_W;
+  const protW = protPills.length ? protPills[0].w : MAP_PILL_MIN_W;
+  const leftMargin = outerR + MAP_PILL_GAP + riskW + 20;
+  const rightMargin = outerR + MAP_PILL_GAP + protW + 20;
+  const vbW = leftMargin + rightMargin;
+  const cx = leftMargin;
+
+  // The current-step ring (steps 1–5) reuses the exact same solid-yellow
+  // "is-ring-match" treatment as the Review hover-highlight, instead of its
+  // own separate dashed indicator — one consistent visual language for
+  // "this is the ring you're looking at" everywhere in the tool.
   const ringsSvg = RING_ORDER.map(ring => {
-    const r = mapRingRadius(ring);
+    const r = ringRadii[ring];
     const v = mapRingVisual(ring);
-    const dash = ring === currentRing ? ' stroke-dasharray="5 3"' : '';
-    return `<circle class="planner-ring" data-ring="${ring}" cx="${cx}" cy="${cy}" r="${r}" style="stroke:${v.stroke}" stroke-width="${v.strokeWidth}"${dash}/>`;
+    const isCurrent = ring === currentRing;
+    // A separate class from is-ring-match: applyReviewHighlight() toggles
+    // is-ring-match off on every ring whenever nothing is hovered, which
+    // would otherwise strip this right back off on every re-render.
+    return `<circle class="planner-ring${isCurrent ? ' is-current-ring' : ''}" data-ring="${ring}" cx="${cx}" cy="${cy}" r="${r}" style="stroke:${v.stroke}" stroke-width="${v.strokeWidth}"/>`;
   }).join('');
-
-  const currentIndicator = currentRing
-    ? `<circle class="planner-current-step-ring" cx="${cx}" cy="${cy}" r="${mapRingRadius(currentRing) + 7}"/>`
-    : '';
 
   // Each label curves along the midline of its own ring's band (rather than
   // sitting as straight text above the ring) so it reads inside that
-  // section without overlapping the band above it.
+  // section without overlapping the band above it. Labels render after
+  // (on top of) the connector lines below, so the text stays legible even
+  // in the rare case a connector's estimated clearance (see
+  // verifyLabelClearance) runs close.
   const labelsSvg = RING_ORDER.filter(r => r !== 'client').map(ring => {
-    const labelR = mapRingLabelRadius(ring);
+    const labelR = mapRingLabelRadius(ringRadii, ring);
     const hasFactors = plannerState.factors[ring].risk.length || plannerState.factors[ring].protective.length;
     const label = (plannerState.ringLabelByKey[ring] || ring).toUpperCase();
     const pathId = `${idPrefix}-labelarc-${ring}`;
@@ -230,63 +443,101 @@ function buildEcoMapSvg(opts) {
     <text class="planner-center-label" x="${cx}" y="${cy - 4}" text-anchor="middle">${escapeXml(p.centerLabel)}</text>
     <text class="planner-center-sub" x="${cx}" y="${cy + 13}" text-anchor="middle">${escapeXml(p.centerSub)}</text>`;
 
-  function sideSvg(pills, valence) {
-    const n = pills.length;
-    const startY = cy - ((n - 1) * MAP_PILL_SLOT_H) / 2;
+  function sideSvg(topStacked, bottomStacked, valence) {
+    const records = topStacked.concat(bottomStacked).map(({ item, y }) => {
+      const { w, h } = item;
+      const ringR = ringRadii[item.ring];
+      const dy = y - cy;
+      // x = cx ∓ sqrt(r² − (y − cy)²): the one point on this pill's own
+      // ring that sits at this exact height — growRingRadii() guarantees
+      // every ring reaches far enough that this is always a real point.
+      const dx = Math.sqrt(Math.max(0, ringR * ringR - dy * dy));
+      const pillX = valence === 'risk' ? (cx - outerR - MAP_PILL_GAP - w) : (cx + outerR + MAP_PILL_GAP);
+      const lineStartX = valence === 'risk' ? pillX + w : pillX;
+      const entryX = valence === 'risk' ? (cx - dx) : (cx + dx);
+      return { item, w, h, y, pillX, lineStartX, entryX };
+    });
+
     let lines = '', pillsHtml = '';
-    pills.forEach((item, i) => {
-      const y = startY + i * MAP_PILL_SLOT_H;
-      const text = mapTruncate(item.text);
-      const w = mapPillWidth(text);
+    records.forEach(rec => {
+      const { item, w, h, y, pillX, lineStartX, entryX } = rec;
+      const { lines: textLines } = item;
+
       const color = CHIP_COLOR_BY_WEIGHT[valence][item.weight];
       const textColor = item.weight >= 5 ? '#FFFFFF' : (valence === 'risk' ? 'hsl(6,55%,24%)' : 'hsl(112,35%,20%)');
-      const angle = mapRingAngleRad(item.ring, valence);
-      const ringR = mapRingRadius(item.ring);
-      const endX = cx + ringR * Math.cos(angle);
-      const endY = cy + ringR * Math.sin(angle);
-      const style = CONNECTOR_STYLE_BY_WEIGHT[item.weight] || CONNECTOR_STYLE_BY_WEIGHT[DEFAULT_WEIGHT];
-      const pillX = valence === 'risk' ? (MAP_RING_CX - MAP_RING_MAX_R - MAP_PILL_GAP - w) : (MAP_RING_CX + MAP_RING_MAX_R + MAP_PILL_GAP);
-      const lineStartX = valence === 'risk' ? pillX + w : pillX;
       const textX = pillX + 14;
       const removeX = valence === 'risk' ? pillX - 12 : pillX + w + 12;
 
-      lines += `<line class="planner-connector planner-connector-${valence}" data-ring="${item.ring}" x1="${lineStartX}" y1="${y}" x2="${endX.toFixed(1)}" y2="${endY.toFixed(1)}" stroke-width="${style.width}" stroke-opacity="${style.opacity}"${style.dash ? ` stroke-dasharray="${style.dash}"` : ''} style="stroke:${color}"/>`;
+      // One straight horizontal line, pill to ring — never an elbow. A
+      // small terminal dot caps the endpoint so the ring it belongs to
+      // reads unambiguously, even where the line crosses other rings on
+      // the way in.
+      const connectorPath = `M ${lineStartX.toFixed(1)} ${y.toFixed(1)} L ${entryX.toFixed(1)} ${y.toFixed(1)}`;
+      lines += `<path class="planner-connector planner-connector-${valence}" data-ring="${item.ring}" data-factor-id="${item.id}" d="${connectorPath}" fill="none" stroke-width="${MAP_CONNECTOR_WIDTH}" style="stroke:${color}"/>` +
+        `<circle class="planner-connector planner-connector-dot planner-connector-${valence}" data-ring="${item.ring}" data-factor-id="${item.id}" cx="${entryX.toFixed(1)}" cy="${y.toFixed(1)}" r="${MAP_ENDPOINT_DOT_R}" style="fill:${color}"/>`;
+      connectorSegments.push({ x1: lineStartX, x2: entryX, y, factorId: item.id, ring: item.ring });
+
+      // Laid out from the pill's top edge down: dots first, then the
+      // (possibly multi-line) text below them — nothing drifts into
+      // overlapping text regardless of how many lines it wrapped to.
+      const pillTop = y - h / 2;
+      const dotY = pillTop + MAP_PILL_TOP_PAD;
+      const firstLineY = dotY + MAP_PILL_DOT_TEXT_GAP;
 
       // Each dot gets a generously-sized invisible hit circle around the small
       // visible one, so the weight is actually clickable/tappable and not
       // just a tiny 2-3px target.
       const dots = Array.from({ length: 5 }, (_, di) => {
         const dotX = valence === 'risk' ? (pillX + 21 + di * 10) : (pillX + w - 21 - (4 - di) * 10);
-        const dotY = y + 12;
         return `
           <g class="eco-wdot-hit" data-ring="${item.ring}" data-valence="${valence}" data-index="${item.idx}" data-value="${di + 1}">
-            <circle cx="${dotX.toFixed(1)}" cy="${dotY.toFixed(1)}" r="8" fill="transparent"/>
-            <circle class="eco-wdot${di < item.weight ? ' filled' : ''}" cx="${dotX.toFixed(1)}" cy="${dotY.toFixed(1)}" r="3.2"/>
+            <circle cx="${dotX.toFixed(1)}" cy="${dotY.toFixed(1)}" r="9" fill="transparent"/>
+            <circle class="eco-wdot${di < item.weight ? ' filled' : ''}" cx="${dotX.toFixed(1)}" cy="${dotY.toFixed(1)}" r="3.6"/>
           </g>`;
       }).join('');
 
+      // Aligned with the dot row at the pill's top, clear of the text below.
+      // Sits outside the pill on the page background, not inside the
+      // colored rect — always a fixed dark color regardless of the pill's
+      // own text color (which turns white at weight 5 for contrast against
+      // its own near-black fill), so the X never blends into the page.
       const removeBtn = locked ? '' : `
-        <g class="eco-pill-remove" data-ring="${item.ring}" data-valence="${valence}" data-index="${item.idx}" transform="translate(${removeX.toFixed(1)},${y.toFixed(1)})">
+        <g class="eco-pill-remove" data-ring="${item.ring}" data-valence="${valence}" data-index="${item.idx}" transform="translate(${removeX.toFixed(1)},${dotY.toFixed(1)})" style="color:var(--text)">
           <circle r="9" fill="transparent"/>
           <line x1="-4" y1="-4" x2="4" y2="4"/><line x1="-4" y1="4" x2="4" y2="-4"/>
         </g>`;
 
+      // Full text, never truncated — wrapped across as many lines as it
+      // needs (computed in preparedPills). Each line is its own sibling
+      // <text> element (simpler and just as valid as nested <tspan>s).
+      const textHtml = textLines.map((line, li) =>
+        `<text x="${textX.toFixed(1)}" y="${(firstLineY + li * MAP_PILL_LINE_H).toFixed(1)}" fill="${textColor}">${escapeXml(line)}</text>`
+      ).join('');
+
       pillsHtml += `
-        <g class="eco-pill" data-ring="${item.ring}" style="color:${textColor}">
-          <rect x="${pillX.toFixed(1)}" y="${(y - MAP_PILL_H / 2).toFixed(1)}" width="${w.toFixed(1)}" height="${MAP_PILL_H}" rx="${MAP_PILL_H / 2}" fill="${color}"/>
-          <text x="${textX.toFixed(1)}" y="${(y + 6).toFixed(1)}" fill="${textColor}">${escapeXml(text)}</text>
+        <g class="eco-pill" data-ring="${item.ring}" data-factor-id="${item.id}" style="color:${textColor}">
+          <rect x="${pillX.toFixed(1)}" y="${(y - h / 2).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="${Math.min(h / 2, 20)}" fill="${color}"/>
+          ${textHtml}
           ${dots}${removeBtn}
         </g>`;
     });
     return { lines, pillsHtml };
   }
 
-  const riskSide = sideSvg(riskPills, 'risk');
-  const protSide = sideSvg(protPills, 'protective');
+  const connectorSegments = [];
+  const riskSide = sideSvg(riskTopStacked, riskBottomStacked, 'risk');
+  const protSide = sideSvg(protTopStacked, protBottomStacked, 'protective');
+  verifyNoConnectorOverlap(connectorSegments);
+  verifyLabelClearance(connectorSegments, ringRadii, cx, cy);
 
-  return `<svg viewBox="0 0 ${MAP_VB_W} ${vbH}" class="planner-eco-svg${locked ? ' is-locked' : ''}" role="img" aria-label="Concentric circle diagram of client ecological formulation">
+  // Paint order matters here: rings (with their opaque fill) go down first,
+  // THEN the connector lines on top of that fill — otherwise every ring
+  // drawn after a line would paint right over it, making lines to inner
+  // rings look like they stop at the outermost ring instead of visibly
+  // crossing through it. Pills stay on top of everything.
+  return `<svg viewBox="0 0 ${vbW} ${vbH}" class="planner-eco-svg${locked ? ' is-locked' : ''}" role="img" aria-label="Concentric circle diagram of client ecological formulation">
+    ${ringsSvg}
     ${riskSide.lines}${protSide.lines}
-    ${ringsSvg}${currentIndicator}
     ${labelsSvg}${centerSvg}
     ${riskSide.pillsHtml}${protSide.pillsHtml}
   </svg>`;
@@ -295,10 +546,10 @@ function buildEcoMapSvg(opts) {
 const SAFETY_PLAN_KEYS = ['warningSigns', 'internalCoping', 'distraction', 'askForHelp', 'professionals', 'environment'];
 
 const plannerState = {
-  data: null, resourcesData: null, factors: {}, currentStep: 0, furthestStep: 0, hasGenerated: false,
+  data: null, factors: {}, currentStep: 0, furthestStep: 0, hasGenerated: false,
   nextFactorId: 1, // stable per-factor id so the top-3 picker can track a factor across re-renders
   topContributors: { risk: [null, null, null], protective: [null, null, null] },
-  resourcePlan: [], // array of resource-card keys the clinician dragged into their plan
+  interventionsByFactor: {}, // factor id -> array of intervention strings; each top factor gets its own list
   safetyPlanItems: {}, // editable, typed safety-plan content — same shape as the standalone tool
   safetyPlanSeeded: false, // auto-fills once from entered factors, then it's fully the clinician's own
   safetyPlanPicked: null, // { key, index, text } — transient click-to-move state, not persisted
@@ -320,7 +571,7 @@ function persistPlannerState() {
       hasGenerated: plannerState.hasGenerated,
       nextFactorId: plannerState.nextFactorId,
       topContributors: plannerState.topContributors,
-      resourcePlan: plannerState.resourcePlan,
+      interventionsByFactor: plannerState.interventionsByFactor,
       safetyPlanItems: plannerState.safetyPlanItems,
       safetyPlanSeeded: plannerState.safetyPlanSeeded
     }));
@@ -352,8 +603,10 @@ function loadPersistedPlannerState() {
     plannerState.furthestStep = saved.furthestStep || 0;
     plannerState.hasGenerated = !!saved.hasGenerated;
     if (saved.topContributors) {
+      // At least 3 slots, but never truncate — a clinician may have added a
+      // 4th/5th/6th+ factor beyond the original 3.
       const fix = list => {
-        const clean = Array.isArray(list) ? list.slice(0, 3) : [];
+        const clean = Array.isArray(list) ? list.slice() : [];
         while (clean.length < 3) clean.push(null);
         return clean;
       };
@@ -362,7 +615,9 @@ function loadPersistedPlannerState() {
         protective: fix(saved.topContributors.protective)
       };
     }
-    if (Array.isArray(saved.resourcePlan)) plannerState.resourcePlan = saved.resourcePlan;
+    if (saved.interventionsByFactor && typeof saved.interventionsByFactor === 'object') {
+      plannerState.interventionsByFactor = saved.interventionsByFactor;
+    }
     if (saved.safetyPlanItems) {
       SAFETY_PLAN_KEYS.forEach(k => {
         if (Array.isArray(saved.safetyPlanItems[k])) plannerState.safetyPlanItems[k] = saved.safetyPlanItems[k];
@@ -479,7 +734,7 @@ function renderPlanner(data) {
   document.getElementById('plannerRiskRows').innerHTML = rowsHtml('risk');
   document.getElementById('plannerProtectiveRows').innerHTML = rowsHtml('protective');
 
-  const stepLabels = p.rings.map(r => r.label).concat(['Top 3', 'Resources', 'Review']);
+  const stepLabels = p.rings.map(r => r.label).concat(['Top Factors', 'Resources', 'Review']);
   document.getElementById('plannerStepper').innerHTML = stepLabels.map((label, i) => `
     <button type="button" class="planner-step-item" data-step-index="${i}" data-ring="${STEP_KEYS[i]}">
       <span class="planner-step-dot">${i + 1}</span>
@@ -536,17 +791,43 @@ function initPlanner() {
     if (stepItem && !NON_RING_STEP_KEYS.includes(stepItem.dataset.ring)) return stepItem.dataset.ring;
     const label = target.closest('.planner-row > label, .planner-ring-label[data-ring]');
     if (label) return label.dataset.ring || label.closest('.planner-row').dataset.ring;
-    const ring = target.closest('.planner-ring[data-ring], .eco-pill[data-ring]');
+    const ring = target.closest('.planner-ring[data-ring]');
     if (ring) return ring.dataset.ring;
     return null;
   }
+
+  // Hovering one specific pill (anywhere the map shows, not just Review)
+  // isolates just that one connector line instead of the whole ring — with
+  // several factors in play, it's the only reliable way to tell exactly
+  // which line a given bubble belongs to.
+  const pillHighlightState = { factorId: null };
+  function applyPillHighlight(factorId) {
+    const active = factorId != null;
+    document.querySelectorAll('.eco-pill[data-factor-id]').forEach(pill => {
+      pill.classList.toggle('is-pill-match', active && pill.dataset.factorId === String(factorId));
+      pill.classList.toggle('is-pill-dim', active && pill.dataset.factorId !== String(factorId));
+    });
+    document.querySelectorAll('.planner-connector[data-factor-id]').forEach(line => {
+      line.classList.toggle('is-pill-match', active && line.dataset.factorId === String(factorId));
+      line.classList.toggle('is-pill-dim', active && line.dataset.factorId !== String(factorId));
+    });
+  }
+  function setPillHighlight(factorId) {
+    pillHighlightState.factorId = factorId;
+    applyPillHighlight(factorId);
+  }
+
   if (plannerSection) {
     plannerSection.addEventListener('mouseover', e => {
+      const pill = e.target.closest('.eco-pill[data-factor-id]');
+      if (pill) { setPillHighlight(pill.dataset.factorId); return; }
       const ring = ringFromHoverTarget(e.target);
       if (ring) setReviewHighlight(ring);
     });
     plannerSection.addEventListener('mouseout', e => {
-      const hoverable = e.target.closest('.planner-step-item[data-ring], .planner-row > label, .planner-ring-label[data-ring], .planner-ring[data-ring], .eco-pill[data-ring]');
+      const pill = e.target.closest('.eco-pill[data-factor-id]');
+      if (pill) { if (!pill.contains(e.relatedTarget)) setPillHighlight(null); return; }
+      const hoverable = e.target.closest('.planner-step-item[data-ring], .planner-row > label, .planner-ring-label[data-ring], .planner-ring[data-ring]');
       if (!hoverable || hoverable.contains(e.relatedTarget)) return;
       setReviewHighlight(null);
     });
@@ -569,8 +850,9 @@ function initPlanner() {
     const stepKey = STEP_KEYS[plannerState.currentStep];
     const onReview = stepKey === 'review';
     const currentRing = RING_ORDER.includes(stepKey) ? stepKey : null;
-    container.innerHTML = buildEcoMapSvg({ currentRing, locked: onReview, idPrefix: 'live' });
+    container.innerHTML = buildEcoMapSvg({ currentRing, locked: onReview, idPrefix: 'live', onlyCurrentRing: !!currentRing });
     applyReviewHighlight(reviewHighlightState.ring);
+    applyPillHighlight(pillHighlightState.factorId);
   }
 
   function updateGenerateState() {
@@ -618,38 +900,34 @@ function initPlanner() {
     // it shouldn't keep trailing along at the bottom of every other step.
     document.getElementById('plannerOutput').hidden = !(onReview && plannerState.hasGenerated);
     // The add-factor forms only belong on ring steps — Review has nothing left
-    // to add, and both curation steps (Top 3, Resources) stand on their own.
+    // to add, and both curation steps (Top Factors, Resources) stand on their own.
     document.getElementById('plannerLayout').hidden = isTopFactorsStep || isResourcePlanStep || onReview;
     // The ecological map belongs on ring steps and Review — both curation
-    // steps (Top 3, Resources) stand on their own without it.
+    // steps (Top Factors, Resources) stand on their own without it.
     document.getElementById('plannerEcoMapWrap').hidden = isTopFactorsStep || isResourcePlanStep;
     document.getElementById('plannerTopFactorsSection').hidden = !isTopFactorsStep;
     document.getElementById('plannerResourcePlanSection').hidden = !isResourcePlanStep;
 
     if (isTopFactorsStep) renderTopFactorsStep();
-    if (isResourcePlanStep) {
-      // Top 3 is only editable on its own step — here it's a clean, read-only
-      // recap (same format as Review) above the resource pool/tray.
-      document.getElementById('plannerResourceStepTopSummary').innerHTML = topContributorsHtml();
-      renderResourcePlanStep();
-    }
+    if (isResourcePlanStep) renderInterventionStep();
 
     // Review gets the same "Step X of Y: Label" header as every other step —
-    // no separate custom heading/intro.
+    // no separate custom heading/intro. The last three steps conclude the
+    // mapping activity as three named phases.
     let title, hint;
     if (onReview) {
-      title = `Step ${index + 1} of ${STEP_KEYS.length}: Review`;
+      title = `Step ${index + 1} of ${STEP_KEYS.length}: Review and Next Steps`;
       hint = '';
     } else if (isRingStep) {
       const ringData = p.rings.find(r => r.key === stepKey);
       title = `Step ${index + 1} of ${STEP_KEYS.length}: ${ringData.label}`;
       hint = p.stepHint;
     } else if (isTopFactorsStep) {
-      title = `Step ${index + 1} of ${STEP_KEYS.length}: Top Contributors`;
-      hint = 'Drag — or click — your top 3 risk factors and top 3 protective factors into the boxes below.';
+      title = `Step ${index + 1} of ${STEP_KEYS.length}: Identify Top Factors Impacting the Client`;
+      hint = 'Drag — or click — your top risk and protective factors into the boxes below. At least 3 of each is a good start — add a 4th, 5th, or more with the + button or by dropping in extra factors from the lists above.';
     } else {
-      title = `Step ${index + 1} of ${STEP_KEYS.length}: Resource Plan`;
-      hint = 'Drag — or click the + on — resources to add them to your plan. Download it on the next step.';
+      title = `Step ${index + 1} of ${STEP_KEYS.length}: Select Interventions`;
+      hint = 'Type to choose a strategy or practice for each factor below, or write in your own — add as many as you need per factor.';
     }
     document.getElementById('plannerStepTitle').textContent = title;
     document.getElementById('plannerStepHint').textContent = hint;
@@ -675,7 +953,7 @@ function initPlanner() {
   function refreshActiveCurationStep() {
     const key = STEP_KEYS[plannerState.currentStep];
     if (key === 'topFactors') renderTopFactorsStep();
-    if (key === 'resourcePlan') renderResourcePlanStep();
+    if (key === 'resourcePlan') renderInterventionStep();
     // Review shows the generated plan directly, so an edit made there (the
     // factor rows stay visible/editable on Review) needs to regenerate it.
     if (key === 'review') generatePlan();
@@ -791,9 +1069,14 @@ function initPlanner() {
       slotsEl.innerHTML = slots.map((id, i) => {
         const found = id !== null ? findFactorById(valence, id) : null;
         if (!found) {
+          // The original 3 slots are a permanent floor and stay empty-but-
+          // present; a 4th+ empty slot (e.g. right after clicking "+") can
+          // be removed outright so an accidental add is easy to undo.
+          const removable = i >= 3;
           return `<div class="planner-slot" data-valence="${valence}" data-slot-index="${i}">
             <span class="planner-slot-num">${i + 1}</span>
             <span class="planner-slot-hint">Drag or click a ${valence === 'risk' ? 'risk' : 'protective'} factor</span>
+            ${removable ? `<button type="button" class="planner-chip-remove" data-clear-slot="${valence}:${i}" aria-label="Remove this slot">${icon('i-x', 'icon-xs')}</button>` : ''}
           </div>`;
         }
         return `<div class="planner-slot is-filled" data-valence="${valence}" data-slot-index="${i}">
@@ -804,22 +1087,35 @@ function initPlanner() {
             <button type="button" class="planner-chip-remove" data-clear-slot="${valence}:${i}" aria-label="Remove">${icon('i-x', 'icon-xs')}</button>
           </span>
         </div>`;
-      }).join('');
+      }).join('') + `
+        <button type="button" class="planner-add-slot-btn" data-add-slot="${valence}">${icon('i-plus', 'icon-xs')} Add another ${valence === 'risk' ? 'risk' : 'protective'} factor</button>`;
     });
   }
 
   function placeTopContributor(valence, factorId, slotIndex) {
     const slots = plannerState.topContributors[valence];
     if (slots.includes(factorId)) return;
-    const targetIndex = slotIndex !== undefined ? slotIndex : slots.indexOf(null);
-    if (targetIndex === -1 || targetIndex === undefined) return;
+    let targetIndex = slotIndex !== undefined ? slotIndex : slots.indexOf(null);
+    // No empty slot (specific or otherwise) — grow a new one for this pick,
+    // so dropping/clicking a 4th+ factor always works, not just the first 3.
+    if (targetIndex === -1 || targetIndex === undefined) targetIndex = slots.length;
     slots[targetIndex] = factorId;
     renderTopFactorsStep();
     persistPlannerState();
   }
 
+  // Clearing one of the original 3 slots just empties it (that floor always
+  // shows); clearing a 4th+ slot removes it entirely.
   function clearTopContributor(valence, slotIndex) {
-    plannerState.topContributors[valence][slotIndex] = null;
+    const slots = plannerState.topContributors[valence];
+    if (slotIndex >= 3) slots.splice(slotIndex, 1);
+    else slots[slotIndex] = null;
+    renderTopFactorsStep();
+    persistPlannerState();
+  }
+
+  function addTopFactorSlot(valence) {
+    plannerState.topContributors[valence].push(null);
     renderTopFactorsStep();
     persistPlannerState();
   }
@@ -833,6 +1129,8 @@ function initPlanner() {
         clearTopContributor(valence, parseInt(idx, 10));
         return;
       }
+      const addSlotBtn = e.target.closest('[data-add-slot]');
+      if (addSlotBtn) { addTopFactorSlot(addSlotBtn.dataset.addSlot); return; }
       const poolChip = e.target.closest('.planner-pool-chip');
       if (poolChip) placeTopContributor(poolChip.dataset.valence, parseInt(poolChip.dataset.id, 10));
     });
@@ -842,96 +1140,122 @@ function initPlanner() {
       e.dataTransfer.setData('text/plain', JSON.stringify({ id: parseInt(chip.dataset.id, 10), valence: chip.dataset.valence }));
       e.dataTransfer.effectAllowed = 'move';
     });
+    // Dropping anywhere in a valence's slot zone works, not just on an empty
+    // slot box — if every current slot is full, it grows a new one, so a
+    // 4th/5th/6th+ factor can be dropped in directly.
     topFactorsSection.addEventListener('dragover', e => {
-      const slot = e.target.closest('.planner-slot');
-      if (!slot) return;
+      const container = e.target.closest('.planner-slots');
+      if (!container) return;
       e.preventDefault();
-      slot.classList.add('is-over');
+      container.classList.add('is-over');
     });
     topFactorsSection.addEventListener('dragleave', e => {
-      const slot = e.target.closest('.planner-slot');
-      if (slot) slot.classList.remove('is-over');
+      const container = e.target.closest('.planner-slots');
+      if (container) container.classList.remove('is-over');
     });
     topFactorsSection.addEventListener('drop', e => {
-      const slot = e.target.closest('.planner-slot');
-      if (!slot) return;
+      const container = e.target.closest('.planner-slots');
+      if (!container) return;
       e.preventDefault();
-      slot.classList.remove('is-over');
+      container.classList.remove('is-over');
       let payload;
       try { payload = JSON.parse(e.dataTransfer.getData('text/plain')); } catch (err) { return; }
-      if (!payload || payload.valence !== slot.dataset.valence) return;
-      placeTopContributor(payload.valence, payload.id, parseInt(slot.dataset.slotIndex, 10));
+      if (!payload || payload.valence !== container.dataset.valence) return;
+      const emptySlot = e.target.closest('.planner-slot:not(.is-filled)');
+      placeTopContributor(payload.valence, payload.id, emptySlot ? parseInt(emptySlot.dataset.slotIndex, 10) : undefined);
     });
   }
 
-  // ── Step: Resource Plan — drag (or click +) matched resources into a tray
-  // that gets saved and included in the downloadable plan. ──
-  function resourcePoolCardHtml(c) {
-    return `
-      <div class="planner-resource-card planner-resource-pool-card${c.matched ? ' is-recommended' : ''}" draggable="true" data-key="${c.key}">
-        ${resourceCardBodyHtml(c)}
-        <button type="button" class="planner-resource-add" data-add-key="${c.key}" aria-label="Add to plan">${icon('i-plus', 'icon-xs')}</button>
-      </div>`;
+  // ── Step: Phase 2 — Select Intervention. Every selected top factor (up to
+  // 3 risk + 3 protective) gets its own picker — a dropdown plus a write-in
+  // field — so each factor ends up with at least one assigned
+  // strategy/practice, with multiple allowed per factor. ──
+  // One shared <datalist> (built once) backs every factor's input — typing
+  // filters/suggests from the 71 options, but anything can be typed and
+  // added. This replaces a separate dropdown + write-in field with a single
+  // compact control per factor.
+  function interventionDatalistHtml() {
+    const sortedOptions = INTERVENTION_OPTIONS.slice().sort((a, b) => a.localeCompare(b));
+    return `<datalist id="interventionOptionsList">${sortedOptions.map(opt => `<option value="${opt}"></option>`).join('')}</datalist>`;
   }
 
-  function resourceTrayCardHtml(c) {
-    return `
-      <div class="planner-resource-card planner-resource-tray-card${c.matched ? ' is-recommended' : ''}" data-key="${c.key}">
-        ${resourceCardBodyHtml(c)}
-        <button type="button" class="planner-chip-remove" data-remove-key="${c.key}" aria-label="Remove from plan">${icon('i-x', 'icon-xs')}</button>
-      </div>`;
+  function renderInterventionStep() {
+    const container = document.getElementById('interventionFactorsList');
+    if (!container) return;
+    const factors = selectedTopContributors();
+    if (!factors.length) {
+      container.innerHTML = `<p class="planner-pool-empty">Pick your top risk and protective factors on the previous step first — each one gets its own intervention here.</p>`;
+      return;
+    }
+
+    container.innerHTML = interventionDatalistHtml() + factors.map(f => {
+      const chosen = plannerState.interventionsByFactor[f.id] || [];
+      const chipsHtml = chosen.map((text, i) => `
+        <span class="planner-chip planner-chip-neutral">
+          <span class="planner-chip-text">${escapeXml(text)}</span>
+          <button type="button" class="planner-chip-remove" data-remove-intervention="${f.id}:${i}" aria-label="Remove">${icon('i-x', 'icon-xs')}</button>
+        </span>`).join('');
+      return `
+        <div class="intervention-factor-row">
+          <div class="intervention-factor-header">
+            <span class="planner-note-tag planner-note-tag-${f.valence}">${f.valence === 'risk' ? 'Risk' : 'Protective'}</span>
+            <strong class="intervention-factor-name">${escapeXml(f.text)}</strong>
+            ${severityDotsHtml(f.valence, f.weight)}
+          </div>
+          <div class="intervention-input-row">
+            <input type="text" class="planner-input intervention-input" list="interventionOptionsList"
+                   data-factor-id="${f.id}" placeholder="Type or choose a strategy/practice…" />
+            <button type="button" class="btn btn-primary intervention-add-btn" data-factor-id="${f.id}">Add</button>
+          </div>
+          ${chipsHtml ? `<div class="intervention-selected-list">${chipsHtml}</div>` : ''}
+        </div>`;
+    }).join('');
   }
 
-  function renderResourcePlanStep() {
-    const section = document.getElementById('plannerResourcePlanSection');
-    if (!section) return;
-    const allCards = computeResourceCards();
-    const selectedKeys = new Set(plannerState.resourcePlan);
-
-    const poolEl = document.getElementById('plannerResourcePool');
-    const poolCards = allCards.filter(c => !selectedKeys.has(c.key));
-    poolEl.innerHTML = poolCards.length
-      ? poolCards.map(resourcePoolCardHtml).join('')
-      : `<p class="planner-pool-empty">All resources are already in your plan.</p>`;
-
-    const trayEl = document.getElementById('plannerResourceTray');
-    const trayCards = plannerState.resourcePlan.map(k => allCards.find(c => c.key === k)).filter(Boolean);
-    trayEl.innerHTML = trayCards.map(resourceTrayCardHtml).join('');
-    document.getElementById('plannerTrayEmptyHint').style.display = trayCards.length ? 'none' : 'block';
-  }
-
-  function addToResourcePlan(key) {
-    if (!key || plannerState.resourcePlan.includes(key)) return;
-    plannerState.resourcePlan.push(key);
-    renderResourcePlanStep();
+  function addIntervention(factorId, text) {
+    text = text.trim();
+    if (!text) return;
+    const list = plannerState.interventionsByFactor[factorId] = plannerState.interventionsByFactor[factorId] || [];
+    if (list.includes(text)) return;
+    list.push(text);
+    renderInterventionStep();
     persistPlannerState();
   }
 
-  function removeFromResourcePlan(key) {
-    plannerState.resourcePlan = plannerState.resourcePlan.filter(k => k !== key);
-    renderResourcePlanStep();
+  function removeIntervention(factorId, index) {
+    const list = plannerState.interventionsByFactor[factorId];
+    if (!list) return;
+    list.splice(index, 1);
+    renderInterventionStep();
     persistPlannerState();
   }
 
-  const resourcePlanSection = document.getElementById('plannerResourcePlanSection');
-  if (resourcePlanSection) {
-    resourcePlanSection.addEventListener('click', e => {
-      const addBtn = e.target.closest('[data-add-key]');
-      if (addBtn) { addToResourcePlan(addBtn.dataset.addKey); return; }
-      const removeBtn = e.target.closest('[data-remove-key]');
-      if (removeBtn) removeFromResourcePlan(removeBtn.dataset.removeKey);
+  const interventionFactorsList = document.getElementById('interventionFactorsList');
+  if (interventionFactorsList) {
+    interventionFactorsList.addEventListener('click', e => {
+      const addBtn = e.target.closest('.intervention-add-btn');
+      if (addBtn) {
+        const fid = addBtn.dataset.factorId;
+        const input = interventionFactorsList.querySelector(`.intervention-input[data-factor-id="${fid}"]`);
+        addIntervention(fid, input.value);
+        // renderInterventionStep() rebuilds the whole list, so re-query the
+        // fresh input for this factor and refocus it for rapid entry.
+        interventionFactorsList.querySelector(`.intervention-input[data-factor-id="${fid}"]`)?.focus();
+        return;
+      }
+      const removeBtn = e.target.closest('[data-remove-intervention]');
+      if (removeBtn) {
+        const [fid, idx] = removeBtn.dataset.removeIntervention.split(':');
+        removeIntervention(fid, parseInt(idx, 10));
+      }
     });
-    resourcePlanSection.addEventListener('dragstart', e => {
-      const card = e.target.closest('.planner-resource-pool-card');
-      if (card) e.dataTransfer.setData('text/plain', card.dataset.key);
-    });
-    const trayEl = document.getElementById('plannerResourceTray');
-    trayEl.addEventListener('dragover', e => { e.preventDefault(); trayEl.classList.add('is-over'); });
-    trayEl.addEventListener('dragleave', () => trayEl.classList.remove('is-over'));
-    trayEl.addEventListener('drop', e => {
+    interventionFactorsList.addEventListener('keydown', e => {
+      const input = e.target.closest('.intervention-input');
+      if (!input || e.key !== 'Enter') return;
       e.preventDefault();
-      trayEl.classList.remove('is-over');
-      addToResourcePlan(e.dataTransfer.getData('text/plain'));
+      const fid = input.dataset.factorId;
+      addIntervention(fid, input.value);
+      interventionFactorsList.querySelector(`.intervention-input[data-factor-id="${fid}"]`)?.focus();
     });
   }
 
@@ -1058,7 +1382,7 @@ function initPlanner() {
       plannerState.factors[r] = { risk: [], protective: [] };
     });
     plannerState.topContributors = { risk: [null, null, null], protective: [null, null, null] };
-    plannerState.resourcePlan = [];
+    plannerState.interventionsByFactor = {};
     SAFETY_PLAN_KEYS.forEach(k => { plannerState.safetyPlanItems[k] = []; });
     plannerState.safetyPlanSeeded = false;
     document.getElementById('plannerOutput').hidden = true;
@@ -1191,44 +1515,6 @@ function safetyPlanPrintHtml(data) {
   return `<h2>${data.planner.outputHeadings.safetyPlan}</h2>${body}`;
 }
 
-// resourceKey (as used by RING_RECOMMENDATIONS) -> the matching Audience
-// tag on individual items in content/resources.json.
-const RESOURCE_KEY_AUDIENCE = { clinician: 'Clinician', community: 'Community', family: 'Family', youth: 'Youth', schools: 'Schools' };
-
-// Shared by the Resource Plan step, the auto-generated "My Resource Plan"
-// output, and the printable output, so all three stay in sync off one
-// source of truth. Returns the actual Resource Library items (from
-// content/resources.json) every time, not a filtered-down subset — each
-// card carries a `matched` flag + its triggering factors, so the UI can
-// highlight recommendations without hiding the rest of the library.
-function computeResourceCards() {
-  const resourceTriggers = {}; // resourceKey -> [{ ringLabel, valence }]
-
-  RING_ORDER.forEach(ring => {
-    ['risk', 'protective'].forEach(valence => {
-      const factors = plannerState.factors[ring][valence];
-      if (!factors.length) return;
-      const rec = RING_RECOMMENDATIONS[ring][valence];
-      rec.resourceKeys.forEach(key => {
-        (resourceTriggers[key] = resourceTriggers[key] || []).push({ ringLabel: plannerState.ringLabelByKey[ring], valence });
-      });
-    });
-  });
-
-  const items = (plannerState.resourcesData && plannerState.resourcesData.items) || [];
-  return items.map(item => {
-    const triggers = Object.keys(RESOURCE_KEY_AUDIENCE)
-      .filter(key => resourceTriggers[key] && item.audience.includes(RESOURCE_KEY_AUDIENCE[key]))
-      .flatMap(key => resourceTriggers[key]);
-    return {
-      key: item.id, title: item.title, type: item.type,
-      icon: RESOURCE_TYPE_ICON[item.type] || 'i-file-text',
-      description: item.description,
-      triggers, matched: triggers.length > 0
-    };
-  });
-}
-
 function topContributorFactor(valence, id) {
   for (const ring of RING_ORDER) {
     const f = plannerState.factors[ring][valence].find(x => x.id === id);
@@ -1237,17 +1523,45 @@ function topContributorFactor(valence, id) {
   return null;
 }
 
-function topContributorsHtml() {
+// All currently-selected top-3 factors (up to 6: 3 risk + 3 protective), each
+// tagged with its valence — the Select Intervention step and the generated
+// "My Interventions" output both key off this same list.
+function selectedTopContributors() {
+  const list = [];
+  ['risk', 'protective'].forEach(valence => {
+    plannerState.topContributors[valence].forEach(id => {
+      if (id === null) return;
+      const f = topContributorFactor(valence, id);
+      if (f) list.push({ ...f, valence });
+    });
+  });
+  return list;
+}
+
+// All factors the clinician has entered (not just the top 3) — every
+// ring, both risk and protective — so Review's "Factors" section is the
+// complete picture, separate from the curated "Interventions" section below.
+function allFactorsList(valence) {
+  const list = [];
+  RING_ORDER.forEach(ring => {
+    plannerState.factors[ring][valence].forEach(f => {
+      list.push({ ...f, ring, ringLabel: plannerState.ringLabelByKey[ring] });
+    });
+  });
+  return list;
+}
+
+function allFactorsHtml() {
   const listFor = valence => {
-    const items = plannerState.topContributors[valence].map(id => id !== null ? topContributorFactor(valence, id) : null).filter(Boolean);
-    if (!items.length) return `<p class="planner-resource-empty">No ${valence === 'risk' ? 'risk' : 'protective'} contributors selected.</p>`;
+    const items = allFactorsList(valence);
+    if (!items.length) return `<p class="planner-resource-empty">No ${valence === 'risk' ? 'risk' : 'protective'} factors entered.</p>`;
     return `<ol class="planner-top-list">${items.map(it => `<li>${it.text} <em>(${it.ringLabel} · ${it.weight}/5)</em></li>`).join('')}</ol>`;
   };
   return `
-    <h3>Top Contributors</h3>
+    <h3>Factors</h3>
     <div class="planner-top-contributors">
-      <div><h4 class="planner-col-heading-risk">Top Risk Factors</h4>${listFor('risk')}</div>
-      <div><h4 class="planner-col-heading-protective">Top Protective Factors</h4>${listFor('protective')}</div>
+      <div><h4 class="planner-col-heading-risk">Risk Factors</h4>${listFor('risk')}</div>
+      <div><h4 class="planner-col-heading-protective">Protective Factors</h4>${listFor('protective')}</div>
     </div>`;
 }
 
@@ -1259,23 +1573,37 @@ function topContributorsPrintHtml() {
   return `<h2 class="print-no-break">Top Contributors</h2><ul><li><strong>Top Risk Factors:</strong> ${listFor('risk')}</li><li><strong>Top Protective Factors:</strong> ${listFor('protective')}</li></ul>`;
 }
 
-function myResourcePlanCards(data) {
-  const allCards = computeResourceCards();
-  return plannerState.resourcePlan.map(k => allCards.find(c => c.key === k)).filter(Boolean);
+// Each top factor shown with its severity, its ecological placement (which
+// ring it was entered under), and whatever intervention(s) were picked for
+// it — the curated counterpart to the full list in "Factors" above.
+function interventionsHtml() {
+  const factors = selectedTopContributors();
+  if (!factors.length) {
+    return `<h3>Interventions</h3><p class="planner-resource-empty">No top factors selected yet — go back to the Top Contributors step to add some.</p>`;
+  }
+  const rows = factors.map(f => {
+    const list = plannerState.interventionsByFactor[f.id] || [];
+    return `<li>
+      <div class="intervention-review-header">
+        <span class="planner-note-tag planner-note-tag-${f.valence}">${f.valence === 'risk' ? 'Risk' : 'Protective'}</span>
+        <strong>${f.text}</strong>
+        <span class="intervention-review-ring">${f.ringLabel}</span>
+        ${severityDotsHtml(f.valence, f.weight)}
+      </div>
+      <p class="intervention-review-plan">${list.length ? list.join(', ') : '<em>No intervention selected yet</em>'}</p>
+    </li>`;
+  });
+  return `<h3>Interventions</h3><ul class="planner-top-list intervention-review-list">${rows.join('')}</ul>`;
 }
 
-function myResourcePlanHtml(data) {
-  const cards = myResourcePlanCards(data);
-  return `
-    <h3>My Resource Plan</h3>
-    <div class="planner-resource-grid">
-      ${cards.length ? cards.map(resourceCardHtml).join('') : '<p class="planner-resource-empty">No resources added to your plan yet — go back to the Resource Plan step to add some.</p>'}
-    </div>`;
-}
-
-function myResourcePlanPrintHtml(data) {
-  const cards = myResourcePlanCards(data);
-  return cards.length ? `<div class="planner-resource-grid">${cards.map(resourceCardHtml).join('')}</div>` : '<p>No resources added to the plan.</p>';
+function myInterventionsPrintHtml() {
+  const factors = selectedTopContributors();
+  if (!factors.length) return `<h2>My Interventions</h2><p>No top factors selected.</p>`;
+  const rows = factors.map(f => {
+    const list = plannerState.interventionsByFactor[f.id] || [];
+    return `<li><strong>${f.valence === 'risk' ? 'Risk' : 'Protective'} · ${f.text}:</strong> ${list.length ? list.join(', ') : 'no intervention selected yet'}</li>`;
+  });
+  return `<h2>My Interventions</h2><ul>${rows.join('')}</ul>`;
 }
 
 function generatePlan() {
@@ -1334,7 +1662,7 @@ function generatePlan() {
   seedSafetyPlanItemsIfNeeded(data);
   document.getElementById('plannerOutputPlan').innerHTML = planHtml;
   document.getElementById('plannerOutputSafetyPlan').innerHTML = safetyPlanEditorHtml(data);
-  document.getElementById('plannerOutputTopPlan').innerHTML = topContributorsHtml() + myResourcePlanHtml(data);
+  document.getElementById('plannerOutputTopPlan').innerHTML = allFactorsHtml() + interventionsHtml();
   document.getElementById('plannerOutputMore').innerHTML = moreHtml;
   buildPrintSheet(data, ringLabelByKey, phases, phaseScores, topScore, notes);
 
@@ -1401,8 +1729,7 @@ function buildPrintSheet(data, ringLabelByKey, phases, phaseScores, topScore, no
 
     ${safetyPlanPrintHtml(data)}
 
-    <h2>My Resource Plan</h2>
-    ${myResourcePlanPrintHtml(data)}`;
+    ${myInterventionsPrintHtml()}`;
 }
 
 function renderFooter(data) {
@@ -1464,16 +1791,12 @@ window.addEventListener('beforeprint', () => {
 });
 
 // ── Load content, render, then wire up interactions ──
-// The Resource Plan step pulls its cards straight from the same
-// content/resources.json dataset that powers the Resource Library page.
-Promise.all([
-  fetch('content/site.json').then(res => res.json()),
-  fetch('content/resources.json').then(res => res.json())
-]).then(([data, resourcesData]) => {
-  plannerState.resourcesData = resourcesData;
-  renderPlanner(data);
-  renderFooter(data);
-  loadPersistedPlannerState();
-  initPlanner();
-  initFadeObserver();
-});
+fetch('content/site.json')
+  .then(res => res.json())
+  .then(data => {
+    renderPlanner(data);
+    renderFooter(data);
+    loadPersistedPlannerState();
+    initPlanner();
+    initFadeObserver();
+  });

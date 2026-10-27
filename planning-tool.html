@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=8" />
+  <link rel="stylesheet" href="styles.css?v=20" />
 </head>
 <body>
 
@@ -143,29 +143,21 @@
       </div>
       <div class="planner-topfactors-slots">
         <div class="planner-slots-col">
-          <h4 class="planner-pool-heading planner-col-heading-risk">Top 3 Risk Contributors</h4>
+          <h4 class="planner-pool-heading planner-col-heading-risk">Top Risk Factors</h4>
           <div class="planner-slots" id="plannerRiskSlots" data-valence="risk"></div>
         </div>
         <div class="planner-slots-col">
-          <h4 class="planner-pool-heading planner-col-heading-protective">Top 3 Protective Contributors</h4>
+          <h4 class="planner-pool-heading planner-col-heading-protective">Top Protective Factors</h4>
           <div class="planner-slots" id="plannerProtectiveSlots" data-valence="protective"></div>
         </div>
       </div>
     </div>
 
-    <!-- STEP 7: RESOURCE PLAN — browse the full resource library (recommended ones
-         highlighted) and drag/click any into a downloadable plan -->
-    <div class="planner-resourceplan" id="plannerResourcePlanSection" hidden>
-      <div class="planner-resource-step-summary" id="plannerResourceStepTopSummary"></div>
-      <div class="planner-resourceplan-pool">
-        <h4 class="planner-pool-heading">Resource Library</h4>
-        <div class="planner-resource-pool" id="plannerResourcePool"></div>
-      </div>
-      <div class="planner-resourceplan-tray">
-        <h4 class="planner-pool-heading">My Resource Plan</h4>
-        <div class="planner-resource-tray" id="plannerResourceTray"></div>
-        <p class="planner-tray-empty" id="plannerTrayEmptyHint">Drag resources here, or click the + on a resource card.</p>
-      </div>
+    <!-- STEP 7: PHASE 2 — SELECT INTERVENTION — each top factor gets its own
+         intervention picker (dropdown + write-in), so every factor ends up
+         with at least one assigned strategy/practice (multiple allowed) -->
+    <div class="intervention-step" id="plannerResourcePlanSection" hidden>
+      <div id="interventionFactorsList" class="intervention-factors-list"></div>
     </div>
 
     <div class="planner-step-nav" id="plannerStepNav">
@@ -198,6 +190,6 @@
   </div>
 </footer>
 
-<script src="planner.js?v=12"></script>
+<script src="planner.js?v=31"></script>
 </body>
 </html>

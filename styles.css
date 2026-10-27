@@ -795,11 +795,6 @@ body.scgate-open { overflow: hidden; }
 .planner-step-nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 24px; }
 
 .planner-row.step-hidden { display: none; }
-.planner-ring.is-current-step { stroke-dasharray: 5 3; }
-.planner-current-step-ring {
-  fill: none; stroke: var(--yellow); stroke-width: 3; stroke-dasharray: 3 5;
-  stroke-linecap: round; pointer-events: none;
-}
 
 .planner-row { transition: opacity .18s ease; }
 .planner-row.is-ring-dim { opacity: .32; }
@@ -809,11 +804,35 @@ body.scgate-open { overflow: hidden; }
 .planner-ring-label.is-ring-dim { opacity: .35; }
 .planner-ring-label.is-ring-match { fill: var(--teal-dark); font-weight: 900; }
 
+.planner-ring { transition: stroke .18s ease, opacity .18s ease; }
 .planner-ring.is-ring-dim { opacity: .3; }
+/* The matched ring turns solid yellow (overriding its normal weight-based
+   color, which is an inline style and needs !important to lose) so it's
+   unmistakable which level you're looking at on Review. */
+.planner-ring.is-ring-match { stroke: var(--yellow) !important; opacity: 1; }
+/* Steps 1–5: the current ring gets the identical solid-yellow treatment,
+   via its own class so the Review-only hover logic can't clobber it. */
+.planner-ring.is-current-ring { stroke: var(--yellow) !important; opacity: 1; }
 .planner-connector.is-ring-dim { opacity: .15; }
 .planner-connector.is-ring-match { opacity: 1; }
+.eco-pill { transition: opacity .18s ease; }
 .eco-pill.is-ring-dim { opacity: .3; }
-.eco-pill.is-ring-match .eco-pill-remove, .eco-pill.is-ring-match text { font-weight: 800; }
+/* Matched pills turn yellow too, with their text/weight-dots (which use
+   currentColor) switched to black so they stay readable on yellow. */
+.eco-pill.is-ring-match { opacity: 1; color: #000; }
+.eco-pill.is-ring-match rect { fill: var(--yellow); }
+.eco-pill.is-ring-match text { fill: #000; font-weight: 800; }
+.eco-pill.is-ring-match .eco-pill-remove { font-weight: 800; }
+
+/* Hovering one specific pill traces just that one connector — with several
+   factors on the map, this is the only way to see at a glance exactly
+   which line belongs to which bubble. Everything else fades back; the
+   matched line is thickened so it's unmistakable even where it crosses
+   other, dimmed lines. */
+.planner-connector.is-pill-dim { opacity: .08; }
+.planner-connector.is-pill-match { opacity: 1; stroke-width: 3.5px; }
+.eco-pill.is-pill-dim { opacity: .3; }
+.eco-pill.is-pill-match rect { stroke: var(--text); stroke-width: 2px; }
 
 .planner-layout {
   display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
@@ -893,9 +912,9 @@ body.scgate-open { overflow: hidden; }
 .planner-ring { fill: var(--white); stroke: var(--cream-dark); transition: fill .2s, stroke .2s, stroke-width .2s, opacity .18s; }
 .planner-center-label { font-family: var(--font); font-size: 15px; font-weight: 900; fill: var(--teal-dark); text-anchor: middle; }
 .planner-center-sub { font-family: var(--font); font-size: 10px; font-weight: 700; fill: var(--text-light); text-anchor: middle; }
-.planner-connector { stroke-linecap: round; transition: stroke-width .15s, opacity .18s; }
+.planner-connector { stroke-linecap: round; stroke-linejoin: round; transition: stroke-width .15s, opacity .18s; }
 
-.eco-pill text { font-family: var(--font); font-weight: 700; font-size: 16px; }
+.eco-pill text { font-family: var(--font); font-weight: 700; font-size: 18px; }
 .eco-wdot { fill: currentColor; opacity: .3; transition: opacity .12s, transform .12s; }
 .eco-wdot.filled { opacity: 1; }
 .planner-eco-svg:not(.is-locked) .eco-wdot-hit { cursor: pointer; }
@@ -968,35 +987,35 @@ body.scgate-open { overflow: hidden; }
 .sp-move-hint { font-size: 12px; color: var(--text-light); margin: -8px 0 18px; }
 .sp-move-hint strong { color: var(--teal-dark); }
 
-.planner-resource-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
-.planner-resource-card { display: flex; gap: 12px; background: var(--cream); border-radius: var(--radius-sm); padding: 16px; }
-.planner-resource-card svg { stroke: var(--teal-dark); flex-shrink: 0; }
-.planner-resource-card strong { display: block; margin-bottom: 6px; font-size: 14px; }
-.planner-resource-triggers { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
-.planner-resource-triggers .planner-note-tag { font-size: 9px; padding: 2px 8px; }
-.planner-resource-card ul li { font-size: 12px; color: var(--text-mid); padding: 2px 0 2px 12px; position: relative; }
-.planner-resource-card ul li::before { content: '→'; position: absolute; left: 0; font-size: 10px; }
-.planner-resource-type {
-  display: inline-block; font-size: 10px; font-weight: 800; text-transform: uppercase;
-  letter-spacing: .05em; color: var(--teal-dark); background: var(--teal-light);
-  padding: 2px 8px; border-radius: 100px; margin-bottom: 6px;
-}
-.planner-resource-desc { font-size: 12px; color: var(--text-mid); line-height: 1.5; }
-
-/* Recommended (matched to entered factors) resources are highlighted yellow
-   rather than being filtered out of the library view. */
-.planner-resource-card.is-recommended { background: #FDF3D0; box-shadow: inset 0 0 0 2px var(--yellow); }
-.planner-recommended-badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em;
-  color: #4A3B00; background: var(--yellow); padding: 3px 10px; border-radius: 100px;
-  margin-bottom: 8px;
-}
-.planner-recommended-badge svg { width: 11px; height: 11px; stroke: #4A3B00; fill: #4A3B00; }
 .planner-resource-empty { font-size: 14px; color: var(--text-mid); margin-top: 12px; }
-.planner-resource-cta { font-size: 14px; color: var(--text-mid); margin-top: 18px; }
-.planner-resource-cta a { color: var(--teal); font-weight: 800; }
-.planner-resource-cta a:hover { text-decoration: underline; }
+
+/* ── Step: Phase 2 — Select Intervention. Each top factor gets its own
+   row: a compact header (valence tag + factor text), one combined
+   type-or-choose input (backed by a shared <datalist>) + Add, and the
+   chips it's accumulated so far — wraps naturally on narrow screens
+   without a separate breakpoint rule. ── */
+.intervention-factors-list { display: flex; flex-direction: column; }
+.intervention-factor-row {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;
+  background: var(--cream); border-radius: var(--radius-sm); padding: 16px;
+}
+/* A divider line between factors — the cream card background alone doesn't
+   read as separate rows since the page behind it is the same cream. */
+.intervention-factor-row + .intervention-factor-row {
+  border-top: 2px solid var(--cream-dark); margin-top: 4px; padding-top: 20px;
+}
+.intervention-factor-header {
+  display: flex; align-items: center; gap: 8px;
+  flex: 1 1 260px; min-width: 200px; font-size: 14px;
+}
+.intervention-factor-name { font-size: 19px; }
+.intervention-severity { display: inline-flex; align-items: center; gap: 3px; }
+.intervention-severity-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--cream-dark); flex-shrink: 0;
+}
+.intervention-input-row { display: flex; gap: 8px; flex: 2 1 320px; min-width: 260px; }
+.intervention-input { flex: 1; min-width: 0; }
+.intervention-selected-list { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 6px; }
 
 .planner-more-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
 
@@ -1022,14 +1041,28 @@ body.scgate-open { overflow: hidden; }
   opacity: .75; border-left: 1px solid currentColor; padding-left: 7px; margin-left: -1px;
 }
 
-.planner-slots { display: flex; flex-direction: column; gap: 10px; }
+.planner-slots {
+  display: flex; flex-direction: column; gap: 10px;
+  border-radius: var(--radius-sm); transition: background .15s;
+}
+.planner-slots.is-over { background: var(--teal-light); }
 .planner-slot {
   display: flex; align-items: center; gap: 10px; min-height: 48px;
   border: 2px dashed var(--text-light); border-radius: var(--radius-sm);
   background: var(--white); padding: 8px 12px; transition: border-color .15s, background .15s;
 }
-.planner-slot.is-over { border-color: var(--teal); background: var(--teal-light); }
 .planner-slot.is-filled { border-style: solid; border-color: transparent; padding: 4px; background: none; }
+.planner-slot > .planner-chip-remove { margin-left: auto; opacity: .6; }
+.planner-slot > .planner-chip-remove:hover { opacity: 1; }
+.planner-add-slot-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  border: 2px dashed var(--cream-dark); border-radius: var(--radius-sm);
+  background: none; padding: 10px 12px; margin-top: 2px;
+  font-family: var(--font); font-size: 12px; font-weight: 800; color: var(--text-mid);
+  cursor: pointer; transition: border-color .15s, color .15s;
+}
+.planner-add-slot-btn:hover { border-color: var(--teal); color: var(--teal-dark); }
+.planner-add-slot-btn svg { stroke: currentColor; }
 .planner-slot-num {
   flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: var(--cream-dark);
   color: var(--text-mid); font-size: 11px; font-weight: 800;
@@ -1038,36 +1071,20 @@ body.scgate-open { overflow: hidden; }
 .planner-slot-hint { font-size: 12px; color: var(--text-light); }
 .planner-slot.is-filled .planner-chip { flex: 1; }
 
-/* ── Step: Resource Plan (drag/click matched resources into a plan) ── */
-.planner-resourceplan { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 8px; }
-.planner-resource-step-summary { grid-column: 1 / -1; margin-bottom: 8px; }
-.planner-resource-pool, .planner-resource-tray {
-  display: flex; flex-direction: column; gap: 10px; min-height: 80px;
-  padding: 14px; background: var(--white); border: 1px solid var(--cream-dark);
-  border-radius: var(--radius-sm);
-}
-.planner-resource-pool { max-height: 640px; overflow-y: auto; }
-.planner-resource-tray { border: 2px dashed var(--text-light); transition: border-color .15s, background .15s; }
-.planner-resource-tray.is-over { border-color: var(--teal); background: var(--teal-light); }
-.planner-resource-pool-card { cursor: grab; position: relative; padding-right: 44px; }
-.planner-resource-pool-card:active { cursor: grabbing; }
-.planner-resource-add {
-  position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 50%;
-  border: 2px solid var(--teal); background: var(--white); color: var(--teal);
-  display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0;
-}
-.planner-resource-add:hover { background: var(--teal); color: var(--white); }
-.planner-resource-tray-card { position: relative; padding-right: 36px; }
-.planner-resource-tray-card .planner-chip-remove { position: absolute; top: 14px; right: 12px; }
-.planner-tray-empty { font-size: 13px; color: var(--text-light); font-style: italic; margin: 4px 0 0; }
-
 .planner-top-contributors { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 8px; }
 .planner-top-list { margin: 8px 0 0; padding-left: 18px; }
 .planner-top-list li { font-size: 13px; color: var(--text); margin-bottom: 6px; }
 .planner-top-list em { color: var(--text-light); font-style: normal; font-size: 12px; }
 
+.intervention-review-list { padding-left: 0; list-style: none; }
+.intervention-review-list li { margin-bottom: 16px; }
+.intervention-review-header { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 4px; }
+.intervention-review-ring { font-size: 11px; font-weight: 700; color: var(--text-light); }
+.intervention-review-plan { font-size: 13px; color: var(--text-mid); margin: 0; padding-left: 2px; }
+.intervention-review-plan em { color: var(--text-light); font-style: normal; }
+
 @media (max-width: 900px) {
-  .planner-topfactors-pool, .planner-topfactors-slots, .planner-resourceplan, .planner-top-contributors {
+  .planner-topfactors-pool, .planner-topfactors-slots, .planner-top-contributors {
     grid-template-columns: 1fr;
   }
 }
@@ -1257,7 +1274,6 @@ body.scgate-open { overflow: hidden; }
   .nav-links      { display: none; }
   .nav-hamburger  { display: flex; }
   .planner-layout { grid-template-columns: 1fr; }
-  .planner-resource-grid { grid-template-columns: 1fr; }
   .how-to-use-steps { grid-template-columns: 1fr; }
   .mindful-grid   { grid-template-columns: 1fr; }
   .referral-row   { flex-direction: column; }
@@ -1452,38 +1468,4 @@ body.scgate-open { overflow: hidden; }
   .planner-print-sheet .print-sp-intro { font-size: 11px; color: #555; margin: 0 0 4px; }
   .planner-print-sheet .print-empty { font-size: 12px; font-style: italic; color: #666; margin: 0 0 12px; }
 
-  /* Resource cards — reuse the on-screen card layout, stacked single-column and
-     bordered so they stay legible even if the browser's print dialog has
-     "background graphics" turned off. */
-  .planner-print-sheet .planner-resource-grid {
-    display: block; margin-top: 8px;
-  }
-  .planner-print-sheet .planner-resource-card {
-    display: flex; gap: 10px; align-items: flex-start;
-    border: 1px solid #ccc; border-radius: 6px;
-    padding: 12px 14px; margin-bottom: 10px;
-    background: #fafafa; break-inside: avoid;
-  }
-  .planner-print-sheet .planner-resource-card svg { stroke: #000; width: 18px; height: 18px; margin-top: 2px; }
-  .planner-print-sheet .planner-resource-card strong { display: block; font-size: 13px; margin-bottom: 4px; }
-  .planner-print-sheet .planner-resource-card ul { margin: 0 0 0 16px; }
-  .planner-print-sheet .planner-resource-card li { margin-bottom: 2px; }
-  .planner-print-sheet .planner-resource-triggers { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
-  .planner-print-sheet .planner-note-tag {
-    display: inline-block; font-size: 9px; font-weight: 800; text-transform: uppercase;
-    letter-spacing: .04em; padding: 2px 8px; border-radius: 100px;
-    border: 1px solid #999; color: #000; background: #eee;
-  }
-  .planner-print-sheet .planner-note-tag-risk { border-color: #C0392B; }
-  .planner-print-sheet .planner-note-tag-protective { border-color: #5E9A56; }
-  .planner-print-sheet .planner-resource-card.is-recommended {
-    border: 2px solid #B7950B; background: #FEF9E7;
-    -webkit-print-color-adjust: exact; print-color-adjust: exact;
-  }
-  .planner-print-sheet .planner-recommended-badge {
-    display: inline-block; font-size: 9px; font-weight: 800; text-transform: uppercase;
-    letter-spacing: .04em; padding: 2px 8px; border-radius: 100px; margin-bottom: 4px;
-    border: 1px solid #B7950B; color: #000;
-  }
-  .planner-print-sheet .planner-recommended-badge svg { display: none; }
 }
