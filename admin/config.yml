@@ -202,7 +202,7 @@ collections:
               - {label: "Section Label", name: "sectionLabel", widget: "string"}
               - {label: "Heading", name: "heading", widget: "string"}
               - {label: "Intro Paragraph", name: "intro", widget: "text"}
-              - {label: "Resource Library Link Label (button that sends clinicians to the standalone Resource Library page)", name: "libraryLinkLabel", widget: "string"}
+              - {label: "Treatment Library Link Label (button that sends clinicians to the standalone Treatment Library page)", name: "libraryLinkLabel", widget: "string"}
               - {label: "Self-Care Link Label (button that sends clinicians to the standalone Self-Care & Support page)", name: "selfCareLinkLabel", widget: "string"}
               - label: "Tabs"
                 name: "tabs"
@@ -270,7 +270,7 @@ collections:
                       - {label: "Link Text", name: "linkText", widget: "string"}
                       - {label: "Link Target", name: "linkHref", widget: "string", hint: "Currently points to #team as a placeholder — update to a real mailto: or contact link when one exists."}
 
-          - label: "Resource Categories (summary cards used by the Planning Tool's recommendations — for the full searchable library, edit the Resource Library collection instead)"
+          - label: "Resource Categories (summary cards used by the Planning Tool's recommendations — for the full searchable library, edit the Treatment Library collection instead)"
             name: "resourceCategories"
             widget: "list"
             fields:
@@ -392,6 +392,8 @@ collections:
               - {label: "Disclaimer", name: "disclaimer", widget: "text", hint: "Shown above the tool. Keep this — it's the clinical-judgment safeguard."}
               - {label: "Risk Column Label", name: "riskColumnLabel", widget: "string"}
               - {label: "Protective Column Label", name: "protectiveColumnLabel", widget: "string"}
+              - {label: "Eco Map Risk Title (left side of the circle map)", name: "ecoMapRiskLabel", widget: "string"}
+              - {label: "Eco Map Protective Title (right side of the circle map)", name: "ecoMapProtectiveLabel", widget: "string"}
               - {label: "Center Label", name: "centerLabel", widget: "string"}
               - {label: "Center Sub-label", name: "centerSub", widget: "string"}
               - label: "Ecological Levels (fixed set of 5 — do not add or remove; order matters)"
@@ -418,23 +420,17 @@ collections:
                 name: "outputHeadings"
                 widget: "object"
                 fields:
-                  - {label: "Treatment Plan Heading", name: "plan", widget: "string"}
-                  - {label: "Safety Plan Heading", name: "safetyPlan", widget: "string"}
                   - {label: "Resources Heading", name: "resources", widget: "string"}
                   - {label: "More EBPs Heading", name: "more", widget: "string"}
-              - label: "Safety Plan"
-                name: "safetyPlan"
+              - label: "Email My Plan (opt-in — placeholder address, update once real one exists)"
+                name: "emailPlan"
                 widget: "object"
                 fields:
-                  - {label: "Disclaimer", name: "disclaimer", widget: "text"}
-                  - label: "Sections (fixed set of 6 — do not add, remove, or change the Key)"
-                    name: "sections"
-                    widget: "list"
-                    fields:
-                      - {label: "Key (do not change)", name: "key", widget: "string"}
-                      - {label: "Title", name: "title", widget: "string"}
-                      - {label: "Empty-State Text (shown when nothing was entered for this section)", name: "emptyText", widget: "string", required: false}
-                      - {label: "Static Text (used only for the fixed 'Making the Environment Safe' section)", name: "staticText", widget: "text", required: false}
+                  - {label: "Button Label", name: "buttonLabel", widget: "string"}
+                  - {label: "Email Address", name: "address", widget: "string"}
+                  - {label: "Hint Text", name: "hint", widget: "text"}
+              - {label: "Phase Comment Label (Comments box under each Phase 1/2/3 section on Review)", name: "phaseCommentLabel", widget: "string"}
+              - {label: "Phase Comment Placeholder", name: "phaseCommentPlaceholder", widget: "string"}
 
           - label: "Make A Safety Plan Page"
             name: "safetyPlanPage"
@@ -519,7 +515,7 @@ collections:
 
       - file: "content/resources.json"
         name: "resourceLibrary"
-        label: "Resource Library (full searchable page)"
+        label: "Treatment Library (full searchable page)"
         fields:
           - label: "Page Intro"
             name: "intro"
@@ -555,7 +551,7 @@ collections:
             summary: "{{title}}"
             fields:
               - {label: "Title", name: "title", widget: "string"}
-              - {label: "Type", name: "type", widget: "select", options: ["Assessment Tool", "Worksheet", "Handout", "Referral List", "Tip Sheet"]}
+              - {label: "Type", name: "type", widget: "select", options: ["Assessment Tool", "Worksheet", "Handout", "Referral List", "Tip Sheet", "Evidence-Based Practice"], hint: "For an Evidence-Based Practice, the Title must match the practice's name on the Planning Tool's Select Interventions step exactly."}
               - label: "Who It's For (select all that apply)"
                 name: "audience"
                 widget: "select"
@@ -568,6 +564,12 @@ collections:
                 options: ["Risk Assessment & Safety Planning", "Coping Skills & Emotion Regulation", "Family Engagement", "School Coordination", "Community & Referrals", "Relapse Prevention & Transition"]
               - {label: "Short Description", name: "description", widget: "text"}
               - {label: "Why It Works (evidence/research note)", name: "evidence", widget: "text"}
+              - {label: "About This Practice (Evidence-Based Practices only — longer write-up shown in the Treatment Library)", name: "details", widget: "text", required: false}
+              - label: "Related Resources (Evidence-Based Practices only — titles of other library items)"
+                name: "relatedResources"
+                widget: "list"
+                required: false
+                field: {label: "Resource title", name: "title", widget: "string"}
               - label: "PDF File"
                 name: "fileUrl"
                 widget: "file"

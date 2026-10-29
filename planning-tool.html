@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20" />
+  <link rel="stylesheet" href="styles.css?v=28" />
 </head>
 <body>
 
@@ -73,10 +73,10 @@
     <nav class="nav-links">
       <a href="about.html">About</a>
       <a href="planning-tool.html" class="active">Planning Tool</a>
-      <a href="resource-library.html">Resource Library</a>
-      <a href="find-referral.html">Find a Referral</a>
-    <a href="self-care.html">Self-Care &amp; Support</a>
     <a href="safety-plan.html">Make A Safety Plan</a>
+      <a href="resource-library.html">Treatment Library</a>
+      <a href="find-referral.html">Community Resources</a>
+    <a href="self-care.html">Self-Care &amp; Support</a>
     </nav>
     <button class="nav-hamburger" aria-label="Open menu" id="hamburgerBtn">
       <svg class="icon"><use href="#i-menu"/></svg>
@@ -85,10 +85,10 @@
   <div class="nav-mobile" id="navMobile">
     <a href="about.html">About</a>
     <a href="planning-tool.html" class="active">Planning Tool</a>
-    <a href="resource-library.html">Resource Library</a>
-    <a href="find-referral.html">Find a Referral</a>
-    <a href="self-care.html">Self-Care &amp; Support</a>
     <a href="safety-plan.html">Make A Safety Plan</a>
+    <a href="resource-library.html">Treatment Library</a>
+    <a href="find-referral.html">Community Resources</a>
+    <a href="self-care.html">Self-Care &amp; Support</a>
   </div>
 </header>
 
@@ -111,6 +111,11 @@
       <p id="plannerStepHint"></p>
     </div>
 
+    <!-- Only shown on Review — an at-a-glance Phase 1/2/3 strip. All three
+         cards look the same until hovered/focused or clicked; clicking one
+         jumps to that phase's section below (see initPhaseStripNav). -->
+    <div class="planner-phase-strip" id="plannerPriorityStrip" hidden></div>
+
     <div class="planner-layout" data-fade data-delay="4" id="plannerLayout">
       <div class="planner-col planner-col-risk">
         <h3 class="planner-col-heading planner-col-heading-risk" id="plannerRiskLabel"></h3>
@@ -122,10 +127,24 @@
       </div>
     </div>
 
+    <!-- Only shown on Review — the step header above already covers steps 1–7,
+         and the map/factors below belong conceptually under Phase 1. -->
+    <div class="planner-review-phase-head planner-review-phase-head-1" id="plannerReviewPhase1Head" hidden>
+      <span class="planner-review-phase-num">1</span>
+      <div>
+        <h3 id="plannerPhase1Title"></h3>
+        <span class="planner-review-phase-sessions" id="plannerPhase1Sessions"></span>
+      </div>
+    </div>
+
     <!-- Single self-contained SVG: rings, labels, pills, and connector lines are
          all computed in one viewBox so the whole map scales as one unit and
          reuses identically for the printed/downloaded plan. -->
     <div class="planner-ecomap-wrap" id="plannerEcoMapWrap">
+      <div class="planner-ecomap-titles">
+        <span class="planner-ecomap-title planner-ecomap-title-risk" id="plannerEcoMapRiskTitle"></span>
+        <span class="planner-ecomap-title planner-ecomap-title-protective" id="plannerEcoMapProtectiveTitle"></span>
+      </div>
       <div id="plannerEcoMap"></div>
     </div>
 
@@ -169,12 +188,43 @@
 
     <div class="planner-output" id="plannerOutput" hidden>
       <div class="planner-output-block" id="plannerOutputTopPlan"></div>
-      <div class="planner-output-block" id="plannerOutputPlan"></div>
-      <div class="planner-output-block" id="plannerOutputSafetyPlan"></div>
-      <div class="planner-actions" id="plannerActions" hidden>
-        <button class="btn btn-primary planner-download-btn" id="plannerDownloadBtn" hidden></button>
+      <div class="planner-phase-comment" id="plannerPhase1Comment">
+        <label for="plannerPhase1CommentInput" id="plannerPhase1CommentLabel"></label>
+        <textarea id="plannerPhase1CommentInput" class="planner-phase-comment-input" data-phase-index="0" rows="3"></textarea>
       </div>
-      <p class="planner-download-hint" id="plannerDownloadHint" hidden></p>
+
+      <div class="planner-review-phase-head planner-review-phase-head-2" id="plannerReviewPhase2Head">
+        <span class="planner-review-phase-num">2</span>
+        <div>
+          <h3 id="plannerPhase2Title"></h3>
+          <span class="planner-review-phase-sessions" id="plannerPhase2Sessions"></span>
+        </div>
+      </div>
+      <div class="planner-output-block" id="plannerOutputInterventions"></div>
+      <div class="planner-phase-comment" id="plannerPhase2Comment">
+        <label for="plannerPhase2CommentInput" id="plannerPhase2CommentLabel"></label>
+        <textarea id="plannerPhase2CommentInput" class="planner-phase-comment-input" data-phase-index="1" rows="3"></textarea>
+      </div>
+
+      <div class="planner-review-phase-head planner-review-phase-head-3" id="plannerReviewPhase3Head">
+        <span class="planner-review-phase-num">3</span>
+        <div>
+          <h3 id="plannerPhase3Title"></h3>
+          <span class="planner-review-phase-sessions" id="plannerPhase3Sessions"></span>
+        </div>
+      </div>
+      <div class="planner-phase-comment" id="plannerPhase3Comment">
+        <label for="plannerPhase3CommentInput" id="plannerPhase3CommentLabel"></label>
+        <textarea id="plannerPhase3CommentInput" class="planner-phase-comment-input" data-phase-index="2" rows="3"></textarea>
+      </div>
+      <div class="planner-output-block">
+        <div class="planner-actions" id="plannerActions" hidden>
+          <button class="btn btn-primary planner-download-btn" id="plannerDownloadBtn" hidden></button>
+          <a class="btn btn-outline planner-email-btn" id="plannerEmailBtn" href="#" hidden></a>
+        </div>
+        <p class="planner-download-hint" id="plannerDownloadHint" hidden></p>
+        <p class="planner-email-hint" id="plannerEmailHint" hidden></p>
+      </div>
       <div class="planner-output-block" id="plannerOutputMore"></div>
     </div>
   </div>
@@ -190,6 +240,6 @@
   </div>
 </footer>
 
-<script src="planner.js?v=31"></script>
+<script src="planner.js?v=45"></script>
 </body>
 </html>

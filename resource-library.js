@@ -11,8 +11,16 @@ const TYPE_ICON = {
   'Worksheet': 'i-file-text',
   'Handout': 'i-book',
   'Referral List': 'i-map-pin',
-  'Tip Sheet': 'i-share-2'
+  'Tip Sheet': 'i-share-2',
+  'Evidence-Based Practice': 'i-star'
 };
+
+// Evidence-based practices are the strategies offered on the Planning Tool's
+// Select Interventions step; its "Learn more" link opens one here via
+// ?practice=<title>. A practice only shows in the grid once it has a
+// description, but the link still opens its detail view either way.
+const PRACTICE_TYPE = 'Evidence-Based Practice';
+const isListed = item => item.type !== PRACTICE_TYPE || Boolean(item.description);
 
 const AUDIENCE_ICON = {
   Clinician: 'i-clipboard',
@@ -58,7 +66,7 @@ function cardHtml(item) {
 }
 
 function renderResults() {
-  const items = reslibState.data.items.filter(matchesFilters);
+  const items = reslibState.data.items.filter(isListed).filter(matchesFilters);
   const grid = document.getElementById('reslibGrid');
   const empty = document.getElementById('reslibEmpty');
   const count = document.getElementById('reslibCount');
@@ -86,9 +94,31 @@ function renderChips(containerId, options, activeSet, onToggle) {
   });
 }
 
-function openDetail(id) {
-  const item = reslibState.data.items.find(i => i.id === id);
+function findByTitle(title) {
+  const t = title.trim().toLowerCase();
+  return reslibState.data.items.find(i => i.title.trim().toLowerCase() === t);
+}
+
+function relatedResourcesHtml(item) {
+  const related = (item.relatedResources || []).map(findByTitle).filter(Boolean);
+  if (!related.length) return '';
+  return `
+    <h4>Resources</h4>
+    <ul class="reslib-related">
+      ${related.map(r => `<li><button type="button" class="reslib-related-link" data-id="${r.id}">${icon(TYPE_ICON[r.type] || 'i-file-text', 'icon-xs')}${r.title}<span>${r.type}</span></button></li>`).join('')}
+    </ul>`;
+}
+
+function fileHtml(item) {
+  if (item.fileUrl) return `<a class="btn btn-primary reslib-download" href="${item.fileUrl}" target="_blank" rel="noopener">${icon('i-download', 'icon-sm')} Download PDF</a>`;
+  if (item.type === PRACTICE_TYPE) return '';
+  return `<span class="reslib-coming-soon">${icon('i-file-text', 'icon-sm')} PDF coming soon</span>`;
+}
+
+function openDetail(idOrItem) {
+  const item = typeof idOrItem === 'string' ? reslibState.data.items.find(i => i.id === idOrItem) : idOrItem;
   if (!item) return;
+  const isPractice = item.type === PRACTICE_TYPE;
 
   document.getElementById('reslibModalBody').innerHTML = `
     <div class="reslib-modal-icon">${icon(TYPE_ICON[item.type] || 'i-file-text')}</div>
@@ -102,15 +132,19 @@ function openDetail(id) {
     </div>
 
     <h4>Description</h4>
-    <p>${item.description}</p>
+    <p>${item.description || (isPractice ? '<em>A full write-up for this practice is coming soon.</em>' : '')}</p>
 
-    <h4>Why it works</h4>
-    <p>${item.evidence}</p>
+    ${isPractice && item.details ? `<h4>About this practice</h4><p>${item.details}</p>` : ''}
 
-    ${item.fileUrl
-      ? `<a class="btn btn-primary reslib-download" href="${item.fileUrl}" target="_blank" rel="noopener">${icon('i-download', 'icon-sm')} Download PDF</a>`
-      : `<span class="reslib-coming-soon">${icon('i-file-text', 'icon-sm')} PDF coming soon</span>`}
+    ${item.evidence ? `<h4>Why it works</h4><p>${item.evidence}</p>` : ''}
+
+    ${relatedResourcesHtml(item)}
+
+    ${fileHtml(item)}
   `;
+  document.querySelectorAll('#reslibModalBody .reslib-related-link').forEach(btn => {
+    btn.addEventListener('click', () => openDetail(btn.dataset.id));
+  });
 
   document.getElementById('reslibModalBackdrop').hidden = false;
   document.body.style.overflow = 'hidden';
@@ -181,4 +215,15 @@ fetch('content/resources.json')
     initSearchAndClear();
     initModal();
     initMobileNav();
+    openLinkedPractice();
   });
+
+// Planning Tool "Learn more" links land here as ?practice=<title>.
+function openLinkedPractice() {
+  const name = new URLSearchParams(window.location.search).get('practice');
+  if (!name) return;
+  openDetail(findByTitle(name) || {
+    title: name, type: PRACTICE_TYPE, audience: ['Clinician'], theme: [],
+    description: '', evidence: '', fileUrl: ''
+  });
+}

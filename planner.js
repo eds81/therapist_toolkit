@@ -29,6 +29,18 @@ const INTERVENTION_OPTIONS = [
   'Coping Cards', 'Family Album', 'Counseling about Disinhibiting Effects of Substances'
 ];
 
+// Descriptions for the options above live in the Treatment Library
+// (content/resources.json) as items of this type, matched by title, so the
+// hover preview on Select Interventions and the library page share one source.
+const PRACTICE_TYPE = 'Evidence-Based Practice';
+const practiceLibrary = {}; // lowercased title -> Treatment Library item
+function practiceInfo(name) { return practiceLibrary[name.toLowerCase()] || null; }
+function treatmentLibraryHref(name) { return `resource-library.html?practice=${encodeURIComponent(name)}`; }
+function practiceDescription(name) {
+  const info = practiceInfo(name);
+  return info && info.description ? info.description : '';
+}
+
 // ── Planner: Client Ecological Formulation & Treatment Plan ──
 const RING_ORDER = ['community', 'school', 'family', 'peer', 'client'];
 // Two curation steps sit between entering factors and the final review: pick
@@ -440,8 +452,8 @@ function buildEcoMapSvg(opts) {
   }).join('');
 
   const centerSvg = `
-    <text class="planner-center-label" x="${cx}" y="${cy - 4}" text-anchor="middle">${escapeXml(p.centerLabel)}</text>
-    <text class="planner-center-sub" x="${cx}" y="${cy + 13}" text-anchor="middle">${escapeXml(p.centerSub)}</text>`;
+    <text class="planner-center-label" data-ring="client" x="${cx}" y="${cy - 4}" text-anchor="middle">${escapeXml(p.centerLabel)}</text>
+    <text class="planner-center-sub" data-ring="client" x="${cx}" y="${cy + 13}" text-anchor="middle">${escapeXml(p.centerSub)}</text>`;
 
   function sideSvg(topStacked, bottomStacked, valence) {
     const records = topStacked.concat(bottomStacked).map(({ item, y }) => {
@@ -543,19 +555,14 @@ function buildEcoMapSvg(opts) {
   </svg>`;
 }
 
-const SAFETY_PLAN_KEYS = ['warningSigns', 'internalCoping', 'distraction', 'askForHelp', 'professionals', 'environment'];
-
 const plannerState = {
   data: null, factors: {}, currentStep: 0, furthestStep: 0, hasGenerated: false,
   nextFactorId: 1, // stable per-factor id so the top-3 picker can track a factor across re-renders
   topContributors: { risk: [null, null, null], protective: [null, null, null] },
   interventionsByFactor: {}, // factor id -> array of intervention strings; each top factor gets its own list
-  safetyPlanItems: {}, // editable, typed safety-plan content — same shape as the standalone tool
-  safetyPlanSeeded: false, // auto-fills once from entered factors, then it's fully the clinician's own
-  safetyPlanPicked: null, // { key, index, text } — transient click-to-move state, not persisted
+  phaseComments: ['', '', ''], // freeform notes per Phase 1/2/3, shown on Review and in the printed plan
   ringLabelByKey: {}
 };
-SAFETY_PLAN_KEYS.forEach(k => { plannerState.safetyPlanItems[k] = []; });
 RING_ORDER.forEach(k => { plannerState.factors[k] = { risk: [], protective: [] }; });
 
 // Persist progress in this browser only (nothing is sent anywhere) so switching
@@ -572,8 +579,7 @@ function persistPlannerState() {
       nextFactorId: plannerState.nextFactorId,
       topContributors: plannerState.topContributors,
       interventionsByFactor: plannerState.interventionsByFactor,
-      safetyPlanItems: plannerState.safetyPlanItems,
-      safetyPlanSeeded: plannerState.safetyPlanSeeded
+      phaseComments: plannerState.phaseComments
     }));
   } catch (e) { /* localStorage unavailable (private browsing, quota, etc.) — fail silently */ }
 }
@@ -618,21 +624,8 @@ function loadPersistedPlannerState() {
     if (saved.interventionsByFactor && typeof saved.interventionsByFactor === 'object') {
       plannerState.interventionsByFactor = saved.interventionsByFactor;
     }
-    if (saved.safetyPlanItems) {
-      SAFETY_PLAN_KEYS.forEach(k => {
-        if (Array.isArray(saved.safetyPlanItems[k])) plannerState.safetyPlanItems[k] = saved.safetyPlanItems[k];
-      });
-    }
-    plannerState.safetyPlanSeeded = !!saved.safetyPlanSeeded;
-
-    // Self-heal browsers that got stuck "seeded" with nothing in it (e.g. from
-    // reaching Review before any factors existed, under an earlier version of
-    // this guard) — if there's real factor data now but the safety plan is
-    // still completely empty, let it seed for real on the next regenerate.
-    const hasAnyFactor = RING_ORDER.some(r => plannerState.factors[r].risk.length || plannerState.factors[r].protective.length);
-    const hasAnySafetyPlanItem = SAFETY_PLAN_KEYS.some(k => plannerState.safetyPlanItems[k].length > 0);
-    if (plannerState.safetyPlanSeeded && !hasAnySafetyPlanItem && hasAnyFactor) {
-      plannerState.safetyPlanSeeded = false;
+    if (Array.isArray(saved.phaseComments)) {
+      plannerState.phaseComments = [0, 1, 2].map(i => saved.phaseComments[i] || '');
     }
   } catch (e) { /* ignore corrupt or inaccessible storage */ }
 }
@@ -705,11 +698,28 @@ function renderPlanner(data) {
   document.getElementById('plannerDisclaimer').innerHTML = `${icon('i-shield', 'icon-sm')}<span>${p.disclaimer}</span>`;
   document.getElementById('plannerRiskLabel').textContent = p.riskColumnLabel;
   document.getElementById('plannerProtectiveLabel').textContent = p.protectiveColumnLabel;
+  document.getElementById('plannerEcoMapRiskTitle').textContent = p.ecoMapRiskLabel;
+  document.getElementById('plannerEcoMapProtectiveTitle').textContent = p.ecoMapProtectiveLabel;
   document.getElementById('plannerRestartLink').textContent = p.resetButtonLabel;
   document.getElementById('plannerDownloadBtn').textContent = p.downloadButtonLabel;
   document.getElementById('plannerDownloadHint').textContent = p.downloadHint;
   document.getElementById('plannerEmptyState').textContent = p.emptyStateText;
   document.getElementById('plannerBackBtn').textContent = p.backButtonLabel;
+
+  // Review's three phase headers reuse the same Phase 1/2/3 titles and
+  // session ranges as the Treatment Roadmap, so they stay in sync with that
+  // content instead of needing their own separate copy.
+  const roadmapPhases = data.toolkit.tabs.roadmap.phases;
+  [1, 2, 3].forEach(n => {
+    const ph = roadmapPhases[n - 1];
+    if (!ph) return;
+    document.getElementById(`plannerPhase${n}Title`).textContent = ph.title;
+    document.getElementById(`plannerPhase${n}Sessions`).textContent = ph.sessions;
+    document.getElementById(`plannerPhase${n}CommentLabel`).textContent = p.phaseCommentLabel;
+    document.getElementById(`plannerPhase${n}CommentInput`).placeholder = p.phaseCommentPlaceholder;
+  });
+  document.getElementById('plannerEmailBtn').textContent = p.emailPlan.buttonLabel;
+  document.getElementById('plannerEmailHint').textContent = p.emailPlan.hint;
 
   function weightOptionsHtml() {
     return WEIGHT_LEVELS.map(w => `<option value="${w.value}"${w.value === 3 ? ' selected' : ''}>${w.value} — ${w.label}</option>`).join('');
@@ -746,9 +756,35 @@ function initPlanner() {
   const layout = document.getElementById('plannerLayout');
   if (!layout) return;
 
-  // ── Review-step hover highlight: hovering a ring's name (top stepper or a
-  // row label) spotlights that ring's factors and circle, and fades the rest.
+  // ── Ring hover highlight (ring steps and Review alike): hovering a ring's
+  // name (left stepper or a row label) spotlights that ring's factors and
+  // circle, and fades the rest.
   const reviewHighlightState = { ring: null };
+
+  // On ring steps (1–5), the circles and ring/center wording default to
+  // "current ring lit, the rest lighter" even with nothing hovered — hovering
+  // a different ring/pill temporarily previews that one instead (see
+  // applyRingHighlight, shared with the pill-hover system below).
+  function defaultHighlightRing() {
+    const stepKey = STEP_KEYS[plannerState.currentStep];
+    return RING_ORDER.includes(stepKey) ? stepKey : null;
+  }
+
+  function applyRingHighlight() {
+    const hoveredPillRing = pillHighlightState.factorId != null
+      ? document.querySelector(`.eco-pill[data-factor-id="${pillHighlightState.factorId}"]`)?.dataset.ring
+      : null;
+    const ring = hoveredPillRing || reviewHighlightState.ring || defaultHighlightRing();
+    const active = !!ring;
+    document.querySelectorAll('.planner-ring[data-ring]').forEach(el => {
+      el.classList.toggle('is-ring-match', active && el.dataset.ring === ring);
+      el.classList.toggle('is-ring-dim', active && el.dataset.ring !== ring);
+    });
+    document.querySelectorAll('.planner-ring-label[data-ring], .planner-center-label[data-ring], .planner-center-sub[data-ring]').forEach(lbl => {
+      lbl.classList.toggle('is-ring-match', active && lbl.dataset.ring === ring);
+      lbl.classList.toggle('is-ring-dim', active && lbl.dataset.ring !== ring);
+    });
+  }
 
   function applyReviewHighlight(ring) {
     const active = !!ring;
@@ -761,14 +797,6 @@ function initPlanner() {
       item.classList.toggle('is-ring-match', active && item.dataset.ring === ring);
       item.classList.toggle('is-ring-dim', active && !isNonRingStep && item.dataset.ring !== ring);
     });
-    document.querySelectorAll('.planner-ring-label[data-ring]').forEach(lbl => {
-      lbl.classList.toggle('is-ring-match', active && lbl.dataset.ring === ring);
-      lbl.classList.toggle('is-ring-dim', active && lbl.dataset.ring !== ring);
-    });
-    document.querySelectorAll('.planner-ring[data-ring]').forEach(el => {
-      el.classList.toggle('is-ring-match', active && el.dataset.ring === ring);
-      el.classList.toggle('is-ring-dim', active && el.dataset.ring !== ring);
-    });
     document.querySelectorAll('.planner-connector[data-ring]').forEach(line => {
       line.classList.toggle('is-ring-match', active && line.dataset.ring === ring);
       line.classList.toggle('is-ring-dim', active && line.dataset.ring !== ring);
@@ -777,10 +805,10 @@ function initPlanner() {
       pill.classList.toggle('is-ring-match', active && pill.dataset.ring === ring);
       pill.classList.toggle('is-ring-dim', active && pill.dataset.ring !== ring);
     });
+    applyRingHighlight();
   }
 
   function setReviewHighlight(ring) {
-    if (STEP_KEYS[plannerState.currentStep] !== 'review') return;
     reviewHighlightState.ring = ring;
     applyReviewHighlight(ring);
   }
@@ -811,6 +839,12 @@ function initPlanner() {
       line.classList.toggle('is-pill-match', active && line.dataset.factorId === String(factorId));
       line.classList.toggle('is-pill-dim', active && line.dataset.factorId !== String(factorId));
     });
+
+    // Also spotlight the ring this pill belongs to — same is-ring-match/
+    // is-ring-dim treatment as hovering that ring/layer directly, just
+    // triggered from the pill instead (shared with applyReviewHighlight;
+    // falls back to the step's default ring when no pill is hovered).
+    applyRingHighlight();
   }
   function setPillHighlight(factorId) {
     pillHighlightState.factorId = factorId;
@@ -896,6 +930,7 @@ function initPlanner() {
     document.getElementById('plannerStepNav').hidden = onReview;
     document.getElementById('plannerActions').hidden = !onReview;
     document.getElementById('plannerDownloadHint').hidden = !onReview;
+    document.getElementById('plannerEmailHint').hidden = !onReview;
     // The generated plan only belongs on Review — once you've generated it,
     // it shouldn't keep trailing along at the bottom of every other step.
     document.getElementById('plannerOutput').hidden = !(onReview && plannerState.hasGenerated);
@@ -903,8 +938,12 @@ function initPlanner() {
     // to add, and both curation steps (Top Factors, Resources) stand on their own.
     document.getElementById('plannerLayout').hidden = isTopFactorsStep || isResourcePlanStep || onReview;
     // The ecological map belongs on ring steps and Review — both curation
-    // steps (Top Factors, Resources) stand on their own without it.
+    // steps (Top Factors, Resources) stand on their own without it. Its
+    // "Phase 1" header only belongs on Review, since steps 1–5 already have
+    // their own per-ring step header above.
     document.getElementById('plannerEcoMapWrap').hidden = isTopFactorsStep || isResourcePlanStep;
+    document.getElementById('plannerReviewPhase1Head').hidden = !onReview;
+    document.getElementById('plannerPriorityStrip').hidden = !onReview;
     document.getElementById('plannerTopFactorsSection').hidden = !isTopFactorsStep;
     document.getElementById('plannerResourcePlanSection').hidden = !isResourcePlanStep;
 
@@ -916,7 +955,7 @@ function initPlanner() {
     // mapping activity as three named phases.
     let title, hint;
     if (onReview) {
-      title = `Step ${index + 1} of ${STEP_KEYS.length}: Review and Next Steps`;
+      title = `Step ${index + 1} of ${STEP_KEYS.length}: Treatment Plan`;
       hint = '';
     } else if (isRingStep) {
       const ringData = p.rings.find(r => r.key === stepKey);
@@ -1170,15 +1209,11 @@ function initPlanner() {
   // 3 risk + 3 protective) gets its own picker — a dropdown plus a write-in
   // field — so each factor ends up with at least one assigned
   // strategy/practice, with multiple allowed per factor. ──
-  // One shared <datalist> (built once) backs every factor's input — typing
-  // filters/suggests from the 71 options, but anything can be typed and
-  // added. This replaces a separate dropdown + write-in field with a single
-  // compact control per factor.
-  function interventionDatalistHtml() {
-    const sortedOptions = INTERVENTION_OPTIONS.slice().sort((a, b) => a.localeCompare(b));
-    return `<datalist id="interventionOptionsList">${sortedOptions.map(opt => `<option value="${opt}"></option>`).join('')}</datalist>`;
-  }
-
+  // Each factor's input opens a custom suggestion dropdown (a native
+  // <datalist> can't show anything on hover). Typing filters the 71
+  // options, but anything can still be typed and added. Hovering (or
+  // arrowing to) an option previews its description with a link to that
+  // practice in the Treatment Library.
   function renderInterventionStep() {
     const container = document.getElementById('interventionFactorsList');
     if (!container) return;
@@ -1188,7 +1223,7 @@ function initPlanner() {
       return;
     }
 
-    container.innerHTML = interventionDatalistHtml() + factors.map(f => {
+    container.innerHTML = factors.map(f => {
       const chosen = plannerState.interventionsByFactor[f.id] || [];
       const chipsHtml = chosen.map((text, i) => `
         <span class="planner-chip planner-chip-neutral">
@@ -1203,8 +1238,11 @@ function initPlanner() {
             ${severityDotsHtml(f.valence, f.weight)}
           </div>
           <div class="intervention-input-row">
-            <input type="text" class="planner-input intervention-input" list="interventionOptionsList"
-                   data-factor-id="${f.id}" placeholder="Type or choose a strategy/practice…" />
+            <div class="intervention-combo">
+              <input type="text" class="planner-input intervention-input" autocomplete="off"
+                     role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="interventionListbox"
+                     data-factor-id="${f.id}" placeholder="Type or choose a strategy/practice…" />
+            </div>
             <button type="button" class="btn btn-primary intervention-add-btn" data-factor-id="${f.id}">Add</button>
           </div>
           ${chipsHtml ? `<div class="intervention-selected-list">${chipsHtml}</div>` : ''}
@@ -1230,16 +1268,121 @@ function initPlanner() {
     persistPlannerState();
   }
 
+  // ── Intervention suggestion dropdown — one shared panel that moves into
+  // whichever factor's combo is focused. Left: filtered options. Right (or
+  // below, on narrow screens): a preview of the hovered/arrowed option with
+  // its description and a "Learn more" link into the Treatment Library. ──
+  const SORTED_INTERVENTIONS = INTERVENTION_OPTIONS.slice().sort((a, b) => a.localeCompare(b));
+  const combo = { input: null, panel: null, options: [], active: -1, pointerType: 'mouse' };
+
+  function comboPanel() {
+    if (combo.panel && document.contains(combo.panel)) return combo.panel;
+    const panel = document.createElement('div');
+    panel.className = 'intervention-dropdown';
+    panel.innerHTML = `
+      <ul class="intervention-options" id="interventionListbox" role="listbox" aria-label="Strategies and practices"></ul>
+      <div class="intervention-preview" aria-live="polite"></div>`;
+    // Keep focus in the input when picking with the mouse.
+    panel.addEventListener('mousedown', e => { if (!e.target.closest('a, button')) e.preventDefault(); });
+    panel.addEventListener('pointerdown', e => { combo.pointerType = e.pointerType || 'mouse'; });
+    panel.addEventListener('mouseover', e => {
+      const li = e.target.closest('.intervention-option');
+      if (li) setComboActive(parseInt(li.dataset.index, 10), false);
+    });
+    panel.addEventListener('click', e => {
+      const addBtn = e.target.closest('.intervention-preview-add');
+      if (addBtn) { pickComboOption(combo.options[combo.active]); return; }
+      const li = e.target.closest('.intervention-option');
+      if (!li) return;
+      const index = parseInt(li.dataset.index, 10);
+      // Touch has no hover, so the first tap previews and the preview's
+      // "Add" button confirms; a mouse click adds straight away.
+      if (combo.pointerType === 'touch' && combo.active !== index) setComboActive(index, false);
+      else pickComboOption(combo.options[index]);
+    });
+    combo.panel = panel;
+    return panel;
+  }
+
+  function practicePreviewHtml(name) {
+    const info = practiceInfo(name);
+    const description = info && info.description
+      ? escapeXml(info.description)
+      : '<em>Description coming soon.</em>';
+    return `
+      <h4>${escapeXml(name)}</h4>
+      <p>${description}</p>
+      <div class="intervention-preview-actions">
+        <a class="btn btn-outline intervention-learn-more" href="${treatmentLibraryHref(name)}" target="_blank" rel="noopener">Learn more</a>
+        <button type="button" class="btn btn-primary intervention-preview-add">Add</button>
+      </div>`;
+  }
+
+  function setComboActive(index, scroll) {
+    const panel = comboPanel();
+    combo.active = index;
+    panel.querySelectorAll('.intervention-option').forEach((li, i) => {
+      const on = i === index;
+      li.classList.toggle('is-active', on);
+      li.setAttribute('aria-selected', String(on));
+      if (on && scroll) li.scrollIntoView({ block: 'nearest' });
+    });
+    const preview = panel.querySelector('.intervention-preview');
+    if (index >= 0 && combo.options[index]) {
+      preview.innerHTML = practicePreviewHtml(combo.options[index]);
+      combo.input.setAttribute('aria-activedescendant', `interventionOption${index}`);
+    } else {
+      preview.innerHTML = `<p class="intervention-preview-hint">Hover over a practice to see what it is.</p>`;
+      combo.input && combo.input.removeAttribute('aria-activedescendant');
+    }
+  }
+
+  function openCombo(input) {
+    const panel = comboPanel();
+    if (combo.input && combo.input !== input) combo.input.setAttribute('aria-expanded', 'false');
+    combo.input = input;
+    const q = input.value.trim().toLowerCase();
+    combo.options = q ? SORTED_INTERVENTIONS.filter(opt => opt.toLowerCase().includes(q)) : SORTED_INTERVENTIONS;
+    const list = panel.querySelector('.intervention-options');
+    list.innerHTML = combo.options.length
+      ? combo.options.map((opt, i) => `<li class="intervention-option" id="interventionOption${i}" role="option" aria-selected="false" data-index="${i}">${escapeXml(opt)}</li>`).join('')
+      : `<li class="intervention-option-empty">No match — press Enter or Add to use &ldquo;${escapeXml(input.value.trim())}&rdquo;.</li>`;
+    if (panel.parentElement !== input.parentElement) input.parentElement.appendChild(panel);
+    panel.hidden = false;
+    input.setAttribute('aria-expanded', 'true');
+    setComboActive(-1, false);
+  }
+
+  function closeCombo() {
+    if (combo.panel) combo.panel.hidden = true;
+    if (combo.input) {
+      combo.input.setAttribute('aria-expanded', 'false');
+      combo.input.removeAttribute('aria-activedescendant');
+    }
+    combo.active = -1;
+  }
+
+  function pickComboOption(value) {
+    if (!combo.input || !value) return;
+    const fid = combo.input.dataset.factorId;
+    closeCombo();
+    addIntervention(fid, value);
+    // renderInterventionStep() rebuilds the whole list, so re-query the
+    // fresh input for this factor and refocus it for rapid entry.
+    interventionFactorsList.querySelector(`.intervention-input[data-factor-id="${fid}"]`)?.focus({ preventScroll: true });
+  }
+
   const interventionFactorsList = document.getElementById('interventionFactorsList');
   if (interventionFactorsList) {
     interventionFactorsList.addEventListener('click', e => {
+      const input = e.target.closest('.intervention-input');
+      if (input) { openCombo(input); return; }
       const addBtn = e.target.closest('.intervention-add-btn');
       if (addBtn) {
         const fid = addBtn.dataset.factorId;
-        const input = interventionFactorsList.querySelector(`.intervention-input[data-factor-id="${fid}"]`);
-        addIntervention(fid, input.value);
-        // renderInterventionStep() rebuilds the whole list, so re-query the
-        // fresh input for this factor and refocus it for rapid entry.
+        const field = interventionFactorsList.querySelector(`.intervention-input[data-factor-id="${fid}"]`);
+        closeCombo();
+        addIntervention(fid, field.value);
         interventionFactorsList.querySelector(`.intervention-input[data-factor-id="${fid}"]`)?.focus();
         return;
       }
@@ -1249,131 +1392,42 @@ function initPlanner() {
         removeIntervention(fid, parseInt(idx, 10));
       }
     });
+    interventionFactorsList.addEventListener('input', e => {
+      const input = e.target.closest('.intervention-input');
+      if (input) openCombo(input);
+    });
     interventionFactorsList.addEventListener('keydown', e => {
       const input = e.target.closest('.intervention-input');
-      if (!input || e.key !== 'Enter') return;
-      e.preventDefault();
-      const fid = input.dataset.factorId;
-      addIntervention(fid, input.value);
-      interventionFactorsList.querySelector(`.intervention-input[data-factor-id="${fid}"]`)?.focus();
-    });
-  }
-
-  // ── Draft Safety Plan editor on Review — typeable, same list pattern as
-  // the standalone Make A Safety Plan tool. ──
-  function addSafetyPlanItem(key, text) {
-    text = text.trim();
-    if (!text) return;
-    plannerState.safetyPlanItems[key].push(text);
-    document.getElementById('plannerOutputSafetyPlan').innerHTML = safetyPlanEditorHtml(plannerState.data);
-    persistPlannerState();
-  }
-
-  function removeSafetyPlanItem(key, index) {
-    plannerState.safetyPlanItems[key].splice(index, 1);
-    if (plannerState.safetyPlanPicked && plannerState.safetyPlanPicked.key === key && plannerState.safetyPlanPicked.index === index) {
-      plannerState.safetyPlanPicked = null;
-    }
-    document.getElementById('plannerOutputSafetyPlan').innerHTML = safetyPlanEditorHtml(plannerState.data);
-    persistPlannerState();
-  }
-
-  // Moves an item from one safety-plan section to another — e.g. an
-  // auto-seeded factor that really belongs under a different heading.
-  function moveSafetyPlanItem(fromKey, fromIndex, toKey) {
-    if (fromKey === toKey) return;
-    const fromList = plannerState.safetyPlanItems[fromKey];
-    if (!fromList || fromIndex < 0 || fromIndex >= fromList.length) return;
-    const [text] = fromList.splice(fromIndex, 1);
-    plannerState.safetyPlanItems[toKey].push(text);
-    plannerState.safetyPlanPicked = null;
-    document.getElementById('plannerOutputSafetyPlan').innerHTML = safetyPlanEditorHtml(plannerState.data);
-    persistPlannerState();
-  }
-
-  const safetyPlanOutputEl = document.getElementById('plannerOutputSafetyPlan');
-  if (safetyPlanOutputEl) {
-    safetyPlanOutputEl.addEventListener('click', e => {
-      const addBtn = e.target.closest('[data-sp-add]');
-      if (addBtn) {
-        const key = addBtn.dataset.spAdd;
-        const input = safetyPlanOutputEl.querySelector(`.sp-editor-input[data-sp-key="${key}"]`);
-        addSafetyPlanItem(key, input.value);
-        input.value = '';
-        input.focus();
-        return;
-      }
-      const removeBtn = e.target.closest('[data-sp-remove]');
-      if (removeBtn) {
-        const [key, idx] = removeBtn.dataset.spRemove.split(':');
-        removeSafetyPlanItem(key, parseInt(idx, 10));
-        return;
-      }
-      // Touch-friendly move: tap a chip to pick it up, tap a different
-      // section to drop it there (or tap the same chip again to cancel).
-      const chip = e.target.closest('.sp-movable-chip');
-      if (chip) {
-        const key = chip.dataset.spOriginKey;
-        const index = parseInt(chip.dataset.spOriginIndex, 10);
-        const picked = plannerState.safetyPlanPicked;
-        if (picked && picked.key === key && picked.index === index) {
-          plannerState.safetyPlanPicked = null;
-        } else {
-          plannerState.safetyPlanPicked = { key, index, text: plannerState.safetyPlanItems[key][index] };
-        }
-        document.getElementById('plannerOutputSafetyPlan').innerHTML = safetyPlanEditorHtml(plannerState.data);
-        return;
-      }
-      const section = e.target.closest('.safety-plan-section');
-      if (section && plannerState.safetyPlanPicked) {
-        const picked = plannerState.safetyPlanPicked;
-        if (section.dataset.spSection !== picked.key) {
-          moveSafetyPlanItem(picked.key, picked.index, section.dataset.spSection);
-        } else {
-          plannerState.safetyPlanPicked = null;
-          document.getElementById('plannerOutputSafetyPlan').innerHTML = safetyPlanEditorHtml(plannerState.data);
-        }
-      }
-    });
-    safetyPlanOutputEl.addEventListener('keydown', e => {
-      const input = e.target.closest('.sp-editor-input');
-      if (input && e.key === 'Enter') {
+      if (!input) return;
+      const open = combo.panel && !combo.panel.hidden && combo.input === input;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         e.preventDefault();
-        addSafetyPlanItem(input.dataset.spKey, input.value);
-        input.value = '';
-        return;
+        if (!open) { openCombo(input); return; }
+        const n = combo.options.length;
+        if (!n) return;
+        const step = e.key === 'ArrowDown' ? 1 : -1;
+        setComboActive(combo.active < 0 ? (step > 0 ? 0 : n - 1) : (combo.active + step + n) % n, true);
+      } else if (e.key === 'Escape' && open) {
+        e.preventDefault();
+        closeCombo();
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (open && combo.active >= 0) { pickComboOption(combo.options[combo.active]); return; }
+        const fid = input.dataset.factorId;
+        closeCombo();
+        addIntervention(fid, input.value);
+        interventionFactorsList.querySelector(`.intervention-input[data-factor-id="${fid}"]`)?.focus();
       }
-      if (e.key === 'Escape' && plannerState.safetyPlanPicked) {
-        plannerState.safetyPlanPicked = null;
-        document.getElementById('plannerOutputSafetyPlan').innerHTML = safetyPlanEditorHtml(plannerState.data);
-      }
     });
-    safetyPlanOutputEl.addEventListener('dragstart', e => {
-      const chip = e.target.closest('.sp-movable-chip');
-      if (!chip) return;
-      e.dataTransfer.setData('text/plain', JSON.stringify({
-        key: chip.dataset.spOriginKey, index: parseInt(chip.dataset.spOriginIndex, 10)
-      }));
-      e.dataTransfer.effectAllowed = 'move';
+    // Close when focus or a click lands outside the open combo.
+    interventionFactorsList.addEventListener('focusout', e => {
+      if (!combo.input || !combo.panel || combo.panel.hidden) return;
+      const wrap = combo.input.parentElement;
+      if (e.relatedTarget && !wrap.contains(e.relatedTarget)) closeCombo();
     });
-    safetyPlanOutputEl.addEventListener('dragover', e => {
-      const section = e.target.closest('.safety-plan-section');
-      if (!section) return;
-      e.preventDefault();
-      section.classList.add('is-drop-over');
-    });
-    safetyPlanOutputEl.addEventListener('dragleave', e => {
-      const section = e.target.closest('.safety-plan-section');
-      if (section) section.classList.remove('is-drop-over');
-    });
-    safetyPlanOutputEl.addEventListener('drop', e => {
-      const section = e.target.closest('.safety-plan-section');
-      if (!section) return;
-      e.preventDefault();
-      section.classList.remove('is-drop-over');
-      let payload;
-      try { payload = JSON.parse(e.dataTransfer.getData('text/plain')); } catch (err) { return; }
-      if (payload) moveSafetyPlanItem(payload.key, payload.index, section.dataset.spSection);
+    document.addEventListener('mousedown', e => {
+      if (!combo.panel || combo.panel.hidden) return;
+      if (!e.target.closest('.intervention-combo')) closeCombo();
     });
   }
 
@@ -1383,11 +1437,13 @@ function initPlanner() {
     });
     plannerState.topContributors = { risk: [null, null, null], protective: [null, null, null] };
     plannerState.interventionsByFactor = {};
-    SAFETY_PLAN_KEYS.forEach(k => { plannerState.safetyPlanItems[k] = []; });
-    plannerState.safetyPlanSeeded = false;
+    plannerState.phaseComments = ['', '', ''];
+    document.querySelectorAll('.planner-phase-comment-input').forEach(el => { el.value = ''; });
     document.getElementById('plannerOutput').hidden = true;
     document.getElementById('plannerDownloadBtn').hidden = true;
     document.getElementById('plannerDownloadHint').hidden = true;
+    document.getElementById('plannerEmailBtn').hidden = true;
+    document.getElementById('plannerEmailHint').hidden = true;
     plannerState.currentStep = 0;
     plannerState.furthestStep = 0;
     plannerState.hasGenerated = false;
@@ -1397,8 +1453,8 @@ function initPlanner() {
   }
 
   document.getElementById('plannerDownloadBtn').addEventListener('click', () => {
-    // Regenerate right before printing so the PDF always reflects whatever
-    // was just typed into the safety plan, even if nothing else changed.
+    // Regenerate right before printing so the PDF always reflects the
+    // latest factors and interventions, even if nothing else changed.
     generatePlan();
     window.print();
   });
@@ -1414,105 +1470,17 @@ function initPlanner() {
     item.addEventListener('click', () => goToStep(parseInt(item.dataset.stepIndex, 10)));
   });
 
+  document.querySelectorAll('.planner-phase-comment-input').forEach(el => {
+    el.addEventListener('input', () => {
+      plannerState.phaseComments[parseInt(el.dataset.phaseIndex, 10)] = el.value;
+      persistPlannerState();
+    });
+  });
+
   // Restore any previously entered factors (and the step/output the clinician
   // was on) before landing on the current step.
   goToStep(plannerState.currentStep); // already generates the plan if this lands on Review
   updateGenerateState();
-}
-
-// Auto-drafts a Stanley-Brown-style safety plan from entered factors. Always
-// flagged as a starting draft — the clinician still completes it with the client.
-function buildSafetyPlanData(data, ringLabelByKey) {
-  function itemsFor(rings, valence, sortByWeight) {
-    const out = [];
-    rings.forEach(ring => {
-      plannerState.factors[ring][valence].forEach(f => out.push({ text: f.text, weight: f.weight, ring: ringLabelByKey[ring] }));
-    });
-    if (sortByWeight) out.sort((a, b) => b.weight - a.weight);
-    return out;
-  }
-  return {
-    sections: data.planner.safetyPlan.sections,
-    disclaimer: data.planner.safetyPlan.disclaimer,
-    itemsByKey: {
-      warningSigns:   itemsFor(RING_ORDER, 'risk', true),
-      internalCoping: itemsFor(['client'], 'protective'),
-      distraction:    itemsFor(['peer', 'school'], 'protective'),
-      askForHelp:     itemsFor(['family', 'peer'], 'protective'),
-      professionals:  itemsFor(['community'], 'protective')
-    }
-  };
-}
-
-// The very first time Review generates a plan, seed the editable safety plan
-// from the entered risk/protective factors. After that it's the clinician's
-// own list — regenerating the rest of the plan never overwrites it again.
-// Only latches "seeded" once there was actually something to seed — reaching
-// Review before any factors exist must not permanently lock the plan empty.
-function seedSafetyPlanItemsIfNeeded(data) {
-  if (plannerState.safetyPlanSeeded) return;
-  const { itemsByKey } = buildSafetyPlanData(data, plannerState.ringLabelByKey);
-  const producedAnything = Object.values(itemsByKey).some(list => list.length > 0);
-  if (!producedAnything) return;
-  Object.keys(itemsByKey).forEach(key => {
-    plannerState.safetyPlanItems[key] = itemsByKey[key].map(it => it.text);
-  });
-  plannerState.safetyPlanSeeded = true;
-  persistPlannerState();
-}
-
-// Same structure as the standalone Make A Safety Plan tool — one typeable,
-// addable/removable list per section — but living inside the Review box and
-// started off with a draft pulled from the factors already entered.
-function safetyPlanEditorHtml(data) {
-  const sections = data.planner.safetyPlan.sections;
-  const picked = plannerState.safetyPlanPicked;
-  const body = sections.map(cfg => {
-    const items = plannerState.safetyPlanItems[cfg.key] || [];
-    const isDropTarget = picked && picked.key !== cfg.key;
-    const chips = items.map((text, i) => {
-      const isPicked = picked && picked.key === cfg.key && picked.index === i;
-      return `
-      <span class="planner-chip planner-chip-neutral sp-movable-chip${isPicked ? ' is-picked' : ''}" draggable="true" data-sp-origin-key="${cfg.key}" data-sp-origin-index="${i}">
-        <span class="planner-chip-text">${text}</span>
-        <button type="button" class="planner-chip-remove" data-sp-remove="${cfg.key}:${i}" aria-label="Remove">${icon('i-x', 'icon-xs')}</button>
-      </span>`;
-    }).join('');
-    return `
-      <div class="safety-plan-section${isDropTarget ? ' sp-drop-target' : ''}" data-sp-section="${cfg.key}">
-        <h4>${cfg.title}</h4>
-        ${cfg.intro ? `<p class="safety-plan-intro">${cfg.intro}</p>` : ''}
-        ${cfg.staticText ? `<p class="safety-plan-static">${cfg.staticText}</p>` : ''}
-        <div class="planner-input-group">
-          <input type="text" class="planner-input sp-editor-input" data-sp-key="${cfg.key}" placeholder="Add an item…" />
-          <button type="button" class="planner-add-btn" data-sp-add="${cfg.key}" aria-label="Add">${icon('i-plus', 'icon-xs')}</button>
-        </div>
-        <div class="planner-chips">${chips || `<p class="safety-plan-empty">${cfg.emptyText || 'Nothing added yet.'}</p>`}</div>
-      </div>`;
-  }).join('');
-  return `
-    <h3>${data.planner.outputHeadings.safetyPlan}</h3>
-    <div class="safety-plan-disclaimer">${icon('i-shield', 'icon-sm')}<span>${data.planner.safetyPlan.disclaimer}</span></div>
-    <p class="sp-move-hint">Drag an item into a different section to move it — or on touch, tap it, then tap the section to drop it in.${picked ? ` Moving "<strong>${picked.text}</strong>" — tap it again, or press Escape, to cancel.` : ''}</p>
-    ${body}`;
-}
-
-function safetyPlanPrintHtml(data) {
-  const sections = data.planner.safetyPlan.sections;
-  const body = sections.map(cfg => {
-    const its = plannerState.safetyPlanItems[cfg.key] || [];
-    const list = its.length
-      ? `<ul>${its.map(t => `<li>${t}</li>`).join('')}</ul>`
-      : `<p class="print-empty">${cfg.emptyText || 'Nothing added.'}</p>`;
-    return `
-      <div class="print-sp-section">
-        <h3>${cfg.title}</h3>
-        ${cfg.intro ? `<p class="print-sp-intro">${cfg.intro}</p>` : ''}
-        ${cfg.staticText ? `<p class="print-sp-intro">${cfg.staticText}</p>` : ''}
-        ${list}
-      </div>`;
-  }).join('');
-  return `<h2>${data.planner.outputHeadings.safetyPlan}</h2>${body}`;
 }
 
 function topContributorFactor(valence, id) {
@@ -1570,7 +1538,7 @@ function topContributorsPrintHtml() {
     const items = plannerState.topContributors[valence].map(id => id !== null ? topContributorFactor(valence, id) : null).filter(Boolean);
     return items.length ? items.map(it => `${it.text} (${it.ringLabel} · ${it.weight}/5)`).join('; ') : 'None selected';
   };
-  return `<h2 class="print-no-break">Top Contributors</h2><ul><li><strong>Top Risk Factors:</strong> ${listFor('risk')}</li><li><strong>Top Protective Factors:</strong> ${listFor('protective')}</li></ul>`;
+  return `<h3>Top Contributors</h3><ul><li><strong>Top Risk Factors:</strong> ${listFor('risk')}</li><li><strong>Top Protective Factors:</strong> ${listFor('protective')}</li></ul>`;
 }
 
 // Each top factor shown with its severity, its ecological placement (which
@@ -1590,7 +1558,12 @@ function interventionsHtml() {
         <span class="intervention-review-ring">${f.ringLabel}</span>
         ${severityDotsHtml(f.valence, f.weight)}
       </div>
-      <p class="intervention-review-plan">${list.length ? list.join(', ') : '<em>No intervention selected yet</em>'}</p>
+      ${list.length
+        ? `<ul class="intervention-review-practices">${list.map(name => {
+            const desc = practiceDescription(name);
+            return `<li><strong>${escapeXml(name)}</strong>${desc ? ` — ${escapeXml(desc)}` : ''}</li>`;
+          }).join('')}</ul>`
+        : '<p class="intervention-review-plan"><em>No intervention selected yet</em></p>'}
     </li>`;
   });
   return `<h3>Interventions</h3><ul class="planner-top-list intervention-review-list">${rows.join('')}</ul>`;
@@ -1598,12 +1571,79 @@ function interventionsHtml() {
 
 function myInterventionsPrintHtml() {
   const factors = selectedTopContributors();
-  if (!factors.length) return `<h2>My Interventions</h2><p>No top factors selected.</p>`;
+  if (!factors.length) return `<h3>My Interventions</h3><p>No top factors selected.</p>`;
   const rows = factors.map(f => {
     const list = plannerState.interventionsByFactor[f.id] || [];
-    return `<li><strong>${f.valence === 'risk' ? 'Risk' : 'Protective'} · ${f.text}:</strong> ${list.length ? list.join(', ') : 'no intervention selected yet'}</li>`;
+    const practices = list.map(name => {
+      const desc = practiceDescription(name);
+      return `<li><strong>${escapeXml(name)}</strong>${desc ? `: ${escapeXml(desc)}` : ''}</li>`;
+    }).join('');
+    return `<li><strong>${f.valence === 'risk' ? 'Risk' : 'Protective'} · ${f.text}:</strong> ${list.length ? `<ul>${practices}</ul>` : 'no intervention selected yet'}</li>`;
   });
-  return `<h2>My Interventions</h2><ul>${rows.join('')}</ul>`;
+  return `<h3>My Interventions</h3><ul>${rows.join('')}</ul>`;
+}
+
+// Opt-in "Email My Plan" — a plain-text mailto summary (factors, severities,
+// interventions), not the formatted PDF. No backend exists on this static
+// site to send mail directly, so this opens the clinician's own email
+// client, pre-filled, and lets them review/send it themselves — the same
+// pattern every other "contact us" link on the site already uses.
+function buildEmailPlanSummary(data) {
+  const lines = ['Therapist Toolkit — Plan Summary', ''];
+  RING_ORDER.forEach(ring => {
+    const risk = plannerState.factors[ring].risk;
+    const protective = plannerState.factors[ring].protective;
+    if (!risk.length && !protective.length) return;
+    lines.push(`${plannerState.ringLabelByKey[ring]}:`);
+    risk.forEach(f => lines.push(`  Risk: ${f.text} (${f.weight}/5)`));
+    protective.forEach(f => lines.push(`  Protective: ${f.text} (${f.weight}/5)`));
+  });
+
+  const factors = selectedTopContributors();
+  if (factors.length) {
+    lines.push('', 'Top Factors & Interventions:');
+    factors.forEach(f => {
+      const list = plannerState.interventionsByFactor[f.id] || [];
+      lines.push(`  ${f.valence === 'risk' ? 'Risk' : 'Protective'} · ${f.text}: ${list.length ? list.join(', ') : 'no intervention selected yet'}`);
+    });
+  }
+  return lines.join('\n');
+}
+
+function buildEmailPlanHref(data) {
+  const subject = encodeURIComponent('Therapist Toolkit — Plan Summary');
+  const body = encodeURIComponent(buildEmailPlanSummary(data));
+  return `mailto:${data.planner.emailPlan.address}?subject=${subject}&body=${body}`;
+}
+
+// The strip's three cards all look the same by default (see styles.css) —
+// hover/focus is handled purely in CSS, and clicking a card both jumps to
+// that phase's section and marks the clicked card "current" until another
+// one is clicked.
+function initPhaseStripNav() {
+  const strip = document.getElementById('plannerPriorityStrip');
+  if (!strip) return;
+  const targets = [
+    document.getElementById('plannerReviewPhase1Head'),
+    document.getElementById('plannerReviewPhase2Head'),
+    document.getElementById('plannerReviewPhase3Head')
+  ];
+  function activateCard(card) {
+    strip.querySelectorAll('.planner-phase-card').forEach(c => c.classList.toggle('is-current', c === card));
+    const target = targets[parseInt(card.dataset.phaseIndex, 10)];
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  strip.addEventListener('click', e => {
+    const card = e.target.closest('.planner-phase-card');
+    if (card) activateCard(card);
+  });
+  strip.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const card = e.target.closest('.planner-phase-card');
+    if (!card) return;
+    e.preventDefault();
+    activateCard(card);
+  });
 }
 
 function generatePlan() {
@@ -1611,7 +1651,6 @@ function generatePlan() {
   const phases = data.toolkit.tabs.roadmap.phases;
   const ringLabelByKey = plannerState.ringLabelByKey;
 
-  const phaseScores = phases.map(() => 0);
   const notes = [];
 
   RING_ORDER.forEach(ring => {
@@ -1619,52 +1658,45 @@ function generatePlan() {
       const factors = plannerState.factors[ring][valence];
       if (!factors.length) return;
       const rec = RING_RECOMMENDATIONS[ring][valence];
-      const weightSum = factors.reduce((sum, f) => sum + f.weight, 0);
       const maxWeight = Math.max(...factors.map(f => f.weight));
-      phaseScores[rec.phaseIndex] += weightSum;
       notes.push({ ringLabel: ringLabelByKey[ring], valence, text: rec.planNote, weight: maxWeight });
     });
   });
 
   notes.sort((a, b) => b.weight - a.weight);
 
-  const topScore = Math.max(...phaseScores);
+  // A plain, unscored, clickable strip — all three cards look the same
+  // until hovered/focused or clicked (see initPhaseStripNav/styles.css).
+  const priorityStripHtml = phases.map((ph, i) => `
+    <div class="planner-phase-card phase-${i + 1}" data-phase-index="${i}" role="button" tabindex="0">
+      <strong>${ph.title}</strong>
+      <span>${ph.sessions}</span>
+    </div>`).join('');
 
-  const planHtml = `
-    <h3>${data.planner.outputHeadings.plan}</h3>
-    <div class="planner-phase-strip">
-      ${phases.map((ph, i) => `
-        <div class="planner-phase-card phase-${i + 1}${phaseScores[i] === topScore && topScore > 0 ? ' is-priority' : ''}">
-          ${phaseScores[i] === topScore && topScore > 0 ? '<span class="planner-priority-badge">Priority focus</span>' : ''}
-          <strong>${ph.title}</strong>
-          <span>${ph.sessions}</span>
-        </div>`).join('')}
-    </div>
-    <ul class="planner-notes">
-      ${notes.map(n => `
-        <li>
-          <span class="planner-note-tag planner-note-tag-${n.valence}">${n.ringLabel} · ${n.valence === 'risk' ? 'Risk' : 'Protective'} · ${WEIGHT_LEVELS[n.weight - 1].label} (${n.weight}/5)</span>
-          <p>${n.text}</p>
-        </li>`).join('')}
-    </ul>`;
-
-  // The Toolkit (Roadmap/Schools/Self-Care) now lives on the About page, not this
-  // page — these open in a new tab so the clinician doesn't lose their in-progress plan.
+  // Links out to the other standalone pages — these open in a new tab so
+  // the clinician doesn't lose their in-progress plan.
   const moreHtml = `
     <h3>${data.planner.outputHeadings.more}</h3>
     <div class="planner-more-links">
-      <a class="btn btn-outline" href="about.html#tab-roadmap" target="_blank" rel="noopener">Treatment Roadmap</a>
-      <a class="btn btn-primary" href="resource-library.html" target="_blank" rel="noopener">Browse Full Resource Library</a>
-      <a class="btn btn-outline" href="about.html#tab-schools" target="_blank" rel="noopener">Navigating Schools</a>
-      <a class="btn btn-outline" href="self-care.html" target="_blank" rel="noopener">Self-Care &amp; Support</a>
+      <a class="btn btn-primary" href="resource-library.html" target="_blank" rel="noopener">Treatment Library</a>
+      <a class="btn btn-outline" href="find-referral.html" target="_blank" rel="noopener">Community Resources</a>
+      <a class="btn btn-outline" href="self-care.html" target="_blank" rel="noopener">Self Care and Support for Therapists</a>
+      <a class="btn btn-outline" href="safety-plan.html" target="_blank" rel="noopener">Make a Safety Plan For Your Client</a>
     </div>`;
 
-  seedSafetyPlanItemsIfNeeded(data);
-  document.getElementById('plannerOutputPlan').innerHTML = planHtml;
-  document.getElementById('plannerOutputSafetyPlan').innerHTML = safetyPlanEditorHtml(data);
-  document.getElementById('plannerOutputTopPlan').innerHTML = allFactorsHtml() + interventionsHtml();
+  // Factors (Phase 1, alongside the map) and Interventions (Phase 2) render
+  // into separate blocks now that Review is organized by phase, rather than
+  // one combined "Top Plan" block. The priority strip sits above all three
+  // phase sections, not nested inside Phase 1.
+  document.getElementById('plannerPriorityStrip').innerHTML = priorityStripHtml;
+  document.getElementById('plannerOutputTopPlan').innerHTML = allFactorsHtml();
+  document.getElementById('plannerOutputInterventions').innerHTML = interventionsHtml();
   document.getElementById('plannerOutputMore').innerHTML = moreHtml;
-  buildPrintSheet(data, ringLabelByKey, phases, phaseScores, topScore, notes);
+  [1, 2, 3].forEach(n => {
+    const el = document.getElementById(`plannerPhase${n}CommentInput`);
+    if (el && document.activeElement !== el) el.value = plannerState.phaseComments[n - 1] || '';
+  });
+  buildPrintSheet(data, ringLabelByKey, phases, notes);
 
   // generatePlan() can also run on page load to restore a previously-generated
   // plan — only actually reveal it if that restore lands back on Review;
@@ -1675,7 +1707,10 @@ function generatePlan() {
 
   document.getElementById('plannerDownloadBtn').hidden = false;
   document.getElementById('plannerDownloadHint').hidden = !onReviewNow;
-  if (onReviewNow) output.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  const emailBtn = document.getElementById('plannerEmailBtn');
+  emailBtn.href = buildEmailPlanHref(data);
+  emailBtn.hidden = false;
+  document.getElementById('plannerEmailHint').hidden = !onReviewNow;
 
   plannerState.hasGenerated = true;
   persistPlannerState();
@@ -1685,10 +1720,16 @@ function generatePlan() {
 // connector lines all in one viewBox) rather than a separate stripped-down
 // print version, so the PDF always matches what the clinician sees live.
 function buildPrintDiagramHtml() {
-  return `<div class="planner-ecomap-wrap print-diagram-wrap">${buildEcoMapSvg({ currentRing: null, locked: true, idPrefix: 'print' })}</div>`;
+  const p = plannerState.data.planner;
+  const titlesHtml = `
+    <div class="planner-ecomap-titles">
+      <span class="planner-ecomap-title planner-ecomap-title-risk">${escapeXml(p.ecoMapRiskLabel)}</span>
+      <span class="planner-ecomap-title planner-ecomap-title-protective">${escapeXml(p.ecoMapProtectiveLabel)}</span>
+    </div>`;
+  return `<div class="planner-ecomap-wrap print-diagram-wrap">${titlesHtml}${buildEcoMapSvg({ currentRing: null, locked: true, idPrefix: 'print' })}</div>`;
 }
 
-function buildPrintSheet(data, ringLabelByKey, phases, phaseScores, topScore, notes) {
+function buildPrintSheet(data, ringLabelByKey, phases, notes) {
   const dateStr = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
 
   const fmtFactors = list => list.map(f => `${f.text} (${f.weight}/5)`).join(', ');
@@ -1704,12 +1745,18 @@ function buildPrintSheet(data, ringLabelByKey, phases, phaseScores, topScore, no
       </div>`;
   }).join('');
 
-  const phasesHtml = phases.map((ph, i) => `
-    <li>${ph.title} (${ph.sessions})${phaseScores[i] === topScore && topScore > 0 ? ' — Priority focus' : ''}</li>`).join('');
+  // Whatever the clinician typed into that phase's Comments box on screen.
+  const phaseCommentHtml = i => {
+    const comment = (plannerState.phaseComments[i] || '').trim();
+    return comment ? `<h3>Comments</h3><p class="print-phase-comment">${escapeXml(comment)}</p>` : '';
+  };
 
   const notesHtml = notes.map(n => `
     <li><strong>${n.ringLabel} · ${n.valence === 'risk' ? 'Risk' : 'Protective'}:</strong> ${n.text}</li>`).join('');
 
+  // Same order as the on-screen Treatment Plan step: each Phase 1/2/3
+  // heading directly above the content and comment that live under it
+  // there, rather than a separate combined phase list.
   document.getElementById('plannerPrintSheet').innerHTML = `
     <h1>Client Ecological Formulation &amp; Treatment Plan</h1>
     <p class="print-date">Generated ${dateStr} — Therapist Toolkit Planning Tool</p>
@@ -1718,18 +1765,21 @@ function buildPrintSheet(data, ringLabelByKey, phases, phaseScores, topScore, no
     <h2>Ecological Map</h2>
     ${buildPrintDiagramHtml()}
 
-    <h2>Factors Entered</h2>
+    <h2>${phases[0].title} (${phases[0].sessions})</h2>
+    <h3>Factors Entered</h3>
     ${factorsHtml || '<p>None entered.</p>'}
-
     ${topContributorsPrintHtml()}
+    ${phaseCommentHtml(0)}
 
-    <h2>${data.planner.outputHeadings.plan}</h2>
-    <ul>${phasesHtml}</ul>
-    <ul>${notesHtml}</ul>
+    <h2>${phases[1].title} (${phases[1].sessions})</h2>
+    ${myInterventionsPrintHtml()}
+    ${phaseCommentHtml(1)}
 
-    ${safetyPlanPrintHtml(data)}
+    <h2>${phases[2].title} (${phases[2].sessions})</h2>
+    ${phaseCommentHtml(2)}
 
-    ${myInterventionsPrintHtml()}`;
+    <h2>Clinical Guidance Notes</h2>
+    <ul>${notesHtml || '<li>None.</li>'}</ul>`;
 }
 
 function renderFooter(data) {
@@ -1791,6 +1841,17 @@ window.addEventListener('beforeprint', () => {
 });
 
 // ── Load content, render, then wire up interactions ──
+fetch('content/resources.json')
+  .then(res => res.json())
+  .then(data => {
+    (data.items || []).forEach(item => {
+      if (item.type === PRACTICE_TYPE) practiceLibrary[item.title.toLowerCase()] = item;
+    });
+    // Descriptions can arrive after Review has already rendered.
+    if (plannerState.data && STEP_KEYS[plannerState.currentStep] === 'review') generatePlan();
+  })
+  .catch(() => {}); // previews fall back to "Description coming soon."
+
 fetch('content/site.json')
   .then(res => res.json())
   .then(data => {
@@ -1798,5 +1859,6 @@ fetch('content/site.json')
     renderFooter(data);
     loadPersistedPlannerState();
     initPlanner();
+    initPhaseStripNav();
     initFadeObserver();
   });

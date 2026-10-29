@@ -962,14 +962,20 @@ body.scgate-open { overflow: hidden; }
 .planner-ecomap-wrap { width: 100%; max-width: 1000px; margin: 20px auto 8px; }
 .planner-eco-svg { width: 100%; height: auto; display: block; }
 
+.planner-ecomap-titles { display: flex; justify-content: space-between; padding: 0 4px 6px; }
+.planner-ecomap-title { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: .07em; }
+.planner-ecomap-title-risk { color: #C0392B; }
+.planner-ecomap-title-protective { color: var(--green-dark); }
+
 .planner-ring-label {
   font-family: var(--font); font-size: 15px; font-weight: 800; letter-spacing: .07em;
   text-transform: uppercase; fill: var(--text-light); transition: fill .2s;
 }
 .planner-ring-label.has-factors { fill: var(--teal-dark); }
 .planner-ring { fill: var(--white); stroke: var(--cream-dark); transition: fill .2s, stroke .2s, stroke-width .2s, opacity .18s; }
-.planner-center-label { font-family: var(--font); font-size: 15px; font-weight: 900; fill: var(--teal-dark); text-anchor: middle; }
-.planner-center-sub { font-family: var(--font); font-size: 10px; font-weight: 700; fill: var(--text-light); text-anchor: middle; }
+.planner-center-label { font-family: var(--font); font-size: 15px; font-weight: 900; fill: var(--teal-dark); text-anchor: middle; transition: opacity .18s; }
+.planner-center-sub { font-family: var(--font); font-size: 10px; font-weight: 700; fill: var(--text-light); text-anchor: middle; transition: opacity .18s; }
+.planner-center-label.is-ring-dim, .planner-center-sub.is-ring-dim { opacity: .35; }
 .planner-connector { stroke-linecap: round; stroke-linejoin: round; transition: stroke-width .15s, opacity .18s; }
 
 .eco-pill text { font-family: var(--font); font-weight: 700; font-size: 18px; }
@@ -984,68 +990,76 @@ body.scgate-open { overflow: hidden; }
 
 .planner-actions { display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
 .planner-download-btn { padding: 16px 38px; font-size: 15px; }
+.planner-email-btn { padding: 16px 30px; font-size: 15px; }
 .planner-empty-state { font-size: 13px; color: var(--text-light); font-style: italic; margin-top: 12px; }
 .planner-download-hint { font-size: 12px; color: var(--text-light); margin-top: 10px; }
+.planner-email-hint { font-size: 12px; color: var(--text-light); margin-top: 6px; max-width: 640px; line-height: 1.5; }
 
 .planner-print-sheet { display: none; }
+
+/* Review — the three Phase 1/2/3 headers that group the map/factors,
+   interventions, and download/email content below. Colors match the same
+   phase-1/2/3 palette used on the small phase cards and the Roadmap tab. */
+.planner-review-phase-head { display: flex; align-items: center; gap: 14px; margin: 40px 0 18px; }
+.planner-review-phase-head:first-child { margin-top: 0; }
+.planner-review-phase-num {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--white); font-weight: 900; font-size: 15px;
+}
+.planner-review-phase-head-1 .planner-review-phase-num { background: var(--orange); }
+.planner-review-phase-head-2 .planner-review-phase-num { background: var(--green-dark); }
+.planner-review-phase-head-3 .planner-review-phase-num { background: var(--teal); }
+.planner-review-phase-head h3 { margin-bottom: 2px; }
+.planner-review-phase-sessions {
+  font-size: 12px; font-weight: 800; color: var(--text-light);
+  text-transform: uppercase; letter-spacing: .05em;
+}
+
+/* Freeform notes box under each Phase 1/2/3 head — persisted with the rest
+   of the plan and included in the printed/downloaded PDF (see
+   phaseCommentsPrintHtml in planner.js). */
+.planner-phase-comment { margin: 0 0 24px; }
+.planner-phase-comment label {
+  display: block; font-size: 11px; font-weight: 800; color: var(--text-light);
+  text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px;
+}
+.planner-phase-comment-input {
+  width: 100%; padding: 10px 14px; border-radius: var(--radius-sm);
+  border: 2px solid var(--cream-dark); background: var(--white);
+  font-family: var(--font); font-size: 13px; color: var(--text);
+  resize: vertical;
+}
+.planner-phase-comment-input:focus { outline: none; border-color: var(--teal); }
 
 .planner-output { margin-top: 48px; display: flex; flex-direction: column; gap: 28px; }
 .planner-output-block { background: var(--white); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow-sm); }
 
+/* Sits above Review's Phase 1/2/3 sections — all three cards look the same
+   at rest; emphasis only appears on hover/focus or after a click (clicking
+   also jumps to that phase's section — see initPhaseStripNav in planner.js). */
 .planner-phase-strip { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
 .planner-phase-card {
   flex: 1; min-width: 150px; border-radius: var(--radius-sm); padding: 14px 16px;
-  color: var(--white); position: relative; opacity: .5; transition: opacity .2s;
+  color: var(--white); position: relative; cursor: pointer;
+  transition: box-shadow .2s, transform .15s;
 }
-.planner-phase-card.is-priority { opacity: 1; box-shadow: 0 4px 16px rgba(0,0,0,.18); }
+.planner-phase-card:hover,
+.planner-phase-card.is-current { box-shadow: 0 4px 16px rgba(0,0,0,.18); transform: translateY(-1px); }
+.planner-phase-card:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
 .planner-phase-card strong { display: block; font-size: 13px; margin-bottom: 2px; }
 .planner-phase-card span { font-size: 11px; opacity: .85; }
-.planner-priority-badge {
-  position: absolute; top: -9px; right: 10px;
-  background: var(--text); color: var(--white); font-size: 9px; font-weight: 800;
-  text-transform: uppercase; letter-spacing: .05em; padding: 2px 8px; border-radius: 100px;
-}
 
-.planner-notes { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
-.planner-notes li { display: flex; flex-direction: column; gap: 4px; }
+.planner-resource-empty { font-size: 14px; color: var(--text-mid); margin-top: 12px; }
+
+/* Risk/Protective valence tag — used on both the Select Interventions step
+   and the Interventions list on Review. */
 .planner-note-tag {
   align-self: flex-start; font-size: 10px; font-weight: 800; text-transform: uppercase;
   letter-spacing: .05em; padding: 3px 10px; border-radius: 100px;
 }
 .planner-note-tag-risk { background: #FDECEA; color: #8B2E22; }
 .planner-note-tag-protective { background: var(--green-light); color: var(--green-dark); }
-.planner-notes p { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
-
-/* Safety Plan */
-.safety-plan-disclaimer {
-  display: flex; align-items: flex-start; gap: 10px;
-  background: var(--teal-light); border-left: 3px solid var(--teal);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  padding: 12px 14px; font-size: 13px; color: var(--teal-dark); margin: 16px 0 20px;
-}
-.safety-plan-section { margin-bottom: 20px; }
-.safety-plan-section:last-child { margin-bottom: 0; }
-.safety-plan-section h4 {
-  font-size: 12px; font-weight: 800; text-transform: uppercase;
-  letter-spacing: .05em; color: var(--teal-dark); margin-bottom: 8px;
-}
-.safety-plan-empty { font-size: 13px; color: var(--text-light); font-style: italic; margin: 0; }
-.safety-plan-intro { font-size: 13px; color: var(--text-light); line-height: 1.5; margin: -2px 0 10px; }
-.safety-plan-static { font-size: 14px; color: var(--text-mid); line-height: 1.6; margin-bottom: 10px; }
-.safety-plan-section .planner-input-group { max-width: 480px; }
-.safety-plan-section {
-  border-radius: var(--radius-sm); padding: 10px; margin-left: -10px; margin-right: -10px;
-  transition: background .15s, box-shadow .15s;
-}
-.safety-plan-section.sp-drop-target { box-shadow: inset 0 0 0 1px var(--cream-dark); cursor: pointer; }
-.safety-plan-section.is-drop-over { background: var(--teal-light); box-shadow: inset 0 0 0 2px var(--teal); }
-.sp-movable-chip { cursor: grab; }
-.sp-movable-chip:active { cursor: grabbing; }
-.sp-movable-chip.is-picked { box-shadow: 0 0 0 2px var(--teal); }
-.sp-move-hint { font-size: 12px; color: var(--text-light); margin: -8px 0 18px; }
-.sp-move-hint strong { color: var(--teal-dark); }
-
-.planner-resource-empty { font-size: 14px; color: var(--text-mid); margin-top: 12px; }
 
 /* ── Step: Phase 2 — Select Intervention. Each top factor gets its own
    row: a compact header (valence tag + factor text), one combined
@@ -1074,6 +1088,38 @@ body.scgate-open { overflow: hidden; }
 .intervention-input-row { display: flex; gap: 8px; flex: 2 1 320px; min-width: 260px; }
 .intervention-input { flex: 1; min-width: 0; }
 .intervention-selected-list { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* Suggestion dropdown: option list + a preview of the hovered option
+   (description and a "Learn more" link into the Treatment Library). */
+.intervention-combo { position: relative; flex: 1; min-width: 0; display: flex; }
+.intervention-dropdown {
+  position: absolute; top: calc(100% + 6px); left: 0; z-index: 30;
+  width: min(640px, calc(100vw - 48px));
+  display: grid; grid-template-columns: 1fr 1fr;
+  background: var(--white); border: 2px solid var(--cream-dark);
+  border-radius: var(--radius-sm); box-shadow: var(--shadow-md); overflow: hidden;
+}
+.intervention-dropdown[hidden] { display: none; }
+.intervention-options {
+  list-style: none; margin: 0; padding: 6px; max-height: 300px; overflow-y: auto;
+  border-right: 2px solid var(--cream);
+}
+.intervention-option {
+  padding: 8px 10px; border-radius: 6px; font-size: 13px; color: var(--text); cursor: pointer;
+}
+.intervention-option.is-active { background: var(--teal-light); color: var(--teal-dark); font-weight: 700; }
+.intervention-option-empty { padding: 10px; font-size: 13px; color: var(--text-light); }
+.intervention-preview { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+.intervention-preview h4 { margin: 0; font-size: 16px; color: var(--text); }
+.intervention-preview p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--text-mid); }
+.intervention-preview em { color: var(--text-light); }
+.intervention-preview-hint { color: var(--text-light) !important; }
+.intervention-preview-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.intervention-preview-actions .btn { padding: 8px 16px; font-size: 13px; }
+@media (max-width: 640px) {
+  .intervention-dropdown { grid-template-columns: 1fr; width: 100%; }
+  .intervention-options { max-height: 200px; border-right: none; border-bottom: 2px solid var(--cream); }
+}
 
 .planner-more-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
 
@@ -1140,6 +1186,15 @@ body.scgate-open { overflow: hidden; }
 .intervention-review-ring { font-size: 11px; font-weight: 700; color: var(--text-light); }
 .intervention-review-plan { font-size: 13px; color: var(--text-mid); margin: 0; padding-left: 2px; }
 .intervention-review-plan em { color: var(--text-light); font-style: normal; }
+/* Each chosen practice with its description, so the clinician has the
+   context on Review (and in the printed plan) without opening the library. */
+.intervention-review-practices {
+  list-style: none; margin: 0; padding-left: 2px;
+  display: flex; flex-direction: column; gap: 4px;
+  font-size: 13px; line-height: 1.5; color: var(--text-mid);
+}
+.intervention-review-list .intervention-review-practices li { margin-bottom: 0; }
+.intervention-review-practices strong { color: var(--text); }
 
 @media (max-width: 900px) {
   .planner-topfactors-pool, .planner-topfactors-slots, .planner-top-contributors {
@@ -1475,6 +1530,15 @@ body.scgate-open { overflow: hidden; }
   font-size: 13px; font-weight: 700; color: var(--text-light);
   background: var(--cream); padding: 8px 16px; border-radius: 100px;
 }
+/* Related resources on an evidence-based practice's detail view */
+.reslib-related { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.reslib-related-link {
+  width: 100%; display: flex; align-items: center; gap: 8px; text-align: left;
+  font-family: var(--font); font-size: 14px; font-weight: 700; color: var(--teal-dark);
+  background: var(--cream); border: none; border-radius: var(--radius-sm); padding: 10px 12px; cursor: pointer;
+}
+.reslib-related-link:hover { background: var(--teal-light); }
+.reslib-related-link span { margin-left: auto; font-size: 11px; font-weight: 700; color: var(--text-light); }
 
 @media (max-width: 800px) {
   .reslib-layout { grid-template-columns: 1fr; }
@@ -1499,9 +1563,9 @@ body.scgate-open { overflow: hidden; }
     page-break-before: always; break-before: page;
   }
   .planner-print-sheet h2:first-of-type { page-break-before: avoid; break-before: avoid; }
-  /* Top Contributors is a short summary of Factors Entered — keep them on
-     the same page instead of giving Top Contributors its own. */
-  .planner-print-sheet h2.print-no-break { page-break-before: avoid; break-before: avoid; }
+  /* Subheadings within a phase (Factors Entered, Top Contributors, My
+     Interventions) stay on the same page as that phase's h2. */
+  .planner-print-sheet h3 { font-size: 13px; color: #000; margin: 14px 0 6px; }
   .planner-print-sheet .print-date { font-size: 11px; color: #444; margin-bottom: 16px; }
   .planner-print-sheet .print-disclaimer {
     font-size: 11px; font-style: italic; border: 1px solid #999;
@@ -1520,10 +1584,6 @@ body.scgate-open { overflow: hidden; }
   }
   .planner-print-sheet ul { margin: 0 0 12px 18px; font-size: 12px; }
   .planner-print-sheet li { margin-bottom: 4px; }
-
-  .planner-print-sheet .print-sp-section { margin-bottom: 12px; break-inside: avoid; }
-  .planner-print-sheet .print-sp-section h3 { font-size: 12px; color: #000; margin: 0 0 3px; }
-  .planner-print-sheet .print-sp-intro { font-size: 11px; color: #555; margin: 0 0 4px; }
-  .planner-print-sheet .print-empty { font-size: 12px; font-style: italic; color: #666; margin: 0 0 12px; }
-
+  .planner-print-sheet li ul { margin: 4px 0 6px 16px; }
+  .planner-print-sheet .print-phase-comment { margin: 2px 0 12px; font-size: 11px; color: #333; }
 }
