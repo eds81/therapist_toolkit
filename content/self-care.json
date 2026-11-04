@@ -1,0 +1,155 @@
+{
+  "selfCarePage": {
+    "navLabel": "Self-Care & Support",
+    "sectionLabel": "Self-Care and Support",
+    "heading": "Self-Care and Support",
+    "concern": "This work takes a personal toll.",
+    "intro": "Working with youth at risk for suicide is some of the hardest clinical work there is. These tools help you spot burnout early, build resilience into your practice, provide tips and tricks from your peers, and let you schedule a consultation call with our licensed clinical psychologist.",
+    "quote": { "text": "I can tolerate darkness.", "cite": "Rise therapist" },
+    "tabs": { "overview": "Overview", "why": "Why It Matters", "wins": "Wall of Wins", "consult": "Talk to Someone" },
+    "items": [
+      { "icon": "i-heart",       "title": "Self-Care Tip Sheets",   "body": "Ideas curated for and by therapists doing high-acuity work." },
+      { "icon": "i-play-circle", "title": "Therapist Stories",      "body": "Videos and testimonials from therapists sharing real challenges and how they navigated them." },
+      { "icon": "i-moon",        "title": "Pre-Session Mindfulness", "body": "Brief grounding practices to prepare for emotionally demanding sessions." },
+      { "icon": "i-calendar",    "title": "Schedule a Consultation", "body": "Book time with a clinical psychologist or Rise team member for peer support." }
+    ],
+    "why": {
+      "heading": "Why This Matters",
+      "intro": "Building resilience into your practice isn't a luxury — it's part of doing this work well and staying in it for the long haul.",
+      "cards": [
+        { "colorClass": "why-icon-teal",   "icon": "i-heart", "lead": "This work is hard — and that's not a reflection of your skill.", "body": "Vicarious trauma and compassion fatigue are a normal response to sustained high-acuity work, not a sign you're doing something wrong.", "citation": null },
+        { "colorClass": "why-icon-orange", "icon": "i-users", "lead": "You're not doing this alone.", "body": "Every therapist on the Rise roster carries a caseload like yours — peer support and consultation exist because this work is genuinely heavier when carried solo.", "citation": null },
+        { "colorClass": "why-icon-yellow", "icon": "i-zap",   "lead": "Therapist burnout is real, and support helps.", "body": "Therapists doing this work report high exhaustion and emotional demand, and need more support", "citation": "Villarreal-Otalora et al., 2023" }
+      ]
+    },
+    "testimonialsHeading": "What Therapists Are Saying",
+    "testimonials": [
+      { "text": "Burnout is challenging. It's very hard seeing people in really difficult places over and over, especially when your entire caseload looks like that.", "cite": "Rise therapist", "theme": "ON BURNOUT" },
+      { "text": "Having someone else to call when a case gets heavy makes all the difference. I don't have to carry it by myself anymore.", "cite": "Rise therapist", "theme": "ON CONSULTATION" },
+      { "text": "I started blocking ten minutes before my hardest sessions just to breathe. It sounds small, but it changed how I show up.", "cite": "Rise therapist", "theme": "ON SELF-CARE" }
+    ],
+    "wallOfWins": {
+      "heading": "Wall of Wins",
+      "intro": "A place to celebrate the small (and big) wins — share one, or just read what others have shared.",
+      "prototypeNote": "Prototype preview: entries you add here are visible only in your browser and reset when you reload the page. Nothing is saved or shared with other therapists yet.",
+      "nameFieldPlaceholder": "Your name or initials (optional)",
+      "formPlaceholder": "Share a win, a moment of pride, or just how you're doing today...",
+      "submitLabel": "Share",
+      "defaultAuthor": "Rise therapist",
+      "seedPosts": [
+        { "author": "Rise therapist", "text": "A client I've been worried about for months came in today and told me she signed up for the school play. Small thing, huge thing." },
+        { "author": "Rise therapist", "text": "First time a family thanked me for \"just listening.\" Reminder that showing up consistently is the intervention sometimes." },
+        { "author": "Rise therapist", "text": "Made it through a really hard termination session today. Proud of how far we got in 12 sessions." }
+      ]
+    },
+    "consult": {
+      "eyebrow": "Talk to Someone",
+      "heading": "You don't have to carry a hard case — or a hard week — alone.",
+      "intro": "Tell us what you need and we'll point you to the right person. Every option below is confidential and none of it counts against you.",
+      "needPicker": {
+        "label": "What do you need right now?",
+        "options": [
+          { "label": "Talk through a case", "matchKey": "peer" },
+          { "label": "Clinical guidance on risk", "matchKey": "tamar" },
+          { "label": "I just need to decompress", "matchKey": "peer" },
+          { "label": "Resources, billing or logistics", "matchKey": "rise" }
+        ]
+      },
+      "cards": [
+        {
+          "key": "peer",
+          "icon": "i-users",
+          "title": "A peer therapist",
+          "subtitle": "Another Rise therapist · informal",
+          "bestFor": ["Gut-check a tricky case", "Talk through a hard week with someone who gets it"],
+          "format": "Phone or video, 20–30 min",
+          "reply": "Within 2 business days",
+          "note": "Not a substitute for supervision",
+          "buttonLabel": "Request a peer consult",
+          "mailto": "mailto:peersupport@riseagainstsuicide.org",
+          "schedulingUrl": "",
+          "secondaryText": "Or browse peer therapists ↓",
+          "secondaryHref": "#peers"
+        },
+        {
+          "key": "tamar",
+          "icon": "i-calendar-check",
+          "title": "Dr. Tamar Kodish",
+          "subtitle": "Licensed clinical psychologist",
+          "bestFor": ["Risk assessment and safety planning questions", "Clinical consultation or personal support"],
+          "format": "Scheduled video call, 30 min",
+          "reply": "Pick a time on the calendar",
+          "note": "Bring de-identified case details",
+          "buttonLabel": "Schedule with Dr. Tamar",
+          "mailto": "mailto:tamar@riseagainstsuicide.org",
+          "schedulingUrl": "",
+          "secondaryText": "Opens the scheduling tool",
+          "secondaryHref": ""
+        },
+        {
+          "key": "rise",
+          "icon": "i-chat",
+          "title": "The Rise team",
+          "subtitle": "Program staff · case support",
+          "bestFor": ["Resources, referrals, or billing questions", "General check-ins or program support"],
+          "format": "Email, reviewed on business days",
+          "reply": "Within 1 business day",
+          "note": "For non-urgent logistics, not crisis response",
+          "buttonLabel": "Email the Rise team",
+          "mailto": "mailto:team@riseagainstsuicide.org",
+          "schedulingUrl": "",
+          "secondaryText": "team@riseagainstsuicide.org",
+          "secondaryHref": "mailto:team@riseagainstsuicide.org"
+        }
+      ],
+      "prototypeNote": "Contact links and the scheduling link below are placeholders for this prototype — swap in real addresses and links via the CMS."
+    },
+    "gate": {
+      "heading": "Self-Care and Support",
+      "intro": "Enter password to continue",
+      "label": "Password",
+      "buttonLabel": "Continue",
+      "errorText": "That password didn't work — please try again."
+    },
+    "mindfulness": {
+      "heading": "Session Mindfulness",
+      "intro": "A brief grounding practice before a hard session, and a brief reset after one.",
+      "pre": {
+        "icon": "i-moon",
+        "title": "Pre-Session Mindfulness",
+        "subtitle": "Before you begin",
+        "intro": "Take a minute to ground yourself before you walk in.",
+        "startLabel": "Begin practice",
+        "stopLabel": "I'm ready",
+        "prompts": [
+          "Notice three things you can see in the room around you.",
+          "Unclench your jaw and drop your shoulders.",
+          "Name one thing you want to hold onto from this session."
+        ]
+      },
+      "post": {
+        "icon": "i-sun",
+        "title": "Post-Session Mindfulness",
+        "subtitle": "After you finish",
+        "intro": "Take a minute to reset before you move to the next thing.",
+        "startLabel": "Begin practice",
+        "stopLabel": "Done",
+        "prompts": [
+          "Name one thing from that session you'll let go of before the next one.",
+          "Notice how your body feels right now, without judging it.",
+          "Note anything you want to remember to follow up on later."
+        ]
+      }
+    },
+    "peerTherapists": {
+      "heading": "Peer Therapist One-on-One Support",
+      "intro": "Connect directly with another Rise therapist for informal, one-on-one peer support — not a substitute for supervision, just someone who gets it.",
+      "prototypeNote": "Photos and bios below are placeholders for this prototype. Replace with real peer therapist profiles via the CMS when available.",
+      "list": [
+        { "name": "Peer Therapist Profile", "role": "Role & background to be added", "bio": "Bio coming soon." },
+        { "name": "Peer Therapist Profile", "role": "Role & background to be added", "bio": "Bio coming soon." },
+        { "name": "Peer Therapist Profile", "role": "Role & background to be added", "bio": "Bio coming soon." }
+      ]
+    }
+  }
+}

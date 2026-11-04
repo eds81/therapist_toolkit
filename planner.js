@@ -2140,8 +2140,7 @@ fetch('content/resources.json')
   })
   .catch(() => {}); // previews fall back to "Description coming soon."
 
-fetch('content/site.json')
-  .then(res => res.json())
+loadSiteContent()
   .then(data => {
     renderPlanner(data);
     renderFooter(data);

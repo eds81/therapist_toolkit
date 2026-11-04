@@ -14,28 +14,10 @@ collections:
   - name: "content"
     label: "Site Content"
     files:
-      - file: "content/site.json"
-        name: "homepage"
-        label: "Homepage"
+      - file: "content/home.json"
+        name: "home"
+        label: "Home"
         fields:
-
-          - label: "The Goal (banner shown on the tool pages — reducing suicidal ideation)"
-            name: "goal"
-            widget: "object"
-            fields:
-              - {label: "Label", name: "label", widget: "string"}
-              - {label: "Headline", name: "headline", widget: "string"}
-              - label: "Page-Specific Context Lines"
-                name: "contexts"
-                widget: "object"
-                fields:
-                  - {label: "About page (Toolkit section)", name: "about", widget: "text"}
-                  - {label: "Planning Tool", name: "planner", widget: "text"}
-                  - {label: "Make A Safety Plan", name: "safetyPlan", widget: "text"}
-                  - {label: "Treatment Library", name: "library", widget: "text"}
-                  - {label: "Community Resources", name: "referral", widget: "text"}
-                  - {label: "Navigating Schools", name: "schools", widget: "text"}
-
           - label: "Hero"
             name: "hero"
             widget: "object"
@@ -64,7 +46,6 @@ collections:
                   - {label: "Suffix (e.g. %, %+)", name: "suffix", widget: "string", required: false}
                   - {label: "Text (used instead of Number, e.g. 'Ages 3–19')", name: "text", widget: "string", required: false}
                   - {label: "Label", name: "label", widget: "string"}
-
           - label: "Toolkit FAQ (verbatim client copy, shown on the home page)"
             name: "toolkitFaq"
             widget: "object"
@@ -133,6 +114,10 @@ collections:
                       - {label: "Link Target", name: "linkHref", widget: "string"}
                       - {label: "Text After Link", name: "post", widget: "string"}
 
+      - file: "content/about.json"
+        name: "about"
+        label: "About"
+        fields:
           - label: "About / Ecosystem Section"
             name: "about"
             widget: "object"
@@ -189,8 +174,7 @@ collections:
                       - i-book
                   - {label: "Color", name: "colorClass", widget: "select", options: ["step-teal", "step-green"]}
                   - {label: "Text", name: "text", widget: "string"}
-
-          - label: "Why This Toolkit Section"
+          - label: "Why This Toolkit Section (its cards also appear in the Home page FAQ)"
             name: "why"
             widget: "object"
             fields:
@@ -211,7 +195,6 @@ collections:
                 fields:
                   - {label: "Quote", name: "text", widget: "text"}
                   - {label: "Citation", name: "cite", widget: "string"}
-
           - label: "Toolkit Section"
             name: "toolkit"
             widget: "object"
@@ -286,7 +269,158 @@ collections:
                       - {label: "Text", name: "text", widget: "text"}
                       - {label: "Link Text", name: "linkText", widget: "string"}
                       - {label: "Link Target", name: "linkHref", widget: "string", hint: "Currently points to #team as a placeholder — update to a real mailto: or contact link when one exists."}
+          - label: "Research Section"
+            name: "research"
+            widget: "object"
+            fields:
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Intro", name: "intro", widget: "text", hint: "You can use <em>word</em> to italicize a word."}
+              - label: "Research Aims (fixed set of 3 — do not add or remove)"
+                name: "aims"
+                widget: "list"
+                fields:
+                  - {label: "Number", name: "num", widget: "string"}
+                  - {label: "Color", name: "colorClass", widget: "select", options: ["aim-teal", "aim-green", "aim-lime"]}
+                  - {label: "Title", name: "title", widget: "string"}
+                  - {label: "Body", name: "body", widget: "text"}
+              - {label: "Quotes Heading", name: "quotesHeading", widget: "string"}
+              - label: "Therapist Quotes (add or remove freely)"
+                name: "quotes"
+                widget: "list"
+                fields:
+                  - {label: "Quote", name: "text", widget: "text"}
+                  - {label: "Citation", name: "cite", widget: "string"}
+                  - {label: "Topic Tag", name: "domain", widget: "string"}
+          - label: "Team Section"
+            name: "team"
+            widget: "object"
+            fields:
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Intro", name: "intro", widget: "text"}
+              - label: "Team Members (fixed set of 2 — do not add or remove)"
+                name: "members"
+                widget: "list"
+                fields:
+                  - {label: "Logo Style", name: "logoClass", widget: "select", options: ["cu-logo", "rise-logo"]}
+                  - {label: "Logo Line 1", name: "logoLine1", widget: "string"}
+                  - {label: "Logo Line 2 (optional)", name: "logoLine2", widget: "string", required: false}
+                  - {label: "Name", name: "title", widget: "string"}
+                  - {label: "Description", name: "body", widget: "text"}
+                  - {label: "Funding Tag", name: "fundingTag", widget: "string"}
 
+      - file: "content/planner.json"
+        name: "planningTool"
+        label: "Planning Tool"
+        fields:
+          - label: "Planning Tool Section"
+            name: "planner"
+            widget: "object"
+            fields:
+              - {label: "Nav Label", name: "navLabel", widget: "string"}
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Intro", name: "intro", widget: "text"}
+              - {label: "Disclaimer", name: "disclaimer", widget: "text", hint: "Shown above the tool. Keep this — it's the clinical-judgment safeguard."}
+              - {label: "Risk Column Label", name: "riskColumnLabel", widget: "string"}
+              - {label: "Protective Column Label", name: "protectiveColumnLabel", widget: "string"}
+              - {label: "Eco Map Risk Title (left side of the circle map)", name: "ecoMapRiskLabel", widget: "string"}
+              - {label: "Eco Map Protective Title (right side of the circle map)", name: "ecoMapProtectiveLabel", widget: "string"}
+              - {label: "Center Label", name: "centerLabel", widget: "string"}
+              - {label: "Center Sub-label", name: "centerSub", widget: "string"}
+              - label: "Ecological Levels (fixed set of 5 — do not add or remove; order matters)"
+                name: "rings"
+                widget: "list"
+                fields:
+                  - {label: "Key (do not change)", name: "key", widget: "string"}
+                  - {label: "Label", name: "label", widget: "string"}
+                  - {label: "Risk Placeholder", name: "placeholderRisk", widget: "string"}
+                  - {label: "Protective Placeholder", name: "placeholderProtective", widget: "string"}
+              - {label: "Add Button Label", name: "addButtonLabel", widget: "string"}
+              - {label: "Step Hint (shown on each of the 5 entry steps)", name: "stepHint", widget: "text"}
+              - {label: "Back Button Label", name: "backButtonLabel", widget: "string"}
+              - {label: "Next Button Label", name: "nextButtonLabel", widget: "string"}
+              - {label: "Review Button Label (shown on the last entry step instead of Next)", name: "reviewButtonLabel", widget: "string"}
+              - {label: "Review Step Heading", name: "reviewHeading", widget: "string"}
+              - {label: "Review Step Intro", name: "reviewIntro", widget: "text"}
+              - {label: "Generate Button Label", name: "generateButtonLabel", widget: "string"}
+              - {label: "Reset Button Label", name: "resetButtonLabel", widget: "string"}
+              - {label: "Download Button Label", name: "downloadButtonLabel", widget: "string"}
+              - {label: "Download Hint", name: "downloadHint", widget: "string"}
+              - {label: "Empty State Text", name: "emptyStateText", widget: "string"}
+              - label: "Output Panel Headings"
+                name: "outputHeadings"
+                widget: "object"
+                fields:
+                  - {label: "Resources Heading", name: "resources", widget: "string"}
+                  - {label: "More EBPs Heading", name: "more", widget: "string"}
+              - label: "Email My Plan (opt-in — placeholder address, update once real one exists)"
+                name: "emailPlan"
+                widget: "object"
+                fields:
+                  - {label: "Button Label", name: "buttonLabel", widget: "string"}
+                  - {label: "Email Address", name: "address", widget: "string"}
+                  - {label: "Hint Text", name: "hint", widget: "text"}
+              - label: "Map Layout Switch (Original / Original, grouped / Separate / Grouped / Grouped + flat lines buttons above the ecological map)"
+                name: "mapLayouts"
+                widget: "object"
+                fields:
+                  - {label: "Label", name: "label", widget: "string"}
+                  - label: "Options (fixed set of 5 — do not change the keys)"
+                    name: "options"
+                    widget: "list"
+                    summary: "{{label}}"
+                    fields:
+                      - {label: "Key (do not change)", name: "key", widget: "string"}
+                      - {label: "Button Label", name: "label", widget: "string"}
+                      - {label: "Description (shown under the buttons)", name: "hint", widget: "text"}
+              - label: "Treatment Goal (reducing suicidal ideation — shown on every step, under each phase on Review, and in the PDF/email)"
+                name: "goal"
+                widget: "object"
+                fields:
+                  - {label: "Tag Label", name: "label", widget: "string"}
+                  - {label: "Goal Statement", name: "statement", widget: "string"}
+                  - label: "Step Reminders"
+                    name: "steps"
+                    widget: "object"
+                    fields:
+                      - {label: "Mapping steps (Community → Client)", name: "ring", widget: "text"}
+                      - {label: "Identify Top Factors", name: "topFactors", widget: "text"}
+                      - {label: "Select Interventions", name: "resourcePlan", widget: "text"}
+                      - {label: "Treatment Plan (Review)", name: "review", widget: "text"}
+                  - {label: "'In this phase' Label", name: "focusLabel", widget: "string"}
+                  - {label: "'Check' Label", name: "checkLabel", widget: "string"}
+                  - label: "Phase Goals (fixed set of 3 — Phase 1, 2, 3; each repeats the Goal Statement above)"
+                    name: "phases"
+                    widget: "list"
+                    fields:
+                      - {label: "In this phase (how this phase reduces suicidal ideation)", name: "focus", widget: "text"}
+                      - {label: "Check (yes/no question for the therapist)", name: "check", widget: "string"}
+              - label: "Phase 3 Checklist (shown under Phase 3 on Review and in the printed plan)"
+                name: "phase3Checklist"
+                widget: "object"
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - {label: "Intro", name: "intro", widget: "text"}
+                  - {label: "Progress Label (e.g. 'complete' in '2 of 4 complete')", name: "progressLabel", widget: "string"}
+                  - label: "Items"
+                    name: "items"
+                    widget: "list"
+                    summary: "{{text}}"
+                    fields:
+                      - {label: "Activity", name: "text", widget: "string"}
+                      - {label: "Detail", name: "detail", widget: "text", required: false}
+                      - label: "Links (optional — add one or more)"
+                        name: "links"
+                        widget: "list"
+                        required: false
+                        summary: "{{text}}"
+                        fields:
+                          - {label: "Link Text", name: "text", widget: "string"}
+                          - {label: "Link Target (e.g. schools.html)", name: "href", widget: "string"}
+              - {label: "Phase Comment Label (Comments box under each Phase 1/2/3 section on Review)", name: "phaseCommentLabel", widget: "string"}
+              - {label: "Phase Comment Placeholder", name: "phaseCommentPlaceholder", widget: "string"}
           - label: "Resource Categories (summary cards used by the Planning Tool's recommendations — for the full searchable library, edit the Treatment Library collection instead)"
             name: "resourceCategories"
             widget: "list"
@@ -296,108 +430,135 @@ collections:
               - {label: "Title", name: "title", widget: "string"}
               - {label: "Items", name: "items", widget: "list", field: {label: "Item", name: "item", widget: "string"}}
 
-          - label: "Self-Care & Support Page"
-            name: "selfCarePage"
+      - file: "content/safety-plan.json"
+        name: "safetyPlan"
+        label: "Make A Safety Plan"
+        fields:
+          - label: "Make A Safety Plan Page"
+            name: "safetyPlanPage"
             widget: "object"
             fields:
               - {label: "Nav Label", name: "navLabel", widget: "string"}
               - {label: "Section Label", name: "sectionLabel", widget: "string"}
               - {label: "Heading", name: "heading", widget: "string"}
-              - {label: "Therapist Concern (quoted)", name: "concern", widget: "string", required: false}
               - {label: "Intro", name: "intro", widget: "text"}
-              - label: "Pull Quote"
-                name: "quote"
-                widget: "object"
-                fields:
-                  - {label: "Quote", name: "text", widget: "text"}
-                  - {label: "Citation", name: "cite", widget: "string"}
-              - label: "Items (fixed set of 4 — do not add or remove)"
-                name: "items"
+              - {label: "Crisis Banner (always visible at the top of every step)", name: "crisisBanner", widget: "text"}
+              - {label: "Disclaimer", name: "disclaimer", widget: "text"}
+              - label: "Steps (fixed set of 6 — do not add, remove, or change the Key)"
+                name: "steps"
                 widget: "list"
                 fields:
-                  - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
-                  - {label: "Title", name: "title", widget: "string"}
-                  - {label: "Body", name: "body", widget: "text"}
-              - label: "Why This Matters"
-                name: "why"
-                widget: "object"
-                fields:
-                  - {label: "Heading", name: "heading", widget: "string"}
-                  - {label: "Intro", name: "intro", widget: "text"}
-                  - label: "Cards (fixed set of 3 — do not add or remove)"
-                    name: "cards"
-                    widget: "list"
-                    fields:
-                      - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
-                      - {label: "Color", name: "colorClass", widget: "select", options: ["why-icon-red", "why-icon-orange", "why-icon-yellow", "why-icon-teal"]}
-                      - {label: "Bold Lead-in", name: "lead", widget: "string"}
-                      - {label: "Body", name: "body", widget: "text"}
-                      - {label: "Citation (leave blank if none)", name: "citation", widget: "string", required: false}
-              - {label: "Testimonials Heading", name: "testimonialsHeading", widget: "string"}
-              - label: "Testimonials (add or remove freely)"
-                name: "testimonials"
-                widget: "list"
-                fields:
-                  - {label: "Quote", name: "text", widget: "text"}
-                  - {label: "Citation", name: "cite", widget: "string"}
-                  - {label: "Theme Tag", name: "theme", widget: "string"}
-              - label: "Wall of Wins (visual prototype — entries are not saved by visitors)"
-                name: "wallOfWins"
-                widget: "object"
-                fields:
-                  - {label: "Heading", name: "heading", widget: "string"}
-                  - {label: "Intro", name: "intro", widget: "text"}
-                  - {label: "Prototype Note", name: "prototypeNote", widget: "text", hint: "Shown above the form — update once this is a real, persisted feature."}
-                  - {label: "Post Field Placeholder", name: "formPlaceholder", widget: "string"}
-                  - {label: "Name Field Placeholder", name: "nameFieldPlaceholder", widget: "string"}
-                  - {label: "Submit Button Label", name: "submitLabel", widget: "string"}
-                  - {label: "Default Author (used if name left blank)", name: "defaultAuthor", widget: "string"}
-                  - label: "Seed Posts (add or remove freely)"
-                    name: "seedPosts"
-                    widget: "list"
-                    fields:
-                      - {label: "Author", name: "author", widget: "string"}
-                      - {label: "Text", name: "text", widget: "text"}
-              - label: "Talk to Someone (placeholder contact links — update once real ones exist)"
-                name: "consult"
-                widget: "object"
-                fields:
-                  - {label: "Eyebrow", name: "eyebrow", widget: "string"}
-                  - {label: "Heading", name: "heading", widget: "string"}
-                  - {label: "Intro", name: "intro", widget: "text"}
-                  - label: "Need Picker"
-                    name: "needPicker"
-                    widget: "object"
-                    fields:
-                      - {label: "Label", name: "label", widget: "string"}
-                      - label: "Options (fixed set of 4 — do not add or remove)"
-                        name: "options"
-                        widget: "list"
-                        fields:
-                          - {label: "Pill Label", name: "label", widget: "string"}
-                          - {label: "Matches Card (peer / tamar / rise — must match a card Key below)", name: "matchKey", widget: "string"}
-                  - label: "Contact Cards (fixed set of 3 — do not add or remove)"
-                    name: "cards"
-                    widget: "list"
-                    fields:
-                      - {label: "Key (do not change — peer / tamar / rise)", name: "key", widget: "string"}
-                      - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
-                      - {label: "Title", name: "title", widget: "string"}
-                      - {label: "Subtitle", name: "subtitle", widget: "string"}
-                      - label: "Best For (fixed set of 2 — do not add or remove)"
-                        name: "bestFor"
-                        widget: "list"
-                        field: {label: "Item", name: "item", widget: "string"}
-                      - {label: "Format", name: "format", widget: "string"}
-                      - {label: "Reply Time", name: "reply", widget: "string"}
-                      - {label: "Note", name: "note", widget: "string"}
-                      - {label: "Button Label", name: "buttonLabel", widget: "string"}
-                      - {label: "Mailto (used if no scheduling URL is set)", name: "mailto", widget: "string"}
-                      - {label: "Scheduling URL (optional — overrides the mailto on the button)", name: "schedulingUrl", widget: "string", required: false}
-                      - {label: "Secondary Line Text", name: "secondaryText", widget: "string"}
-                      - {label: "Secondary Line Link (leave blank for plain text, no link)", name: "secondaryHref", widget: "string", required: false}
-                  - {label: "Prototype Note", name: "prototypeNote", widget: "text"}
+                  - {label: "Key (do not change)", name: "key", widget: "string"}
+                  - {label: "Stepper Label (short — shown in the progress bar)", name: "stepLabel", widget: "string"}
+                  - {label: "Step Heading", name: "heading", widget: "string"}
+                  - {label: "Step Instructions", name: "intro", widget: "text"}
+                  - {label: "Input Placeholder", name: "placeholder", widget: "string"}
+                  - {label: "Add Button Label", name: "addButtonLabel", widget: "string"}
+              - {label: "Step Hint (shown on each of the 6 entry steps)", name: "stepHint", widget: "text"}
+              - {label: "Back Button Label", name: "backButtonLabel", widget: "string"}
+              - {label: "Next Button Label", name: "nextButtonLabel", widget: "string"}
+              - {label: "Review Button Label (shown on the last entry step instead of Next)", name: "reviewButtonLabel", widget: "string"}
+              - {label: "Review Step Heading", name: "reviewHeading", widget: "string"}
+              - {label: "Review Step Intro", name: "reviewIntro", widget: "text"}
+              - {label: "Download Button Label", name: "downloadButtonLabel", widget: "string"}
+              - {label: "Download Hint", name: "downloadHint", widget: "string"}
+              - {label: "Reset Button Label", name: "resetButtonLabel", widget: "string"}
+              - {label: "Empty State Text", name: "emptyStateText", widget: "string"}
 
+      - file: "content/resources.json"
+        name: "resourceLibrary"
+        label: "Treatment Library"
+        fields:
+          - label: "Page Intro"
+            name: "intro"
+            widget: "object"
+            fields:
+              - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Subheading", name: "sub", widget: "text"}
+              - {label: "PDF Notice", name: "pdfNotice", widget: "text", hint: "Shown at the top of the page — update or remove once PDFs are fully uploaded."}
+          - label: "Search & Filter Labels"
+            name: "filters"
+            widget: "object"
+            fields:
+              - {label: "Search Placeholder", name: "searchPlaceholder", widget: "string"}
+              - {label: "Audience Filter Label", name: "audienceLabel", widget: "string"}
+              - {label: "Type Filter Label", name: "typeLabel", widget: "string"}
+              - {label: "Theme Filter Label", name: "themeLabel", widget: "string"}
+              - {label: "Clear Filters Label", name: "clearLabel", widget: "string"}
+              - label: "Audience Options (must match the Audience values used below)"
+                name: "audienceOptions"
+                widget: "list"
+                field: {label: "Option", name: "option", widget: "string"}
+              - label: "Type Options (must match the Type values used below)"
+                name: "typeOptions"
+                widget: "list"
+                field: {label: "Option", name: "option", widget: "string"}
+              - label: "Theme Options (must match the Theme values used below)"
+                name: "themeOptions"
+                widget: "list"
+                field: {label: "Option", name: "option", widget: "string"}
+          - label: "Resources (add or remove freely)"
+            name: "items"
+            widget: "list"
+            summary: "{{title}}"
+            fields:
+              - {label: "Title", name: "title", widget: "string"}
+              - {label: "Type", name: "type", widget: "select", options: ["Assessment Tool", "Worksheet", "Handout", "Referral List", "Tip Sheet", "Evidence-Based Practice"], hint: "For an Evidence-Based Practice, the Title must match the practice's name on the Planning Tool's Select Interventions step exactly."}
+              - label: "Who It's For (select all that apply)"
+                name: "audience"
+                widget: "select"
+                multiple: true
+                options: ["Clinician", "Youth", "Family", "Community", "Schools"]
+              - label: "Theme (select all that apply)"
+                name: "theme"
+                widget: "select"
+                multiple: true
+                options: ["Risk Assessment & Safety Planning", "Coping Skills & Emotion Regulation", "Family Engagement", "School Coordination", "Community & Referrals", "Relapse Prevention & Transition"]
+              - {label: "Short Description", name: "description", widget: "text"}
+              - {label: "Why It Works (evidence/research note)", name: "evidence", widget: "text"}
+              - {label: "About This Practice (Evidence-Based Practices only — longer write-up shown in the Treatment Library)", name: "details", widget: "text", required: false}
+              - label: "Related Resources (Evidence-Based Practices only — titles of other library items)"
+                name: "relatedResources"
+                widget: "list"
+                required: false
+                field: {label: "Resource title", name: "title", widget: "string"}
+              - label: "PDF File"
+                name: "fileUrl"
+                widget: "file"
+                required: false
+                media_folder: "/resources"
+                public_folder: "/resources"
+                hint: "Leave blank until the PDF is ready — the page will show a \"PDF coming soon\" badge instead."
+
+      - file: "content/community-resources.json"
+        name: "communityResources"
+        label: "Community Resources"
+        fields:
+          - label: "Community Resources Page"
+            name: "referralPage"
+            widget: "object"
+            fields:
+              - {label: "Nav Label", name: "navLabel", widget: "string"}
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Intro", name: "intro", widget: "text"}
+              - {label: "Disclaimer", name: "disclaimer", widget: "text"}
+              - {label: "Search Field Label", name: "label", widget: "string"}
+              - {label: "Search Placeholder", name: "placeholder", widget: "string"}
+              - {label: "Search Button Label", name: "buttonLabel", widget: "string"}
+              - {label: "Empty Search Message", name: "noInputError", widget: "string"}
+              - {label: "Loading Text", name: "loadingText", widget: "string"}
+              - {label: "Coming Soon Heading", name: "comingSoonHeading", widget: "string"}
+              - {label: "Coming Soon Message", name: "comingSoonBody", widget: "text"}
+              - {label: "Results Heading", name: "resultsHeading", widget: "string"}
+              - {label: "Map Heading", name: "mapHeading", widget: "string"}
+              - {label: "Empty Map Caption", name: "mapEmptyCaption", widget: "string"}
+              - {label: "Map Attribution", name: "mapAttributionNote", widget: "string"}
+
+      - file: "content/schools.json"
+        name: "navigatingSchools"
+        label: "Navigating Schools"
+        fields:
           - label: "Navigating Schools Page"
             name: "schoolsPage"
             widget: "object"
@@ -531,187 +692,185 @@ collections:
                   - {label: "Intro", name: "intro", widget: "text"}
                   - {label: "Guidelines", name: "items", widget: "list", field: {label: "Guideline", name: "item", widget: "text"}}
 
-          - label: "Planning Tool Section"
-            name: "planner"
+      - file: "content/self-care.json"
+        name: "selfCare"
+        label: "Self-Care & Support"
+        fields:
+          - label: "Self-Care & Support Page"
+            name: "selfCarePage"
             widget: "object"
             fields:
               - {label: "Nav Label", name: "navLabel", widget: "string"}
               - {label: "Section Label", name: "sectionLabel", widget: "string"}
               - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Therapist Concern (quoted)", name: "concern", widget: "string", required: false}
               - {label: "Intro", name: "intro", widget: "text"}
-              - {label: "Disclaimer", name: "disclaimer", widget: "text", hint: "Shown above the tool. Keep this — it's the clinical-judgment safeguard."}
-              - {label: "Risk Column Label", name: "riskColumnLabel", widget: "string"}
-              - {label: "Protective Column Label", name: "protectiveColumnLabel", widget: "string"}
-              - {label: "Eco Map Risk Title (left side of the circle map)", name: "ecoMapRiskLabel", widget: "string"}
-              - {label: "Eco Map Protective Title (right side of the circle map)", name: "ecoMapProtectiveLabel", widget: "string"}
-              - {label: "Center Label", name: "centerLabel", widget: "string"}
-              - {label: "Center Sub-label", name: "centerSub", widget: "string"}
-              - label: "Ecological Levels (fixed set of 5 — do not add or remove; order matters)"
-                name: "rings"
+              - label: "Pull Quote"
+                name: "quote"
+                widget: "object"
+                fields:
+                  - {label: "Quote", name: "text", widget: "text"}
+                  - {label: "Citation", name: "cite", widget: "string"}
+              - label: "Items (fixed set of 4 — do not add or remove)"
+                name: "items"
                 widget: "list"
                 fields:
-                  - {label: "Key (do not change)", name: "key", widget: "string"}
-                  - {label: "Label", name: "label", widget: "string"}
-                  - {label: "Risk Placeholder", name: "placeholderRisk", widget: "string"}
-                  - {label: "Protective Placeholder", name: "placeholderProtective", widget: "string"}
-              - {label: "Add Button Label", name: "addButtonLabel", widget: "string"}
-              - {label: "Step Hint (shown on each of the 5 entry steps)", name: "stepHint", widget: "text"}
-              - {label: "Back Button Label", name: "backButtonLabel", widget: "string"}
-              - {label: "Next Button Label", name: "nextButtonLabel", widget: "string"}
-              - {label: "Review Button Label (shown on the last entry step instead of Next)", name: "reviewButtonLabel", widget: "string"}
-              - {label: "Review Step Heading", name: "reviewHeading", widget: "string"}
-              - {label: "Review Step Intro", name: "reviewIntro", widget: "text"}
-              - {label: "Generate Button Label", name: "generateButtonLabel", widget: "string"}
-              - {label: "Reset Button Label", name: "resetButtonLabel", widget: "string"}
-              - {label: "Download Button Label", name: "downloadButtonLabel", widget: "string"}
-              - {label: "Download Hint", name: "downloadHint", widget: "string"}
-              - {label: "Empty State Text", name: "emptyStateText", widget: "string"}
-              - label: "Output Panel Headings"
-                name: "outputHeadings"
-                widget: "object"
-                fields:
-                  - {label: "Resources Heading", name: "resources", widget: "string"}
-                  - {label: "More EBPs Heading", name: "more", widget: "string"}
-              - label: "Email My Plan (opt-in — placeholder address, update once real one exists)"
-                name: "emailPlan"
-                widget: "object"
-                fields:
-                  - {label: "Button Label", name: "buttonLabel", widget: "string"}
-                  - {label: "Email Address", name: "address", widget: "string"}
-                  - {label: "Hint Text", name: "hint", widget: "text"}
-              - label: "Map Layout Switch (Original / Original, grouped / Separate / Grouped / Grouped + flat lines buttons above the ecological map)"
-                name: "mapLayouts"
-                widget: "object"
-                fields:
-                  - {label: "Label", name: "label", widget: "string"}
-                  - label: "Options (fixed set of 5 — do not change the keys)"
-                    name: "options"
-                    widget: "list"
-                    summary: "{{label}}"
-                    fields:
-                      - {label: "Key (do not change)", name: "key", widget: "string"}
-                      - {label: "Button Label", name: "label", widget: "string"}
-                      - {label: "Description (shown under the buttons)", name: "hint", widget: "text"}
-              - label: "Treatment Goal (reducing suicidal ideation — shown on every step, under each phase on Review, and in the PDF/email)"
-                name: "goal"
-                widget: "object"
-                fields:
-                  - {label: "Tag Label", name: "label", widget: "string"}
-                  - {label: "Goal Statement", name: "statement", widget: "string"}
-                  - label: "Step Reminders"
-                    name: "steps"
-                    widget: "object"
-                    fields:
-                      - {label: "Mapping steps (Community → Client)", name: "ring", widget: "text"}
-                      - {label: "Identify Top Factors", name: "topFactors", widget: "text"}
-                      - {label: "Select Interventions", name: "resourcePlan", widget: "text"}
-                      - {label: "Treatment Plan (Review)", name: "review", widget: "text"}
-                  - {label: "'In this phase' Label", name: "focusLabel", widget: "string"}
-                  - {label: "'Check' Label", name: "checkLabel", widget: "string"}
-                  - label: "Phase Goals (fixed set of 3 — Phase 1, 2, 3; each repeats the Goal Statement above)"
-                    name: "phases"
-                    widget: "list"
-                    fields:
-                      - {label: "In this phase (how this phase reduces suicidal ideation)", name: "focus", widget: "text"}
-                      - {label: "Check (yes/no question for the therapist)", name: "check", widget: "string"}
-              - label: "Phase 3 Checklist (shown under Phase 3 on Review and in the printed plan)"
-                name: "phase3Checklist"
+                  - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
+                  - {label: "Title", name: "title", widget: "string"}
+                  - {label: "Body", name: "body", widget: "text"}
+              - label: "Why This Matters"
+                name: "why"
                 widget: "object"
                 fields:
                   - {label: "Heading", name: "heading", widget: "string"}
                   - {label: "Intro", name: "intro", widget: "text"}
-                  - {label: "Progress Label (e.g. 'complete' in '2 of 4 complete')", name: "progressLabel", widget: "string"}
-                  - label: "Items"
-                    name: "items"
+                  - label: "Cards (fixed set of 3 — do not add or remove)"
+                    name: "cards"
                     widget: "list"
-                    summary: "{{text}}"
                     fields:
-                      - {label: "Activity", name: "text", widget: "string"}
-                      - {label: "Detail", name: "detail", widget: "text", required: false}
-                      - label: "Links (optional — add one or more)"
-                        name: "links"
-                        widget: "list"
-                        required: false
-                        summary: "{{text}}"
-                        fields:
-                          - {label: "Link Text", name: "text", widget: "string"}
-                          - {label: "Link Target (e.g. schools.html)", name: "href", widget: "string"}
-              - {label: "Phase Comment Label (Comments box under each Phase 1/2/3 section on Review)", name: "phaseCommentLabel", widget: "string"}
-              - {label: "Phase Comment Placeholder", name: "phaseCommentPlaceholder", widget: "string"}
-
-          - label: "Make A Safety Plan Page"
-            name: "safetyPlanPage"
-            widget: "object"
-            fields:
-              - {label: "Nav Label", name: "navLabel", widget: "string"}
-              - {label: "Section Label", name: "sectionLabel", widget: "string"}
-              - {label: "Heading", name: "heading", widget: "string"}
-              - {label: "Intro", name: "intro", widget: "text"}
-              - {label: "Crisis Banner (always visible at the top of every step)", name: "crisisBanner", widget: "text"}
-              - {label: "Disclaimer", name: "disclaimer", widget: "text"}
-              - label: "Steps (fixed set of 6 — do not add, remove, or change the Key)"
-                name: "steps"
-                widget: "list"
-                fields:
-                  - {label: "Key (do not change)", name: "key", widget: "string"}
-                  - {label: "Stepper Label (short — shown in the progress bar)", name: "stepLabel", widget: "string"}
-                  - {label: "Step Heading", name: "heading", widget: "string"}
-                  - {label: "Step Instructions", name: "intro", widget: "text"}
-                  - {label: "Input Placeholder", name: "placeholder", widget: "string"}
-                  - {label: "Add Button Label", name: "addButtonLabel", widget: "string"}
-              - {label: "Step Hint (shown on each of the 6 entry steps)", name: "stepHint", widget: "text"}
-              - {label: "Back Button Label", name: "backButtonLabel", widget: "string"}
-              - {label: "Next Button Label", name: "nextButtonLabel", widget: "string"}
-              - {label: "Review Button Label (shown on the last entry step instead of Next)", name: "reviewButtonLabel", widget: "string"}
-              - {label: "Review Step Heading", name: "reviewHeading", widget: "string"}
-              - {label: "Review Step Intro", name: "reviewIntro", widget: "text"}
-              - {label: "Download Button Label", name: "downloadButtonLabel", widget: "string"}
-              - {label: "Download Hint", name: "downloadHint", widget: "string"}
-              - {label: "Reset Button Label", name: "resetButtonLabel", widget: "string"}
-              - {label: "Empty State Text", name: "emptyStateText", widget: "string"}
-
-          - label: "Research Section"
-            name: "research"
-            widget: "object"
-            fields:
-              - {label: "Section Label", name: "sectionLabel", widget: "string"}
-              - {label: "Heading", name: "heading", widget: "string"}
-              - {label: "Intro", name: "intro", widget: "text", hint: "You can use <em>word</em> to italicize a word."}
-              - label: "Research Aims (fixed set of 3 — do not add or remove)"
-                name: "aims"
-                widget: "list"
-                fields:
-                  - {label: "Number", name: "num", widget: "string"}
-                  - {label: "Color", name: "colorClass", widget: "select", options: ["aim-teal", "aim-green", "aim-lime"]}
-                  - {label: "Title", name: "title", widget: "string"}
-                  - {label: "Body", name: "body", widget: "text"}
-              - {label: "Quotes Heading", name: "quotesHeading", widget: "string"}
-              - label: "Therapist Quotes (add or remove freely)"
-                name: "quotes"
+                      - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
+                      - {label: "Color", name: "colorClass", widget: "select", options: ["why-icon-red", "why-icon-orange", "why-icon-yellow", "why-icon-teal"]}
+                      - {label: "Bold Lead-in", name: "lead", widget: "string"}
+                      - {label: "Body", name: "body", widget: "text"}
+                      - {label: "Citation (leave blank if none)", name: "citation", widget: "string", required: false}
+              - {label: "Testimonials Heading", name: "testimonialsHeading", widget: "string"}
+              - label: "Testimonials (add or remove freely)"
+                name: "testimonials"
                 widget: "list"
                 fields:
                   - {label: "Quote", name: "text", widget: "text"}
                   - {label: "Citation", name: "cite", widget: "string"}
-                  - {label: "Topic Tag", name: "domain", widget: "string"}
+                  - {label: "Theme Tag", name: "theme", widget: "string"}
+              - label: "Wall of Wins (visual prototype — entries are not saved by visitors)"
+                name: "wallOfWins"
+                widget: "object"
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - {label: "Intro", name: "intro", widget: "text"}
+                  - {label: "Prototype Note", name: "prototypeNote", widget: "text", hint: "Shown above the form — update once this is a real, persisted feature."}
+                  - {label: "Post Field Placeholder", name: "formPlaceholder", widget: "string"}
+                  - {label: "Name Field Placeholder", name: "nameFieldPlaceholder", widget: "string"}
+                  - {label: "Submit Button Label", name: "submitLabel", widget: "string"}
+                  - {label: "Default Author (used if name left blank)", name: "defaultAuthor", widget: "string"}
+                  - label: "Seed Posts (add or remove freely)"
+                    name: "seedPosts"
+                    widget: "list"
+                    fields:
+                      - {label: "Author", name: "author", widget: "string"}
+                      - {label: "Text", name: "text", widget: "text"}
+              - label: "Talk to Someone (placeholder contact links — update once real ones exist)"
+                name: "consult"
+                widget: "object"
+                fields:
+                  - {label: "Eyebrow", name: "eyebrow", widget: "string"}
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - {label: "Intro", name: "intro", widget: "text"}
+                  - label: "Need Picker"
+                    name: "needPicker"
+                    widget: "object"
+                    fields:
+                      - {label: "Label", name: "label", widget: "string"}
+                      - label: "Options (fixed set of 4 — do not add or remove)"
+                        name: "options"
+                        widget: "list"
+                        fields:
+                          - {label: "Pill Label", name: "label", widget: "string"}
+                          - {label: "Matches Card (peer / tamar / rise — must match a card Key below)", name: "matchKey", widget: "string"}
+                  - label: "Contact Cards (fixed set of 3 — do not add or remove)"
+                    name: "cards"
+                    widget: "list"
+                    fields:
+                      - {label: "Key (do not change — peer / tamar / rise)", name: "key", widget: "string"}
+                      - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
+                      - {label: "Title", name: "title", widget: "string"}
+                      - {label: "Subtitle", name: "subtitle", widget: "string"}
+                      - label: "Best For (fixed set of 2 — do not add or remove)"
+                        name: "bestFor"
+                        widget: "list"
+                        field: {label: "Item", name: "item", widget: "string"}
+                      - {label: "Format", name: "format", widget: "string"}
+                      - {label: "Reply Time", name: "reply", widget: "string"}
+                      - {label: "Note", name: "note", widget: "string"}
+                      - {label: "Button Label", name: "buttonLabel", widget: "string"}
+                      - {label: "Mailto (used if no scheduling URL is set)", name: "mailto", widget: "string"}
+                      - {label: "Scheduling URL (optional — overrides the mailto on the button)", name: "schedulingUrl", widget: "string", required: false}
+                      - {label: "Secondary Line Text", name: "secondaryText", widget: "string"}
+                      - {label: "Secondary Line Link (leave blank for plain text, no link)", name: "secondaryHref", widget: "string", required: false}
+                  - {label: "Prototype Note", name: "prototypeNote", widget: "text"}
+              - label: "Tab Labels"
+                name: "tabs"
+                widget: "object"
+                fields:
+                  - {label: "Overview", name: "overview", widget: "string"}
+                  - {label: "Why It Matters", name: "why", widget: "string"}
+                  - {label: "Wall of Wins", name: "wins", widget: "string"}
+                  - {label: "Talk to Someone", name: "consult", widget: "string"}
+              - label: "Password Screen (text only — the password itself is set in selfcare.js)"
+                name: "gate"
+                widget: "object"
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - {label: "Intro", name: "intro", widget: "string"}
+                  - {label: "Field Label", name: "label", widget: "string"}
+                  - {label: "Button Label", name: "buttonLabel", widget: "string"}
+                  - {label: "Wrong Password Message", name: "errorText", widget: "string"}
+              - label: "Session Mindfulness"
+                name: "mindfulness"
+                widget: "object"
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - {label: "Intro", name: "intro", widget: "text"}
+                  - label: "Pre-Session Practice"
+                    name: "pre"
+                    widget: "object"
+                    fields: &mindful_fields
+                      - {label: "Icon (e.g. i-moon, i-sun)", name: "icon", widget: "string"}
+                      - {label: "Title", name: "title", widget: "string"}
+                      - {label: "Subtitle", name: "subtitle", widget: "string"}
+                      - {label: "Intro", name: "intro", widget: "text"}
+                      - {label: "Start Button Label", name: "startLabel", widget: "string"}
+                      - {label: "Finish Button Label", name: "stopLabel", widget: "string"}
+                      - {label: "Prompts", name: "prompts", widget: "list", field: {label: "Prompt", name: "prompt", widget: "string"}}
+                  - label: "Post-Session Practice"
+                    name: "post"
+                    widget: "object"
+                    fields: *mindful_fields
+              - label: "Peer Therapist One-on-One Support"
+                name: "peerTherapists"
+                widget: "object"
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - {label: "Intro", name: "intro", widget: "text"}
+                  - {label: "Prototype Note (leave blank to hide)", name: "prototypeNote", widget: "text", required: false}
+                  - label: "Peer Therapists"
+                    name: "list"
+                    widget: "list"
+                    summary: "{{name}}"
+                    fields:
+                      - {label: "Name", name: "name", widget: "string"}
+                      - {label: "Role & Background", name: "role", widget: "string"}
+                      - {label: "Bio", name: "bio", widget: "text"}
 
-          - label: "Team Section"
-            name: "team"
+      - file: "content/site.json"
+        name: "siteWide"
+        label: "Site-wide (goal banner & footer)"
+        fields:
+          - label: "The Goal (banner shown on the tool pages — reducing suicidal ideation)"
+            name: "goal"
             widget: "object"
             fields:
-              - {label: "Section Label", name: "sectionLabel", widget: "string"}
-              - {label: "Heading", name: "heading", widget: "string"}
-              - {label: "Intro", name: "intro", widget: "text"}
-              - label: "Team Members (fixed set of 2 — do not add or remove)"
-                name: "members"
-                widget: "list"
+              - {label: "Label", name: "label", widget: "string"}
+              - {label: "Headline", name: "headline", widget: "string"}
+              - label: "Page-Specific Context Lines"
+                name: "contexts"
+                widget: "object"
                 fields:
-                  - {label: "Logo Style", name: "logoClass", widget: "select", options: ["cu-logo", "rise-logo"]}
-                  - {label: "Logo Line 1", name: "logoLine1", widget: "string"}
-                  - {label: "Logo Line 2 (optional)", name: "logoLine2", widget: "string", required: false}
-                  - {label: "Name", name: "title", widget: "string"}
-                  - {label: "Description", name: "body", widget: "text"}
-                  - {label: "Funding Tag", name: "fundingTag", widget: "string"}
-
+                  - {label: "About page (Toolkit section)", name: "about", widget: "text"}
+                  - {label: "Planning Tool", name: "planner", widget: "text"}
+                  - {label: "Make A Safety Plan", name: "safetyPlan", widget: "text"}
+                  - {label: "Treatment Library", name: "library", widget: "text"}
+                  - {label: "Community Resources", name: "referral", widget: "text"}
+                  - {label: "Navigating Schools", name: "schools", widget: "text"}
           - label: "Footer"
             name: "footer"
             widget: "object"
@@ -719,68 +878,3 @@ collections:
               - {label: "Org Name", name: "orgName", widget: "string"}
               - {label: "Sub Line", name: "subLine", widget: "string"}
               - {label: "Funding Text", name: "fundingText", widget: "string"}
-
-      - file: "content/resources.json"
-        name: "resourceLibrary"
-        label: "Treatment Library (full searchable page)"
-        fields:
-          - label: "Page Intro"
-            name: "intro"
-            widget: "object"
-            fields:
-              - {label: "Heading", name: "heading", widget: "string"}
-              - {label: "Subheading", name: "sub", widget: "text"}
-              - {label: "PDF Notice", name: "pdfNotice", widget: "text", hint: "Shown at the top of the page — update or remove once PDFs are fully uploaded."}
-          - label: "Search & Filter Labels"
-            name: "filters"
-            widget: "object"
-            fields:
-              - {label: "Search Placeholder", name: "searchPlaceholder", widget: "string"}
-              - {label: "Audience Filter Label", name: "audienceLabel", widget: "string"}
-              - {label: "Type Filter Label", name: "typeLabel", widget: "string"}
-              - {label: "Theme Filter Label", name: "themeLabel", widget: "string"}
-              - {label: "Clear Filters Label", name: "clearLabel", widget: "string"}
-              - label: "Audience Options (must match the Audience values used below)"
-                name: "audienceOptions"
-                widget: "list"
-                field: {label: "Option", name: "option", widget: "string"}
-              - label: "Type Options (must match the Type values used below)"
-                name: "typeOptions"
-                widget: "list"
-                field: {label: "Option", name: "option", widget: "string"}
-              - label: "Theme Options (must match the Theme values used below)"
-                name: "themeOptions"
-                widget: "list"
-                field: {label: "Option", name: "option", widget: "string"}
-          - label: "Resources (add or remove freely)"
-            name: "items"
-            widget: "list"
-            summary: "{{title}}"
-            fields:
-              - {label: "Title", name: "title", widget: "string"}
-              - {label: "Type", name: "type", widget: "select", options: ["Assessment Tool", "Worksheet", "Handout", "Referral List", "Tip Sheet", "Evidence-Based Practice"], hint: "For an Evidence-Based Practice, the Title must match the practice's name on the Planning Tool's Select Interventions step exactly."}
-              - label: "Who It's For (select all that apply)"
-                name: "audience"
-                widget: "select"
-                multiple: true
-                options: ["Clinician", "Youth", "Family", "Community", "Schools"]
-              - label: "Theme (select all that apply)"
-                name: "theme"
-                widget: "select"
-                multiple: true
-                options: ["Risk Assessment & Safety Planning", "Coping Skills & Emotion Regulation", "Family Engagement", "School Coordination", "Community & Referrals", "Relapse Prevention & Transition"]
-              - {label: "Short Description", name: "description", widget: "text"}
-              - {label: "Why It Works (evidence/research note)", name: "evidence", widget: "text"}
-              - {label: "About This Practice (Evidence-Based Practices only — longer write-up shown in the Treatment Library)", name: "details", widget: "text", required: false}
-              - label: "Related Resources (Evidence-Based Practices only — titles of other library items)"
-                name: "relatedResources"
-                widget: "list"
-                required: false
-                field: {label: "Resource title", name: "title", widget: "string"}
-              - label: "PDF File"
-                name: "fileUrl"
-                widget: "file"
-                required: false
-                media_folder: "/resources"
-                public_folder: "/resources"
-                hint: "Leave blank until the PDF is ready — the page will show a \"PDF coming soon\" badge instead."

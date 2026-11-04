@@ -1,0 +1,140 @@
+{
+  "planner": {
+    "navLabel": "Planning Tool",
+    "sectionLabel": "Interactive Tool",
+    "heading": "Client Ecological Formulation & Treatment Planner",
+    "intro": "Map the risk and protective factors shaping a client's world — client, peer, family, school, and community/structural — then generate a starting-point treatment plan and resource list drawn from this toolkit. The goal throughout: reducing the client's suicidal ideation.",
+    "disclaimer": "This tool offers a starting point, not a clinical decision. Always apply your own clinical judgment, and follow your standard risk assessment and safety planning protocol regardless of what it suggests.",
+    "riskColumnLabel": "Risk / Vulnerability",
+    "protectiveColumnLabel": "Protective / Buffering",
+    "ecoMapRiskLabel": "Risks",
+    "ecoMapProtectiveLabel": "Protectors",
+    "centerLabel": "Client",
+    "centerSub": "current context",
+    "rings": [
+      { "key": "community", "label": "Community / Structural", "placeholderRisk": "e.g. limited healthcare access", "placeholderProtective": "e.g. community resources" },
+      { "key": "school",    "label": "School",                  "placeholderRisk": "e.g. academic stress",           "placeholderProtective": "e.g. trusted teacher" },
+      { "key": "family",    "label": "Family",                  "placeholderRisk": "e.g. family conflict",           "placeholderProtective": "e.g. supportive caregiver" },
+      { "key": "peer",      "label": "Peer",                     "placeholderRisk": "e.g. social isolation",          "placeholderProtective": "e.g. close friend" },
+      { "key": "client",    "label": "Client (Individual)",      "placeholderRisk": "e.g. hopelessness / SI",         "placeholderProtective": "e.g. coping + treatment skills" }
+    ],
+    "addButtonLabel": "Add",
+    "stepHint": "Enter as many or as few factors as apply at this level — you can leave it blank and move on if it isn't relevant to this client.",
+    "backButtonLabel": "Back",
+    "nextButtonLabel": "Next",
+    "reviewButtonLabel": "Review Plan",
+    "reviewHeading": "Review Your Client Ecological Formulation",
+    "reviewIntro": "Here's the full map from what you entered. Add, remove, or adjust anything before generating the plan.",
+    "generateButtonLabel": "Generate Treatment Plan",
+    "resetButtonLabel": "Start Over",
+    "downloadButtonLabel": "Download Plan (PDF)",
+    "downloadHint": "Opens your browser's print dialog — choose “Save as PDF” as the destination to download it.",
+    "emptyStateText": "Add at least one risk or protective factor above, then generate a plan.",
+    "outputHeadings": {
+      "resources": "Recommended Resources",
+      "more": "Explore More"
+    },
+    "emailPlan": {
+      "buttonLabel": "Email My Plan to the Rise Team",
+      "address": "feedback@riseagainstsuicide.org",
+      "hint": "Opt-in — opens your email client with a plain-text summary of what you entered (factors, severities, and interventions), not the formatted PDF. Please remove or de-identify any client details before sending. Sharing this helps the Rise and toolkit development team improve the service."
+    },
+    "mapLayouts": {
+      "label": "Map layout",
+      "options": [
+        { "key": "original", "label": "Original", "hint": "Before: pills stacked outward from the center in both directions, so reading down jumps between outer and inner rings. Flat connector lines." },
+        { "key": "originalGrouped", "label": "Original, grouped", "hint": "The original arrangement and flat lines, but factors in the same ring share one pill, so there are never more than 5 pills per side." },
+        { "key": "separate", "label": "Separate pills", "hint": "One pill per factor, ordered from the outer ring (Community) at the top to the inner ring (Client) at the bottom." },
+        { "key": "grouped", "label": "Grouped (max 5 per side)", "hint": "Factors in the same ring share one pill, so there are never more than 5 pills per side. Still ordered outer to inner." },
+        { "key": "groupedFlat", "label": "Grouped + flat lines", "hint": "Same grouped pills (never more than 5 per side, ordered outer to inner), with flat horizontal lines and no angles. The innermost pill sits level with the center, so the column builds upward and the rings grow to reach each pill." }
+      ]
+    },
+    "goal": {
+      "label": "Goal",
+      "statement": "Reduce the client's suicidal ideation",
+      "steps": {
+        "ring": "As you map this level, ask: what here raises or lowers the client's suicidal ideation?",
+        "topFactors": "Choose the factors most closely tied to the client's suicidal ideation. These become the focus of treatment.",
+        "resourcePlan": "Pick interventions that directly target what drives the client's suicidal ideation, or strengthen what protects against it.",
+        "review": "Every phase of this plan works toward one outcome: reducing the client's suicidal ideation."
+      },
+      "focusLabel": "In this phase",
+      "checkLabel": "Check",
+      "phases": [
+        {
+          "focus": "Understand what is driving the client's suicidal ideation, and keep them safe while you work on it. Assess current risk, build a safety plan together, and map the factors that raise and lower it.",
+          "check": "Do I know what is driving this client's suicidal ideation, and is a safety plan in place?"
+        },
+        {
+          "focus": "Give the client skills to manage suicidal thoughts when they show up and lower them over time. Teach and practice emotion regulation, problem-solving, and support-seeking, aimed at the top factors you identified.",
+          "check": "Is the client using these skills when suicidal thoughts or urges come up?"
+        },
+        {
+          "focus": "Make the reduction in suicidal ideation last after Rise ends. Consolidate skills, re-screen to measure change since intake, update the safety plan, and link the client to their next step in care.",
+          "check": "Has the client's suicidal ideation decreased since intake, and is care in place to keep it that way?"
+        }
+      ]
+    },
+    "phase3Checklist": {
+      "heading": "Phase 3 Checklist",
+      "intro": "Activities to complete before your final session with the client.",
+      "progressLabel": "complete",
+      "items": [
+        {
+          "text": "Assess and consolidate skills, and promote self-efficacy",
+          "detail": "Review which skills have helped most, practice them once more, and help the client name what they can now do on their own.",
+          "links": []
+        },
+        {
+          "text": "Ensure continuity of care",
+          "detail": "Link the client from treatment to their next step: a warm handoff to ongoing care, school supports, or community resources.",
+          "links": [
+            { "text": "Community Resources", "href": "find-referral.html" },
+            { "text": "Navigating Schools", "href": "schools.html" }
+          ]
+        },
+        {
+          "text": "Reflect on the Rise treatment experience and complete final screenings",
+          "detail": "Look back on progress together, and re-administer screenings to measure change in suicidal ideation since intake.",
+          "links": []
+        },
+        {
+          "text": "Revisit the safety plan",
+          "detail": "Update warning signs, coping strategies, and supports so the plan reflects where the client is now.",
+          "links": [
+            { "text": "Make A Safety Plan", "href": "safety-plan.html" }
+          ]
+        }
+      ]
+    },
+    "phaseCommentLabel": "Comments",
+    "phaseCommentPlaceholder": "Add any notes for this phase…"
+  },
+
+  "resourceCategories": [
+    {
+      "icon": "i-clipboard",
+      "colorClass": "lib-teal",
+      "title": "Clinician Resources",
+      "items": ["EBP worksheets & handouts", "Training videos & manuals", "Links to key papers", "Visual research summaries"]
+    },
+    {
+      "icon": "i-map-pin",
+      "colorClass": "lib-green",
+      "title": "Community Referrals",
+      "items": ["Vetted mental health referrals", "Post-Rise therapy options", "Community support resources"]
+    },
+    {
+      "icon": "i-family",
+      "colorClass": "lib-yellow",
+      "title": "Parent & Family",
+      "items": ["Psychoeducation materials", "How to support your teen", "Family engagement guides"]
+    },
+    {
+      "icon": "i-star",
+      "colorClass": "lib-purple",
+      "title": "Youth-Facing",
+      "items": ["Coping skills worksheets", "Safety planning templates", "Mindfulness & grounding tools"]
+    }
+  ]
+}

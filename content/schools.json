@@ -1,0 +1,281 @@
+{
+  "schoolsPage": {
+    "navLabel": "Navigating Schools",
+    "sectionLabel": "Working in Schools",
+    "heading": "Navigating Schools",
+    "intro": "We've heard from therapists that navigating schools is one of the most complex and challenging parts of this job. Based on therapist input, we've put together tips for working with schools, plus practical tools to keep key school information handy over the course of treatment.",
+    "quote": {
+      "text": "We're definitely navigating 50 systems every time we walk into a school.",
+      "cite": "Rise therapist"
+    },
+    "tabs": {
+      "tips": "Tips for Working with Schools",
+      "card": "Your Client's School Card",
+      "contact": "Mental Health Contact Card",
+      "guidelines": "Rise School Guidelines"
+    },
+    "tips": [
+      {
+        "title": "Find and connect with a school partner",
+        "body": "When a youth requests for sessions to occur in the school through Rise, the Rise therapist reaches out to the QRS (qualified referral source): the person who entered the referral. This is often the Mental Health Advocate, School Counselor, Interventionist, or School Social Worker. This person can help determine the best time to meet with the youth based on their school schedule, and where sessions can be held. The Rise therapist is expected to communicate with the QRS at least 24 hours before coming to the school to meet with the youth.",
+        "widget": "none",
+        "linkText": "",
+        "linkHref": "",
+        "pendingText": ""
+      },
+      {
+        "title": "Connect with your school partner and answer key questions",
+        "body": "Use the interview guide below to get your important questions about working in the school answered. The goal is to equip you with what you need to understand the specific school context and work effectively there. Each time you start working in a new school, find a school contact for a brief meeting or phone call to go through these questions. Your answers save in this browser and carry over to Your Client's School Card.",
+        "widget": "interviewGuide",
+        "linkText": "",
+        "linkHref": "",
+        "pendingText": ""
+      },
+      {
+        "title": "Clarify the roles of school personnel, the Rise therapist, and Rise admin",
+        "body": "Youth and families may be confused about the roles of the school and their therapist, and may or may not know about the role of Rise admin. Give young people clear information about roles and confidentiality. You can open the discussion by asking whether they've heard of confidentiality before and exploring what they think it means. Validate that it can be hard to keep track of all the adults involved in their care, and provide psychoeducation about each role.",
+        "widget": "roles",
+        "linkText": "",
+        "linkHref": "",
+        "pendingText": ""
+      },
+      {
+        "title": "Get a Release of Information to communicate with the youth's school",
+        "body": "We strongly suggest getting a signed release of information (ROI) form from the youth and family so you can exchange information with the client's school.",
+        "widget": "none",
+        "linkText": "Download the standard ROI form",
+        "linkHref": "",
+        "pendingText": "Standard ROI form coming soon"
+      },
+      {
+        "title": "Learn the school's policies and practices",
+        "body": "We are developing a set of policies, practices, and insider tips for working in the schools we serve. More soon!",
+        "widget": "none",
+        "linkText": "",
+        "linkHref": "",
+        "pendingText": ""
+      },
+      {
+        "title": "Be prepared to support youth through school re-entry after a crisis",
+        "body": "Youth with suicidal thoughts and behaviors often move in and out of schools and other systems of care. A supported return to school helps protect the progress made in reducing suicidal ideation, so be prepared to support youth through these transitions.",
+        "widget": "none",
+        "linkText": "Open the school re-entry resource guide",
+        "linkHref": "",
+        "pendingText": "Re-entry resource guide coming soon"
+      }
+    ],
+    "interviewGuide": {
+      "heading": "School partner interview guide",
+      "progressLabel": "answered",
+      "answerPlaceholder": "Notes from the school…",
+      "printLabel": "Print interview guide",
+      "printHint": "Prints the questions with any answers you've added, plus space to write, so you can bring it to the meeting.",
+      "questions": [
+        "What is the school schedule?",
+        "When is lunch?",
+        "Where can I meet with clients in your school?",
+        "What are the best and worst times to meet with clients?",
+        "What do I need to know about re-integrating youth into school?",
+        "Is there a re-entry meeting? Who attends?",
+        "What are the school-based risk assessment procedures?",
+        "What happens during a school emergency or lockdown?",
+        "What else should I know about working with your school?",
+        "What other mental health resources are available in the school?",
+        "Who helps connect families with resources in your school?"
+      ]
+    },
+    "roles": [
+      {
+        "key": "rise",
+        "who": "Rise",
+        "role": "Facilitates and funds therapy, and supports linkage to follow-up treatment when needed."
+      },
+      {
+        "key": "school",
+        "who": "The school",
+        "role": "Links the youth with a therapist. Sometimes the school also provides space and scheduling support for Rise therapy sessions."
+      },
+      {
+        "key": "therapist",
+        "who": "The therapist",
+        "role": "Provides therapy to the youth, assesses outcomes (including changes in suicidal ideation), and links to follow-up care."
+      }
+    ],
+    "rolesHeading": "Who does what",
+    "rolesPicker": {
+      "label": "Who handles this?",
+      "intro": "Pick a situation to see whose role it is. You can walk through this with youth and families too.",
+      "bestFitLabel": "Their role",
+      "clearLabel": "Show all",
+      "options": [
+        { "label": "Getting connected with a therapist", "matchKeys": ["school"], "note": "The school links the youth with a therapist. The school partner (QRS) enters the referral to Rise." },
+        { "label": "Finding a time and place to meet at school", "matchKeys": ["school"], "note": "The school partner (QRS) helps with scheduling around the youth's classes and finding a private space. Give them at least 24 hours' notice." },
+        { "label": "Paying for therapy", "matchKeys": ["rise"], "note": "Rise funds therapy, so there is no cost to the youth or family." },
+        { "label": "What happens in sessions, and what stays private", "matchKeys": ["therapist"], "note": "The therapist provides therapy and explains confidentiality: what stays between them, and when information has to be shared to keep the youth safe." },
+        { "label": "Checking whether things are getting better", "matchKeys": ["therapist"], "note": "The therapist assesses outcomes, including changes in suicidal ideation, through screenings during treatment." },
+        { "label": "Next steps in care after Rise", "matchKeys": ["therapist", "rise"], "note": "The therapist links the youth to follow-up care, and Rise supports that linkage when needed." }
+      ]
+    },
+    "schoolCard": {
+      "intro": "Fill in key information about your client's school environment and keep it handy over the course of treatment. It saves only in this browser, so nothing is sent anywhere. Use initials rather than the client's full name.",
+      "fields": [
+        {
+          "key": "client",
+          "label": "Client (initials)",
+          "placeholder": "e.g. J.R.",
+          "type": "text"
+        },
+        {
+          "key": "school",
+          "label": "School",
+          "placeholder": "School name",
+          "type": "text"
+        },
+        {
+          "key": "grade",
+          "label": "Grade",
+          "placeholder": "e.g. 8th",
+          "type": "text"
+        },
+        {
+          "key": "teacher",
+          "label": "Teacher(s)",
+          "placeholder": "Homeroom / key teachers",
+          "type": "text"
+        },
+        {
+          "key": "qrs",
+          "label": "QRS (school partner)",
+          "placeholder": "Name and role",
+          "type": "text"
+        },
+        {
+          "key": "qrsContact",
+          "label": "QRS contact",
+          "placeholder": "Phone / email",
+          "type": "text"
+        },
+        {
+          "key": "plan",
+          "label": "IEP or 504 plan?",
+          "placeholder": "",
+          "type": "select",
+          "options": [
+            "Not sure yet",
+            "No plan",
+            "IEP",
+            "504 plan"
+          ]
+        },
+        {
+          "key": "roi",
+          "label": "Release of Information signed?",
+          "placeholder": "",
+          "type": "select",
+          "options": [
+            "Not yet",
+            "Pending",
+            "Yes, on file"
+          ]
+        },
+        {
+          "key": "accommodations",
+          "label": "Supports & accommodations",
+          "placeholder": "Anything in the IEP/504 or informal supports the youth receives",
+          "type": "textarea"
+        },
+        {
+          "key": "other",
+          "label": "Other things to know",
+          "placeholder": "Attendance, recent transitions, trusted adults at school…",
+          "type": "textarea"
+        }
+      ],
+      "interviewHeading": "From your school partner interview",
+      "interviewEmpty": "No answers yet. Add them under Tip 2 on the Tips tab.",
+      "interviewEditLabel": "Edit answers",
+      "mapHeading": "School drivers & protectors from your map",
+      "mapIntro": "Pulled automatically from the School ring of your Planning Tool map in this browser.",
+      "mapEmpty": "No School factors on your map yet.",
+      "mapLinkLabel": "Open the Planning Tool",
+      "riskLabel": "Drivers (risk)",
+      "protectiveLabel": "Protectors",
+      "printLabel": "Print school card",
+      "resetLabel": "Clear card"
+    },
+    "contactCard": {
+      "intro": "A card to give your school partner. It shows when to reach out to you as the therapist and when to reach out to Rise, plus crisis services and local resources. Fill in your details, then print.",
+      "title": "Mental Health Contact Card",
+      "therapistHeading": "Rise therapist",
+      "therapistFields": [
+        {
+          "key": "name",
+          "label": "Therapist name",
+          "placeholder": "Your name"
+        },
+        {
+          "key": "phone",
+          "label": "Phone",
+          "placeholder": "Phone number"
+        },
+        {
+          "key": "email",
+          "label": "Email",
+          "placeholder": "Email address"
+        },
+        {
+          "key": "hours",
+          "label": "Best times to reach me",
+          "placeholder": "e.g. Mon–Thu, replies within 1 business day"
+        }
+      ],
+      "whenTherapistHeading": "Contact the therapist about",
+      "whenTherapist": [
+        "Scheduling sessions or meeting space",
+        "Changes in the youth's attendance, behavior, or wellbeing that may affect treatment (with a signed ROI)",
+        "Planning re-entry after a crisis or absence",
+        "Non-emergency concerns that come up between sessions"
+      ],
+      "riseHeading": "Rise Against Suicide",
+      "riseContactLabel": "Email",
+    "riseContact": "team@riseagainstsuicide.org",
+      "whenRiseHeading": "Contact Rise about",
+      "whenRise": [
+        "New referrals (through the Rise RMS)",
+        "Questions about the Rise program or how it works",
+        "Concerns about a Rise provider",
+        "Funding or program logistics"
+      ],
+      "crisisHeading": "In a crisis",
+      "crisis": [
+        "Immediate danger: call 911",
+        "988 Suicide & Crisis Lifeline: call or text 988 (24/7)",
+        "Colorado Crisis Services: 1-844-493-8255, or text TALK to 38255",
+        "Follow your school's own risk assessment procedures"
+      ],
+      "localHeading": "Local community resources",
+      "localPlaceholder": "Add local resources for this school's community (one per line)",
+      "printLabel": "Print contact card",
+      "prototypeNote": "The Rise contact address is a placeholder for this prototype. Confirm it, and the crisis lines, in the CMS before sharing cards with schools."
+    },
+    "guidelines": {
+      "heading": "Rise School Guidelines",
+      "source": "From the Rise Program Manual",
+    "printLabel": "Print guidelines",
+    "downloadHint": "Opens your browser's print dialog.",
+      "intro": "When seeing Rise clients in the school setting, the Rise provider is a representative of Rise Against Suicide. Follow the school's policies and procedures, as well as the Rise protocol below.",
+      "items": [
+        "The QRS is the only school staff member the Rise provider communicates with at the school. Never reach out to the principal or a school administrator unless directed to by the QRS.",
+        "Rise providers do not speak on behalf of Rise in the school setting unless Rise staff are present or have arranged it.",
+        "Regular communication between the Rise provider and the QRS is encouraged while the client is progressing through sessions.",
+        "For a Rise provider to see a youth, the Rise referral process must be completed in the Rise RMS or through a Rise staff member.",
+        "If the client has a social service need, the school counselor or appropriate school staff may be notified to help the student.",
+        "Give the QRS at least 24 hours' notice before arriving to see a client at the school, including arranging a place to meet the student.",
+        "Sign in at the front desk and ask for the QRS who contacted you.",
+        "Immediately report any concerns about the young person to the QRS, and collaborate on school policies and procedures.",
+        "Respond within 24 hours on business days to QRS outreach about availability and fit.",
+        "Rise providers are not available to school staff for consultation services as part of the Rise program."
+      ]
+    }
+  }
+}

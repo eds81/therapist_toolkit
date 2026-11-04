@@ -606,8 +606,7 @@ navMobile.querySelectorAll('a').forEach(a => {
   });
 });
 
-fetch('content/site.json')
-  .then(res => res.json())
+loadSiteContent()
   .then(data => {
     render(data);
     initFadeObserver();

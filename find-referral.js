@@ -176,8 +176,7 @@ navMobile.querySelectorAll('a').forEach(a => {
 
 // ── Load content, render, then wire up interactions ──
 initReferralMap();
-fetch('content/site.json')
-  .then(res => res.json())
+loadSiteContent()
   .then(data => {
     render(data);
     initReferralSearch(data);

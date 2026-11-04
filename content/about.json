@@ -1,0 +1,230 @@
+{
+  "about": {
+    "sectionLabel": "Our Model",
+    "headingLine1": "Youth at the Center.",
+    "headingLine2": "The Ecosystem is Essential.",
+    "intro": "Rise Against Suicide pairs youth at risk with community therapists who deliver free, short-term therapy in schools and other community settings. CU Boulder brings research expertise to help strengthen that system — starting with the therapists doing the work.",
+    "partnershipNote": {
+      "text": "This toolkit is built through a partnership between Rise Against Suicide and the University of Colorado Boulder.",
+      "linkText": "More about the partnership",
+      "linkHref": "#team"
+    },
+    "ecosystemHint": "Hover or click any ring to explore each layer of support.",
+    "ecosystemLegend": [
+      {
+        "layer": "youth",
+        "title": "Youth",
+        "body": "The young person receiving care. Their needs, strengths, and wellbeing drive every decision in this model.",
+        "tags": []
+      },
+      {
+        "layer": "network",
+        "title": "Close Personal Network",
+        "body": "The people immediately surrounding the youth in their daily life.",
+        "tags": ["Parents", "Peers"]
+      },
+      {
+        "layer": "providers",
+        "title": "Clinical Providers",
+        "body": "Trained professionals who directly deliver or coordinate mental health care.",
+        "tags": ["Therapists", "Counselors", "Psychiatrists", "Other Providers"]
+      },
+      {
+        "layer": "systems",
+        "title": "Systems & Settings",
+        "body": "The institutions and organizations where youth encounter support and receive care.",
+        "tags": ["Schools", "Clinics", "Hospitals", "Community Orgs"]
+      }
+    ],
+    "modelSteps": [
+      { "icon": "i-user", "colorClass": "step-teal", "text": "Youth referred to Rise" },
+      { "icon": "i-users", "colorClass": "step-teal", "text": "Paired with a therapist from the Rise roster" },
+      { "icon": "i-chat", "colorClass": "step-teal", "text": "Therapist provides up to 10 sessions" },
+      { "icon": "i-check-circle", "colorClass": "step-green", "text": "Youth completes treatment or is referred for follow-up" }
+    ]
+  },
+
+  "why": {
+    "sectionLabel": "Study Rationale",
+    "heading": "Why This Toolkit?",
+    "cards": [
+      {
+        "icon": "i-gap",
+        "colorClass": "why-icon-red",
+        "lead": "Large gaps in care.",
+        "body": "More than 50% of youth with detected suicide risk receive no follow-up care",
+        "citation": "(Kim et al., 2019)"
+      },
+      {
+        "icon": "i-shield",
+        "colorClass": "why-icon-orange",
+        "lead": "Structural & attitudinal barriers.",
+        "body": "Cost, insurance, waitlists, stigma, and negative beliefs all block access to treatment",
+        "citation": "(Kodish et al., 2020)"
+      },
+      {
+        "icon": "i-help-circle",
+        "colorClass": "why-icon-yellow",
+        "lead": "Therapist hesitancy.",
+        "body": "Many therapists feel unsure, uncomfortable, or fearful about doing this work",
+        "citation": "(Schmidt et al., 2016; Singer et al., 2011)"
+      },
+      {
+        "icon": "i-zap",
+        "colorClass": "why-icon-teal",
+        "lead": "Therapist burnout is real.",
+        "body": "Therapists doing this work report high exhaustion and emotional demand, and need more support",
+        "citation": "(Villarreal-Otalora et al., 2023)"
+      }
+    ],
+    "pullQuote": {
+      "text": "Burnout is challenging. It's very hard seeing people in really difficult places over and over, especially when your entire caseload looks like that.",
+      "cite": "Rise therapist"
+    }
+  },
+
+  "toolkit": {
+    "sectionLabel": "The Toolkit",
+    "heading": "Four Core Sections",
+    "intro": "Everything here serves one goal: reducing suicidal ideation in the youth you treat. Rather than replacing your clinical judgment or training, this toolkit is meant to give you a clear roadmap, vetted resources, guidance for working with schools, and support for your own sustainability in this rewarding, yet challenging, work — built with therapists, clinical and research experts through a Discover, Design, Build, Test process.",
+    "libraryLinkLabel": "2. Treatment Library",
+    "tabs": {
+      "roadmap": {
+        "tabLabel": "1. Treatment Roadmap",
+        "heading": "Treatment Planning / Roadmap",
+        "concern": "“12 sessions isn’t enough.”",
+        "intro": "We know 12 sessions is short — that's why we built this toolkit. Developed with therapists and clinical and research experts in youth suicide prevention, the Treatment Roadmap structures our brief model around its central goal, reducing suicidal ideation, and what matters most in a short window to get there: reducing risk and stabilizing crisis, building emotion regulation, problem-solving and support-seeking skills, and building a life worth living. Click any phase below to expand it and see sample evidence-based interventions for that stage.",
+        "phases": [
+          {
+            "title": "Phase 1: Assess & Understand",
+            "sessions": "Sessions 1–4",
+            "items": ["Suicide Risk Assessment & Safety Planning", "Case Conceptualization & Treatment Plan"],
+            "interventions": [
+              "Columbia Suicide Severity Rating Scale (C-SSRS)",
+              "Stanley-Brown Safety Planning Intervention",
+              "Crisis response planning",
+              "Means restriction counseling",
+              "Family/caregiver psychoeducation"
+            ]
+          },
+          {
+            "title": "Phase 2: Train & Teach Skills",
+            "sessions": "Sessions 5–8",
+            "items": ["Teach and Practice Skills"],
+            "interventions": [
+              "DBT skills: distress tolerance & emotion regulation",
+              "CBT cognitive restructuring techniques",
+              "ACT and mindfulness exercises",
+              "Somatic grounding interventions",
+              "Coping card development",
+              "Behavioral activation"
+            ]
+          },
+          {
+            "title": "Phase 3: Consolidate & Next Steps",
+            "sessions": "Sessions 9–12",
+            "items": ["Relapse Prevention", "Linkage to Care", "Termination"],
+            "interventions": [
+              "Warning sign identification & review",
+              "Updated safety plan review",
+              "Warm handoff to ongoing care provider",
+              "Family/caregiver transition support",
+              "Final screenings to measure change in suicidal ideation",
+              "Termination rituals & strengths review"
+            ]
+          }
+        ]
+      },
+      "schools": {
+        "tabLabel": "3. Navigating Schools",
+        "heading": "Navigating Schools",
+        "concern": "“Working in the schools is complicated.”",
+        "intro": "We've built a school navigation page filled with resources to support your work in schools: a list of questions to ask schools to get to know the lay of the land, tips for navigating tricky interactions, and suggestions for collaborating with schools to best support youth and families.",
+        "quote": { "text": "We're definitely navigating 50 systems every time we walk into a school.", "cite": "Rise therapist" },
+        "items": [
+          { "icon": "i-file-text", "title": "Tip Sheets", "body": "How to navigate school partnership complexities, coordinate with counselors, and manage referrals." },
+          { "icon": "i-school", "title": "District-Specific Info", "body": "Detailed guides for the schools and districts Rise frequently partners with." },
+          { "icon": "i-share-2", "title": "Multi-System Coordination", "body": "Resources for collaborating across hospitals, clinics, and school teams." }
+        ]
+      },
+      "selfcare": {
+        "tabLabel": "4. Therapist Self-Care",
+        "heading": "Therapist Support & Self-Care",
+        "concern": "“This work takes a personal toll.”",
+        "intro": "Working with youth at risk for suicide is some of the hardest clinical work there is. These tools help you spot burnout early, build resilience into your practice, provide tips and tricks from your peers, and let you schedule a consultation call with our licensed clinical psychologist.",
+        "quote": { "text": "I can tolerate darkness.", "cite": "Rise therapist" },
+        "items": [
+          { "icon": "i-heart", "title": "Self-Care Tip Sheets", "body": "Ideas curated for and by therapists doing high-acuity work." },
+          { "icon": "i-play-circle", "title": "Therapist Stories", "body": "Videos and testimonials from therapists sharing real challenges and how they navigated them." },
+          { "icon": "i-moon", "title": "Pre-Session Mindfulness", "body": "Brief grounding practices to prepare for emotionally demanding sessions." },
+          { "icon": "i-calendar", "title": "Schedule a Consultation", "body": "Book time with a clinical psychologist or Rise team member for peer support." }
+        ]
+      }
+    },
+    "howToUse": {
+      "heading": "How Do I Use This Toolkit?",
+      "intro": "This toolkit is designed to be flexible: use what works for you, your clients, and your workflow.",
+      "steps": [
+        { "tab": "roadmap", "icon": "i-map-pin", "title": "Start with the Treatment Roadmap.", "body": "Use it to help you plan and deliver your therapy. Revisit session by session to see where you are and what comes next." },
+        { "tab": "library", "icon": "i-book", "title": "Dip into the Treatment Library when you need something specific.", "body": "Align it with the Roadmap, and treat it like a search tool: pull a handout for a family session, grab an assessment before intake, or find a referral when treatment is wrapping up." },
+        { "tab": "schools", "icon": "i-school", "title": "Turn to Navigating Schools before or during any school-facing work.", "body": "Review the sample questions ahead of a school meeting, or reference the role-clarification tips when a case starts to feel tangled between systems." },
+        { "tab": "selfcare", "icon": "i-heart", "title": "Revisit Therapist Self-Care regularly, not just when things feel hard.", "body": "Build a check-in by integrating these tools into your own routine — weekly, monthly, whatever's sustainable — so you catch signs of strain early rather than after burnout sets in." }
+      ],
+      "tips": [
+        "You don't need to use every tool with every client. Pick what's relevant to the case in front of you.",
+        "Tools can be adapted. Use your clinical judgment to fit language, pacing, and content to each youth and family.",
+        "Come back often. This is meant to be a living resource you return to throughout a case, not a one-time read!",
+        "If you want support, or to talk through a case, remember you can also schedule a consultation call with our licensed clinical psychologist."
+      ],
+      "feedback": {
+        "text": "If you have suggestions to improve our toolkit, please let us know! The goal is to support you best — we need your help knowing how to do this.",
+        "linkText": "Contact us",
+        "linkHref": "#team"
+      }
+    }
+  },
+
+  "research": {
+    "sectionLabel": "Research Process",
+    "heading": "Discover. Design. Test.",
+    "intro": "This toolkit is being co-designed through a rigorous, community-engaged research process with Rise therapists — not built for them, but <em>with</em> them.",
+    "aims": [
+      { "num": "01", "colorClass": "aim-teal", "title": "Discover", "body": "Focus groups and interviews with 10 Rise therapists, analyzed across 9 domains covering strengths, challenges, interventions, and toolkit vision." },
+      { "num": "02", "colorClass": "aim-green", "title": "Design & Build", "body": "Two two-session co-design workshop sequences with Rise therapists, creating and refining toolkit prototypes based on real needs." },
+      { "num": "03", "colorClass": "aim-lime", "title": "Test", "body": "Mixed-method pilot testing through interviews and surveys with community therapists to assess feasibility and acceptability." }
+    ],
+    "quotesHeading": "What Therapists Told Us",
+    "quotes": [
+      { "text": "We go to them. They choose us, we work for them.", "cite": "Rise therapist", "domain": "Positives of Rise" },
+      { "text": "I feel like it's almost impossible to work with kids and not also work with their parents.", "cite": "Rise therapist", "domain": "Challenges" },
+      { "text": "I literally bring in several handouts from DBT, CBT, because I don't know how much time I'm going to have with that person.", "cite": "Rise therapist", "domain": "Interventions" },
+      { "text": "Be another trusted adult that's not their parents, that's not gonna judge them — really just give space to listen.", "cite": "Rise therapist", "domain": "Mechanisms of Change" },
+      { "text": "A community, like, maybe a therapist forum or something.", "cite": "Rise therapist", "domain": "Needed Supports" },
+      { "text": "Having some sort of list or… if there was a provider database… and it's all in one.", "cite": "Rise therapist", "domain": "Toolkit Vision" }
+    ]
+  },
+
+  "team": {
+    "sectionLabel": "The Team",
+    "heading": "Community-Engaged Research",
+    "intro": "This project is a collaboration between the University of Colorado Boulder and Rise Against Suicide, funded through community-engaged scholarship.",
+    "members": [
+      {
+        "logoClass": "cu-logo",
+        "logoLine1": "CU",
+        "logoLine2": "Boulder",
+        "title": "University of Colorado Boulder",
+        "body": "Led by Dr. Tamar, Assistant Professor in Psychology and Neuroscience. Research-driven co-design, qualitative analysis, and evidence-based resource development.",
+        "fundingTag": "Funded by CU Boulder Office for Public & Community Engaged Scholarship"
+      },
+      {
+        "logoClass": "rise-logo",
+        "logoLine1": "Rise",
+        "logoLine2": "",
+        "title": "Rise Against Suicide",
+        "body": "A Boulder-based nonprofit providing timely, free therapy to youth with suicide risk through partnerships with schools and community organizations.",
+        "fundingTag": "Funded by Colorado Clinical Translational Science Institute"
+      }
+    ]
+  }
+}
