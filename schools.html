@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Navigating Schools | Therapist Toolkit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=44" />
+</head>
+<body>
+
+<!-- SVG SPRITE -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-school" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 20h20M4 20V9l8-5 8 5v11"/><path d="M9 20v-5h6v5"/><line x1="12" y1="4" x2="12" y2="9"/>
+  </symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2L4 5v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V5l-8-3z"/>
+    <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+  </symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+  </symbol>
+  <symbol id="i-printer" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
+  </symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+  </symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+  </symbol>
+  <symbol id="i-help-circle" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+  </symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+  </symbol>
+</svg>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- NAV -->
+<header class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">
+      <span class="logo-rise">Therapist Toolkit</span>
+      <span class="logo-sub">Rise Against Suicide × CU Boulder</span>
+    </a>
+    <nav class="nav-links">
+      <a href="about.html">About</a>
+      <a href="planning-tool.html">Planning Tool</a>
+      <a href="safety-plan.html">Make A Safety Plan</a>
+      <a href="resource-library.html">Treatment Library</a>
+      <a href="find-referral.html">Community Resources</a>
+      <a href="schools.html" class="active">Navigating Schools</a>
+      <a href="self-care.html">Self-Care &amp; Support</a>
+    </nav>
+    <button class="nav-hamburger" aria-label="Open menu" id="hamburgerBtn">
+      <svg class="icon"><use href="#i-menu"/></svg>
+    </button>
+  </div>
+  <div class="nav-mobile" id="navMobile">
+    <a href="about.html">About</a>
+    <a href="planning-tool.html">Planning Tool</a>
+    <a href="safety-plan.html">Make A Safety Plan</a>
+    <a href="resource-library.html">Treatment Library</a>
+    <a href="find-referral.html">Community Resources</a>
+    <a href="schools.html" class="active">Navigating Schools</a>
+    <a href="self-care.html">Self-Care &amp; Support</a>
+  </div>
+</header>
+
+<!-- NAVIGATING SCHOOLS -->
+<section class="schools-page" id="schoolsPage">
+  <div class="section-inner">
+    <div class="section-label" data-fade id="schLabel"></div>
+    <h2 data-fade data-delay="1" id="schHeading"></h2>
+    <p class="section-intro" data-fade data-delay="2" id="schIntro"></p>
+    <div class="goal-banner" data-goal-banner="schools" hidden></div>
+    <blockquote class="mini-quote schools-quote" id="schQuote"></blockquote>
+
+    <div class="toolkit-tabs" id="schTabsNav" role="tablist"></div>
+
+    <!-- TIPS -->
+    <div class="tab-panel active" id="panel-tips">
+      <ol class="schools-tips" id="schTips"></ol>
+    </div>
+
+    <!-- CLIENT SCHOOL CARD -->
+    <div class="tab-panel" id="panel-card">
+      <p class="schools-panel-intro" id="schCardIntro"></p>
+      <div class="schools-card-layout">
+        <form class="schools-card-form" id="schCardForm" autocomplete="off"></form>
+        <aside class="schools-card-side">
+          <div class="schools-side-block" id="schCardMap"></div>
+          <div class="schools-side-block" id="schCardInterview"></div>
+        </aside>
+      </div>
+      <div class="schools-actions">
+        <button type="button" class="btn btn-primary" id="schCardPrintBtn"></button>
+        <button type="button" class="btn btn-outline" id="schCardResetBtn"></button>
+      </div>
+    </div>
+
+    <!-- CONTACT CARD -->
+    <div class="tab-panel" id="panel-contact">
+      <p class="schools-panel-intro" id="schContactIntro"></p>
+      <div class="wow-prototype-note schools-note" id="schContactNote"></div>
+      <div class="schools-contact-layout">
+        <form class="schools-card-form" id="schContactForm" autocomplete="off"></form>
+        <div class="schools-contact-preview" id="schContactPreview" aria-label="Contact card preview"></div>
+      </div>
+      <div class="schools-actions">
+        <button type="button" class="btn btn-primary" id="schContactPrintBtn"></button>
+      </div>
+    </div>
+
+    <!-- RISE GUIDELINES -->
+    <div class="tab-panel" id="panel-guidelines">
+      <div class="schools-guidelines" id="schGuidelines"></div>
+    </div>
+  </div>
+
+  <div class="schools-print-sheet" id="schPrintSheet"></div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-left" id="footerLeft"></div>
+    <div class="footer-right" id="footerRight"></div>
+  </div>
+</footer>
+
+<script src="schools.js?v=7"></script>
+<script src="goal-banner.js?v=2"></script>
+</body>
+</html>

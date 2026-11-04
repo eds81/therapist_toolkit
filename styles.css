@@ -116,11 +116,11 @@ h4 { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 8px; 
   height: 68px; display: flex; align-items: center;
   justify-content: space-between; gap: 16px;
 }
-.nav-logo { display: flex; flex-direction: column; line-height: 1.2; text-decoration: none; }
+.nav-logo { display: flex; flex-direction: column; line-height: 1.2; text-decoration: none; flex-shrink: 0; white-space: nowrap; }
 .logo-rise { font-size: 17px; font-weight: 900; color: var(--teal-dark); }
 .logo-sub  { font-size: 11px; color: var(--text-light); font-weight: 600; }
-.nav-links { display: flex; align-items: center; gap: 28px; }
-.nav-links a { font-size: 14px; font-weight: 700; color: var(--text-mid); transition: color .15s; position: relative; }
+.nav-links { display: flex; align-items: center; gap: 18px; }
+.nav-links a { white-space: nowrap; font-size: 14px; font-weight: 700; color: var(--text-mid); transition: color .15s; position: relative; }
 .nav-links a::after {
   content: ''; position: absolute; bottom: -3px; left: 0;
   width: 0; height: 2px; background: var(--teal);
@@ -850,6 +850,30 @@ body.scgate-open { overflow: hidden; }
 .planner-step-header h3 { font-size: 20px; margin-bottom: 6px; }
 .planner-step-header p { font-size: 13px; color: var(--text-light); margin-bottom: 0; }
 
+/* Goal reminder (reducing suicidality) — under each step's hint and each
+   Review phase heading. */
+.planner-step-header .planner-step-goal,
+.planner-review-phase-goal {
+  display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap;
+  font-size: 13px; font-weight: 700; color: var(--teal-dark);
+  background: var(--teal-light); border-radius: var(--radius-sm);
+  padding: 8px 12px; margin-top: 10px; max-width: 760px; line-height: 1.5;
+}
+.planner-step-goal:empty, .planner-review-phase-goal:empty { display: none; }
+.planner-step-goal > span:last-child, .planner-review-phase-goal > span:last-child { flex: 1; min-width: 200px; }
+.planner-goal-tag {
+  display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0;
+  font-size: 10px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--white); background: var(--teal); border-radius: 100px; padding: 2px 9px 2px 6px; margin-top: 1px;
+}
+.planner-goal-tag svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2.5; }
+.planner-review-phase-goal { margin-top: 8px; flex-direction: column; gap: 6px; font-weight: 600; padding: 10px 14px; }
+.planner-phase-goal-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.planner-phase-goal-head strong { font-size: 14px; font-weight: 900; }
+.planner-phase-goal-row { color: var(--text-mid); }
+.planner-phase-goal-row em { font-style: normal; font-weight: 800; color: var(--teal-dark); }
+.planner-phase-goal-check { border-top: 1px dashed #A9D9E1; padding-top: 6px; }
+
 .planner-step-nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 24px; }
 
 .planner-row.step-hidden { display: none; }
@@ -878,7 +902,7 @@ body.scgate-open { overflow: hidden; }
 /* Matched pills turn yellow too, with their text/weight-dots (which use
    currentColor) switched to black so they stay readable on yellow. */
 .eco-pill.is-ring-match { opacity: 1; color: #000; }
-.eco-pill.is-ring-match rect { fill: var(--yellow); }
+.eco-pill.is-ring-match .eco-pill-row-bg { fill: var(--yellow); }
 .eco-pill.is-ring-match text { fill: #000; font-weight: 800; }
 .eco-pill.is-ring-match .eco-pill-remove { font-weight: 800; }
 
@@ -890,7 +914,7 @@ body.scgate-open { overflow: hidden; }
 .planner-connector.is-pill-dim { opacity: .08; }
 .planner-connector.is-pill-match { opacity: 1; stroke-width: 3.5px; }
 .eco-pill.is-pill-dim { opacity: .3; }
-.eco-pill.is-pill-match rect { stroke: var(--text); stroke-width: 2px; }
+.eco-pill.is-pill-match .eco-pill-outline { stroke: var(--text); stroke-width: 2px; }
 
 .planner-layout {
   display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
@@ -979,6 +1003,8 @@ body.scgate-open { overflow: hidden; }
 .planner-connector { stroke-linecap: round; stroke-linejoin: round; transition: stroke-width .15s, opacity .18s; }
 
 .eco-pill text { font-family: var(--font); font-weight: 700; font-size: 18px; }
+.eco-pill-divider { stroke: #FFFFFF; stroke-width: 2; opacity: .85; }
+.eco-pill-outline { stroke: none; pointer-events: none; }
 .eco-wdot { fill: currentColor; opacity: .3; transition: opacity .12s, transform .12s; }
 .eco-wdot.filled { opacity: 1; }
 .planner-eco-svg:not(.is-locked) .eco-wdot-hit { cursor: pointer; }
@@ -1000,7 +1026,7 @@ body.scgate-open { overflow: hidden; }
 /* Review — the three Phase 1/2/3 headers that group the map/factors,
    interventions, and download/email content below. Colors match the same
    phase-1/2/3 palette used on the small phase cards and the Roadmap tab. */
-.planner-review-phase-head { display: flex; align-items: center; gap: 14px; margin: 40px 0 18px; }
+.planner-review-phase-head { display: flex; align-items: flex-start; gap: 14px; margin: 40px 0 18px; }
 .planner-review-phase-head:first-child { margin-top: 0; }
 .planner-review-phase-num {
   width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
@@ -1034,6 +1060,42 @@ body.scgate-open { overflow: hidden; }
 
 .planner-output { margin-top: 48px; display: flex; flex-direction: column; gap: 28px; }
 .planner-output-block { background: var(--white); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow-sm); }
+
+/* Phase 3 checklist on Review — persisted with the plan and printed. */
+.planner-checklist { border-top: 4px solid var(--teal); }
+.planner-checklist-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.planner-checklist-head h3 { margin-bottom: 4px; }
+.planner-checklist-progress {
+  font-size: 12px; font-weight: 800; color: var(--teal-dark); background: var(--teal-light);
+  padding: 3px 12px; border-radius: 100px; white-space: nowrap;
+}
+.planner-checklist-intro { font-size: 14px; color: var(--text-mid); margin-bottom: 14px; }
+.planner-checklist-list { display: flex; flex-direction: column; gap: 10px; }
+.planner-checklist-item {
+  border: 2px solid var(--cream-dark); border-radius: var(--radius-sm);
+  padding: 12px 14px; transition: border-color .15s, background .15s;
+}
+.planner-checklist-item:hover { border-color: var(--teal); }
+.planner-checklist-item.is-done { background: var(--teal-light); border-color: #B9E2E9; }
+.planner-checklist-item label { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+.planner-checklist-input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.planner-checklist-box {
+  flex-shrink: 0; width: 22px; height: 22px; margin-top: 1px; border-radius: 6px;
+  border: 2px solid var(--teal); background: var(--white); position: relative;
+}
+.planner-checklist-input:checked + .planner-checklist-box { background: var(--teal); }
+.planner-checklist-input:checked + .planner-checklist-box::after {
+  content: ''; position: absolute; left: 6px; top: 2px; width: 6px; height: 11px;
+  border: solid var(--white); border-width: 0 3px 3px 0; transform: rotate(45deg);
+}
+.planner-checklist-input:focus-visible + .planner-checklist-box { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.planner-checklist-text { display: flex; flex-direction: column; gap: 2px; }
+.planner-checklist-text strong { font-size: 15px; color: var(--text); }
+.planner-checklist-item.is-done .planner-checklist-text strong { color: var(--teal-dark); }
+.planner-checklist-detail { font-size: 13px; color: var(--text-mid); line-height: 1.5; }
+.planner-checklist-link-row { padding-left: 34px; margin-top: 6px; }
+.planner-checklist-link { font-size: 13px; font-weight: 800; color: var(--teal); }
+.planner-checklist-link:hover { text-decoration: underline; }
 
 /* Sits above Review's Phase 1/2/3 sections — all three cards look the same
    at rest; emphasis only appears on hover/focus or after a click (clicking
@@ -1180,21 +1242,49 @@ body.scgate-open { overflow: hidden; }
 .planner-top-list li { font-size: 13px; color: var(--text); margin-bottom: 6px; }
 .planner-top-list em { color: var(--text-light); font-style: normal; font-size: 12px; }
 
-.intervention-review-list { padding-left: 0; list-style: none; }
-.intervention-review-list li { margin-bottom: 16px; }
-.intervention-review-header { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 4px; }
-.intervention-review-ring { font-size: 11px; font-weight: 700; color: var(--text-light); }
-.intervention-review-plan { font-size: 13px; color: var(--text-mid); margin: 0; padding-left: 2px; }
-.intervention-review-plan em { color: var(--text-light); font-style: normal; }
-/* Each chosen practice with its description, so the clinician has the
-   context on Review (and in the printed plan) without opening the library. */
-.intervention-review-practices {
-  list-style: none; margin: 0; padding-left: 2px;
-  display: flex; flex-direction: column; gap: 4px;
-  font-size: 13px; line-height: 1.5; color: var(--text-mid);
+/* Review → Phase 2: two-column table, factor | intervention(s). Names only,
+   shown as chips; alternating row shading and an arrow between the columns
+   make each factor → intervention pairing easy to follow across. */
+.intervention-review-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 10px; }
+.intervention-review-table th {
+  text-align: left; font-size: 11px; font-weight: 800; color: var(--text-light);
+  text-transform: uppercase; letter-spacing: .06em; padding: 0 18px 10px; border-bottom: 2px solid var(--cream-dark);
 }
-.intervention-review-list .intervention-review-practices li { margin-bottom: 0; }
-.intervention-review-practices strong { color: var(--text); }
+.intervention-review-table td { padding: 16px 18px; vertical-align: middle; }
+.intervention-review-table tbody tr:nth-child(even) td { background: #FAF8F3; }
+.intervention-review-factor { width: 42%; border-left: 4px solid transparent; }
+.intervention-review-row-risk .intervention-review-factor { border-left-color: #E8A79F; }
+.intervention-review-row-protective .intervention-review-factor { border-left-color: var(--green); }
+.intervention-review-factor-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.intervention-review-factor-text { font-size: 16px; color: var(--text); line-height: 1.35; }
+.intervention-review-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 6px; }
+.intervention-review-ring { font-size: 12px; font-weight: 700; color: var(--text-light); }
+.intervention-review-practice-cell { position: relative; padding-left: 44px !important; }
+.intervention-review-practice-cell::after {
+  content: '→'; position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  font-size: 18px; font-weight: 800; color: var(--text-light);
+}
+.intervention-review-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.intervention-review-chips li {
+  font-size: 14px; font-weight: 700; color: var(--teal-dark); line-height: 1.3;
+  background: var(--teal-light); border: 1px solid #B9E2E9; border-radius: 100px; padding: 6px 14px;
+}
+.intervention-review-none {
+  display: inline-block; font-size: 13px; font-weight: 700; color: var(--text-light);
+  border: 1px dashed var(--text-light); border-radius: 100px; padding: 5px 13px;
+}
+@media (max-width: 640px) {
+  .intervention-review-table thead { display: none; }
+  .intervention-review-table, .intervention-review-table tbody, .intervention-review-table tr, .intervention-review-table td { display: block; width: 100%; }
+  .intervention-review-table tr { border-bottom: 1px solid var(--cream-dark); padding: 6px 0; }
+  .intervention-review-table td { border-bottom: none; padding: 8px 12px; }
+  .intervention-review-practice-cell { padding-left: 12px !important; }
+  .intervention-review-practice-cell::after { display: none; }
+  .intervention-review-practice-cell::before {
+    content: attr(data-label); display: block; font-size: 10px; font-weight: 800; color: var(--text-light);
+    text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px;
+  }
+}
 
 @media (max-width: 900px) {
   .planner-topfactors-pool, .planner-topfactors-slots, .planner-top-contributors {
@@ -1226,7 +1316,7 @@ body.scgate-open { overflow: hidden; }
 .sp-print-sheet { display: none; }
 
 @media print {
-  body > *:not(#safetyPlan):not(#planner) { display: none !important; }
+  body > *:not(#safetyPlan):not(#planner):not(#schoolsPage) { display: none !important; }
   #safetyPlan > *:not(.sp-print-sheet) { display: none !important; }
   .sp-print-sheet {
     display: block !important;
@@ -1549,7 +1639,7 @@ body.scgate-open { overflow: hidden; }
    PRINT — Client Ecological Formulation & Treatment Plan
    ============================================= */
 @media print {
-  body > *:not(#planner):not(#safetyPlan) { display: none !important; }
+  body > *:not(#planner):not(#safetyPlan):not(#schoolsPage) { display: none !important; }
   #planner > *:not(.planner-print-sheet) { display: none !important; }
   .planner-print-sheet {
     display: block !important;
@@ -1585,5 +1675,366 @@ body.scgate-open { overflow: hidden; }
   .planner-print-sheet ul { margin: 0 0 12px 18px; font-size: 12px; }
   .planner-print-sheet li { margin-bottom: 4px; }
   .planner-print-sheet li ul { margin: 4px 0 6px 16px; }
+  .planner-print-sheet .print-int-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 12px; }
+  .planner-print-sheet .print-int-table th, .planner-print-sheet .print-int-table td { border: 1px solid #bbb; padding: 6px 8px; text-align: left; vertical-align: top; }
+  .planner-print-sheet .print-int-table th { background: #f2f2f2; }
+  .planner-print-sheet .print-int-table td:first-child { width: 36%; }
+  .planner-print-sheet .print-int-table tr { break-inside: avoid; }
+  .planner-print-sheet .print-int-table ul { margin: 0 0 0 16px; }
+  .planner-print-sheet .print-int-meta { font-size: 11px; color: #555; }
+  .planner-print-sheet .print-checklist { list-style: none; margin-left: 0; }
+  .planner-print-sheet .print-checklist li { margin-bottom: 10px; break-inside: avoid; }
+  .planner-print-sheet .print-check-title { display: block; font-weight: 700; }
+  .planner-print-sheet .print-check-detail { display: block; margin-left: 18px; color: #333; }
+  .planner-print-sheet .print-check-link { display: block; margin-left: 18px; font-size: 11px; font-weight: 700; color: #006E82; }
+  .planner-print-sheet .print-goal { font-size: 12px; font-weight: 700; margin-bottom: 12px; border-left: 3px solid #006E82; padding: 4px 0 4px 10px; }
+  .planner-print-sheet .print-phase-goal { font-size: 12px; margin: 0 0 12px; border-left: 3px solid #006E82; padding: 2px 0 2px 10px; }
+  .planner-print-sheet .print-phase-goal p { margin: 2px 0; }
+  .planner-print-sheet .print-phase-goal strong { color: #006E82; }
   .planner-print-sheet .print-phase-comment { margin: 2px 0 12px; font-size: 11px; color: #333; }
+}
+
+/* =============================================
+   GOAL BANNER (shared — see goal-banner.js)
+   ============================================= */
+.goal-banner {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: var(--white); border: 2px solid var(--teal-light); border-left: 6px solid var(--teal);
+  border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 24px; max-width: 760px;
+  box-shadow: var(--shadow-sm);
+}
+.goal-banner-icon {
+  flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
+  background: var(--teal-light); display: flex; align-items: center; justify-content: center;
+}
+.goal-banner-icon svg { width: 22px; height: 22px; stroke: var(--teal-dark); }
+.goal-banner-body { display: flex; flex-direction: column; gap: 2px; }
+.goal-banner-label {
+  font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--teal);
+}
+.goal-banner-headline { font-size: 18px; font-weight: 900; color: var(--teal-dark); line-height: 1.3; }
+.goal-banner-context { font-size: 14px; color: var(--text-mid); line-height: 1.55; margin-top: 2px; }
+@media print { .goal-banner { display: none !important; } }
+
+/* =============================================
+   NAVIGATING SCHOOLS (schools.html / schools.js)
+   ============================================= */
+.schools-page { background: var(--cream); }
+.schools-page .section-intro { margin-bottom: 24px; }
+.schools-quote { margin: 0 0 32px; max-width: 640px; }
+.schools-page .tab-panel { padding-top: 4px; }
+.schools-panel-intro { font-size: 15px; color: var(--text-mid); max-width: 720px; margin-bottom: 20px; }
+.schools-btn-sm { padding: 8px 16px; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
+.schools-hint { font-size: 12px; color: var(--text-light); max-width: 420px; line-height: 1.5; }
+.schools-pending {
+  display: inline-block; font-size: 12px; font-weight: 800; color: var(--text-light);
+  background: var(--cream); border: 1px dashed var(--text-light); border-radius: 100px; padding: 4px 12px;
+}
+.schools-note { max-width: 760px; margin-bottom: 20px; }
+
+/* Tips */
+.schools-tips { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+.schools-tip {
+  display: flex; gap: 18px; background: var(--white); border-radius: var(--radius);
+  padding: 24px 28px; box-shadow: var(--shadow-sm); scroll-margin-top: 90px;
+}
+.schools-tip-num {
+  flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
+  background: var(--teal); color: var(--white); font-weight: 900; font-size: 17px;
+  display: flex; align-items: center; justify-content: center;
+}
+.schools-tip-body { flex: 1; min-width: 0; }
+.schools-tip-kicker { font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); }
+.schools-tip h3 { margin: 2px 0 8px; }
+.schools-tip p { font-size: 15px; color: var(--text-mid); line-height: 1.7; max-width: 760px; }
+.schools-tip-link { margin-top: 14px; }
+
+/* Interview guide (Tip 2) */
+.schools-guide { margin-top: 20px; border-top: 1px solid var(--cream-dark); padding-top: 18px; }
+.schools-guide-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.schools-guide-head h4 { margin: 0; }
+.schools-progress {
+  font-size: 12px; font-weight: 800; color: var(--teal-dark); background: var(--teal-light);
+  padding: 3px 12px; border-radius: 100px;
+}
+.schools-q-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.schools-q {
+  border: 2px solid var(--cream-dark); border-radius: var(--radius-sm); padding: 10px 12px;
+  transition: border-color .15s, background .15s;
+}
+.schools-q:focus-within { border-color: var(--teal); }
+.schools-q.is-answered { background: var(--teal-light); border-color: #B9E2E9; }
+.schools-q label { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; font-weight: 800; color: var(--text); cursor: text; }
+.schools-q-num {
+  flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: var(--cream-dark);
+  font-size: 11px; font-weight: 900; color: var(--text-mid); display: flex; align-items: center; justify-content: center;
+}
+.schools-q.is-answered .schools-q-num { background: var(--teal); color: var(--white); }
+.schools-q-input {
+  display: block; width: calc(100% - 32px); margin: 6px 0 0 32px; resize: none; overflow: hidden;
+  border: none; border-bottom: 1px dashed var(--cream-dark); background: transparent;
+  font-family: var(--font); font-size: 14px; color: var(--text); padding: 4px 0; line-height: 1.5;
+}
+.schools-q-input:focus { outline: none; border-bottom-color: var(--teal); }
+.schools-guide-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 14px; }
+
+/* Roles (Tip 3) */
+.schools-roles { margin-top: 20px; }
+.schools-roles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.schools-role { border-radius: var(--radius-sm); padding: 14px 16px; background: var(--cream); border-top: 4px solid var(--teal); }
+.schools-role-1 { border-top-color: var(--teal); }
+.schools-role-2 { border-top-color: var(--orange); }
+.schools-role-3 { border-top-color: var(--green-dark); }
+.schools-role { position: relative; transition: opacity .2s, box-shadow .2s, background .2s, transform .15s; }
+.schools-role strong { display: block; font-size: 15px; color: var(--text); margin-bottom: 4px; }
+.schools-role.is-match { background: var(--white); box-shadow: 0 0 0 2px var(--teal), var(--shadow-sm); transform: translateY(-2px); }
+.schools-role.is-dimmed { opacity: .45; }
+.schools-role-badge {
+  display: inline-block; font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--white); background: var(--teal); border-radius: 100px; padding: 2px 9px; margin-bottom: 6px;
+}
+.schools-roles-picker { background: var(--cream); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 14px; }
+.schools-roles-picker-label { display: block; font-size: 13px; font-weight: 900; color: var(--teal-dark); }
+.schools-roles-picker-intro { font-size: 13px !important; color: var(--text-mid); margin: 2px 0 10px; }
+.schools-roles-options { display: flex; flex-wrap: wrap; gap: 8px; }
+.schools-roles-option {
+  font-family: var(--font); font-size: 13px; font-weight: 700; color: var(--text-mid);
+  background: var(--white); border: 2px solid var(--cream-dark); border-radius: 100px;
+  padding: 6px 14px; cursor: pointer; transition: border-color .15s, background .15s, color .15s;
+}
+.schools-roles-option:hover { border-color: var(--teal); color: var(--teal-dark); }
+.schools-roles-option.is-active { background: var(--teal); border-color: var(--teal); color: var(--white); }
+.schools-roles-option:focus-visible, .schools-roles-clear:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.schools-roles-answer {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-top: 12px;
+  background: var(--white); border-left: 4px solid var(--teal); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 10px 14px; font-size: 14px; color: var(--text-mid); line-height: 1.55;
+}
+.schools-roles-answer strong { color: var(--teal-dark); }
+.schools-roles-answer span { flex: 1; min-width: 220px; }
+.schools-roles-clear {
+  background: none; border: none; padding: 0; font-family: var(--font); font-size: 12px; font-weight: 800;
+  color: var(--text-light); text-decoration: underline; cursor: pointer;
+}
+.schools-roles-clear:hover { color: var(--teal-dark); }
+@media (prefers-reduced-motion: reduce) { .schools-role { transition: none; } .schools-role.is-match { transform: none; } }
+.schools-role p { font-size: 13px; line-height: 1.55; }
+
+/* Forms shared by the School Card + Contact Card */
+.schools-card-layout { display: grid; grid-template-columns: 3fr 2fr; gap: 24px; align-items: start; }
+/* Same arrangement as Your Client's School Card: the write-in form on the
+   left, the card on the right. The card keeps the larger share of the width
+   so it isn't squeezed, and the form's fields stack one per row. Stacks
+   (form above card) below 900px. */
+.schools-contact-layout { display: grid; grid-template-columns: minmax(280px, 2fr) 3fr; gap: 24px; align-items: start; }
+.schools-contact-layout .schools-card-form { grid-template-columns: 1fr; }
+.schools-contact-preview { min-width: 0; }
+.schools-card-form {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px;
+  background: var(--white); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow-sm);
+}
+.schools-field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.schools-field.is-wide { grid-column: 1 / -1; }
+.schools-field label { font-size: 11px; font-weight: 800; color: var(--text-light); text-transform: uppercase; letter-spacing: .04em; }
+.schools-field input, .schools-field select, .schools-field textarea {
+  width: 100%; padding: 9px 12px; border-radius: var(--radius-sm); border: 2px solid var(--cream-dark);
+  background: var(--white); font-family: var(--font); font-size: 14px; color: var(--text);
+}
+.schools-field textarea { resize: vertical; }
+.schools-field input:focus, .schools-field select:focus, .schools-field textarea:focus { outline: none; border-color: var(--teal); }
+.schools-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.schools-actions .btn { display: inline-flex; align-items: center; gap: 8px; }
+
+.schools-card-side { display: flex; flex-direction: column; gap: 16px; }
+.schools-side-block { background: var(--white); border-radius: var(--radius); padding: 20px 22px; box-shadow: var(--shadow-sm); }
+.schools-side-block h4 { margin-bottom: 4px; }
+.schools-side-intro { font-size: 12px; color: var(--text-light); margin-bottom: 12px; }
+.schools-side-empty { font-size: 13px; color: var(--text-mid); font-style: italic; margin: 6px 0 10px; }
+.schools-side-link {
+  display: inline-flex; align-items: center; gap: 4px; margin-top: 10px; background: none; border: none; padding: 0;
+  font-family: var(--font); font-size: 13px; font-weight: 800; color: var(--teal); cursor: pointer;
+}
+.schools-side-link:hover { text-decoration: underline; }
+.schools-factor-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.schools-factor-label { display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; }
+.schools-factor-cols ul { display: flex; flex-direction: column; gap: 6px; }
+.schools-factor { font-size: 13px; padding: 6px 10px; border-radius: var(--radius-sm); line-height: 1.4; }
+.schools-factor em { font-style: normal; font-size: 11px; font-weight: 800; opacity: .7; }
+.schools-factor-risk { background: #FDECEA; color: hsl(6,55%,28%); }
+.schools-factor-protective { background: var(--green-light); color: hsl(112,35%,22%); }
+.schools-factor-empty { font-size: 13px; color: var(--text-light); font-style: italic; }
+.schools-answers dt { font-size: 12px; font-weight: 800; color: var(--text-mid); margin-top: 10px; }
+.schools-answers dt:first-child { margin-top: 4px; }
+.schools-answers dd { font-size: 14px; color: var(--text); white-space: pre-wrap; }
+
+/* Contact card (preview on screen + printed) */
+.cc-card {
+  background: var(--white); border: 2px solid var(--teal); border-radius: var(--radius);
+  overflow: hidden; box-shadow: var(--shadow-sm); font-size: 14px; color: var(--text);
+}
+.cc-header { background: var(--teal); color: var(--white); padding: 20px 32px; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.cc-title { font-weight: 900; font-size: 20px; }
+.cc-sub { font-size: 12px; font-weight: 700; opacity: .9; }
+/* Section headings sit at the left edge; everything under a heading is
+   indented, with a thin accent line showing what belongs to it. */
+.cc-card h5 { display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 900; color: var(--teal-dark); margin-bottom: 16px; }
+.cc-body { margin-left: 6px; padding-left: 30px; border-left: 3px solid var(--teal-light); }
+.cc-card h6 { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--text-mid); margin: 26px 0 10px; }
+.cc-card ul { list-style: disc; padding-left: 20px; line-height: 1.6; }
+.cc-card li { margin-bottom: 10px; padding-left: 4px; }
+.cc-card li:last-child { margin-bottom: 0; }
+.cc-section { padding: 28px 32px; }
+.cc-section + .cc-section { border-top: 1px solid var(--cream-dark); }
+.cc-details { display: flex; flex-direction: column; gap: 18px; }
+.cc-detail { min-width: 0; }
+.cc-details dt { font-size: 10px; font-weight: 800; color: var(--text-light); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+.cc-details dd { font-weight: 700; font-size: 16px; overflow-wrap: anywhere; }
+.cc-detail-email dd { white-space: nowrap; overflow-wrap: normal; font-size: clamp(12px, 3.4vw, 16px); }
+.cc-blank { display: block; width: 100%; max-width: 380px; height: 30px; border-bottom: 1.5px solid #CFC6B4; }
+.cc-crisis { background: #FDECEA; padding: 26px 32px 28px; border-top: 1px solid #F3C7C1; }
+.cc-crisis h5 { color: #8B2E22; }
+.cc-crisis h5 svg { stroke: #C0392B; width: 18px; height: 18px; }
+.cc-crisis .cc-body { border-left-color: #F3C7C1; }
+.cc-local { padding: 26px 32px 28px; border-top: 1px solid var(--cream-dark); }
+
+/* Rise guidelines */
+.schools-guidelines { background: var(--white); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow-sm); max-width: 860px; }
+.schools-guidelines-head { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+.schools-guidelines-head svg { stroke: var(--teal-dark); width: 32px; height: 32px; }
+.schools-guidelines-head h3 { margin: 0; }
+.schools-guidelines-source { font-size: 12px; font-weight: 800; color: var(--text-light); text-transform: uppercase; letter-spacing: .05em; }
+.schools-guidelines-list { padding-left: 22px; display: flex; flex-direction: column; gap: 10px; }
+.schools-guidelines-list li { font-size: 15px; color: var(--text-mid); line-height: 1.6; padding-left: 4px; }
+.schools-guidelines-list li::marker { color: var(--teal); font-weight: 900; }
+
+.schools-guidelines-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--cream-dark); }
+.schools-guidelines-actions .btn { display: inline-flex; align-items: center; gap: 8px; }
+
+.schools-print-sheet { display: none; }
+
+@media (max-width: 900px) {
+  .schools-card-layout, .schools-contact-layout { grid-template-columns: 1fr; }
+  .schools-roles-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .schools-tip { flex-direction: column; gap: 10px; padding: 20px; }
+  .schools-card-form { grid-template-columns: 1fr; padding: 18px; }
+  .cc-header, .cc-section, .cc-crisis, .cc-local { padding-left: 18px; padding-right: 18px; }
+  .cc-body { margin-left: 2px; padding-left: 18px; }
+}
+
+@media print {
+  body > *:not(#schoolsPage):not(#planner):not(#safetyPlan) { display: none !important; }
+  #schoolsPage > *:not(.schools-print-sheet) { display: none !important; }
+  .schools-print-sheet { display: block !important; padding: 24px; color: #000; background: #fff; font-size: 12px; }
+  .schools-print-sheet h1 { font-size: 20px; color: #000; margin-bottom: 4px; }
+  .schools-print-sheet h2 { font-size: 15px; color: #000; margin: 18px 0 8px; }
+  .schools-print-sheet h3 { font-size: 13px; color: #000; margin: 0 0 6px; }
+  .schools-print-sheet .print-date { font-size: 11px; color: #444; margin-bottom: 16px; }
+  .schools-print-sheet .print-questions { padding-left: 18px; }
+  .schools-print-sheet .print-questions li { margin-bottom: 12px; break-inside: avoid; }
+  .schools-print-sheet .print-questions p { margin-top: 2px; white-space: pre-wrap; }
+  .schools-print-sheet .print-write-space { height: 44px; border-bottom: 1px solid #999; }
+  .schools-print-sheet .print-table { width: 100%; border-collapse: collapse; }
+  .schools-print-sheet .print-table th, .schools-print-sheet .print-table td { border: 1px solid #bbb; padding: 6px 8px; text-align: left; vertical-align: top; }
+  .schools-print-sheet .print-table th { width: 34%; background: #f2f2f2; }
+  .schools-print-sheet .print-table td { white-space: pre-wrap; }
+  .schools-print-sheet .print-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .schools-print-sheet ul { margin: 0 0 8px 18px; list-style: disc; }
+  .schools-print-sheet .print-answers dt { font-weight: 800; margin-top: 8px; }
+  .schools-print-sheet .print-answers dd { white-space: pre-wrap; }
+  .schools-print-sheet .print-contact-card { max-width: 6.5in; margin: 0 auto; }
+  .schools-print-sheet .print-guidelines-intro { font-size: 13px; margin-bottom: 12px; }
+  .schools-print-sheet .print-guidelines { padding-left: 20px; font-size: 13px; line-height: 1.55; }
+  .schools-print-sheet .print-guidelines li { margin-bottom: 8px; break-inside: avoid; }
+  /* Printed contact card: compact sizing so the whole card fits on one
+     Letter page, even with long details and a full local resources list.
+     The on-screen card keeps its roomier sizing. */
+  .schools-print-sheet .print-contact-card { break-inside: avoid; page-break-inside: avoid; }
+  /* School card + interview guide print in the same card style. They can
+     run longer than one page, so sections and rows avoid splitting
+     instead of the whole card. */
+  .schools-print-sheet .print-card { max-width: 6.5in; margin: 0 auto; }
+  /* Sections may continue onto a next page rather than jumping whole (which
+     left two half-empty pages); individual rows still stay together. */
+  .schools-print-sheet .print-card .cc-detail { break-inside: avoid; }
+  /* School card: compact so a fully filled card fits on one Letter page. */
+  .schools-print-sheet .print-card-compact .cc-section { padding: 9px 16px; }
+  .schools-print-sheet .print-card-compact .cc-header { padding: 8px 16px; }
+  .schools-print-sheet .print-card-compact .cc-card h5 { font-size: 12px; margin-bottom: 5px; }
+  .schools-print-sheet .print-card-compact .cc-details { gap: 5px; }
+  .schools-print-sheet .print-card-compact .cc-details-grid { gap: 5px 18px; }
+  .schools-print-sheet .print-card-compact .cc-details dd { font-size: 11px; line-height: 1.35; }
+  .schools-print-sheet .print-card-compact .cc-detail-long dd,
+  .schools-print-sheet .print-card-compact .cc-prewrap { font-weight: 600; }
+  .schools-print-sheet .print-card-compact .cc-card li { margin-bottom: 1px; }
+  .schools-print-sheet .print-card-compact .cc-blank { height: 15px; }
+  .schools-print-sheet .print-card-compact .cc-detail-long { grid-column: auto; }
+  .schools-print-sheet .cc-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 20px; }
+  .schools-print-sheet .cc-detail-long { grid-column: 1 / -1; }
+  .schools-print-sheet .cc-detail-long dd, .schools-print-sheet .cc-prewrap { white-space: pre-wrap; font-weight: 600; }
+  .schools-print-sheet .cc-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+  .schools-print-sheet .cc-two-col h6 { margin-top: 0; }
+  .schools-print-sheet .cc-muted { color: #666; font-weight: 400; }
+  .schools-print-sheet .cc-qa-list { list-style: decimal; padding-left: 18px; margin: 0; }
+  .schools-print-sheet .cc-qa { margin-bottom: 10px; break-inside: avoid; }
+  .schools-print-sheet .cc-qa::marker { color: #006E82; font-weight: 800; }
+  .schools-print-sheet .cc-qa-q { display: block; font-weight: 800; font-size: 12px; }
+  .schools-print-sheet .cc-qa-a { display: block; white-space: pre-wrap; margin-top: 2px; }
+  .schools-print-sheet .cc-qa .cc-blank { max-width: none; height: 20px; }
+  .schools-print-sheet .cc-intro { font-size: 11.5px; line-height: 1.5; margin: 0 0 10px; color: #222; }
+  .schools-print-sheet .cc-guidelines-list .cc-qa { font-size: 11.5px; line-height: 1.5; margin-bottom: 7px; }
+  .schools-print-sheet .cc-card { font-size: 11px; border-width: 1.5px; }
+  .schools-print-sheet .cc-header { padding: 10px 18px; }
+  .schools-print-sheet .cc-title { font-size: 15px; }
+  .schools-print-sheet .cc-sub { font-size: 10px; }
+  .schools-print-sheet .cc-section { padding: 12px 18px; }
+  .schools-print-sheet .cc-crisis, .schools-print-sheet .cc-local { padding: 10px 18px 12px; }
+  .schools-print-sheet .cc-card h5 { font-size: 13px; margin-bottom: 7px; }
+  .schools-print-sheet .cc-crisis h5 svg { width: 14px; height: 14px; }
+  .schools-print-sheet .cc-body { padding-left: 16px; margin-left: 4px; border-left-width: 2px; }
+  .schools-print-sheet .cc-details { gap: 7px; }
+  .schools-print-sheet .cc-details dt { font-size: 8.5px; margin-bottom: 1px; }
+  .schools-print-sheet .cc-details dd { font-size: 12px; }
+  .schools-print-sheet .cc-detail-email dd { font-size: 12px; }
+  .schools-print-sheet .cc-blank { height: 18px; max-width: 3.2in; border-bottom-color: #999; }
+  .schools-print-sheet .cc-card h6 { font-size: 9px; margin: 10px 0 4px; }
+  .schools-print-sheet .cc-card ul { line-height: 1.4; padding-left: 16px; margin: 0; }
+  .schools-print-sheet .cc-card li { margin-bottom: 2px; }
+  .schools-print-sheet .cc-local ul { columns: 2; column-gap: 24px; }
+  .schools-print-sheet .cc-local li { break-inside: avoid; }
+  .schools-print-sheet .cc-card, .schools-print-sheet .cc-header, .schools-print-sheet .cc-crisis {
+    -webkit-print-color-adjust: exact; print-color-adjust: exact; box-shadow: none;
+  }
+}
+
+/* Seven nav links no longer fit beside the logo below ~1200px — switch to
+   the hamburger menu there instead of letting links wrap. */
+@media (max-width: 1200px) {
+  .nav-links     { display: none; }
+  .nav-hamburger { display: flex; }
+}
+
+/* Ecological map layout switch (Original / Separate / Grouped) */
+.planner-map-layout { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 14px; }
+.planner-map-layout-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--text-light); }
+.planner-map-layout-btns { display: inline-flex; flex-wrap: wrap; background: var(--white); border: 2px solid var(--cream-dark); border-radius: 100px; padding: 3px; gap: 2px; }
+.planner-map-layout-btn {
+  font-family: var(--font); font-size: 13px; font-weight: 800; color: var(--text-mid);
+  background: none; border: none; border-radius: 100px; padding: 6px 14px; cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.planner-map-layout-btn:hover { color: var(--teal-dark); background: var(--teal-light); }
+.planner-map-layout-btn.is-active { background: var(--teal); color: var(--white); }
+.planner-map-layout-btn:focus-visible { outline: 3px solid var(--yellow); outline-offset: 1px; }
+.planner-map-layout-hint { flex-basis: 100%; font-size: 12px; color: var(--text-light); margin: 0; max-width: 720px; }
+@media print { .planner-map-layout { display: none !important; } }
+
+/* Timestamp line at the top of every generated PDF (see printTimestamp()). */
+.print-timestamp { display: none; }
+@media print {
+  .print-timestamp {
+    display: block; font-size: 10.5px; font-weight: 700; color: #333;
+    margin: 0 0 12px; padding-bottom: 6px; border-bottom: 1px solid #ccc;
+  }
 }

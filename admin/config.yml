@@ -19,6 +19,23 @@ collections:
         label: "Homepage"
         fields:
 
+          - label: "The Goal (banner shown on the tool pages — reducing suicidal ideation)"
+            name: "goal"
+            widget: "object"
+            fields:
+              - {label: "Label", name: "label", widget: "string"}
+              - {label: "Headline", name: "headline", widget: "string"}
+              - label: "Page-Specific Context Lines"
+                name: "contexts"
+                widget: "object"
+                fields:
+                  - {label: "About page (Toolkit section)", name: "about", widget: "text"}
+                  - {label: "Planning Tool", name: "planner", widget: "text"}
+                  - {label: "Make A Safety Plan", name: "safetyPlan", widget: "text"}
+                  - {label: "Treatment Library", name: "library", widget: "text"}
+                  - {label: "Community Resources", name: "referral", widget: "text"}
+                  - {label: "Navigating Schools", name: "schools", widget: "text"}
+
           - label: "Hero"
             name: "hero"
             widget: "object"
@@ -26,7 +43,7 @@ collections:
               - {label: "Badges", name: "badges", widget: "list", field: {label: "Badge", name: "badge", widget: "string"}}
               - {label: "Headline — Line 1", name: "headlineLine1", widget: "string"}
               - {label: "Headline — Line 2", name: "headlineLine2", widget: "string"}
-              - {label: "Subheading", name: "sub", widget: "text", hint: "You can use <em>word</em> to italicize a word."}
+              - {label: "Subheading", name: "sub", widget: "text", hint: "You can use <em>word</em> to italicize or <strong>word</strong> to bold a word."}
               - label: "Primary Button"
                 name: "ctaPrimary"
                 widget: "object"
@@ -381,6 +398,139 @@ collections:
                       - {label: "Secondary Line Link (leave blank for plain text, no link)", name: "secondaryHref", widget: "string", required: false}
                   - {label: "Prototype Note", name: "prototypeNote", widget: "text"}
 
+          - label: "Navigating Schools Page"
+            name: "schoolsPage"
+            widget: "object"
+            fields:
+              - {label: "Nav Label", name: "navLabel", widget: "string"}
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Intro", name: "intro", widget: "text"}
+              - label: "Pull Quote"
+                name: "quote"
+                widget: "object"
+                fields:
+                  - {label: "Quote", name: "text", widget: "text"}
+                  - {label: "Citation", name: "cite", widget: "string"}
+              - label: "Tab Labels"
+                name: "tabs"
+                widget: "object"
+                fields:
+                  - {label: "Tips", name: "tips", widget: "string"}
+                  - {label: "Your Client's School Card", name: "card", widget: "string"}
+                  - {label: "Mental Health Contact Card", name: "contact", widget: "string"}
+                  - {label: "Rise School Guidelines", name: "guidelines", widget: "string"}
+              - label: "Tips"
+                name: "tips"
+                widget: "list"
+                summary: "{{title}}"
+                fields:
+                  - {label: "Title", name: "title", widget: "string"}
+                  - {label: "Body", name: "body", widget: "text"}
+                  - {label: "Extra Module", name: "widget", widget: "select", options: ["none", "interviewGuide", "roles"], default: "none", hint: "interviewGuide shows the interview questions below this tip; roles shows the Who Does What cards."}
+                  - {label: "Link Text (optional)", name: "linkText", widget: "string", required: false}
+                  - {label: "Link / File URL (optional — e.g. the ROI form or re-entry guide)", name: "linkHref", widget: "string", required: false}
+                  - {label: "Shown When No Link Yet (e.g. 'ROI form coming soon')", name: "pendingText", widget: "string", required: false}
+              - label: "Interview Guide (Tip 2)"
+                name: "interviewGuide"
+                widget: "object"
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - {label: "Progress Label", name: "progressLabel", widget: "string"}
+                  - {label: "Answer Placeholder", name: "answerPlaceholder", widget: "string"}
+                  - {label: "Print Button Label", name: "printLabel", widget: "string"}
+                  - {label: "Print Hint", name: "printHint", widget: "string"}
+                  - {label: "Questions", name: "questions", widget: "list", field: {label: "Question", name: "question", widget: "string"}}
+              - {label: "Roles Heading (Tip 3)", name: "rolesHeading", widget: "string"}
+              - label: "Roles Picker (Tip 3 — 'Who handles this?' situations)"
+                name: "rolesPicker"
+                widget: "object"
+                fields:
+                  - {label: "Label", name: "label", widget: "string"}
+                  - {label: "Intro", name: "intro", widget: "string", required: false}
+                  - {label: "Badge on Matching Card", name: "bestFitLabel", widget: "string"}
+                  - {label: "Clear Link Label", name: "clearLabel", widget: "string"}
+                  - label: "Situations"
+                    name: "options"
+                    widget: "list"
+                    summary: "{{label}}"
+                    fields:
+                      - {label: "Situation", name: "label", widget: "string"}
+                      - {label: "Whose role (role keys)", name: "matchKeys", widget: "select", multiple: true, options: ["rise", "school", "therapist"]}
+                      - {label: "Explanation", name: "note", widget: "text"}
+              - label: "Roles (Tip 3)"
+                name: "roles"
+                widget: "list"
+                summary: "{{who}}"
+                fields:
+                  - {label: "Key (rise / school / therapist — used by the picker below)", name: "key", widget: "string"}
+                  - {label: "Who", name: "who", widget: "string"}
+                  - {label: "Role", name: "role", widget: "text"}
+              - label: "Your Client's School Card"
+                name: "schoolCard"
+                widget: "object"
+                fields:
+                  - {label: "Intro", name: "intro", widget: "text"}
+                  - label: "Fields"
+                    name: "fields"
+                    widget: "list"
+                    summary: "{{label}}"
+                    fields:
+                      - {label: "Key (unique, no spaces — changing it clears saved values for this field)", name: "key", widget: "string"}
+                      - {label: "Label", name: "label", widget: "string"}
+                      - {label: "Placeholder", name: "placeholder", widget: "string", required: false}
+                      - {label: "Type", name: "type", widget: "select", options: ["text", "textarea", "select"]}
+                      - {label: "Options (Type = select only)", name: "options", widget: "list", required: false, field: {label: "Option", name: "option", widget: "string"}}
+                  - {label: "Interview Answers Heading", name: "interviewHeading", widget: "string"}
+                  - {label: "Interview Answers Empty Text", name: "interviewEmpty", widget: "string"}
+                  - {label: "Edit Answers Link Label", name: "interviewEditLabel", widget: "string"}
+                  - {label: "Map Factors Heading", name: "mapHeading", widget: "string"}
+                  - {label: "Map Factors Intro", name: "mapIntro", widget: "string"}
+                  - {label: "Map Factors Empty Text", name: "mapEmpty", widget: "string"}
+                  - {label: "Planning Tool Link Label", name: "mapLinkLabel", widget: "string"}
+                  - {label: "Risk Label", name: "riskLabel", widget: "string"}
+                  - {label: "Protective Label", name: "protectiveLabel", widget: "string"}
+                  - {label: "Print Button Label", name: "printLabel", widget: "string"}
+                  - {label: "Clear Button Label", name: "resetLabel", widget: "string"}
+              - label: "Mental Health Contact Card"
+                name: "contactCard"
+                widget: "object"
+                fields:
+                  - {label: "Intro", name: "intro", widget: "text"}
+                  - {label: "Card Title", name: "title", widget: "string"}
+                  - {label: "Therapist Heading", name: "therapistHeading", widget: "string"}
+                  - label: "Therapist Fields"
+                    name: "therapistFields"
+                    widget: "list"
+                    summary: "{{label}}"
+                    fields:
+                      - {label: "Key (unique, no spaces)", name: "key", widget: "string"}
+                      - {label: "Label", name: "label", widget: "string"}
+                      - {label: "Placeholder", name: "placeholder", widget: "string", required: false}
+                  - {label: "When to Contact the Therapist — Heading", name: "whenTherapistHeading", widget: "string"}
+                  - {label: "When to Contact the Therapist", name: "whenTherapist", widget: "list", field: {label: "Item", name: "item", widget: "string"}}
+                  - {label: "Rise Heading", name: "riseHeading", widget: "string"}
+                  - {label: "Rise Contact Label (e.g. Email)", name: "riseContactLabel", widget: "string"}
+                  - {label: "Rise Contact (email or phone)", name: "riseContact", widget: "string"}
+                  - {label: "When to Contact Rise — Heading", name: "whenRiseHeading", widget: "string"}
+                  - {label: "When to Contact Rise", name: "whenRise", widget: "list", field: {label: "Item", name: "item", widget: "string"}}
+                  - {label: "Crisis Heading", name: "crisisHeading", widget: "string"}
+                  - {label: "Crisis Lines", name: "crisis", widget: "list", field: {label: "Line", name: "line", widget: "string"}}
+                  - {label: "Local Resources Heading", name: "localHeading", widget: "string"}
+                  - {label: "Local Resources Placeholder", name: "localPlaceholder", widget: "string"}
+                  - {label: "Print Button Label", name: "printLabel", widget: "string"}
+                  - {label: "Prototype Note (leave blank to hide)", name: "prototypeNote", widget: "text", required: false}
+              - label: "Rise School Guidelines (Program Manual)"
+                name: "guidelines"
+                widget: "object"
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - {label: "Source Line", name: "source", widget: "string"}
+                  - {label: "Print Button Label", name: "printLabel", widget: "string"}
+                  - {label: "Print Hint (shown next to the button; leave blank to hide)", name: "downloadHint", widget: "string", required: false}
+                  - {label: "Intro", name: "intro", widget: "text"}
+                  - {label: "Guidelines", name: "items", widget: "list", field: {label: "Guideline", name: "item", widget: "text"}}
+
           - label: "Planning Tool Section"
             name: "planner"
             widget: "object"
@@ -429,6 +579,57 @@ collections:
                   - {label: "Button Label", name: "buttonLabel", widget: "string"}
                   - {label: "Email Address", name: "address", widget: "string"}
                   - {label: "Hint Text", name: "hint", widget: "text"}
+              - label: "Map Layout Switch (Original / Original, grouped / Separate / Grouped / Grouped + flat lines buttons above the ecological map)"
+                name: "mapLayouts"
+                widget: "object"
+                fields:
+                  - {label: "Label", name: "label", widget: "string"}
+                  - label: "Options (fixed set of 5 — do not change the keys)"
+                    name: "options"
+                    widget: "list"
+                    summary: "{{label}}"
+                    fields:
+                      - {label: "Key (do not change)", name: "key", widget: "string"}
+                      - {label: "Button Label", name: "label", widget: "string"}
+                      - {label: "Description (shown under the buttons)", name: "hint", widget: "text"}
+              - label: "Treatment Goal (reducing suicidal ideation — shown on every step, under each phase on Review, and in the PDF/email)"
+                name: "goal"
+                widget: "object"
+                fields:
+                  - {label: "Tag Label", name: "label", widget: "string"}
+                  - {label: "Goal Statement", name: "statement", widget: "string"}
+                  - label: "Step Reminders"
+                    name: "steps"
+                    widget: "object"
+                    fields:
+                      - {label: "Mapping steps (Community → Client)", name: "ring", widget: "text"}
+                      - {label: "Identify Top Factors", name: "topFactors", widget: "text"}
+                      - {label: "Select Interventions", name: "resourcePlan", widget: "text"}
+                      - {label: "Treatment Plan (Review)", name: "review", widget: "text"}
+                  - {label: "'In this phase' Label", name: "focusLabel", widget: "string"}
+                  - {label: "'Check' Label", name: "checkLabel", widget: "string"}
+                  - label: "Phase Goals (fixed set of 3 — Phase 1, 2, 3; each repeats the Goal Statement above)"
+                    name: "phases"
+                    widget: "list"
+                    fields:
+                      - {label: "In this phase (how this phase reduces suicidal ideation)", name: "focus", widget: "text"}
+                      - {label: "Check (yes/no question for the therapist)", name: "check", widget: "string"}
+              - label: "Phase 3 Checklist (shown under Phase 3 on Review and in the printed plan)"
+                name: "phase3Checklist"
+                widget: "object"
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - {label: "Intro", name: "intro", widget: "text"}
+                  - {label: "Progress Label (e.g. 'complete' in '2 of 4 complete')", name: "progressLabel", widget: "string"}
+                  - label: "Items"
+                    name: "items"
+                    widget: "list"
+                    summary: "{{text}}"
+                    fields:
+                      - {label: "Activity", name: "text", widget: "string"}
+                      - {label: "Detail", name: "detail", widget: "text", required: false}
+                      - {label: "Link Text (optional)", name: "linkText", widget: "string", required: false}
+                      - {label: "Link Target (optional)", name: "linkHref", widget: "string", required: false}
               - {label: "Phase Comment Label (Comments box under each Phase 1/2/3 section on Review)", name: "phaseCommentLabel", widget: "string"}
               - {label: "Phase Comment Placeholder", name: "phaseCommentPlaceholder", widget: "string"}
 

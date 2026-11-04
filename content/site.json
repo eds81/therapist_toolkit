@@ -1,9 +1,22 @@
 {
+  "goal": {
+    "label": "The Goal",
+    "headline": "Reducing suicidal ideation.",
+    "contexts": {
+      "about": "Every section of this toolkit points toward one outcome: reducing suicidal ideation in the youth Rise serves. Use it to keep each session focused on that goal.",
+      "planner": "Every step of this planner works toward one outcome: reducing the client's suicidal ideation. Map, prioritize, and plan around what drives it and what protects against it.",
+      "safetyPlan": "A safety plan helps the client get through moments of suicidal ideation safely, and gives you a shared tool for reducing it over time.",
+      "library": "Every resource here is selected for its role in reducing youth suicidal ideation: assessing it, coping with it, or building the supports that protect against it.",
+      "referral": "Reductions in suicidal ideation last when care continues. Linking the client to their next step helps protect the progress made in treatment.",
+      "schools": "School connectedness is one of the strongest protectors against youth suicidal ideation. Strong school partnerships help keep the client safe and supported where they spend most of their day."
+    }
+  },
+
   "hero": {
     "badges": ["Rise Against Suicide", "University of Colorado Boulder"],
     "headlineLine1": "Supporting Therapists.",
     "headlineLine2": "Protecting Youth.",
-    "sub": "A co-designed online toolkit providing evidence-based resources, clinical support, and community for therapists treating youth with suicidal ideation — built <em>for</em> and <em>by</em> therapists.",
+    "sub": "A co-designed online toolkit providing evidence-based resources, clinical support, and community for therapists working toward one goal: <strong>reducing suicidal ideation in youth</strong> — built <em>for</em> and <em>by</em> therapists.",
     "ctaPrimary": { "text": "Explore the Toolkit", "href": "about.html#toolkit" },
     "ctaSecondary": { "text": "Learn More", "href": "about.html#about" },
     "stats": [
@@ -19,7 +32,7 @@
     "goal": {
       "heading": "1. What Is the Goal of This Toolkit?",
       "paragraphs": [
-        "This goal of this toolkit is to support therapists working with youth at risk for suicide in the Rise short-term treatment model by consolidating practical, evidence-informed tools in one place and by providing resources, tips and strategies to make your day-to-day practice easier, more efficient, and more connected.",
+        "The goal of this toolkit is to reduce suicidal ideation among youth served through the Rise short-term treatment model. It does this by supporting the therapists who work with them: consolidating practical, evidence-informed tools in one place and by providing resources, tips and strategies to make your day-to-day practice easier, more efficient, and more connected.",
         "Rather than replacing clinical judgment or training, it's meant to give therapists a clear roadmap, vetted resources, guidance for working with schools, and support for their own sustainability in this rewarding, yet challenging, work."
       ]
     },
@@ -32,7 +45,7 @@
       "pairs": [
         {
           "concern": "12 sessions isn't enough.",
-          "solution": "We know 12 sessions is short. That's why we built this toolkit. Developed with therapists, clinical and research experts in youth suicide prevention, the Treatment Roadmap structures our brief model around what matters most in a short window: reducing risk and stabilizing crisis, building emotion regulation, problem-solving and support seeking skills, and building a life worth living."
+          "solution": "We know 12 sessions is short. That's why we built this toolkit. Developed with therapists, clinical and research experts in youth suicide prevention, the Treatment Roadmap structures our brief model around what matters most in a short window: reducing risk and stabilizing crisis, building emotion regulation, problem-solving and support seeking skills, and building a life worth living, all in service of reducing suicidal ideation."
         },
         {
           "concern": "We spend too much time looking for resources.",
@@ -168,14 +181,14 @@
   "toolkit": {
     "sectionLabel": "The Toolkit",
     "heading": "Four Core Sections",
-    "intro": "Rather than replacing your clinical judgment or training, this toolkit is meant to give you a clear roadmap, vetted resources, guidance for working with schools, and support for your own sustainability in this rewarding, yet challenging, work — built with therapists, clinical and research experts through a Discover, Design, Build, Test process.",
+    "intro": "Everything here serves one goal: reducing suicidal ideation in the youth you treat. Rather than replacing your clinical judgment or training, this toolkit is meant to give you a clear roadmap, vetted resources, guidance for working with schools, and support for your own sustainability in this rewarding, yet challenging, work — built with therapists, clinical and research experts through a Discover, Design, Build, Test process.",
     "libraryLinkLabel": "2. Treatment Library",
     "tabs": {
       "roadmap": {
         "tabLabel": "1. Treatment Roadmap",
         "heading": "Treatment Planning / Roadmap",
         "concern": "“12 sessions isn’t enough.”",
-        "intro": "We know 12 sessions is short — that's why we built this toolkit. Developed with therapists and clinical and research experts in youth suicide prevention, the Treatment Roadmap structures our brief model around what matters most in a short window: reducing risk and stabilizing crisis, building emotion regulation, problem-solving and support-seeking skills, and building a life worth living. Click any phase below to expand it and see sample evidence-based interventions for that stage.",
+        "intro": "We know 12 sessions is short — that's why we built this toolkit. Developed with therapists and clinical and research experts in youth suicide prevention, the Treatment Roadmap structures our brief model around its central goal, reducing suicidal ideation, and what matters most in a short window to get there: reducing risk and stabilizing crisis, building emotion regulation, problem-solving and support-seeking skills, and building a life worth living. Click any phase below to expand it and see sample evidence-based interventions for that stage.",
         "phases": [
           {
             "title": "Phase 1: Assess & Understand",
@@ -211,6 +224,7 @@
               "Updated safety plan review",
               "Warm handoff to ongoing care provider",
               "Family/caregiver transition support",
+              "Final screenings to measure change in suicidal ideation",
               "Termination rituals & strengths review"
             ]
           }
@@ -465,11 +479,291 @@
     "mapAttributionNote": "Map data © OpenStreetMap contributors"
   },
 
+  "schoolsPage": {
+    "navLabel": "Navigating Schools",
+    "sectionLabel": "Working in Schools",
+    "heading": "Navigating Schools",
+    "intro": "We've heard from therapists that navigating schools is one of the most complex and challenging parts of this job. Based on therapist input, we've put together tips for working with schools, plus practical tools to keep key school information handy over the course of treatment.",
+    "quote": {
+      "text": "We're definitely navigating 50 systems every time we walk into a school.",
+      "cite": "Rise therapist"
+    },
+    "tabs": {
+      "tips": "Tips for Working with Schools",
+      "card": "Your Client's School Card",
+      "contact": "Mental Health Contact Card",
+      "guidelines": "Rise School Guidelines"
+    },
+    "tips": [
+      {
+        "title": "Find and connect with a school partner",
+        "body": "When a youth requests for sessions to occur in the school through Rise, the Rise therapist reaches out to the QRS (qualified referral source): the person who entered the referral. This is often the Mental Health Advocate, School Counselor, Interventionist, or School Social Worker. This person can help determine the best time to meet with the youth based on their school schedule, and where sessions can be held. The Rise therapist is expected to communicate with the QRS at least 24 hours before coming to the school to meet with the youth.",
+        "widget": "none",
+        "linkText": "",
+        "linkHref": "",
+        "pendingText": ""
+      },
+      {
+        "title": "Connect with your school partner and answer key questions",
+        "body": "Use the interview guide below to get your important questions about working in the school answered. The goal is to equip you with what you need to understand the specific school context and work effectively there. Each time you start working in a new school, find a school contact for a brief meeting or phone call to go through these questions. Your answers save in this browser and carry over to Your Client's School Card.",
+        "widget": "interviewGuide",
+        "linkText": "",
+        "linkHref": "",
+        "pendingText": ""
+      },
+      {
+        "title": "Clarify the roles of school personnel, the Rise therapist, and Rise admin",
+        "body": "Youth and families may be confused about the roles of the school and their therapist, and may or may not know about the role of Rise admin. Give young people clear information about roles and confidentiality. You can open the discussion by asking whether they've heard of confidentiality before and exploring what they think it means. Validate that it can be hard to keep track of all the adults involved in their care, and provide psychoeducation about each role.",
+        "widget": "roles",
+        "linkText": "",
+        "linkHref": "",
+        "pendingText": ""
+      },
+      {
+        "title": "Get a Release of Information to communicate with the youth's school",
+        "body": "We strongly suggest getting a signed release of information (ROI) form from the youth and family so you can exchange information with the client's school.",
+        "widget": "none",
+        "linkText": "Download the standard ROI form",
+        "linkHref": "",
+        "pendingText": "Standard ROI form coming soon"
+      },
+      {
+        "title": "Learn the school's policies and practices",
+        "body": "We are developing a set of policies, practices, and insider tips for working in the schools we serve. More soon!",
+        "widget": "none",
+        "linkText": "",
+        "linkHref": "",
+        "pendingText": ""
+      },
+      {
+        "title": "Be prepared to support youth through school re-entry after a crisis",
+        "body": "Youth with suicidal thoughts and behaviors often move in and out of schools and other systems of care. A supported return to school helps protect the progress made in reducing suicidal ideation, so be prepared to support youth through these transitions.",
+        "widget": "none",
+        "linkText": "Open the school re-entry resource guide",
+        "linkHref": "",
+        "pendingText": "Re-entry resource guide coming soon"
+      }
+    ],
+    "interviewGuide": {
+      "heading": "School partner interview guide",
+      "progressLabel": "answered",
+      "answerPlaceholder": "Notes from the school…",
+      "printLabel": "Print interview guide",
+      "printHint": "Prints the questions with any answers you've added, plus space to write, so you can bring it to the meeting.",
+      "questions": [
+        "What is the school schedule?",
+        "When is lunch?",
+        "Where can I meet with clients in your school?",
+        "What are the best and worst times to meet with clients?",
+        "What do I need to know about re-integrating youth into school?",
+        "Is there a re-entry meeting? Who attends?",
+        "What are the school-based risk assessment procedures?",
+        "What happens during a school emergency or lockdown?",
+        "What else should I know about working with your school?",
+        "What other mental health resources are available in the school?",
+        "Who helps connect families with resources in your school?"
+      ]
+    },
+    "roles": [
+      {
+        "key": "rise",
+        "who": "Rise",
+        "role": "Facilitates and funds therapy, and supports linkage to follow-up treatment when needed."
+      },
+      {
+        "key": "school",
+        "who": "The school",
+        "role": "Links the youth with a therapist. Sometimes the school also provides space and scheduling support for Rise therapy sessions."
+      },
+      {
+        "key": "therapist",
+        "who": "The therapist",
+        "role": "Provides therapy to the youth, assesses outcomes (including changes in suicidal ideation), and links to follow-up care."
+      }
+    ],
+    "rolesHeading": "Who does what",
+    "rolesPicker": {
+      "label": "Who handles this?",
+      "intro": "Pick a situation to see whose role it is. You can walk through this with youth and families too.",
+      "bestFitLabel": "Their role",
+      "clearLabel": "Show all",
+      "options": [
+        { "label": "Getting connected with a therapist", "matchKeys": ["school"], "note": "The school links the youth with a therapist. The school partner (QRS) enters the referral to Rise." },
+        { "label": "Finding a time and place to meet at school", "matchKeys": ["school"], "note": "The school partner (QRS) helps with scheduling around the youth's classes and finding a private space. Give them at least 24 hours' notice." },
+        { "label": "Paying for therapy", "matchKeys": ["rise"], "note": "Rise funds therapy, so there is no cost to the youth or family." },
+        { "label": "What happens in sessions, and what stays private", "matchKeys": ["therapist"], "note": "The therapist provides therapy and explains confidentiality: what stays between them, and when information has to be shared to keep the youth safe." },
+        { "label": "Checking whether things are getting better", "matchKeys": ["therapist"], "note": "The therapist assesses outcomes, including changes in suicidal ideation, through screenings during treatment." },
+        { "label": "Next steps in care after Rise", "matchKeys": ["therapist", "rise"], "note": "The therapist links the youth to follow-up care, and Rise supports that linkage when needed." }
+      ]
+    },
+    "schoolCard": {
+      "intro": "Fill in key information about your client's school environment and keep it handy over the course of treatment. It saves only in this browser, so nothing is sent anywhere. Use initials rather than the client's full name.",
+      "fields": [
+        {
+          "key": "client",
+          "label": "Client (initials)",
+          "placeholder": "e.g. J.R.",
+          "type": "text"
+        },
+        {
+          "key": "school",
+          "label": "School",
+          "placeholder": "School name",
+          "type": "text"
+        },
+        {
+          "key": "grade",
+          "label": "Grade",
+          "placeholder": "e.g. 8th",
+          "type": "text"
+        },
+        {
+          "key": "teacher",
+          "label": "Teacher(s)",
+          "placeholder": "Homeroom / key teachers",
+          "type": "text"
+        },
+        {
+          "key": "qrs",
+          "label": "QRS (school partner)",
+          "placeholder": "Name and role",
+          "type": "text"
+        },
+        {
+          "key": "qrsContact",
+          "label": "QRS contact",
+          "placeholder": "Phone / email",
+          "type": "text"
+        },
+        {
+          "key": "plan",
+          "label": "IEP or 504 plan?",
+          "placeholder": "",
+          "type": "select",
+          "options": [
+            "Not sure yet",
+            "No plan",
+            "IEP",
+            "504 plan"
+          ]
+        },
+        {
+          "key": "roi",
+          "label": "Release of Information signed?",
+          "placeholder": "",
+          "type": "select",
+          "options": [
+            "Not yet",
+            "Pending",
+            "Yes, on file"
+          ]
+        },
+        {
+          "key": "accommodations",
+          "label": "Supports & accommodations",
+          "placeholder": "Anything in the IEP/504 or informal supports the youth receives",
+          "type": "textarea"
+        },
+        {
+          "key": "other",
+          "label": "Other things to know",
+          "placeholder": "Attendance, recent transitions, trusted adults at school…",
+          "type": "textarea"
+        }
+      ],
+      "interviewHeading": "From your school partner interview",
+      "interviewEmpty": "No answers yet. Add them under Tip 2 on the Tips tab.",
+      "interviewEditLabel": "Edit answers",
+      "mapHeading": "School drivers & protectors from your map",
+      "mapIntro": "Pulled automatically from the School ring of your Planning Tool map in this browser.",
+      "mapEmpty": "No School factors on your map yet.",
+      "mapLinkLabel": "Open the Planning Tool",
+      "riskLabel": "Drivers (risk)",
+      "protectiveLabel": "Protectors",
+      "printLabel": "Print school card",
+      "resetLabel": "Clear card"
+    },
+    "contactCard": {
+      "intro": "A card to give your school partner. It shows when to reach out to you as the therapist and when to reach out to Rise, plus crisis services and local resources. Fill in your details, then print.",
+      "title": "Mental Health Contact Card",
+      "therapistHeading": "Rise therapist",
+      "therapistFields": [
+        {
+          "key": "name",
+          "label": "Therapist name",
+          "placeholder": "Your name"
+        },
+        {
+          "key": "phone",
+          "label": "Phone",
+          "placeholder": "Phone number"
+        },
+        {
+          "key": "email",
+          "label": "Email",
+          "placeholder": "Email address"
+        },
+        {
+          "key": "hours",
+          "label": "Best times to reach me",
+          "placeholder": "e.g. Mon–Thu, replies within 1 business day"
+        }
+      ],
+      "whenTherapistHeading": "Contact the therapist about",
+      "whenTherapist": [
+        "Scheduling sessions or meeting space",
+        "Changes in the youth's attendance, behavior, or wellbeing that may affect treatment (with a signed ROI)",
+        "Planning re-entry after a crisis or absence",
+        "Non-emergency concerns that come up between sessions"
+      ],
+      "riseHeading": "Rise Against Suicide",
+      "riseContactLabel": "Email",
+    "riseContact": "team@riseagainstsuicide.org",
+      "whenRiseHeading": "Contact Rise about",
+      "whenRise": [
+        "New referrals (through the Rise RMS)",
+        "Questions about the Rise program or how it works",
+        "Concerns about a Rise provider",
+        "Funding or program logistics"
+      ],
+      "crisisHeading": "In a crisis",
+      "crisis": [
+        "Immediate danger: call 911",
+        "988 Suicide & Crisis Lifeline: call or text 988 (24/7)",
+        "Colorado Crisis Services: 1-844-493-8255, or text TALK to 38255",
+        "Follow your school's own risk assessment procedures"
+      ],
+      "localHeading": "Local community resources",
+      "localPlaceholder": "Add local resources for this school's community (one per line)",
+      "printLabel": "Print contact card",
+      "prototypeNote": "The Rise contact address is a placeholder for this prototype. Confirm it, and the crisis lines, in the CMS before sharing cards with schools."
+    },
+    "guidelines": {
+      "heading": "Rise School Guidelines",
+      "source": "From the Rise Program Manual",
+    "printLabel": "Print guidelines",
+    "downloadHint": "Opens your browser's print dialog.",
+      "intro": "When seeing Rise clients in the school setting, the Rise provider is a representative of Rise Against Suicide. Follow the school's policies and procedures, as well as the Rise protocol below.",
+      "items": [
+        "The QRS is the only school staff member the Rise provider communicates with at the school. Never reach out to the principal or a school administrator unless directed to by the QRS.",
+        "Rise providers do not speak on behalf of Rise in the school setting unless Rise staff are present or have arranged it.",
+        "Regular communication between the Rise provider and the QRS is encouraged while the client is progressing through sessions.",
+        "For a Rise provider to see a youth, the Rise referral process must be completed in the Rise RMS or through a Rise staff member.",
+        "If the client has a social service need, the school counselor or appropriate school staff may be notified to help the student.",
+        "Give the QRS at least 24 hours' notice before arriving to see a client at the school, including arranging a place to meet the student.",
+        "Sign in at the front desk and ask for the QRS who contacted you.",
+        "Immediately report any concerns about the young person to the QRS, and collaborate on school policies and procedures.",
+        "Respond within 24 hours on business days to QRS outreach about availability and fit.",
+        "Rise providers are not available to school staff for consultation services as part of the Rise program."
+      ]
+    }
+  },
+
   "planner": {
     "navLabel": "Planning Tool",
     "sectionLabel": "Interactive Tool",
     "heading": "Client Ecological Formulation & Treatment Planner",
-    "intro": "Map the risk and protective factors shaping a client's world — client, peer, family, school, and community/structural — then generate a starting-point treatment plan and resource list drawn from this toolkit.",
+    "intro": "Map the risk and protective factors shaping a client's world — client, peer, family, school, and community/structural — then generate a starting-point treatment plan and resource list drawn from this toolkit. The goal throughout: reducing the client's suicidal ideation.",
     "disclaimer": "This tool offers a starting point, not a clinical decision. Always apply your own clinical judgment, and follow your standard risk assessment and safety planning protocol regardless of what it suggests.",
     "riskColumnLabel": "Risk / Vulnerability",
     "protectiveColumnLabel": "Protective / Buffering",
@@ -505,6 +799,73 @@
       "address": "feedback@riseagainstsuicide.org",
       "hint": "Opt-in — opens your email client with a plain-text summary of what you entered (factors, severities, and interventions), not the formatted PDF. Please remove or de-identify any client details before sending. Sharing this helps the Rise and toolkit development team improve the service."
     },
+    "mapLayouts": {
+      "label": "Map layout",
+      "options": [
+        { "key": "original", "label": "Original", "hint": "Before: pills stacked outward from the center in both directions, so reading down jumps between outer and inner rings. Flat connector lines." },
+        { "key": "originalGrouped", "label": "Original, grouped", "hint": "The original arrangement and flat lines, but factors in the same ring share one pill, so there are never more than 5 pills per side." },
+        { "key": "separate", "label": "Separate pills", "hint": "One pill per factor, ordered from the outer ring (Community) at the top to the inner ring (Client) at the bottom." },
+        { "key": "grouped", "label": "Grouped (max 5 per side)", "hint": "Factors in the same ring share one pill, so there are never more than 5 pills per side. Still ordered outer to inner." },
+        { "key": "groupedFlat", "label": "Grouped + flat lines", "hint": "Same grouped pills (never more than 5 per side, ordered outer to inner), with flat horizontal lines and no angles. The innermost pill sits level with the center, so the column builds upward and the rings grow to reach each pill." }
+      ]
+    },
+    "goal": {
+      "label": "Goal",
+      "statement": "Reduce the client's suicidal ideation",
+      "steps": {
+        "ring": "As you map this level, ask: what here raises or lowers the client's suicidal ideation?",
+        "topFactors": "Choose the factors most closely tied to the client's suicidal ideation. These become the focus of treatment.",
+        "resourcePlan": "Pick interventions that directly target what drives the client's suicidal ideation, or strengthen what protects against it.",
+        "review": "Every phase of this plan works toward one outcome: reducing the client's suicidal ideation."
+      },
+      "focusLabel": "In this phase",
+      "checkLabel": "Check",
+      "phases": [
+        {
+          "focus": "Understand what is driving the client's suicidal ideation, and keep them safe while you work on it. Assess current risk, build a safety plan together, and map the factors that raise and lower it.",
+          "check": "Do I know what is driving this client's suicidal ideation, and is a safety plan in place?"
+        },
+        {
+          "focus": "Give the client skills to manage suicidal thoughts when they show up and lower them over time. Teach and practice emotion regulation, problem-solving, and support-seeking, aimed at the top factors you identified.",
+          "check": "Is the client using these skills when suicidal thoughts or urges come up?"
+        },
+        {
+          "focus": "Make the reduction in suicidal ideation last after Rise ends. Consolidate skills, re-screen to measure change since intake, update the safety plan, and link the client to their next step in care.",
+          "check": "Has the client's suicidal ideation decreased since intake, and is care in place to keep it that way?"
+        }
+      ]
+    },
+    "phase3Checklist": {
+      "heading": "Phase 3 Checklist",
+      "intro": "Activities to complete before your final session with the client.",
+      "progressLabel": "complete",
+      "items": [
+        {
+          "text": "Assess and consolidate skills, and promote self-efficacy",
+          "detail": "Review which skills have helped most, practice them once more, and help the client name what they can now do on their own.",
+          "linkText": "",
+          "linkHref": ""
+        },
+        {
+          "text": "Ensure continuity of care",
+          "detail": "Link the client from treatment to their next step: a warm handoff to ongoing care, school supports, or community resources.",
+          "linkText": "Community Resources",
+          "linkHref": "find-referral.html"
+        },
+        {
+          "text": "Reflect on the Rise treatment experience and complete final screenings",
+          "detail": "Look back on progress together, and re-administer screenings to measure change in suicidal ideation since intake.",
+          "linkText": "",
+          "linkHref": ""
+        },
+        {
+          "text": "Revisit the safety plan",
+          "detail": "Update warning signs, coping strategies, and supports so the plan reflects where the client is now.",
+          "linkText": "Make A Safety Plan",
+          "linkHref": "safety-plan.html"
+        }
+      ]
+    },
     "phaseCommentLabel": "Comments",
     "phaseCommentPlaceholder": "Add any notes for this phase…"
   },
@@ -513,7 +874,7 @@
     "navLabel": "Make A Safety Plan",
     "sectionLabel": "Interactive Tool",
     "heading": "Make A Safety Plan",
-    "intro": "Build a personalized safety plan step by step, together with the client. Each step focuses on one part of the plan — add as many items as apply, then review the whole plan before printing a copy for the client to keep.",
+    "intro": "Build a personalized safety plan step by step, together with the client, to help them stay safe through moments of suicidal ideation. Each step focuses on one part of the plan — add as many items as apply, then review the whole plan before printing a copy for the client to keep.",
     "crisisBanner": "If you or someone you know is in immediate danger, call 911. You can also call or text the 988 Suicide & Crisis Lifeline, available 24/7.",
     "disclaimer": "This tool is a starting point for completing the Stanley-Brown Safety Planning Intervention together with a client. It saves only in this browser — nothing is sent anywhere.",
     "steps": [

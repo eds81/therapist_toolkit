@@ -97,14 +97,17 @@ function severityDotsHtml(valence, weight) {
 // with what's mapped to a given ring.
 const RING_STROKE_WIDTH = 4;
 
+// Ecological map layouts the clinician can switch between (Review/steps
+// toolbar above the map). See buildEcoMapSvg().
+const MAP_LAYOUTS = ['original', 'originalGrouped', 'separate', 'grouped', 'groupedFlat'];
+const DEFAULT_MAP_LAYOUT = 'grouped';
+
 // ── Ecological map geometry — the whole diagram (rings, ring labels, risk/
 // protective pills, connector lines) is one self-contained SVG computed
 // entirely in viewBox units, so it scales as a single unit and the exact
 // same markup can be reused for the printed/downloaded plan. ──
 // Rings are spaced in equal steps outward from the client ring (center) —
-// "space the rings evenly: equal gaps between radii." A ring can still grow
-// past its base radius at render time if that specific ring's own pills
-// need more vertical room than it currently offers (see growRingRadii()).
+// "space the rings evenly: equal gaps between radii."
 const MAP_RING_STEP = 46;
 const MAP_RING_BASE_R = 50; // client ring's starting radius
 const MAP_RING_BASE_RADII = (() => {
@@ -113,19 +116,14 @@ const MAP_RING_BASE_RADII = (() => {
   deepFirst.forEach((ring, i) => { radii[ring] = MAP_RING_BASE_R + i * MAP_RING_STEP; });
   return radii;
 })();
-const MAP_MIN_RING_GAP = 20; // keeps two rings from ever growing visually indistinct from one another
 const MAP_PILL_LINE_H = 22; // viewBox units per wrapped text line
 const MAP_PILL_V_GAP = 12; // vertical gap between stacked pills
 const MAP_PILL_MIN_W = 100;
 const MAP_PILL_MAX_W = 240;
 const MAP_PILL_CHAR_W = 9;
 const MAP_PILL_GAP = 36; // gap between the outer ring's edge and the pill zone
-// Connector routing: one straight horizontal line, pill to ring — never an
-// elbow. A horizontal line can only reach a ring when the pill's own y sits
-// within that ring's radius, so pills are ordered by ring depth (see
-// splitPillsForLayout()/stackHalf() below) and rings grow to fit (see
-// growRingRadii()) rather than ever bending a connector.
-const MAP_RING_EDGE_MARGIN = 10;  // how far a connector's entry point must stay inside its own ring's edge
+// Connector routing: one straight line per pill, aimed at the circle's
+// center and stopping at that pill's own ring — see stackColumn() below.
 const MAP_CONNECTOR_WIDTH = 3;
 const MAP_ENDPOINT_DOT_R = 4;
 // Pills are laid out top-down: the weight dots sit in their own row above
@@ -153,27 +151,27 @@ function mapRingLabelRadius(ringRadii, ring) {
   return mapRingRadius(ringRadii, innerRing) + 14 - nudge;
 }
 
-// ── Connector layout: straight horizontal lines only, zero crossings ──
+// ── Connector layout: one column per side, outer ring → inner ring ──
 //
-// Every connector is one straight horizontal line, pill to ring — never an
-// elbow. Horizontal lines at different y-positions can never touch each
-// other, which is what removes the overlap problem entirely, with no lane
-// system needed. That only works, though, if every pill's y actually sits
-// within its own ring's radius (a straight horizontal line can only reach
-// as far as the ring's own circle at that height) — which is what the two
-// pieces below guarantee, together, for one whole side (risk or
-// protective) at a time:
+// Each side (risk on the left, protective on the right) is a single column
+// of pills read top to bottom in ring order — Community / Structural first,
+// then School, Family, Peer, and Client last — so scanning down the map
+// moves steadily inward instead of bouncing between outer and inner rings.
 //
-// 1. Pills are split into a "top" half and a "bottom" half (balanced by
-//    height, splitting a single ring's own pills between the two halves
-//    when it has more than one), each ordered deepest ring (client) at the
-//    circle's own vertical center out to the shallowest ring (community)
-//    at that half's outer extreme. See splitPillsForLayout()/stackHalf().
-// 2. Every ring's actual radius grows, if it needs to, to comfortably
-//    reach whichever of its own pills ended up furthest from the vertical
-//    center — so every pill is guaranteed to fall inside its own ring's
-//    valid span by construction, rather than by relying on how much room
-//    happened to be left over. See growRingRadii().
+// Every connector is one straight line, pill to ring — never an elbow —
+// aimed at the circle's own center and stopping at the pill's ring. Lines
+// aimed at one common point can only ever meet at that point, and no line
+// reaches it (each stops at its ring, all of which have a radius > 0), so
+// no two connectors can cross by construction. Pills in one column also
+// sit at distinct heights, so no two lines share a direction either.
+
+// ── "Original" layout (kept for the layout comparison toggle) ──
+// Each side's pills stacked outward from the circle's vertical center in
+// both directions (client nearest the center, community at the top and
+// bottom extremes), with flat horizontal connectors. Rings grow so every
+// pill's own ring reaches its height.
+const MAP_MIN_RING_GAP = 20; // keeps two rings from ever growing visually indistinct from one another
+const MAP_RING_EDGE_MARGIN = 10; // how far a connector's entry point must stay inside its own ring's edge
 
 // Splits one side's pills (still grouped by ring) into top/bottom halves,
 // balanced by height, splitting a single ring's own pills between both
@@ -230,12 +228,14 @@ function stackHalf(items, direction, cy) {
 // keeping the rings in equally-stepped, strictly-increasing order.
 // neededReach maps ring -> the largest |y - cy| any of its pills actually
 // landed at.
-function growRingRadii(neededReach) {
+// reachFactor > 1 makes each ring reach further than strictly needed, so a
+// flat connector meets its ring at a gentler angle (Grouped + flat lines).
+function growRingRadii(neededReach, reachFactor = 1) {
   const radii = {};
   let prev = 0;
   RING_ORDER.slice().reverse().forEach(ring => { // client..community
     const base = MAP_RING_BASE_RADII[ring];
-    const need = (neededReach[ring] || 0) + MAP_RING_EDGE_MARGIN;
+    const need = (neededReach[ring] || 0) * reachFactor + MAP_RING_EDGE_MARGIN;
     const r = Math.max(base, need, prev + MAP_MIN_RING_GAP);
     radii[ring] = r;
     prev = r;
@@ -243,35 +243,58 @@ function growRingRadii(neededReach) {
   return radii;
 }
 
+// ── "Separate" and "Grouped" layouts ──
+// Stacks one side's pills (already in outer → inner ring order) into a
+// single column vertically centered on cy, top to bottom.
+function stackColumn(items, cy) {
+  const total = items.reduce((s, p) => s + p.h, 0) + MAP_PILL_V_GAP * Math.max(0, items.length - 1);
+  let cursor = cy - total / 2;
+  return items.map(item => {
+    const y = cursor + item.h / 2;
+    cursor += item.h + MAP_PILL_V_GAP;
+    return { item, y };
+  });
+}
+
+// Shortest distance between two line segments (all in viewBox units).
+function segmentDistance(a, b) {
+  const pts = (s) => [{ x: s.x1, y: s.y1 }, { x: s.x2, y: s.y2 }];
+  const pointToSeg = (p, s) => {
+    const dx = s.x2 - s.x1, dy = s.y2 - s.y1;
+    const len2 = dx * dx + dy * dy || 1;
+    const t = Math.max(0, Math.min(1, ((p.x - s.x1) * dx + (p.y - s.y1) * dy) / len2));
+    return Math.hypot(p.x - (s.x1 + t * dx), p.y - (s.y1 + t * dy));
+  };
+  const cross = (o, p, q) => (p.x - o.x) * (q.y - o.y) - (p.y - o.y) * (q.x - o.x);
+  const [a1, a2] = pts(a), [b1, b2] = pts(b);
+  const d1 = cross(a1, a2, b1), d2 = cross(a1, a2, b2), d3 = cross(b1, b2, a1), d4 = cross(b1, b2, a2);
+  if (((d1 > 0) !== (d2 > 0)) && ((d3 > 0) !== (d4 > 0))) return 0; // proper intersection
+  return Math.min(pointToSeg(a1, b), pointToSeg(a2, b), pointToSeg(b1, a), pointToSeg(b2, a));
+}
+
 // Dev-time safety net: confirms no two connectors (from different factors)
-// ever come within 8px of each other. Since every connector is a single
-// horizontal segment, two can only possibly conflict when their y's are
-// within that 8px AND their x-spans overlap — the layout above is built so
-// this never actually happens, but this still catches any real regression
-// immediately instead of silently shipping an overlap.
+// cross or come within a few px of each other. The center-aimed layout
+// above makes this impossible by construction — this just catches any
+// real regression immediately instead of silently shipping an overlap.
 function verifyNoConnectorOverlap(segments) {
-  const pad = 8; // no two connectors may touch or come within this many px
+  const pad = 4;
   const violations = [];
   for (let i = 0; i < segments.length; i++) {
     for (let j = i + 1; j < segments.length; j++) {
       const a = segments[i], b = segments[j];
       if (a.factorId === b.factorId) continue;
-      if (Math.abs(a.y - b.y) > pad) continue;
-      const aLo = Math.min(a.x1, a.x2), aHi = Math.max(a.x1, a.x2);
-      const bLo = Math.min(b.x1, b.x2), bHi = Math.max(b.x1, b.x2);
-      if (aHi + pad < bLo || bHi + pad < aLo) continue;
-      violations.push([a, b]);
+      if (segmentDistance(a, b) < pad) violations.push([a, b]);
     }
   }
-  if (violations.length) console.warn(`Ecological map: ${violations.length} connector pair(s) within 8px or overlapping`, violations);
+  if (violations.length) console.warn(`Ecological map: ${violations.length} connector pair(s) crossing or within ${pad}px`, violations);
   return violations.length === 0;
 }
 
-// Dev-time safety net: confirms no connector's horizontal run passes
-// through the small arc each ring label occupies near the top of its own
-// band. Labels still render after (on top of) the connector lines, so text
-// stays legible even in an edge case this estimate misses — this is a
-// diagnostic, not the only protection.
+// Dev-time safety net: confirms no connector passes through the small arc
+// each ring label occupies near the top of its own band. Labels still
+// render after (on top of) the connector lines, so text stays legible even
+// in an edge case this estimate misses — this is a diagnostic, not the
+// only protection.
 function verifyLabelClearance(segments, ringRadii, cx, cy) {
   const violations = [];
   RING_ORDER.filter(r => r !== 'client').forEach(ring => {
@@ -279,14 +302,16 @@ function verifyLabelClearance(segments, ringRadii, cx, cy) {
     const labelText = (plannerState.ringLabelByKey[ring] || ring).toUpperCase();
     const halfWidthPx = Math.max(20, labelText.length * 3.6);
     const halfAngle = Math.min(1.4, halfWidthPx / labelR);
-    const yTop = cy - labelR, yBottom = cy - labelR * Math.cos(halfAngle);
-    const xHalf = labelR * Math.sin(halfAngle);
     segments.forEach(seg => {
       if (seg.ring === ring) return; // a ring's own connectors end right at its edge, not through its label
-      if (seg.y < yTop - 2 || seg.y > yBottom + 2) return;
-      const lo = Math.min(seg.x1, seg.x2), hi = Math.max(seg.x1, seg.x2);
-      if (hi < cx - xHalf || lo > cx + xHalf) return;
-      violations.push({ ring, seg });
+      for (let k = 0; k <= 40; k++) {
+        const t = k / 40;
+        const x = seg.x1 + (seg.x2 - seg.x1) * t, y = seg.y1 + (seg.y2 - seg.y1) * t;
+        const r = Math.hypot(x - cx, y - cy);
+        if (r < labelR - 14 || r > labelR + 4 || y > cy) continue;
+        const angleFromTop = Math.abs(Math.atan2(x - cx, cy - y));
+        if (angleFromTop <= halfAngle) { violations.push({ ring, seg }); return; }
+      }
     });
   });
   if (violations.length) console.warn(`Ecological map: ${violations.length} connector(s) pass through a ring label's band`, violations);
@@ -352,66 +377,111 @@ function buildEcoMapSvg(opts) {
   const onlyCurrentRing = !!opts.onlyCurrentRing;
   const p = plannerState.data.planner;
 
+  // Five layouts, switchable for comparison (see MAP_LAYOUTS):
+  //  • grouped  — one pill per ring per side (never more than 5 per side);
+  //               a ring with several factors gets one pill with a row per
+  //               factor, each row keeping its own severity color, weight
+  //               dots, and remove button. Column ordered outer → inner.
+  //  • separate — one pill per factor, column ordered outer → inner.
+  //  • groupedFlat — grouped pills, outer → inner, with flat horizontal
+  //               connectors: each side's column is anchored with its
+  //               innermost pill level with the center and builds upward,
+  //               and rings grow so each reaches its own pill's height.
+  //  • original — one pill per factor, stacked out from the center in both
+  //               directions, flat horizontal connectors.
+  //  • originalGrouped — the original arrangement and flat connectors, but
+  //               with grouped pills (never more than 5 per side).
+  const layout = MAP_LAYOUTS.includes(opts.layout) ? opts.layout : DEFAULT_MAP_LAYOUT;
   function pillsFor(valence) {
-    const list = [];
     const rings = onlyCurrentRing && currentRing ? [currentRing] : RING_ORDER;
+    const pills = [];
     rings.forEach(ring => {
-      const sameRing = plannerState.factors[ring][valence];
-      sameRing.forEach((f, idx) => {
-        list.push({ ring, idx, id: f.id, text: f.text, weight: f.weight });
-      });
+      const rows = plannerState.factors[ring][valence].map((f, idx) => ({ idx, id: f.id, text: f.text, weight: f.weight }));
+      if (!rows.length) return;
+      if (layout === 'grouped' || layout === 'groupedFlat' || layout === 'originalGrouped') pills.push({ ring, id: `${valence}-${ring}`, rows }); // group id drives hover/highlight
+      else rows.forEach(r => pills.push({ ring, id: r.id, rows: [r] }));
     });
-    return list;
+    return pills;
   }
-  // Every pill on one side shares one width — the widest any of them
+  // Every pill on one side shares one width — the widest any factor's text
   // naturally wants — so left pills all right-align to one inner edge and
-  // right pills all left-align to the other, instead of staggering at
-  // different x-positions. Each pill's text is then wrapped against that
-  // shared width, which is also what its height (possibly multi-line) ends
-  // up depending on.
+  // right pills all left-align to the other. Each row's text wraps against
+  // that shared width; a pill's height is the sum of its rows' heights.
   function preparedPills(valence) {
-    const raw = pillsFor(valence);
-    const uniformW = raw.length ? Math.max(...raw.map(item => mapNaturalWidth(item.text))) : MAP_PILL_MIN_W;
-    return raw.map(item => {
-      const lines = mapWrapAtWidth(item.text, uniformW);
-      const h = MAP_PILL_H + (lines.length - 1) * MAP_PILL_LINE_H;
-      return { ...item, w: uniformW, h, lines };
+    const groups = pillsFor(valence);
+    const allRows = groups.flatMap(g => g.rows);
+    const uniformW = allRows.length ? Math.max(...allRows.map(r => mapNaturalWidth(r.text))) : MAP_PILL_MIN_W;
+    return groups.map(g => {
+      const rows = g.rows.map(r => {
+        const lines = mapWrapAtWidth(r.text, uniformW);
+        return { ...r, lines, h: MAP_PILL_H + (lines.length - 1) * MAP_PILL_LINE_H };
+      });
+      const h = rows.reduce((sum, r) => sum + r.h, 0);
+      const weight = Math.max(...rows.map(r => r.weight)); // connector takes the strongest row's color
+      return { ...g, rows, w: uniformW, h, weight };
     });
   }
   const riskPills = preparedPills('risk');
   const protPills = preparedPills('protective');
 
   const sumH = list => list.reduce((sum, p) => sum + p.h, 0) + MAP_PILL_V_GAP * Math.max(0, list.length - 1);
-  const riskSplit = splitPillsForLayout(riskPills);
-  const protSplit = splitPillsForLayout(protPills);
-  // The circle stays centered in the canvas; each half just reserves
-  // whatever room its own tallest side needs above/below that center.
-  const vbH = Math.max(560, 2 * (Math.max(sumH(riskSplit.top), sumH(riskSplit.bottom), sumH(protSplit.top), sumH(protSplit.bottom)) + MAP_PILL_V_GAP) + 90);
-  const cy = vbH / 2;
-
-  // Stacking a half only depends on pill heights, not on any ring's
-  // radius, so every pill's y is already final at this point.
-  const riskTopStacked = stackHalf(riskSplit.top, -1, cy);
-  const riskBottomStacked = stackHalf(riskSplit.bottom, 1, cy);
-  const protTopStacked = stackHalf(protSplit.top, -1, cy);
-  const protBottomStacked = stackHalf(protSplit.bottom, 1, cy);
-
-  // Both sides draw the exact same circles, so every ring's radius is
-  // grown (if it needs to be) to fit whichever of its pills — risk or
-  // protective — ended up furthest from the vertical center.
-  const neededReach = {};
-  [...riskTopStacked, ...riskBottomStacked, ...protTopStacked, ...protBottomStacked].forEach(({ item, y }) => {
-    const dy = Math.abs(y - cy);
-    neededReach[item.ring] = Math.max(neededReach[item.ring] || 0, dy);
-  });
-  const ringRadii = growRingRadii(neededReach);
+  let ringRadii, vbH, cy, riskStacked, protStacked;
+  if (layout === 'original' || layout === 'originalGrouped') {
+    const riskSplit = splitPillsForLayout(riskPills);
+    const protSplit = splitPillsForLayout(protPills);
+    vbH = Math.max(560, 2 * (Math.max(sumH(riskSplit.top), sumH(riskSplit.bottom), sumH(protSplit.top), sumH(protSplit.bottom)) + MAP_PILL_V_GAP) + 90);
+    cy = vbH / 2;
+    riskStacked = stackHalf(riskSplit.top, -1, cy).concat(stackHalf(riskSplit.bottom, 1, cy));
+    protStacked = stackHalf(protSplit.top, -1, cy).concat(stackHalf(protSplit.bottom, 1, cy));
+    const neededReach = {};
+    riskStacked.concat(protStacked).forEach(({ item, y }) => {
+      neededReach[item.ring] = Math.max(neededReach[item.ring] || 0, Math.abs(y - cy));
+    });
+    ringRadii = growRingRadii(neededReach);
+  } else if (layout === 'groupedFlat') {
+    // Stack each column upward from cy (provisionally 0): the last
+    // (innermost) pill centered on cy, each earlier (outer) pill above it.
+    const stackUp = items => {
+      let cursor = 0;
+      return items.slice().reverse().map((item, i) => {
+        if (i > 0) cursor -= MAP_PILL_V_GAP;
+        const y = i === 0 ? 0 : cursor - item.h / 2;
+        cursor = i === 0 ? -item.h / 2 : y - item.h / 2;
+        return { item, y };
+      }).reverse();
+    };
+    riskStacked = stackUp(riskPills);
+    protStacked = stackUp(protPills);
+    const neededReach = {};
+    riskStacked.concat(protStacked).forEach(({ item, y }) => {
+      neededReach[item.ring] = Math.max(neededReach[item.ring] || 0, Math.abs(y));
+    });
+    ringRadii = growRingRadii(neededReach, 1.25);
+    // Shift everything down so the topmost of (circle top, top pill) sits
+    // at the canvas margin, and size the canvas to the bottom of the circle.
+    const R = ringRadii.community;
+    const all = riskStacked.concat(protStacked);
+    const minY = Math.min(-R, ...all.map(({ item, y }) => y - item.h / 2));
+    const maxY = Math.max(R, ...all.map(({ item, y }) => y + item.h / 2));
+    const shift = 45 - minY;
+    cy = shift;
+    all.forEach(rec => { rec.y += shift; });
+    vbH = maxY - minY + 90;
+  } else {
+    // One column per side, centered on the circle's vertical center. The
+    // canvas is tall enough for whichever is taller: the longer column or
+    // the circle itself.
+    ringRadii = { ...MAP_RING_BASE_RADII };
+    vbH = Math.max(560, Math.max(sumH(riskPills), sumH(protPills)) + 2 * MAP_PILL_V_GAP + 60, 2 * ringRadii.community + 90);
+    cy = vbH / 2;
+    riskStacked = stackColumn(riskPills, cy);
+    protStacked = stackColumn(protPills, cy);
+  }
   const outerR = ringRadii.community; // anchors the pill zone just outside the outermost ring
 
-  // The viewBox width grows along with the rings — a ring that grew to fit
-  // a lot of pills needs a wider canvas too, or its own pills would spill
-  // past the edge. Risk and protective pills can have different uniform
-  // widths, so the circle's own center (cx) isn't necessarily the
-  // viewBox's midpoint — it's wherever the risk-side margin puts it.
+  // Risk and protective pills can have different uniform widths, so the
+  // circle's own center (cx) isn't necessarily the viewBox's midpoint —
+  // it's wherever the risk-side margin puts it.
   const riskW = riskPills.length ? riskPills[0].w : MAP_PILL_MIN_W;
   const protW = protPills.length ? protPills[0].w : MAP_PILL_MIN_W;
   const leftMargin = outerR + MAP_PILL_GAP + riskW + 20;
@@ -455,90 +525,108 @@ function buildEcoMapSvg(opts) {
     <text class="planner-center-label" data-ring="client" x="${cx}" y="${cy - 4}" text-anchor="middle">${escapeXml(p.centerLabel)}</text>
     <text class="planner-center-sub" data-ring="client" x="${cx}" y="${cy + 13}" text-anchor="middle">${escapeXml(p.centerSub)}</text>`;
 
-  function sideSvg(topStacked, bottomStacked, valence) {
-    const records = topStacked.concat(bottomStacked).map(({ item, y }) => {
+  function sideSvg(stacked, valence) {
+    const records = stacked.map(({ item, y }) => {
       const { w, h } = item;
       const ringR = ringRadii[item.ring];
-      const dy = y - cy;
-      // x = cx ∓ sqrt(r² − (y − cy)²): the one point on this pill's own
-      // ring that sits at this exact height — growRingRadii() guarantees
-      // every ring reaches far enough that this is always a real point.
-      const dx = Math.sqrt(Math.max(0, ringR * ringR - dy * dy));
       const pillX = valence === 'risk' ? (cx - outerR - MAP_PILL_GAP - w) : (cx + outerR + MAP_PILL_GAP);
       const lineStartX = valence === 'risk' ? pillX + w : pillX;
-      const entryX = valence === 'risk' ? (cx - dx) : (cx + dx);
-      return { item, w, h, y, pillX, lineStartX, entryX };
+      let entryX, entryY;
+      if (layout === 'original' || layout === 'originalGrouped' || layout === 'groupedFlat') {
+        // Flat line: the one point on this pill's ring at the pill's own
+        // height — growRingRadii() guarantees the ring reaches it.
+        const dy = y - cy;
+        const dx = Math.sqrt(Math.max(0, ringR * ringR - dy * dy));
+        entryX = valence === 'risk' ? (cx - dx) : (cx + dx);
+        entryY = y;
+      } else {
+        // Aim straight at the circle's center and stop where that line meets
+        // this pill's own ring: center + (unit vector toward the pill) × r.
+        const vx = lineStartX - cx, vy = y - cy;
+        const len = Math.hypot(vx, vy) || 1;
+        entryX = cx + (vx / len) * ringR;
+        entryY = cy + (vy / len) * ringR;
+      }
+      return { item, w, h, y, pillX, lineStartX, entryX, entryY };
     });
 
     let lines = '', pillsHtml = '';
     records.forEach(rec => {
-      const { item, w, h, y, pillX, lineStartX, entryX } = rec;
-      const { lines: textLines } = item;
-
+      const { item, w, h, y, pillX, lineStartX, entryX, entryY } = rec;
       const color = CHIP_COLOR_BY_WEIGHT[valence][item.weight];
-      const textColor = item.weight >= 5 ? '#FFFFFF' : (valence === 'risk' ? 'hsl(6,55%,24%)' : 'hsl(112,35%,20%)');
+
+      // One straight line, pill to ring — never an elbow. A small terminal
+      // dot caps the endpoint so the ring it belongs to reads
+      // unambiguously, even where the line crosses other rings on the way in.
+      const connectorPath = `M ${lineStartX.toFixed(1)} ${y.toFixed(1)} L ${entryX.toFixed(1)} ${entryY.toFixed(1)}`;
+      lines += `<path class="planner-connector planner-connector-${valence}" data-ring="${item.ring}" data-factor-id="${item.id}" d="${connectorPath}" fill="none" stroke-width="${MAP_CONNECTOR_WIDTH}" style="stroke:${color}"/>` +
+        `<circle class="planner-connector planner-connector-dot planner-connector-${valence}" data-ring="${item.ring}" data-factor-id="${item.id}" cx="${entryX.toFixed(1)}" cy="${entryY.toFixed(1)}" r="${MAP_ENDPOINT_DOT_R}" style="fill:${color}"/>`;
+      connectorSegments.push({ x1: lineStartX, y1: y, x2: entryX, y2: entryY, factorId: item.id, ring: item.ring });
+
+      const pillTop = y - h / 2;
+      const clipId = `${idPrefix}-pillclip-${item.id}`;
       const textX = pillX + 14;
       const removeX = valence === 'risk' ? pillX - 12 : pillX + w + 12;
 
-      // One straight horizontal line, pill to ring — never an elbow. A
-      // small terminal dot caps the endpoint so the ring it belongs to
-      // reads unambiguously, even where the line crosses other rings on
-      // the way in.
-      const connectorPath = `M ${lineStartX.toFixed(1)} ${y.toFixed(1)} L ${entryX.toFixed(1)} ${y.toFixed(1)}`;
-      lines += `<path class="planner-connector planner-connector-${valence}" data-ring="${item.ring}" data-factor-id="${item.id}" d="${connectorPath}" fill="none" stroke-width="${MAP_CONNECTOR_WIDTH}" style="stroke:${color}"/>` +
-        `<circle class="planner-connector planner-connector-dot planner-connector-${valence}" data-ring="${item.ring}" data-factor-id="${item.id}" cx="${entryX.toFixed(1)}" cy="${y.toFixed(1)}" r="${MAP_ENDPOINT_DOT_R}" style="fill:${color}"/>`;
-      connectorSegments.push({ x1: lineStartX, x2: entryX, y, factorId: item.id, ring: item.ring });
+      let rowTop = pillTop;
+      const rowsHtml = item.rows.map((row, ri) => {
+        const rowColor = CHIP_COLOR_BY_WEIGHT[valence][row.weight];
+        const textColor = row.weight >= 5 ? '#FFFFFF' : (valence === 'risk' ? 'hsl(6,55%,24%)' : 'hsl(112,35%,20%)');
+        // Laid out from the row's top edge down: dots first, then the
+        // (possibly multi-line) text below them.
+        const dotY = rowTop + MAP_PILL_TOP_PAD;
+        const firstLineY = dotY + MAP_PILL_DOT_TEXT_GAP;
 
-      // Laid out from the pill's top edge down: dots first, then the
-      // (possibly multi-line) text below them — nothing drifts into
-      // overlapping text regardless of how many lines it wrapped to.
-      const pillTop = y - h / 2;
-      const dotY = pillTop + MAP_PILL_TOP_PAD;
-      const firstLineY = dotY + MAP_PILL_DOT_TEXT_GAP;
+        // Each dot gets a generously-sized invisible hit circle around the
+        // small visible one, so the weight is actually clickable/tappable.
+        const dots = Array.from({ length: 5 }, (_, di) => {
+          const dotX = valence === 'risk' ? (pillX + 21 + di * 10) : (pillX + w - 21 - (4 - di) * 10);
+          return `
+            <g class="eco-wdot-hit" data-ring="${item.ring}" data-valence="${valence}" data-index="${row.idx}" data-value="${di + 1}">
+              <circle cx="${dotX.toFixed(1)}" cy="${dotY.toFixed(1)}" r="9" fill="transparent"/>
+              <circle class="eco-wdot${di < row.weight ? ' filled' : ''}" cx="${dotX.toFixed(1)}" cy="${dotY.toFixed(1)}" r="3.6"/>
+            </g>`;
+        }).join('');
 
-      // Each dot gets a generously-sized invisible hit circle around the small
-      // visible one, so the weight is actually clickable/tappable and not
-      // just a tiny 2-3px target.
-      const dots = Array.from({ length: 5 }, (_, di) => {
-        const dotX = valence === 'risk' ? (pillX + 21 + di * 10) : (pillX + w - 21 - (4 - di) * 10);
-        return `
-          <g class="eco-wdot-hit" data-ring="${item.ring}" data-valence="${valence}" data-index="${item.idx}" data-value="${di + 1}">
-            <circle cx="${dotX.toFixed(1)}" cy="${dotY.toFixed(1)}" r="9" fill="transparent"/>
-            <circle class="eco-wdot${di < item.weight ? ' filled' : ''}" cx="${dotX.toFixed(1)}" cy="${dotY.toFixed(1)}" r="3.6"/>
+        // Outside the pill on the page background, aligned with this row's
+        // dot row — always a fixed dark color so it never blends in.
+        const removeBtn = locked ? '' : `
+          <g class="eco-pill-remove" data-ring="${item.ring}" data-valence="${valence}" data-index="${row.idx}" transform="translate(${removeX.toFixed(1)},${dotY.toFixed(1)})" style="color:var(--text)">
+            <circle r="9" fill="transparent"/>
+            <line x1="-4" y1="-4" x2="4" y2="4"/><line x1="-4" y1="4" x2="4" y2="-4"/>
           </g>`;
+
+        // Full text, never truncated — wrapped across as many lines as needed.
+        const textHtml = row.lines.map((line, li) =>
+          `<text x="${textX.toFixed(1)}" y="${(firstLineY + li * MAP_PILL_LINE_H).toFixed(1)}" fill="${textColor}">${escapeXml(line)}</text>`
+        ).join('');
+
+        // A thin divider between rows of the same pill.
+        const divider = ri > 0
+          ? `<line class="eco-pill-divider" x1="${pillX.toFixed(1)}" y1="${rowTop.toFixed(1)}" x2="${(pillX + w).toFixed(1)}" y2="${rowTop.toFixed(1)}"/>` : '';
+
+        const html = `
+          <g class="eco-pill-row" style="color:${textColor}">
+            <rect class="eco-pill-row-bg" x="${pillX.toFixed(1)}" y="${rowTop.toFixed(1)}" width="${w.toFixed(1)}" height="${row.h.toFixed(1)}" fill="${rowColor}" clip-path="url(#${clipId})"/>
+            ${divider}${textHtml}${dots}
+          </g>${removeBtn}`;
+        rowTop += row.h;
+        return html;
       }).join('');
 
-      // Aligned with the dot row at the pill's top, clear of the text below.
-      // Sits outside the pill on the page background, not inside the
-      // colored rect — always a fixed dark color regardless of the pill's
-      // own text color (which turns white at weight 5 for contrast against
-      // its own near-black fill), so the X never blends into the page.
-      const removeBtn = locked ? '' : `
-        <g class="eco-pill-remove" data-ring="${item.ring}" data-valence="${valence}" data-index="${item.idx}" transform="translate(${removeX.toFixed(1)},${dotY.toFixed(1)})" style="color:var(--text)">
-          <circle r="9" fill="transparent"/>
-          <line x1="-4" y1="-4" x2="4" y2="4"/><line x1="-4" y1="4" x2="4" y2="-4"/>
-        </g>`;
-
-      // Full text, never truncated — wrapped across as many lines as it
-      // needs (computed in preparedPills). Each line is its own sibling
-      // <text> element (simpler and just as valid as nested <tspan>s).
-      const textHtml = textLines.map((line, li) =>
-        `<text x="${textX.toFixed(1)}" y="${(firstLineY + li * MAP_PILL_LINE_H).toFixed(1)}" fill="${textColor}">${escapeXml(line)}</text>`
-      ).join('');
-
       pillsHtml += `
-        <g class="eco-pill" data-ring="${item.ring}" data-factor-id="${item.id}" style="color:${textColor}">
-          <rect x="${pillX.toFixed(1)}" y="${(y - h / 2).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="${Math.min(h / 2, 20)}" fill="${color}"/>
-          ${textHtml}
-          ${dots}${removeBtn}
+        <g class="eco-pill" data-ring="${item.ring}" data-factor-id="${item.id}">
+          <clipPath id="${clipId}"><rect x="${pillX.toFixed(1)}" y="${pillTop.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="20"/></clipPath>
+          ${rowsHtml}
+          <rect class="eco-pill-outline" x="${pillX.toFixed(1)}" y="${pillTop.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="20" fill="none"/>
         </g>`;
     });
     return { lines, pillsHtml };
   }
 
   const connectorSegments = [];
-  const riskSide = sideSvg(riskTopStacked, riskBottomStacked, 'risk');
-  const protSide = sideSvg(protTopStacked, protBottomStacked, 'protective');
+  const riskSide = sideSvg(riskStacked, 'risk');
+  const protSide = sideSvg(protStacked, 'protective');
   verifyNoConnectorOverlap(connectorSegments);
   verifyLabelClearance(connectorSegments, ringRadii, cx, cy);
 
@@ -561,6 +649,8 @@ const plannerState = {
   topContributors: { risk: [null, null, null], protective: [null, null, null] },
   interventionsByFactor: {}, // factor id -> array of intervention strings; each top factor gets its own list
   phaseComments: ['', '', ''], // freeform notes per Phase 1/2/3, shown on Review and in the printed plan
+  phase3Checks: [], // checked state of each Phase 3 checklist item, by index
+  mapLayout: DEFAULT_MAP_LAYOUT, // which ecological map layout is showing (see MAP_LAYOUTS)
   ringLabelByKey: {}
 };
 RING_ORDER.forEach(k => { plannerState.factors[k] = { risk: [], protective: [] }; });
@@ -579,7 +669,9 @@ function persistPlannerState() {
       nextFactorId: plannerState.nextFactorId,
       topContributors: plannerState.topContributors,
       interventionsByFactor: plannerState.interventionsByFactor,
-      phaseComments: plannerState.phaseComments
+      phaseComments: plannerState.phaseComments,
+      phase3Checks: plannerState.phase3Checks,
+      mapLayout: plannerState.mapLayout
     }));
   } catch (e) { /* localStorage unavailable (private browsing, quota, etc.) — fail silently */ }
 }
@@ -626,6 +718,10 @@ function loadPersistedPlannerState() {
     }
     if (Array.isArray(saved.phaseComments)) {
       plannerState.phaseComments = [0, 1, 2].map(i => saved.phaseComments[i] || '');
+    }
+    if (MAP_LAYOUTS.includes(saved.mapLayout)) plannerState.mapLayout = saved.mapLayout;
+    if (Array.isArray(saved.phase3Checks)) {
+      plannerState.phase3Checks = saved.phase3Checks.map(Boolean);
     }
   } catch (e) { /* ignore corrupt or inaccessible storage */ }
 }
@@ -715,6 +811,7 @@ function renderPlanner(data) {
     if (!ph) return;
     document.getElementById(`plannerPhase${n}Title`).textContent = ph.title;
     document.getElementById(`plannerPhase${n}Sessions`).textContent = ph.sessions;
+    document.getElementById(`plannerPhase${n}Goal`).innerHTML = phaseGoalHtml(n - 1);
     document.getElementById(`plannerPhase${n}CommentLabel`).textContent = p.phaseCommentLabel;
     document.getElementById(`plannerPhase${n}CommentInput`).placeholder = p.phaseCommentPlaceholder;
   });
@@ -884,10 +981,37 @@ function initPlanner() {
     const stepKey = STEP_KEYS[plannerState.currentStep];
     const onReview = stepKey === 'review';
     const currentRing = RING_ORDER.includes(stepKey) ? stepKey : null;
-    container.innerHTML = buildEcoMapSvg({ currentRing, locked: onReview, idPrefix: 'live', onlyCurrentRing: !!currentRing });
+    container.innerHTML = buildEcoMapSvg({ currentRing, locked: onReview, idPrefix: 'live', onlyCurrentRing: !!currentRing, layout: plannerState.mapLayout });
+    renderMapLayoutToggle();
     applyReviewHighlight(reviewHighlightState.ring);
     applyPillHighlight(pillHighlightState.factorId);
   }
+
+  // Layout switch above the map (Original / Original, grouped / Separate /
+  // Grouped / Grouped + flat lines). Re-rendered with the map so its pressed
+  // state stays in sync.
+  function renderMapLayoutToggle() {
+    const el = document.getElementById('plannerMapLayout');
+    const cfg = plannerState.data.planner.mapLayouts;
+    if (!el || !cfg) return;
+    const current = cfg.options.find(o => o.key === plannerState.mapLayout) || cfg.options[0];
+    el.innerHTML = `
+      <span class="planner-map-layout-label" id="plannerMapLayoutLabel">${escapeXml(cfg.label)}</span>
+      <div class="planner-map-layout-btns" role="group" aria-labelledby="plannerMapLayoutLabel">
+        ${cfg.options.map(o => `<button type="button" class="planner-map-layout-btn${o.key === plannerState.mapLayout ? ' is-active' : ''}" data-layout="${o.key}" aria-pressed="${o.key === plannerState.mapLayout}">${escapeXml(o.label)}</button>`).join('')}
+      </div>
+      <p class="planner-map-layout-hint">${escapeXml(current.hint)}</p>`;
+  }
+  document.getElementById('plannerMapLayout').addEventListener('click', e => {
+    const btn = e.target.closest('.planner-map-layout-btn');
+    if (!btn || !MAP_LAYOUTS.includes(btn.dataset.layout)) return;
+    plannerState.mapLayout = btn.dataset.layout;
+    pillHighlightState.factorId = null; // pill ids differ between grouped and separate
+    renderEcoMap();
+    persistPlannerState();
+    if (STEP_KEYS[plannerState.currentStep] === 'review') generatePlan(); // keep the PDF's map in sync
+    document.querySelector(`.planner-map-layout-btn[data-layout="${plannerState.mapLayout}"]`)?.focus();
+  });
 
   function updateGenerateState() {
     const any = RING_ORDER.some(r => plannerState.factors[r].risk.length || plannerState.factors[r].protective.length);
@@ -970,6 +1094,9 @@ function initPlanner() {
     }
     document.getElementById('plannerStepTitle').textContent = title;
     document.getElementById('plannerStepHint').textContent = hint;
+    // Same goal reminder on every step, worded for what that step asks of you.
+    const goalStepKey = isRingStep ? 'ring' : stepKey;
+    document.getElementById('plannerStepGoal').innerHTML = stepGoalHtml(goalStepKey);
 
     if (!onReview) {
       document.getElementById('plannerBackBtn').hidden = index === 0;
@@ -1438,6 +1565,7 @@ function initPlanner() {
     plannerState.topContributors = { risk: [null, null, null], protective: [null, null, null] };
     plannerState.interventionsByFactor = {};
     plannerState.phaseComments = ['', '', ''];
+    plannerState.phase3Checks = [];
     document.querySelectorAll('.planner-phase-comment-input').forEach(el => { el.value = ''; });
     document.getElementById('plannerOutput').hidden = true;
     document.getElementById('plannerDownloadBtn').hidden = true;
@@ -1475,6 +1603,20 @@ function initPlanner() {
       plannerState.phaseComments[parseInt(el.dataset.phaseIndex, 10)] = el.value;
       persistPlannerState();
     });
+  });
+
+  // Phase 3 checklist — delegated so it survives generatePlan() re-rendering
+  // the list. Updates state, the progress count, and the email summary in
+  // place rather than re-rendering (keeps keyboard focus on the checkbox).
+  document.getElementById('plannerPhase3Checklist').addEventListener('change', e => {
+    const box = e.target.closest('.planner-checklist-input');
+    if (!box) return;
+    const i = parseInt(box.dataset.checkIndex, 10);
+    plannerState.phase3Checks[i] = box.checked;
+    box.closest('.planner-checklist-item').classList.toggle('is-done', box.checked);
+    updatePhase3Progress();
+    document.getElementById('plannerEmailBtn').href = buildEmailPlanHref(plannerState.data);
+    persistPlannerState();
   });
 
   // Restore any previously entered factors (and the step/output the clinician
@@ -1549,24 +1691,35 @@ function interventionsHtml() {
   if (!factors.length) {
     return `<h3>Interventions</h3><p class="planner-resource-empty">No top factors selected yet — go back to the Top Contributors step to add some.</p>`;
   }
+  // Two columns — each top factor on the left, the intervention(s) chosen
+  // for it on the right — so it's clear which strategy targets which factor.
   const rows = factors.map(f => {
     const list = plannerState.interventionsByFactor[f.id] || [];
-    return `<li>
-      <div class="intervention-review-header">
-        <span class="planner-note-tag planner-note-tag-${f.valence}">${f.valence === 'risk' ? 'Risk' : 'Protective'}</span>
-        <strong>${f.text}</strong>
-        <span class="intervention-review-ring">${f.ringLabel}</span>
-        ${severityDotsHtml(f.valence, f.weight)}
-      </div>
-      ${list.length
-        ? `<ul class="intervention-review-practices">${list.map(name => {
-            const desc = practiceDescription(name);
-            return `<li><strong>${escapeXml(name)}</strong>${desc ? ` — ${escapeXml(desc)}` : ''}</li>`;
-          }).join('')}</ul>`
-        : '<p class="intervention-review-plan"><em>No intervention selected yet</em></p>'}
-    </li>`;
+    // Names only (no descriptions) as chips, so the column scans quickly.
+    const practices = list.length
+      ? `<ul class="intervention-review-chips">${list.map(name => `<li>${escapeXml(name)}</li>`).join('')}</ul>`
+      : '<span class="intervention-review-none">No intervention selected yet</span>';
+    return `
+      <tr class="intervention-review-row intervention-review-row-${f.valence}">
+        <td class="intervention-review-factor" data-label="Factor">
+          <span class="intervention-review-factor-top">
+            <span class="planner-note-tag planner-note-tag-${f.valence}">${f.valence === 'risk' ? 'Risk' : 'Protective'}</span>
+            <strong class="intervention-review-factor-text">${escapeXml(f.text)}</strong>
+          </span>
+          <span class="intervention-review-meta">
+            <span class="intervention-review-ring">${escapeXml(f.ringLabel)}</span>
+            ${severityDotsHtml(f.valence, f.weight)}
+          </span>
+        </td>
+        <td class="intervention-review-practice-cell" data-label="Intervention(s)">${practices}</td>
+      </tr>`;
   });
-  return `<h3>Interventions</h3><ul class="planner-top-list intervention-review-list">${rows.join('')}</ul>`;
+  return `
+    <h3>Interventions</h3>
+    <table class="intervention-review-table">
+      <thead><tr><th scope="col">Factor</th><th scope="col">Intervention(s)</th></tr></thead>
+      <tbody>${rows.join('')}</tbody>
+    </table>`;
 }
 
 function myInterventionsPrintHtml() {
@@ -1574,13 +1727,113 @@ function myInterventionsPrintHtml() {
   if (!factors.length) return `<h3>My Interventions</h3><p>No top factors selected.</p>`;
   const rows = factors.map(f => {
     const list = plannerState.interventionsByFactor[f.id] || [];
-    const practices = list.map(name => {
-      const desc = practiceDescription(name);
-      return `<li><strong>${escapeXml(name)}</strong>${desc ? `: ${escapeXml(desc)}` : ''}</li>`;
-    }).join('');
-    return `<li><strong>${f.valence === 'risk' ? 'Risk' : 'Protective'} · ${f.text}:</strong> ${list.length ? `<ul>${practices}</ul>` : 'no intervention selected yet'}</li>`;
+    const practices = list.map(name => `<li>${escapeXml(name)}</li>`).join('');
+    return `<tr>
+      <td><strong>${f.valence === 'risk' ? 'Risk' : 'Protective'}</strong> · ${escapeXml(f.text)}<br><span class="print-int-meta">${escapeXml(f.ringLabel)} · ${f.weight}/5</span></td>
+      <td>${list.length ? `<ul>${practices}</ul>` : '<em>No intervention selected yet</em>'}</td>
+    </tr>`;
   });
-  return `<h3>My Interventions</h3><ul>${rows.join('')}</ul>`;
+  return `<h3>My Interventions</h3>
+    <table class="print-int-table">
+      <thead><tr><th>Factor</th><th>Intervention(s)</th></tr></thead>
+      <tbody>${rows.join('')}</tbody>
+    </table>`;
+}
+
+// ── Treatment goal (reducing suicidal ideation) — shown on every step, under each
+// Review phase heading, and in the printed plan + email summary. ──
+function plannerGoal() {
+  return (plannerState.data && plannerState.data.planner.goal) || null;
+}
+function goalTagHtml(g) {
+  return `<span class="planner-goal-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>${escapeXml(g.label)}</span>`;
+}
+function stepGoalHtml(stepKey) {
+  const g = plannerGoal();
+  const text = g && g.steps && g.steps[stepKey];
+  return text ? `${goalTagHtml(g)}<span>${escapeXml(text)}</span>` : '';
+}
+// Each phase repeats the same goal statement, then says how that phase
+// moves toward it ("In this phase") and gives a yes/no check question.
+function phaseGoal(i) {
+  const g = plannerGoal();
+  const ph = g && g.phases && g.phases[i];
+  if (!ph) return null;
+  return typeof ph === 'string' ? { focus: ph, check: '' } : ph;
+}
+function phaseGoalHtml(i) {
+  const g = plannerGoal();
+  const ph = phaseGoal(i);
+  if (!ph) return '';
+  return `
+    <span class="planner-phase-goal-head">${goalTagHtml(g)}<strong>${escapeXml(g.statement)}</strong></span>
+    ${ph.focus ? `<span class="planner-phase-goal-row"><em>${escapeXml(g.focusLabel || 'In this phase')}:</em> ${escapeXml(ph.focus)}</span>` : ''}
+    ${ph.check ? `<span class="planner-phase-goal-row planner-phase-goal-check"><em>${escapeXml(g.checkLabel || 'Check')}:</em> ${escapeXml(ph.check)}</span>` : ''}`;
+}
+function phaseGoalPrintHtml(i) {
+  const g = plannerGoal();
+  const ph = phaseGoal(i);
+  if (!ph) return '';
+  return `<div class="print-phase-goal">
+    <p><strong>${escapeXml(g.label)}: ${escapeXml(g.statement)}</strong></p>
+    ${ph.focus ? `<p><em>${escapeXml(g.focusLabel || 'In this phase')}:</em> ${escapeXml(ph.focus)}</p>` : ''}
+    ${ph.check ? `<p><em>${escapeXml(g.checkLabel || 'Check')}:</em> ${escapeXml(ph.check)}</p>` : ''}
+  </div>`;
+}
+
+// ── Phase 3 checklist (Consolidate & Next Steps) ──
+function phase3ChecklistItems() {
+  const c = plannerState.data.planner.phase3Checklist;
+  return c && Array.isArray(c.items) ? c.items : [];
+}
+
+function updatePhase3Progress() {
+  const c = plannerState.data.planner.phase3Checklist;
+  const items = phase3ChecklistItems();
+  const done = items.filter((_, i) => plannerState.phase3Checks[i]).length;
+  const el = document.getElementById('plannerPhase3Progress');
+  if (el) el.textContent = `${done} of ${items.length} ${c.progressLabel || 'complete'}`;
+}
+
+function phase3ChecklistHtml() {
+  const c = plannerState.data.planner.phase3Checklist;
+  const items = phase3ChecklistItems();
+  if (!items.length) return '';
+  const rows = items.map((it, i) => {
+    const checked = !!plannerState.phase3Checks[i];
+    const link = it.linkText && it.linkHref
+      ? ` <a class="planner-checklist-link" href="${it.linkHref}" target="_blank" rel="noopener">${escapeXml(it.linkText)} →</a>` : '';
+    return `
+      <li class="planner-checklist-item${checked ? ' is-done' : ''}">
+        <label>
+          <input type="checkbox" class="planner-checklist-input" data-check-index="${i}"${checked ? ' checked' : ''}/>
+          <span class="planner-checklist-box" aria-hidden="true"></span>
+          <span class="planner-checklist-text">
+            <strong>${escapeXml(it.text)}</strong>
+            ${it.detail ? `<span class="planner-checklist-detail">${escapeXml(it.detail)}</span>` : ''}
+          </span>
+        </label>${link ? `<div class="planner-checklist-link-row">${link}</div>` : ''}
+      </li>`;
+  }).join('');
+  return `
+    <div class="planner-checklist-head">
+      <h3>${escapeXml(c.heading)}</h3>
+      <span class="planner-checklist-progress" id="plannerPhase3Progress" aria-live="polite"></span>
+    </div>
+    ${c.intro ? `<p class="planner-checklist-intro">${escapeXml(c.intro)}</p>` : ''}
+    <ul class="planner-checklist-list">${rows}</ul>`;
+}
+
+function phase3ChecklistPrintHtml() {
+  const c = plannerState.data.planner.phase3Checklist;
+  const items = phase3ChecklistItems();
+  if (!items.length) return '';
+  return `<h3>${escapeXml(c.heading)}</h3><ul class="print-checklist">${items.map((it, i) => `
+    <li>
+      <span class="print-check-title">${plannerState.phase3Checks[i] ? '☑' : '☐'} ${escapeXml(it.text)}</span>
+      ${it.detail ? `<span class="print-check-detail">${escapeXml(it.detail)}</span>` : ''}
+      ${it.linkText ? `<span class="print-check-link">${escapeXml(it.linkText)} →</span>` : ''}
+    </li>`).join('')}</ul>`;
 }
 
 // Opt-in "Email My Plan" — a plain-text mailto summary (factors, severities,
@@ -1589,7 +1842,10 @@ function myInterventionsPrintHtml() {
 // client, pre-filled, and lets them review/send it themselves — the same
 // pattern every other "contact us" link on the site already uses.
 function buildEmailPlanSummary(data) {
-  const lines = ['Therapist Toolkit — Plan Summary', ''];
+  const lines = ['Therapist Toolkit — Plan Summary'];
+  const goal = plannerGoal();
+  if (goal) lines.push(`${goal.label}: ${goal.statement}`);
+  lines.push('');
   RING_ORDER.forEach(ring => {
     const risk = plannerState.factors[ring].risk;
     const protective = plannerState.factors[ring].protective;
@@ -1606,6 +1862,12 @@ function buildEmailPlanSummary(data) {
       const list = plannerState.interventionsByFactor[f.id] || [];
       lines.push(`  ${f.valence === 'risk' ? 'Risk' : 'Protective'} · ${f.text}: ${list.length ? list.join(', ') : 'no intervention selected yet'}`);
     });
+  }
+
+  const checklist = phase3ChecklistItems();
+  if (checklist.length) {
+    lines.push('', `${data.planner.phase3Checklist.heading}:`);
+    checklist.forEach((it, i) => lines.push(`  [${plannerState.phase3Checks[i] ? 'x' : ' '}] ${it.text}`));
   }
   return lines.join('\n');
 }
@@ -1680,6 +1942,7 @@ function generatePlan() {
     <div class="planner-more-links">
       <a class="btn btn-primary" href="resource-library.html" target="_blank" rel="noopener">Treatment Library</a>
       <a class="btn btn-outline" href="find-referral.html" target="_blank" rel="noopener">Community Resources</a>
+      <a class="btn btn-outline" href="schools.html" target="_blank" rel="noopener">Navigating Schools</a>
       <a class="btn btn-outline" href="self-care.html" target="_blank" rel="noopener">Self Care and Support for Therapists</a>
       <a class="btn btn-outline" href="safety-plan.html" target="_blank" rel="noopener">Make a Safety Plan For Your Client</a>
     </div>`;
@@ -1692,6 +1955,10 @@ function generatePlan() {
   document.getElementById('plannerOutputTopPlan').innerHTML = allFactorsHtml();
   document.getElementById('plannerOutputInterventions').innerHTML = interventionsHtml();
   document.getElementById('plannerOutputMore').innerHTML = moreHtml;
+  const checklistEl = document.getElementById('plannerPhase3Checklist');
+  checklistEl.innerHTML = phase3ChecklistHtml();
+  checklistEl.hidden = !phase3ChecklistItems().length;
+  updatePhase3Progress();
   [1, 2, 3].forEach(n => {
     const el = document.getElementById(`plannerPhase${n}CommentInput`);
     if (el && document.activeElement !== el) el.value = plannerState.phaseComments[n - 1] || '';
@@ -1726,11 +1993,19 @@ function buildPrintDiagramHtml() {
       <span class="planner-ecomap-title planner-ecomap-title-risk">${escapeXml(p.ecoMapRiskLabel)}</span>
       <span class="planner-ecomap-title planner-ecomap-title-protective">${escapeXml(p.ecoMapProtectiveLabel)}</span>
     </div>`;
-  return `<div class="planner-ecomap-wrap print-diagram-wrap">${titlesHtml}${buildEcoMapSvg({ currentRing: null, locked: true, idPrefix: 'print' })}</div>`;
+  return `<div class="planner-ecomap-wrap print-diagram-wrap">${titlesHtml}${buildEcoMapSvg({ currentRing: null, locked: true, idPrefix: 'print', layout: plannerState.mapLayout })}</div>`;
+}
+
+// Date + time (with time zone) stamped at the top of every generated PDF,
+// so the client, therapist, and school can all tell when it was made.
+function printTimestamp() {
+  const stamp = new Date().toLocaleString(undefined, {
+    year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short'
+  });
+  return `<p class="print-timestamp">Generated ${stamp}</p>`;
 }
 
 function buildPrintSheet(data, ringLabelByKey, phases, notes) {
-  const dateStr = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
 
   const fmtFactors = list => list.map(f => `${f.text} (${f.weight}/5)`).join(', ');
   const factorsHtml = RING_ORDER.map(ring => {
@@ -1758,24 +2033,30 @@ function buildPrintSheet(data, ringLabelByKey, phases, notes) {
   // heading directly above the content and comment that live under it
   // there, rather than a separate combined phase list.
   document.getElementById('plannerPrintSheet').innerHTML = `
+    ${printTimestamp()}
     <h1>Client Ecological Formulation &amp; Treatment Plan</h1>
-    <p class="print-date">Generated ${dateStr} — Therapist Toolkit Planning Tool</p>
+    <p class="print-date">Therapist Toolkit Planning Tool</p>
+    ${plannerGoal() ? `<p class="print-goal">Treatment ${escapeXml(plannerGoal().label.toLowerCase())}: ${escapeXml(plannerGoal().statement)}.</p>` : ''}
     <p class="print-disclaimer">${data.planner.disclaimer}</p>
 
     <h2>Ecological Map</h2>
     ${buildPrintDiagramHtml()}
 
     <h2>${phases[0].title} (${phases[0].sessions})</h2>
+    ${phaseGoalPrintHtml(0)}
     <h3>Factors Entered</h3>
     ${factorsHtml || '<p>None entered.</p>'}
     ${topContributorsPrintHtml()}
     ${phaseCommentHtml(0)}
 
     <h2>${phases[1].title} (${phases[1].sessions})</h2>
+    ${phaseGoalPrintHtml(1)}
     ${myInterventionsPrintHtml()}
     ${phaseCommentHtml(1)}
 
     <h2>${phases[2].title} (${phases[2].sessions})</h2>
+    ${phaseGoalPrintHtml(2)}
+    ${phase3ChecklistPrintHtml()}
     ${phaseCommentHtml(2)}
 
     <h2>Clinical Guidance Notes</h2>

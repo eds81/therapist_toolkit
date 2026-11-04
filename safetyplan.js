@@ -3,6 +3,15 @@
    Step-by-step Stanley-Brown style safety plan builder
    ============================================= */
 
+// Date + time (with time zone) stamped at the top of every generated PDF,
+// so the client, therapist, and school can all tell when it was made.
+function printTimestamp() {
+  const stamp = new Date().toLocaleString(undefined, {
+    year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short'
+  });
+  return `<p class="print-timestamp">Generated ${stamp}</p>`;
+}
+
 function icon(id, extraClass) {
   return `<svg class="icon${extraClass ? ' ' + extraClass : ''}"><use href="#${id}"/></svg>`;
 }
@@ -118,8 +127,8 @@ function initSafetyPlan() {
     }).join('');
 
     document.getElementById('spPrintSheet').innerHTML = `
+      ${printTimestamp()}
       <h1>${spState.data.footer.orgName} — Safety Plan</h1>
-      <p class="print-date">${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
       <p class="print-disclaimer">${p.crisisBanner}</p>
       ${sections}
     `;
@@ -207,6 +216,9 @@ function initSafetyPlan() {
   }
 
   document.getElementById('spDownloadBtn').addEventListener('click', () => { buildPrintSheet(); window.print(); });
+  // A print started from the keyboard/browser menu skips the button — rebuild
+  // here too so the sheet (and its timestamp) is always current.
+  window.addEventListener('beforeprint', buildPrintSheet);
   document.getElementById('spResetBtn').addEventListener('click', resetSafetyPlan);
   document.getElementById('spRestartLink').addEventListener('click', resetSafetyPlan);
 

@@ -63,7 +63,7 @@ function render(data) {
 
   const roadmapBtn = `<button class="tab-btn active" data-tab="roadmap">${tabs.roadmap.tabLabel}</button>`;
   const libraryLink = `<a class="tab-btn tab-btn-link" href="resource-library.html">${data.toolkit.libraryLinkLabel}${icon('i-arrow-right', 'icon-xs')}</a>`;
-  const schoolsBtn = `<button class="tab-btn" data-tab="schools">${tabs.schools.tabLabel}</button>`;
+  const schoolsBtn = `<a class="tab-btn tab-btn-link" href="schools.html">${tabs.schools.tabLabel}${icon('i-arrow-right', 'icon-xs')}</a>`;
   const selfCareLink = `<a class="tab-btn tab-btn-link" href="self-care.html">${data.toolkit.selfCareLinkLabel}${icon('i-arrow-right', 'icon-xs')}</a>`;
   document.getElementById('toolkitTabsNav').innerHTML = roadmapBtn + libraryLink + schoolsBtn + selfCareLink;
 
@@ -268,6 +268,8 @@ function initTabs() {
   // Deep-link support: about.html#tab-schools (from the Planning Tool's "Explore More"
   // links) activates and scrolls to the matching tab.
   const hash = window.location.hash.replace('#', '');
+  // Navigating Schools moved to its own page — keep old links working.
+  if (hash === 'tab-schools') { window.location.replace('schools.html'); return; }
   if (hash.startsWith('tab-')) {
     const key = hash.replace('tab-', '');
     const targetBtn = document.querySelector(`.tab-btn[data-tab="${key}"]`);

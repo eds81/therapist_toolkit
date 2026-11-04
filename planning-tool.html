@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=28" />
+  <link rel="stylesheet" href="styles.css?v=44" />
 </head>
 <body>
 
@@ -76,6 +76,7 @@
     <a href="safety-plan.html">Make A Safety Plan</a>
       <a href="resource-library.html">Treatment Library</a>
       <a href="find-referral.html">Community Resources</a>
+      <a href="schools.html">Navigating Schools</a>
     <a href="self-care.html">Self-Care &amp; Support</a>
     </nav>
     <button class="nav-hamburger" aria-label="Open menu" id="hamburgerBtn">
@@ -88,6 +89,7 @@
     <a href="safety-plan.html">Make A Safety Plan</a>
     <a href="resource-library.html">Treatment Library</a>
     <a href="find-referral.html">Community Resources</a>
+    <a href="schools.html">Navigating Schools</a>
     <a href="self-care.html">Self-Care &amp; Support</a>
   </div>
 </header>
@@ -98,6 +100,7 @@
     <div class="section-label" data-fade id="plannerLabel"></div>
     <h2 data-fade data-delay="1" id="plannerHeading"></h2>
     <p class="section-intro" data-fade data-delay="2" id="plannerIntro"></p>
+    <div class="goal-banner" data-goal-banner="planner" hidden></div>
 
     <div class="planner-disclaimer" data-fade data-delay="3" id="plannerDisclaimer"></div>
 
@@ -109,6 +112,7 @@
     <div class="planner-step-header" id="plannerStepHeader">
       <h3 id="plannerStepTitle"></h3>
       <p id="plannerStepHint"></p>
+      <p class="planner-step-goal" id="plannerStepGoal"></p>
     </div>
 
     <!-- Only shown on Review — an at-a-glance Phase 1/2/3 strip. All three
@@ -134,6 +138,7 @@
       <div>
         <h3 id="plannerPhase1Title"></h3>
         <span class="planner-review-phase-sessions" id="plannerPhase1Sessions"></span>
+        <p class="planner-review-phase-goal" id="plannerPhase1Goal"></p>
       </div>
     </div>
 
@@ -141,6 +146,7 @@
          all computed in one viewBox so the whole map scales as one unit and
          reuses identically for the printed/downloaded plan. -->
     <div class="planner-ecomap-wrap" id="plannerEcoMapWrap">
+      <div class="planner-map-layout" id="plannerMapLayout"></div>
       <div class="planner-ecomap-titles">
         <span class="planner-ecomap-title planner-ecomap-title-risk" id="plannerEcoMapRiskTitle"></span>
         <span class="planner-ecomap-title planner-ecomap-title-protective" id="plannerEcoMapProtectiveTitle"></span>
@@ -198,6 +204,7 @@
         <div>
           <h3 id="plannerPhase2Title"></h3>
           <span class="planner-review-phase-sessions" id="plannerPhase2Sessions"></span>
+        <p class="planner-review-phase-goal" id="plannerPhase2Goal"></p>
         </div>
       </div>
       <div class="planner-output-block" id="plannerOutputInterventions"></div>
@@ -211,8 +218,10 @@
         <div>
           <h3 id="plannerPhase3Title"></h3>
           <span class="planner-review-phase-sessions" id="plannerPhase3Sessions"></span>
+        <p class="planner-review-phase-goal" id="plannerPhase3Goal"></p>
         </div>
       </div>
+      <div class="planner-output-block planner-checklist" id="plannerPhase3Checklist"></div>
       <div class="planner-phase-comment" id="plannerPhase3Comment">
         <label for="plannerPhase3CommentInput" id="plannerPhase3CommentLabel"></label>
         <textarea id="plannerPhase3CommentInput" class="planner-phase-comment-input" data-phase-index="2" rows="3"></textarea>
@@ -240,6 +249,7 @@
   </div>
 </footer>
 
-<script src="planner.js?v=45"></script>
+<script src="planner.js?v=57"></script>
+<script src="goal-banner.js"></script>
 </body>
 </html>
