@@ -1093,7 +1093,7 @@ body.scgate-open { overflow: hidden; }
 .planner-checklist-text strong { font-size: 15px; color: var(--text); }
 .planner-checklist-item.is-done .planner-checklist-text strong { color: var(--teal-dark); }
 .planner-checklist-detail { font-size: 13px; color: var(--text-mid); line-height: 1.5; }
-.planner-checklist-link-row { padding-left: 34px; margin-top: 6px; }
+.planner-checklist-link-row { padding-left: 34px; margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px 18px; }
 .planner-checklist-link { font-size: 13px; font-weight: 800; color: var(--teal); }
 .planner-checklist-link:hover { text-decoration: underline; }
 

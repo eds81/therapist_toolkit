@@ -843,26 +843,27 @@
         {
           "text": "Assess and consolidate skills, and promote self-efficacy",
           "detail": "Review which skills have helped most, practice them once more, and help the client name what they can now do on their own.",
-          "linkText": "",
-          "linkHref": ""
+          "links": []
         },
         {
           "text": "Ensure continuity of care",
           "detail": "Link the client from treatment to their next step: a warm handoff to ongoing care, school supports, or community resources.",
-          "linkText": "Community Resources",
-          "linkHref": "find-referral.html"
+          "links": [
+            { "text": "Community Resources", "href": "find-referral.html" },
+            { "text": "Navigating Schools", "href": "schools.html" }
+          ]
         },
         {
           "text": "Reflect on the Rise treatment experience and complete final screenings",
           "detail": "Look back on progress together, and re-administer screenings to measure change in suicidal ideation since intake.",
-          "linkText": "",
-          "linkHref": ""
+          "links": []
         },
         {
           "text": "Revisit the safety plan",
           "detail": "Update warning signs, coping strategies, and supports so the plan reflects where the client is now.",
-          "linkText": "Make A Safety Plan",
-          "linkHref": "safety-plan.html"
+          "links": [
+            { "text": "Make A Safety Plan", "href": "safety-plan.html" }
+          ]
         }
       ]
     },

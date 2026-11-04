@@ -1787,6 +1787,12 @@ function phase3ChecklistItems() {
   return c && Array.isArray(c.items) ? c.items : [];
 }
 
+// An item's links: the "links" list, or the older single linkText/linkHref.
+function checklistLinks(it) {
+  if (Array.isArray(it.links)) return it.links.filter(l => l && l.text && l.href);
+  return it.linkText && it.linkHref ? [{ text: it.linkText, href: it.linkHref }] : [];
+}
+
 function updatePhase3Progress() {
   const c = plannerState.data.planner.phase3Checklist;
   const items = phase3ChecklistItems();
@@ -1801,8 +1807,9 @@ function phase3ChecklistHtml() {
   if (!items.length) return '';
   const rows = items.map((it, i) => {
     const checked = !!plannerState.phase3Checks[i];
-    const link = it.linkText && it.linkHref
-      ? ` <a class="planner-checklist-link" href="${it.linkHref}" target="_blank" rel="noopener">${escapeXml(it.linkText)} →</a>` : '';
+    const link = checklistLinks(it)
+      .map(l => `<a class="planner-checklist-link" href="${escapeXml(l.href)}" target="_blank" rel="noopener">${escapeXml(l.text)} →</a>`)
+      .join('');
     return `
       <li class="planner-checklist-item${checked ? ' is-done' : ''}">
         <label>
@@ -1832,7 +1839,7 @@ function phase3ChecklistPrintHtml() {
     <li>
       <span class="print-check-title">${plannerState.phase3Checks[i] ? '☑' : '☐'} ${escapeXml(it.text)}</span>
       ${it.detail ? `<span class="print-check-detail">${escapeXml(it.detail)}</span>` : ''}
-      ${it.linkText ? `<span class="print-check-link">${escapeXml(it.linkText)} →</span>` : ''}
+      ${checklistLinks(it).length ? `<span class="print-check-link">${checklistLinks(it).map(l => `${escapeXml(l.text)} →`).join('&nbsp;&nbsp;·&nbsp;&nbsp;')}</span>` : ''}
     </li>`).join('')}</ul>`;
 }
 

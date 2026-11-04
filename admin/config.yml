@@ -628,8 +628,14 @@ collections:
                     fields:
                       - {label: "Activity", name: "text", widget: "string"}
                       - {label: "Detail", name: "detail", widget: "text", required: false}
-                      - {label: "Link Text (optional)", name: "linkText", widget: "string", required: false}
-                      - {label: "Link Target (optional)", name: "linkHref", widget: "string", required: false}
+                      - label: "Links (optional — add one or more)"
+                        name: "links"
+                        widget: "list"
+                        required: false
+                        summary: "{{text}}"
+                        fields:
+                          - {label: "Link Text", name: "text", widget: "string"}
+                          - {label: "Link Target (e.g. schools.html)", name: "href", widget: "string"}
               - {label: "Phase Comment Label (Comments box under each Phase 1/2/3 section on Review)", name: "phaseCommentLabel", widget: "string"}
               - {label: "Phase Comment Placeholder", name: "phaseCommentPlaceholder", widget: "string"}
 
