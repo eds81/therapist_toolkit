@@ -46,6 +46,59 @@ collections:
                   - {label: "Suffix (e.g. %, %+)", name: "suffix", widget: "string", required: false}
                   - {label: "Text (used instead of Number, e.g. 'Ages 3–19')", name: "text", widget: "string", required: false}
                   - {label: "Label", name: "label", widget: "string"}
+          - label: "What's Inside (one card per tool)"
+            name: "tour"
+            widget: "object"
+            fields:
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Intro", name: "intro", widget: "text"}
+              - {label: "'Use it' Label", name: "useWhenLabel", widget: "string"}
+              - {label: "'Open' Link Label", name: "openLabel", widget: "string"}
+              - label: "Tools (keep all six keys — each key draws that tool's preview picture)"
+                name: "tools"
+                widget: "list"
+                summary: "{{title}}"
+                fields:
+                  - {label: "Key (do not change)", name: "key", widget: "select", options: ["planner", "safety", "library", "community", "schools", "selfcare"]}
+                  - {label: "Title", name: "title", widget: "string"}
+                  - {label: "What it does", name: "tagline", widget: "text"}
+                  - {label: "When to use it", name: "useWhen", widget: "string"}
+                  - {label: "Link", name: "href", widget: "string"}
+          - label: "How It Fits Together (tools in each treatment phase)"
+            name: "journey"
+            widget: "object"
+            fields:
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Intro", name: "intro", widget: "text"}
+              - label: "Phases (fixed set of 3 — titles and sessions come from About → Treatment Roadmap)"
+                name: "phases"
+                widget: "list"
+                fields:
+                  - {label: "What happens in this phase", name: "note", widget: "text"}
+                  - {label: "Tools used (by key)", name: "tools", widget: "select", multiple: true, options: ["planner", "safety", "library", "community", "schools", "selfcare"]}
+              - {label: "'Throughout' Row Title", name: "throughoutTitle", widget: "string"}
+              - label: "Throughout Treatment"
+                name: "throughout"
+                widget: "list"
+                fields:
+                  - {label: "Tool (by key)", name: "tool", widget: "select", options: ["planner", "safety", "library", "community", "schools", "selfcare"]}
+                  - {label: "Note", name: "note", widget: "string"}
+          - label: "Why It Exists (the research cards themselves are edited under About → Why This Toolkit)"
+            name: "whySummary"
+            widget: "object"
+            fields:
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Link Text", name: "linkText", widget: "string"}
+              - {label: "Link Target", name: "linkHref", widget: "string"}
+          - label: "Questions Section (heading above the FAQ below)"
+            name: "faqSection"
+            widget: "object"
+            fields:
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Heading", name: "heading", widget: "string"}
           - label: "Toolkit FAQ (verbatim client copy, shown on the home page)"
             name: "toolkitFaq"
             widget: "object"
@@ -118,6 +171,30 @@ collections:
         name: "about"
         label: "About"
         fields:
+          - label: "Page Header, Section Links & Closing Call-to-Action"
+            name: "aboutPage"
+            widget: "object"
+            fields:
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Intro", name: "intro", widget: "text"}
+              - label: "Section Links (the row of links under the header)"
+                name: "sectionNav"
+                widget: "list"
+                summary: "{{label}}"
+                fields:
+                  - {label: "Label", name: "label", widget: "string"}
+                  - {label: "Target (e.g. #research)", name: "href", widget: "string"}
+              - label: "Closing Call-to-Action"
+                name: "explore"
+                widget: "object"
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - {label: "Body", name: "body", widget: "text"}
+                  - {label: "Primary Button Text", name: "primaryText", widget: "string"}
+                  - {label: "Primary Button Link", name: "primaryHref", widget: "string"}
+                  - {label: "Secondary Button Text", name: "secondaryText", widget: "string"}
+                  - {label: "Secondary Button Link", name: "secondaryHref", widget: "string"}
           - label: "About / Ecosystem Section"
             name: "about"
             widget: "object"
@@ -199,12 +276,8 @@ collections:
             name: "toolkit"
             widget: "object"
             fields:
-              - {label: "Section Label", name: "sectionLabel", widget: "string"}
-              - {label: "Heading", name: "heading", widget: "string"}
-              - {label: "Intro Paragraph", name: "intro", widget: "text"}
-              - {label: "Treatment Library Link Label (button that sends clinicians to the standalone Treatment Library page)", name: "libraryLinkLabel", widget: "string"}
-              - {label: "Self-Care Link Label (button that sends clinicians to the standalone Self-Care & Support page)", name: "selfCareLinkLabel", widget: "string"}
-              - label: "Tabs"
+              - {label: "Section Label (above the Treatment Roadmap heading)", name: "sectionLabel", widget: "string"}
+              - label: "Treatment Roadmap (its phase titles and sessions also appear on the Home page and in the Planning Tool)"
                 name: "tabs"
                 widget: "object"
                 fields:
@@ -212,7 +285,7 @@ collections:
                     name: "roadmap"
                     widget: "object"
                     fields:
-                      - {label: "Tab Button Label", name: "tabLabel", widget: "string"}
+                      - {label: "Short Label (not currently shown)", name: "tabLabel", widget: "string", required: false}
                       - {label: "Heading", name: "heading", widget: "string"}
                       - {label: "Therapist Concern (quoted)", name: "concern", widget: "string", required: false}
                       - {label: "Intro", name: "intro", widget: "text"}
@@ -224,27 +297,6 @@ collections:
                           - {label: "Session Range", name: "sessions", widget: "string"}
                           - {label: "Focus Items", name: "items", widget: "list", field: {label: "Item", name: "item", widget: "string"}}
                           - {label: "Sample Interventions", name: "interventions", widget: "list", field: {label: "Intervention", name: "intervention", widget: "string"}}
-                  - label: "3. Navigating Schools"
-                    name: "schools"
-                    widget: "object"
-                    fields:
-                      - {label: "Tab Button Label", name: "tabLabel", widget: "string"}
-                      - {label: "Heading", name: "heading", widget: "string"}
-                      - {label: "Therapist Concern (quoted)", name: "concern", widget: "string", required: false}
-                      - {label: "Intro", name: "intro", widget: "text"}
-                      - label: "Pull Quote"
-                        name: "quote"
-                        widget: "object"
-                        fields:
-                          - {label: "Quote", name: "text", widget: "text"}
-                          - {label: "Citation", name: "cite", widget: "string"}
-                      - label: "Items (fixed set of 3 — do not add or remove)"
-                        name: "items"
-                        widget: "list"
-                        fields:
-                          - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
-                          - {label: "Title", name: "title", widget: "string"}
-                          - {label: "Body", name: "body", widget: "text"}
               - label: "How to Use This Toolkit"
                 name: "howToUse"
                 widget: "object"
@@ -362,19 +414,6 @@ collections:
                   - {label: "Button Label", name: "buttonLabel", widget: "string"}
                   - {label: "Email Address", name: "address", widget: "string"}
                   - {label: "Hint Text", name: "hint", widget: "text"}
-              - label: "Map Layout Switch (Original / Original, grouped / Separate / Grouped / Grouped + flat lines buttons above the ecological map)"
-                name: "mapLayouts"
-                widget: "object"
-                fields:
-                  - {label: "Label", name: "label", widget: "string"}
-                  - label: "Options (fixed set of 5 — do not change the keys)"
-                    name: "options"
-                    widget: "list"
-                    summary: "{{label}}"
-                    fields:
-                      - {label: "Key (do not change)", name: "key", widget: "string"}
-                      - {label: "Button Label", name: "label", widget: "string"}
-                      - {label: "Description (shown under the buttons)", name: "hint", widget: "text"}
               - label: "Treatment Goal (reducing suicidal ideation — shown on every step, under each phase on Review, and in the PDF/email)"
                 name: "goal"
                 widget: "object"
@@ -513,10 +552,21 @@ collections:
                 name: "theme"
                 widget: "select"
                 multiple: true
-                options: ["Risk Assessment & Safety Planning", "Coping Skills & Emotion Regulation", "Family Engagement", "School Coordination", "Community & Referrals", "Relapse Prevention & Transition"]
-              - {label: "Short Description", name: "description", widget: "text"}
-              - {label: "Why It Works (evidence/research note)", name: "evidence", widget: "text"}
+                options: ["Risk Assessment & Safety Planning", "Coping Skills & Emotion Regulation", "Family Engagement", "School Coordination", "Community & Referrals", "Relapse Prevention & Transition", "Engagement & Treatment Process"]
+              - {label: "Short Description (for an Evidence-Based Practice, its definition — leave blank to keep it out of the library grid until it's written)", name: "description", widget: "text", required: false}
+              - {label: "Why It Works (evidence/research note)", name: "evidence", widget: "text", required: false}
               - {label: "About This Practice (Evidence-Based Practices only — longer write-up shown in the Treatment Library)", name: "details", widget: "text", required: false}
+              - label: "Practice Links (Evidence-Based Practices only — shown under Resources; leave the address blank to show 'link coming soon')"
+                name: "links"
+                widget: "list"
+                required: false
+                summary: "{{label}}"
+                fields:
+                  - {label: "Group", name: "group", widget: "select", options: [{label: "For therapists", value: "therapist"}, {label: "For clients & families", value: "client"}, {label: "Research", value: "research"}, {label: "More resources", value: "other"}]}
+                  - {label: "Link Name", name: "label", widget: "string"}
+                  - {label: "Web Address (blank = coming soon)", name: "url", widget: "string", required: false}
+              - {label: "Source Framework (internal, not shown on the site — e.g. Meza, ECCA)", name: "source", widget: "string", required: false}
+              - {label: "Team Review Status (internal, not shown on the site)", name: "reviewStatus", widget: "select", required: false, options: ["Yes", "Maybe", "Probably not", "Undecided"]}
               - label: "Related Resources (Evidence-Based Practices only — titles of other library items)"
                 name: "relatedResources"
                 widget: "list"

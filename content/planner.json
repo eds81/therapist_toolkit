@@ -39,16 +39,6 @@
       "address": "feedback@riseagainstsuicide.org",
       "hint": "Opt-in — opens your email client with a plain-text summary of what you entered (factors, severities, and interventions), not the formatted PDF. Please remove or de-identify any client details before sending. Sharing this helps the Rise and toolkit development team improve the service."
     },
-    "mapLayouts": {
-      "label": "Map layout",
-      "options": [
-        { "key": "original", "label": "Original", "hint": "Before: pills stacked outward from the center in both directions, so reading down jumps between outer and inner rings. Flat connector lines." },
-        { "key": "originalGrouped", "label": "Original, grouped", "hint": "The original arrangement and flat lines, but factors in the same ring share one pill, so there are never more than 5 pills per side." },
-        { "key": "separate", "label": "Separate pills", "hint": "One pill per factor, ordered from the outer ring (Community) at the top to the inner ring (Client) at the bottom." },
-        { "key": "grouped", "label": "Grouped (max 5 per side)", "hint": "Factors in the same ring share one pill, so there are never more than 5 pills per side. Still ordered outer to inner." },
-        { "key": "groupedFlat", "label": "Grouped + flat lines", "hint": "Same grouped pills (never more than 5 per side, ordered outer to inner), with flat horizontal lines and no angles. The innermost pill sits level with the center, so the column builds upward and the rings grow to reach each pill." }
-      ]
-    },
     "goal": {
       "label": "Goal",
       "statement": "Reduce the client's suicidal ideation",

@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=49" />
 </head>
 <body>
 
@@ -18,6 +18,9 @@
   </symbol>
   <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round">
     <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
   </symbol>
   <symbol id="i-gap" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M5 3L2 12l3 9M19 3l3 9-3 9"/><line x1="5" y1="12" x2="19" y2="12"/>
@@ -85,39 +88,43 @@
   <div class="hero-stats" id="heroStats"></div>
 </section>
 
-<!-- TOOLKIT FAQ (verbatim client copy) -->
+<!-- WHAT'S INSIDE — one card per tool, each with a small preview of what it looks like -->
+<section class="tour" id="tour">
+  <div class="section-inner">
+    <div class="section-label" data-fade id="tourLabel"></div>
+    <h2 data-fade data-delay="1" id="tourHeading"></h2>
+    <p class="section-intro" data-fade data-delay="2" id="tourIntro"></p>
+    <div class="tour-grid" id="tourGrid"></div>
+  </div>
+</section>
+
+<!-- HOW IT FITS TOGETHER — which tools do the work in each treatment phase -->
+<section class="journey" id="journey">
+  <div class="section-inner">
+    <div class="section-label" data-fade id="journeyLabel"></div>
+    <h2 data-fade data-delay="1" id="journeyHeading"></h2>
+    <p class="section-intro" data-fade data-delay="2" id="journeyIntro"></p>
+    <div class="journey-phases" data-fade data-delay="3" id="journeyPhases"></div>
+    <div class="journey-throughout" data-fade data-delay="4" id="journeyThroughout"></div>
+  </div>
+</section>
+
+<!-- WHY IT EXISTS -->
+<section class="home-why" id="why">
+  <div class="section-inner">
+    <div class="section-label" data-fade id="whyLabel"></div>
+    <h2 data-fade data-delay="1" id="whyHeading"></h2>
+    <div class="why-grid" id="whyGrid"></div>
+    <a class="home-why-link" id="whyLink"></a>
+  </div>
+</section>
+
+<!-- QUESTIONS — the toolkit FAQ (verbatim client copy), as expandable sections -->
 <section class="faq" id="faq">
   <div class="section-inner">
     <div class="section-label" data-fade id="faqLabel"></div>
-
-    <div class="faq-block" data-fade>
-      <h3 id="faqGoalHeading"></h3>
-      <div id="faqGoalBody"></div>
-    </div>
-
-    <div class="faq-block" data-fade>
-      <h3 id="faqWhyHeading"></h3>
-      <div class="why-grid" id="faqWhyGrid"></div>
-    </div>
-
-    <div class="faq-block" data-fade>
-      <h3 id="faqHowHeading"></h3>
-      <p id="faqHowIntro"></p>
-      <div id="faqHowPairs"></div>
-    </div>
-
-    <div class="faq-block" data-fade>
-      <h3 id="faqIncludesHeading"></h3>
-      <div id="faqIncludesList"></div>
-    </div>
-
-    <div class="faq-block" data-fade>
-      <h3 id="faqUseHeading"></h3>
-      <p id="faqUseIntro"></p>
-      <div id="faqUseGuidance"></div>
-      <ul class="how-to-use-tips" id="faqUseTips"></ul>
-      <p id="faqUseClosing"></p>
-    </div>
+    <h2 data-fade data-delay="1" id="faqHeading"></h2>
+    <div class="faq-accordion" data-fade data-delay="2" id="faqAccordion"></div>
   </div>
 </section>
 
@@ -129,7 +136,7 @@
   </div>
 </footer>
 
-<script src="content-loader.js?v=1"></script>
-<script src="main.js?v=2"></script>
+<script src="content-loader.js?v=2"></script>
+<script src="main.js?v=4"></script>
 </body>
 </html>

@@ -1,19 +1,142 @@
 {
   "hero": {
-    "badges": ["Rise Against Suicide", "University of Colorado Boulder"],
+    "badges": [
+      "Rise Against Suicide",
+      "University of Colorado Boulder"
+    ],
     "headlineLine1": "Supporting Therapists.",
     "headlineLine2": "Protecting Youth.",
     "sub": "A co-designed online toolkit providing evidence-based resources, clinical support, and community for therapists working toward one goal: <strong>reducing suicidal ideation in youth</strong> — built <em>for</em> and <em>by</em> therapists.",
-    "ctaPrimary": { "text": "Explore the Toolkit", "href": "about.html#toolkit" },
-    "ctaSecondary": { "text": "Learn More", "href": "about.html#about" },
+    "ctaPrimary": {
+      "text": "See What's Inside",
+      "href": "#tour"
+    },
+    "ctaSecondary": {
+      "text": "Start the Planning Tool",
+      "href": "planning-tool.html"
+    },
     "stats": [
-      { "count": 529, "suffix": "", "label": "Youth served by Rise in FY 24–25" },
-      { "count": 40, "suffix": "%", "label": "Referrals from the BIPOC community" },
-      { "count": 50, "suffix": "%+", "label": "Of detected at-risk youth receive no follow-up care" },
-      { "text": "Ages 3–19", "label": "Range served, average age 13" }
+      {
+        "count": 529,
+        "suffix": "",
+        "label": "Youth served by Rise in FY 24–25"
+      },
+      {
+        "count": 40,
+        "suffix": "%",
+        "label": "Referrals from the BIPOC community"
+      },
+      {
+        "count": 50,
+        "suffix": "%+",
+        "label": "Of detected at-risk youth receive no follow-up care"
+      },
+      {
+        "text": "Ages 3–19",
+        "label": "Range served, average age 13"
+      }
     ]
   },
-
+  "tour": {
+    "sectionLabel": "What's Inside",
+    "heading": "Six tools, one goal",
+    "intro": "Each part of the toolkit does one job. Here is what each tool looks like, what it is for, and when to reach for it.",
+    "useWhenLabel": "Use it",
+    "openLabel": "Open",
+    "tools": [
+      {
+        "key": "planner",
+        "title": "Planning Tool",
+        "tagline": "Map the risk and protective factors in your client's world, choose the top ones, and build a three-phase treatment plan you can print.",
+        "useWhen": "In sessions 1–4, then revisit as things change",
+        "href": "planning-tool.html"
+      },
+      {
+        "key": "safety",
+        "title": "Make A Safety Plan",
+        "tagline": "Build a Stanley-Brown safety plan step by step with your client, then print a copy for them to keep.",
+        "useWhen": "Early in treatment, and whenever risk changes",
+        "href": "safety-plan.html"
+      },
+      {
+        "key": "library",
+        "title": "Treatment Library",
+        "tagline": "Search vetted assessments, worksheets, handouts and evidence-based practices for youth, families and schools.",
+        "useWhen": "When planning a session or a family meeting",
+        "href": "resource-library.html"
+      },
+      {
+        "key": "community",
+        "title": "Community Resources",
+        "tagline": "Find referrals near your client for ongoing care after their time with Rise ends.",
+        "useWhen": "When linking your client to their next step in care",
+        "href": "find-referral.html"
+      },
+      {
+        "key": "schools",
+        "title": "Navigating Schools",
+        "tagline": "Tips for working with schools, a school partner interview guide, your client's school card, and a contact card to give schools.",
+        "useWhen": "Before your first visit to a new school",
+        "href": "schools.html"
+      },
+      {
+        "key": "selfcare",
+        "title": "Self-Care & Support",
+        "tagline": "Grounding practices, a wall of wins, peer support and consultation, for you.",
+        "useWhen": "Any time, not just when things feel hard",
+        "href": "self-care.html"
+      }
+    ]
+  },
+  "journey": {
+    "sectionLabel": "How It Fits Together",
+    "heading": "Your toolkit across a Rise treatment",
+    "intro": "The toolkit follows the three phases of Rise's short-term model. Here is which tools do the most work in each phase.",
+    "phases": [
+      {
+        "tools": [
+          "planner",
+          "safety"
+        ],
+        "note": "Assess risk, build the safety plan together, and map what is driving the client's suicidal ideation."
+      },
+      {
+        "tools": [
+          "library"
+        ],
+        "note": "Choose evidence-based interventions for the top factors and practice skills in session."
+      },
+      {
+        "tools": [
+          "safety",
+          "community",
+          "schools"
+        ],
+        "note": "Re-screen, revisit the safety plan, and link the client to their next step in care."
+      }
+    ],
+    "throughoutTitle": "Throughout treatment",
+    "throughout": [
+      {
+        "tool": "schools",
+        "note": "Whenever sessions happen at school"
+      },
+      {
+        "tool": "selfcare",
+        "note": "Support for you, every week"
+      }
+    ]
+  },
+  "whySummary": {
+    "sectionLabel": "Why It Exists",
+    "heading": "Built to close real gaps in care",
+    "linkText": "More about the project",
+    "linkHref": "about.html"
+  },
+  "faqSection": {
+    "sectionLabel": "Questions",
+    "heading": "Questions about the toolkit"
+  },
   "toolkitFaq": {
     "sectionLabel": "About This Toolkit",
     "goal": {
@@ -51,20 +174,48 @@
     "includes": {
       "heading": "4. What Does This Toolkit Include?",
       "items": [
-        { "letter": "a", "title": "Treatment Roadmap", "body": "Your guide through the clinical process: starting with risk assessment and safety planning, skill building and practice, consolidation and transition planning." },
-        { "letter": "b", "title": "Treatment Library", "body": "Your one-stop-shop for therapy resources. From vetted community resources to suggested referrals, browse recommended clinical assessment tools, youth and family handouts, intervention worksheets, and more." },
-        { "letter": "c", "title": "Navigating Schools", "body": "Your tips and tricks for navigating the complexity of schools. Learn what questions to ask to get the information you need, how to clarify roles and responsibilities, and how to coordinate with school teams." },
-        { "letter": "d", "title": "Therapist Self-Care", "body": "Your reminder to care for yourself. Strategies for managing vicarious trauma and compassion fatigue, recognizing signs and developing action plans to address burnout, and connecting with your peers." }
+        {
+          "letter": "a",
+          "title": "Treatment Roadmap",
+          "body": "Your guide through the clinical process: starting with risk assessment and safety planning, skill building and practice, consolidation and transition planning."
+        },
+        {
+          "letter": "b",
+          "title": "Treatment Library",
+          "body": "Your one-stop-shop for therapy resources. From vetted community resources to suggested referrals, browse recommended clinical assessment tools, youth and family handouts, intervention worksheets, and more."
+        },
+        {
+          "letter": "c",
+          "title": "Navigating Schools",
+          "body": "Your tips and tricks for navigating the complexity of schools. Learn what questions to ask to get the information you need, how to clarify roles and responsibilities, and how to coordinate with school teams."
+        },
+        {
+          "letter": "d",
+          "title": "Therapist Self-Care",
+          "body": "Your reminder to care for yourself. Strategies for managing vicarious trauma and compassion fatigue, recognizing signs and developing action plans to address burnout, and connecting with your peers."
+        }
       ]
     },
     "useIt": {
       "heading": "5. How Do I Use This Toolkit?",
       "intro": "This toolkit is designed to be flexible: use what works for you, your clients and your workflow. Here are some suggestions:",
       "guidance": [
-        { "title": "Start with the Treatment Roadmap.", "body": "Use it to help you plan and deliver your therapy. Revisit session by session to see where you are and what comes next." },
-        { "title": "Dip into the Treatment Library when you need something specific.", "body": "Align it with the Roadmap, and treat it like a search tool: pull a handout for a family session, grab an assessment before intake, or find a referral when treatment is wrapping up." },
-        { "title": "Turn to Navigating Schools before or during any school-facing work.", "body": "Review the sample questions ahead of a school meeting, or reference the role-clarification tips when a case starts to feel tangled between systems." },
-        { "title": "Revisit Therapist Self-Care regularly, not just when things feel hard.", "body": "Build a check-in by integrating these tools into your own routine - weekly, monthly, whatever's sustainable - so you catch signs of strain early rather than after burnout sets in." }
+        {
+          "title": "Start with the Treatment Roadmap.",
+          "body": "Use it to help you plan and deliver your therapy. Revisit session by session to see where you are and what comes next."
+        },
+        {
+          "title": "Dip into the Treatment Library when you need something specific.",
+          "body": "Align it with the Roadmap, and treat it like a search tool: pull a handout for a family session, grab an assessment before intake, or find a referral when treatment is wrapping up."
+        },
+        {
+          "title": "Turn to Navigating Schools before or during any school-facing work.",
+          "body": "Review the sample questions ahead of a school meeting, or reference the role-clarification tips when a case starts to feel tangled between systems."
+        },
+        {
+          "title": "Revisit Therapist Self-Care regularly, not just when things feel hard.",
+          "body": "Build a check-in by integrating these tools into your own routine - weekly, monthly, whatever's sustainable - so you catch signs of strain early rather than after burnout sets in."
+        }
       ],
       "tips": [
         "You don't need to use every tool with every client. Pick what's relevant to the case in front of you.",

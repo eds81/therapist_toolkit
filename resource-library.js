@@ -109,6 +109,34 @@ function relatedResourcesHtml(item) {
     </ul>`;
 }
 
+// A practice's links, grouped the way the team's library sheet groups them.
+// Links still waiting for a web address show as "link coming soon".
+const LINK_GROUPS = [
+  ['therapist', 'For therapists'],
+  ['client', 'For clients & families'],
+  ['research', 'Research'],
+  ['other', 'More resources'],
+];
+function escHtml(str) {
+  return String(str == null ? '' : str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function practiceLinksHtml(item) {
+  const links = Array.isArray(item.links) ? item.links.filter(l => l && l.label) : [];
+  if (!links.length) return '';
+  const groups = LINK_GROUPS.map(([key, heading]) => {
+    const list = links.filter(l => (l.group || 'other') === key);
+    if (!list.length) return '';
+    return `
+      <div class="reslib-link-group">
+        <h5>${heading}</h5>
+        <ul>${list.map(l => l.url
+          ? `<li><a href="${escHtml(l.url)}"${/^https?:/.test(l.url) ? ' target="_blank" rel="noopener"' : ''}>${escHtml(l.label)}${icon('i-arrow-right', 'icon-xs')}</a></li>`
+          : `<li><span class="reslib-link-pending">${escHtml(l.label)} <em>link coming soon</em></span></li>`).join('')}</ul>
+      </div>`;
+  }).join('');
+  return `<h4>Resources</h4><div class="reslib-link-groups">${groups}</div>`;
+}
+
 function fileHtml(item) {
   if (item.fileUrl) return `<a class="btn btn-primary reslib-download" href="${item.fileUrl}" target="_blank" rel="noopener">${icon('i-download', 'icon-sm')} Download PDF</a>`;
   if (item.type === PRACTICE_TYPE) return '';
@@ -137,6 +165,8 @@ function openDetail(idOrItem) {
     ${isPractice && item.details ? `<h4>About this practice</h4><p>${item.details}</p>` : ''}
 
     ${item.evidence ? `<h4>Why it works</h4><p>${item.evidence}</p>` : ''}
+
+    ${isPractice ? practiceLinksHtml(item) : ''}
 
     ${relatedResourcesHtml(item)}
 
@@ -193,9 +223,16 @@ function initMobileNav() {
   });
 }
 
-fetch('content/resources.json')
+fetch('content/resources.json', { cache: 'no-cache' }) // always check for the latest library
   .then(res => res.json())
   .then(data => {
+    // Items added in the CMS have no "id" field — give each a stable one
+    // (from its title) so its card can still open its detail view.
+    (data.items || []).forEach((item, i) => {
+      if (!item.id) item.id = 'item-' + (item.title || i).toString().toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      if (!Array.isArray(item.audience)) item.audience = [];
+      if (!Array.isArray(item.theme)) item.theme = [];
+    });
     reslibState.data = data;
 
     document.getElementById('reslibHeading').textContent = data.intro.heading;

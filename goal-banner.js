@@ -8,7 +8,7 @@
 (function () {
   const slots = document.querySelectorAll('[data-goal-banner]');
   if (!slots.length) return;
-  fetch('content/site.json')
+  fetch('content/site.json', { cache: 'no-cache' })
     .then(res => res.json())
     .then(data => {
       const goal = data.goal;

@@ -13,6 +13,19 @@ function concernHtml(tab) {
 }
 
 function render(data) {
+  // PAGE HEADER + SECTION LINKS
+  const page = data.aboutPage;
+  document.getElementById('aboutPageLabel').textContent = page.sectionLabel;
+  document.getElementById('aboutPageHeading').textContent = page.heading;
+  document.getElementById('aboutPageIntro').textContent = page.intro;
+  document.getElementById('aboutSubnav').innerHTML = `<div class="about-subnav-inner">${page.sectionNav
+    .map(l => `<a href="${l.href}" data-target="${l.href.replace('#', '')}">${l.label}</a>`).join('')}</div>`;
+  document.getElementById('exploreHeading').textContent = page.explore.heading;
+  document.getElementById('exploreBody').textContent = page.explore.body;
+  document.getElementById('exploreActions').innerHTML = `
+    <a class="btn btn-primary" href="${page.explore.primaryHref}">${page.explore.primaryText}</a>
+    <a class="btn btn-outline" href="${page.explore.secondaryHref}">${page.explore.secondaryText}</a>`;
+
   // ABOUT / ECOSYSTEM
   document.getElementById('aboutLabel').textContent = data.about.sectionLabel;
   document.getElementById('aboutHeading').innerHTML = `${data.about.headingLine1}<br/>${data.about.headingLine2}`;
@@ -54,26 +67,16 @@ function render(data) {
   document.getElementById('whyPullQuote').innerHTML =
     `"${data.why.pullQuote.text}"<cite>— ${data.why.pullQuote.cite}</cite>`;
 
-  // TOOLKIT
+  // TREATMENT ROADMAP
+  const roadmap = data.toolkit.tabs.roadmap;
   document.getElementById('toolkitLabel').textContent = data.toolkit.sectionLabel;
-  document.getElementById('toolkitHeading').textContent = data.toolkit.heading;
-  document.getElementById('toolkitIntro').textContent = data.toolkit.intro;
-
-  const tabs = data.toolkit.tabs;
-
-  const roadmapBtn = `<button class="tab-btn active" data-tab="roadmap">${tabs.roadmap.tabLabel}</button>`;
-  const libraryLink = `<a class="tab-btn tab-btn-link" href="resource-library.html">${data.toolkit.libraryLinkLabel}${icon('i-arrow-right', 'icon-xs')}</a>`;
-  const schoolsBtn = `<a class="tab-btn tab-btn-link" href="schools.html">${tabs.schools.tabLabel}${icon('i-arrow-right', 'icon-xs')}</a>`;
-  const selfCareLink = `<a class="tab-btn tab-btn-link" href="self-care.html">${data.toolkit.selfCareLinkLabel}${icon('i-arrow-right', 'icon-xs')}</a>`;
-  document.getElementById('toolkitTabsNav').innerHTML = roadmapBtn + libraryLink + schoolsBtn + selfCareLink;
-
-  const roadmap = tabs.roadmap;
-  document.getElementById('tab-roadmap').innerHTML = `
+  document.getElementById('roadmapHeading').textContent = roadmap.heading;
+  document.getElementById('aboutRoadmap').innerHTML = `
     <div class="tab-layout">
       <div class="tab-text">
         ${concernHtml(roadmap)}
-        <h3>${roadmap.heading}</h3>
         <p>${roadmap.intro}</p>
+        <a class="btn btn-primary about-roadmap-cta" href="planning-tool.html">Plan a client's treatment ${icon('i-arrow-right', 'icon-xs')}</a>
       </div>
       <div class="tab-visual">
         <div class="roadmap">
@@ -101,34 +104,11 @@ function render(data) {
       </div>
     </div>`;
 
-  const schools = tabs.schools;
-  document.getElementById('tab-schools').innerHTML = `
-    <div class="tab-layout">
-      <div class="tab-text">
-        ${concernHtml(schools)}
-        <h3>${schools.heading}</h3>
-        <p>${schools.intro}</p>
-        <blockquote class="mini-quote">"${schools.quote.text}"<cite>— ${schools.quote.cite}</cite></blockquote>
-      </div>
-      <div class="tab-visual">
-        <div class="schools-cards">
-          ${schools.items.map(it => `
-            <div class="school-item">
-              <div class="school-icon-wrap">${icon(it.icon)}</div>
-              <div>
-                <h4>${it.title}</h4>
-                <p>${it.body}</p>
-              </div>
-            </div>`).join('')}
-        </div>
-      </div>
-    </div>`;
-
   // HOW TO USE THIS TOOLKIT
   const howTo = data.toolkit.howToUse;
   document.getElementById('howToUseHeading').textContent = howTo.heading;
   document.getElementById('howToUseIntro').textContent = howTo.intro;
-  const STEP_LINK_HREFS = { library: 'resource-library.html', selfcare: 'self-care.html' };
+  const STEP_LINK_HREFS = { roadmap: 'planning-tool.html', library: 'resource-library.html', schools: 'schools.html', selfcare: 'self-care.html' };
   document.getElementById('howToUseSteps').innerHTML = howTo.steps.map(step => {
     const href = STEP_LINK_HREFS[step.tab];
     const tag = href ? 'a' : 'div';
@@ -234,50 +214,25 @@ function initEcosystem() {
   });
 }
 
-// ── Tab switching with fade ──────────────────
-function initTabs() {
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const target = btn.dataset.tab;
-      if (btn.classList.contains('active')) return;
-
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const panels = document.querySelectorAll('.tab-panel');
-      panels.forEach(p => {
-        p.classList.remove('active', 'tab-entering');
-        p.style.display = 'none';
-      });
-
-      const next = document.getElementById('tab-' + target);
-      next.style.display = 'block';
-      next.getBoundingClientRect();
-      next.classList.add('active');
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => next.classList.add('tab-entering'));
-      });
-    });
-  });
-
-  const firstPanel = document.querySelector('.tab-panel.active');
-  if (firstPanel) {
-    firstPanel.classList.add('tab-entering');
-  }
-
-  // Deep-link support: about.html#tab-schools (from the Planning Tool's "Explore More"
-  // links) activates and scrolls to the matching tab.
+// ── Old deep links + section links ───────────
+function initSectionLinks() {
+  // Old links into the retired tabs: about.html#tab-schools → Navigating
+  // Schools page; #tab-roadmap → the Treatment Roadmap section.
   const hash = window.location.hash.replace('#', '');
-  // Navigating Schools moved to its own page — keep old links working.
   if (hash === 'tab-schools') { window.location.replace('schools.html'); return; }
-  if (hash.startsWith('tab-')) {
-    const key = hash.replace('tab-', '');
-    const targetBtn = document.querySelector(`.tab-btn[data-tab="${key}"]`);
-    if (targetBtn) {
-      targetBtn.click();
-      document.getElementById('toolkit').scrollIntoView();
-    }
+  if (hash === 'tab-roadmap') document.getElementById('toolkit').scrollIntoView();
+
+  // Highlight the section link for whichever section is in view.
+  const links = [...document.querySelectorAll('#aboutSubnav a')];
+  const sections = links.map(l => document.getElementById(l.dataset.target)).filter(Boolean);
+  function update() {
+    const line = 140; // just below the sticky nav + section links
+    let current = null;
+    sections.forEach(sec => { if (sec.getBoundingClientRect().top <= line) current = sec.id; });
+    links.forEach(l => l.classList.toggle('is-active', l.dataset.target === current));
   }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
 }
 
 // ── Expandable roadmap phases ────────────────
@@ -397,7 +352,7 @@ loadSiteContent()
   .then(data => {
     render(data);
     initEcosystem();
-    initTabs();
+    initSectionLinks();
     initRoadmapExpand();
     initCarousel();
     initFadeObserver();

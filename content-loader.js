@@ -16,9 +16,12 @@ const SITE_CONTENT_FILES = [
   'self-care'             // Self-Care & Support
 ];
 
+// cache: 'no-cache' makes the browser check with the server for a newer copy
+// every time (a quick "not modified" reply when nothing changed), so edits made
+// in the CMS appear right away instead of an old saved copy being reused.
 function loadSiteContent() {
   return Promise.all(SITE_CONTENT_FILES.map(name =>
-    fetch(`content/${name}.json`).then(res => {
+    fetch(`content/${name}.json`, { cache: 'no-cache' }).then(res => {
       if (!res.ok) throw new Error(`Could not load content/${name}.json (${res.status})`);
       return res.json();
     })

@@ -7,7 +7,9 @@ function icon(id, extraClass) {
 }
 
 // Phase 2 "Select Intervention" strategy/practice options — order doesn't
-// matter here, the dropdown sorts alphabetically at render time.
+// matter here, the dropdown sorts alphabetically at render time. Any
+// Evidence-Based Practice added to the Treatment Library (CMS) is added to
+// this list once the library loads (see sortedInterventions()).
 const INTERVENTION_OPTIONS = [
   'Psychoeducation', "Elicit Client Issues/Concerns", 'Agenda Setting', 'Treatment Goal Setting/Review',
   "Tracking/Review Client's Progress", 'Homework Assignment/Review', 'Individualized/Flexible Treatment Delivery',
@@ -24,7 +26,7 @@ const INTERVENTION_OPTIONS = [
   'Common Reactions to Trauma', 'Caregiver Emotion Coaching', 'Caregiver Support for Safety Plan',
   'Drawing on Strengths', 'Chain/Functional Analysis', 'Praise/Reinforcement', 'Crisis Survival Skills',
   'Diary Card (Youth)', 'Motivational Interviewing', 'Pros/Cons', 'Thanks Notes', 'Hope Box',
-  'Dialetical Thinking', 'Cognitive Defusion', 'Diary Card (Parent)', 'Worry Time', 'Silver Linings',
+  'Dialectical Thinking', 'Cognitive Defusion', 'Diary Card (Parent)', 'Worry Time', 'Silver Linings',
   'Taking Ownership', 'Gratitude', 'Identifying Thoughts, Feelings, Behaviors', 'Stimulus Control',
   'Coping Cards', 'Family Album', 'Counseling about Disinhibiting Effects of Substances'
 ];
@@ -97,11 +99,6 @@ function severityDotsHtml(valence, weight) {
 // with what's mapped to a given ring.
 const RING_STROKE_WIDTH = 4;
 
-// Ecological map layouts the clinician can switch between (Review/steps
-// toolbar above the map). See buildEcoMapSvg().
-const MAP_LAYOUTS = ['original', 'originalGrouped', 'separate', 'grouped', 'groupedFlat'];
-const DEFAULT_MAP_LAYOUT = 'grouped';
-
 // ── Ecological map geometry — the whole diagram (rings, ring labels, risk/
 // protective pills, connector lines) is one self-contained SVG computed
 // entirely in viewBox units, so it scales as a single unit and the exact
@@ -165,85 +162,6 @@ function mapRingLabelRadius(ringRadii, ring) {
 // no two connectors can cross by construction. Pills in one column also
 // sit at distinct heights, so no two lines share a direction either.
 
-// ── "Original" layout (kept for the layout comparison toggle) ──
-// Each side's pills stacked outward from the circle's vertical center in
-// both directions (client nearest the center, community at the top and
-// bottom extremes), with flat horizontal connectors. Rings grow so every
-// pill's own ring reaches its height.
-const MAP_MIN_RING_GAP = 20; // keeps two rings from ever growing visually indistinct from one another
-const MAP_RING_EDGE_MARGIN = 10; // how far a connector's entry point must stay inside its own ring's edge
-
-// Splits one side's pills (still grouped by ring) into top/bottom halves,
-// balanced by height, splitting a single ring's own pills between both
-// halves when it has more than one. Each half comes back already ordered
-// deepest ring (client) first through shallowest (community) last — i.e.
-// in the order stackHalf() needs to stack outward from the circle's own
-// vertical center.
-function splitPillsForLayout(pills) {
-  const byRing = {};
-  RING_ORDER.forEach(r => { byRing[r] = []; });
-  pills.forEach(p => byRing[p.ring].push(p));
-
-  const deepFirst = RING_ORDER.slice().reverse(); // client..community
-  const top = [], bottom = [];
-  let topH = 0, bottomH = 0;
-  deepFirst.forEach(ring => {
-    const list = byRing[ring];
-    if (!list.length) return;
-    if (list.length === 1) {
-      const item = list[0];
-      if (topH <= bottomH) { top.push(item); topH += item.h; }
-      else { bottom.push(item); bottomH += item.h; }
-      return;
-    }
-    // More than one pill in this ring — split its own pills across both
-    // halves instead of piling all of them onto whichever side is lighter.
-    const mid = Math.ceil(list.length / 2);
-    const bigger = list.slice(0, mid), smaller = list.slice(mid);
-    const biggerH = bigger.reduce((s, p) => s + p.h, 0);
-    const smallerH = smaller.reduce((s, p) => s + p.h, 0);
-    if (topH <= bottomH) { top.push(...bigger); topH += biggerH; bottom.push(...smaller); bottomH += smallerH; }
-    else { bottom.push(...bigger); bottomH += biggerH; top.push(...smaller); topH += smallerH; }
-  });
-  return { top, bottom };
-}
-
-// Stacks one half's pills (already in deepest-first order) outward from
-// cy. direction is -1 for the top half (y decreases, growing upward) or
-// +1 for the bottom half (y increases, growing downward) — the first item
-// (deepest ring) always lands nearest cy, and each later item (a
-// shallower ring) lands further out.
-function stackHalf(items, direction, cy) {
-  let cursor = cy + direction * MAP_PILL_V_GAP;
-  return items.map(item => {
-    const y = cursor + direction * (item.h / 2);
-    cursor = y + direction * (item.h / 2 + MAP_PILL_V_GAP);
-    return { item, y };
-  });
-}
-
-// Grows each ring's radius, if needed, so it comfortably reaches whichever
-// of its own pills (on either side, risk or protective — both sides share
-// one set of circles) ended up furthest from the vertical center, while
-// keeping the rings in equally-stepped, strictly-increasing order.
-// neededReach maps ring -> the largest |y - cy| any of its pills actually
-// landed at.
-// reachFactor > 1 makes each ring reach further than strictly needed, so a
-// flat connector meets its ring at a gentler angle (Grouped + flat lines).
-function growRingRadii(neededReach, reachFactor = 1) {
-  const radii = {};
-  let prev = 0;
-  RING_ORDER.slice().reverse().forEach(ring => { // client..community
-    const base = MAP_RING_BASE_RADII[ring];
-    const need = (neededReach[ring] || 0) * reachFactor + MAP_RING_EDGE_MARGIN;
-    const r = Math.max(base, need, prev + MAP_MIN_RING_GAP);
-    radii[ring] = r;
-    prev = r;
-  });
-  return radii;
-}
-
-// ── "Separate" and "Grouped" layouts ──
 // Stacks one side's pills (already in outer → inner ring order) into a
 // single column vertically centered on cy, top to bottom.
 function stackColumn(items, cy) {
@@ -377,29 +295,15 @@ function buildEcoMapSvg(opts) {
   const onlyCurrentRing = !!opts.onlyCurrentRing;
   const p = plannerState.data.planner;
 
-  // Five layouts, switchable for comparison (see MAP_LAYOUTS):
-  //  • grouped  — one pill per ring per side (never more than 5 per side);
-  //               a ring with several factors gets one pill with a row per
-  //               factor, each row keeping its own severity color, weight
-  //               dots, and remove button. Column ordered outer → inner.
-  //  • separate — one pill per factor, column ordered outer → inner.
-  //  • groupedFlat — grouped pills, outer → inner, with flat horizontal
-  //               connectors: each side's column is anchored with its
-  //               innermost pill level with the center and builds upward,
-  //               and rings grow so each reaches its own pill's height.
-  //  • original — one pill per factor, stacked out from the center in both
-  //               directions, flat horizontal connectors.
-  //  • originalGrouped — the original arrangement and flat connectors, but
-  //               with grouped pills (never more than 5 per side).
-  const layout = MAP_LAYOUTS.includes(opts.layout) ? opts.layout : DEFAULT_MAP_LAYOUT;
+  // One pill per ring per side — never more than 5 pills on either side. A
+  // ring with several factors gets one pill with a row per factor, each row
+  // keeping its own severity color, weight dots, and remove button.
   function pillsFor(valence) {
     const rings = onlyCurrentRing && currentRing ? [currentRing] : RING_ORDER;
     const pills = [];
     rings.forEach(ring => {
       const rows = plannerState.factors[ring][valence].map((f, idx) => ({ idx, id: f.id, text: f.text, weight: f.weight }));
-      if (!rows.length) return;
-      if (layout === 'grouped' || layout === 'groupedFlat' || layout === 'originalGrouped') pills.push({ ring, id: `${valence}-${ring}`, rows }); // group id drives hover/highlight
-      else rows.forEach(r => pills.push({ ring, id: r.id, rows: [r] }));
+      if (rows.length) pills.push({ ring, id: `${valence}-${ring}`, rows }); // group id drives hover/highlight
     });
     return pills;
   }
@@ -425,58 +329,14 @@ function buildEcoMapSvg(opts) {
   const protPills = preparedPills('protective');
 
   const sumH = list => list.reduce((sum, p) => sum + p.h, 0) + MAP_PILL_V_GAP * Math.max(0, list.length - 1);
-  let ringRadii, vbH, cy, riskStacked, protStacked;
-  if (layout === 'original' || layout === 'originalGrouped') {
-    const riskSplit = splitPillsForLayout(riskPills);
-    const protSplit = splitPillsForLayout(protPills);
-    vbH = Math.max(560, 2 * (Math.max(sumH(riskSplit.top), sumH(riskSplit.bottom), sumH(protSplit.top), sumH(protSplit.bottom)) + MAP_PILL_V_GAP) + 90);
-    cy = vbH / 2;
-    riskStacked = stackHalf(riskSplit.top, -1, cy).concat(stackHalf(riskSplit.bottom, 1, cy));
-    protStacked = stackHalf(protSplit.top, -1, cy).concat(stackHalf(protSplit.bottom, 1, cy));
-    const neededReach = {};
-    riskStacked.concat(protStacked).forEach(({ item, y }) => {
-      neededReach[item.ring] = Math.max(neededReach[item.ring] || 0, Math.abs(y - cy));
-    });
-    ringRadii = growRingRadii(neededReach);
-  } else if (layout === 'groupedFlat') {
-    // Stack each column upward from cy (provisionally 0): the last
-    // (innermost) pill centered on cy, each earlier (outer) pill above it.
-    const stackUp = items => {
-      let cursor = 0;
-      return items.slice().reverse().map((item, i) => {
-        if (i > 0) cursor -= MAP_PILL_V_GAP;
-        const y = i === 0 ? 0 : cursor - item.h / 2;
-        cursor = i === 0 ? -item.h / 2 : y - item.h / 2;
-        return { item, y };
-      }).reverse();
-    };
-    riskStacked = stackUp(riskPills);
-    protStacked = stackUp(protPills);
-    const neededReach = {};
-    riskStacked.concat(protStacked).forEach(({ item, y }) => {
-      neededReach[item.ring] = Math.max(neededReach[item.ring] || 0, Math.abs(y));
-    });
-    ringRadii = growRingRadii(neededReach, 1.25);
-    // Shift everything down so the topmost of (circle top, top pill) sits
-    // at the canvas margin, and size the canvas to the bottom of the circle.
-    const R = ringRadii.community;
-    const all = riskStacked.concat(protStacked);
-    const minY = Math.min(-R, ...all.map(({ item, y }) => y - item.h / 2));
-    const maxY = Math.max(R, ...all.map(({ item, y }) => y + item.h / 2));
-    const shift = 45 - minY;
-    cy = shift;
-    all.forEach(rec => { rec.y += shift; });
-    vbH = maxY - minY + 90;
-  } else {
-    // One column per side, centered on the circle's vertical center. The
-    // canvas is tall enough for whichever is taller: the longer column or
-    // the circle itself.
-    ringRadii = { ...MAP_RING_BASE_RADII };
-    vbH = Math.max(560, Math.max(sumH(riskPills), sumH(protPills)) + 2 * MAP_PILL_V_GAP + 60, 2 * ringRadii.community + 90);
-    cy = vbH / 2;
-    riskStacked = stackColumn(riskPills, cy);
-    protStacked = stackColumn(protPills, cy);
-  }
+  // One column per side, centered on the circle's vertical center. The
+  // canvas is tall enough for whichever is taller: the longer column or
+  // the circle itself.
+  const ringRadii = { ...MAP_RING_BASE_RADII };
+  const vbH = Math.max(560, Math.max(sumH(riskPills), sumH(protPills)) + 2 * MAP_PILL_V_GAP + 60, 2 * ringRadii.community + 90);
+  const cy = vbH / 2;
+  const riskStacked = stackColumn(riskPills, cy);
+  const protStacked = stackColumn(protPills, cy);
   const outerR = ringRadii.community; // anchors the pill zone just outside the outermost ring
 
   // Risk and protective pills can have different uniform widths, so the
@@ -531,22 +391,12 @@ function buildEcoMapSvg(opts) {
       const ringR = ringRadii[item.ring];
       const pillX = valence === 'risk' ? (cx - outerR - MAP_PILL_GAP - w) : (cx + outerR + MAP_PILL_GAP);
       const lineStartX = valence === 'risk' ? pillX + w : pillX;
-      let entryX, entryY;
-      if (layout === 'original' || layout === 'originalGrouped' || layout === 'groupedFlat') {
-        // Flat line: the one point on this pill's ring at the pill's own
-        // height — growRingRadii() guarantees the ring reaches it.
-        const dy = y - cy;
-        const dx = Math.sqrt(Math.max(0, ringR * ringR - dy * dy));
-        entryX = valence === 'risk' ? (cx - dx) : (cx + dx);
-        entryY = y;
-      } else {
-        // Aim straight at the circle's center and stop where that line meets
-        // this pill's own ring: center + (unit vector toward the pill) × r.
-        const vx = lineStartX - cx, vy = y - cy;
-        const len = Math.hypot(vx, vy) || 1;
-        entryX = cx + (vx / len) * ringR;
-        entryY = cy + (vy / len) * ringR;
-      }
+      // Aim straight at the circle's center and stop where that line meets
+      // this pill's own ring: center + (unit vector toward the pill) × r.
+      const vx = lineStartX - cx, vy = y - cy;
+      const len = Math.hypot(vx, vy) || 1;
+      const entryX = cx + (vx / len) * ringR;
+      const entryY = cy + (vy / len) * ringR;
       return { item, w, h, y, pillX, lineStartX, entryX, entryY };
     });
 
@@ -650,7 +500,6 @@ const plannerState = {
   interventionsByFactor: {}, // factor id -> array of intervention strings; each top factor gets its own list
   phaseComments: ['', '', ''], // freeform notes per Phase 1/2/3, shown on Review and in the printed plan
   phase3Checks: [], // checked state of each Phase 3 checklist item, by index
-  mapLayout: DEFAULT_MAP_LAYOUT, // which ecological map layout is showing (see MAP_LAYOUTS)
   ringLabelByKey: {}
 };
 RING_ORDER.forEach(k => { plannerState.factors[k] = { risk: [], protective: [] }; });
@@ -670,8 +519,7 @@ function persistPlannerState() {
       topContributors: plannerState.topContributors,
       interventionsByFactor: plannerState.interventionsByFactor,
       phaseComments: plannerState.phaseComments,
-      phase3Checks: plannerState.phase3Checks,
-      mapLayout: plannerState.mapLayout
+      phase3Checks: plannerState.phase3Checks
     }));
   } catch (e) { /* localStorage unavailable (private browsing, quota, etc.) — fail silently */ }
 }
@@ -719,7 +567,6 @@ function loadPersistedPlannerState() {
     if (Array.isArray(saved.phaseComments)) {
       plannerState.phaseComments = [0, 1, 2].map(i => saved.phaseComments[i] || '');
     }
-    if (MAP_LAYOUTS.includes(saved.mapLayout)) plannerState.mapLayout = saved.mapLayout;
     if (Array.isArray(saved.phase3Checks)) {
       plannerState.phase3Checks = saved.phase3Checks.map(Boolean);
     }
@@ -981,37 +828,10 @@ function initPlanner() {
     const stepKey = STEP_KEYS[plannerState.currentStep];
     const onReview = stepKey === 'review';
     const currentRing = RING_ORDER.includes(stepKey) ? stepKey : null;
-    container.innerHTML = buildEcoMapSvg({ currentRing, locked: onReview, idPrefix: 'live', onlyCurrentRing: !!currentRing, layout: plannerState.mapLayout });
-    renderMapLayoutToggle();
+    container.innerHTML = buildEcoMapSvg({ currentRing, locked: onReview, idPrefix: 'live', onlyCurrentRing: !!currentRing });
     applyReviewHighlight(reviewHighlightState.ring);
     applyPillHighlight(pillHighlightState.factorId);
   }
-
-  // Layout switch above the map (Original / Original, grouped / Separate /
-  // Grouped / Grouped + flat lines). Re-rendered with the map so its pressed
-  // state stays in sync.
-  function renderMapLayoutToggle() {
-    const el = document.getElementById('plannerMapLayout');
-    const cfg = plannerState.data.planner.mapLayouts;
-    if (!el || !cfg) return;
-    const current = cfg.options.find(o => o.key === plannerState.mapLayout) || cfg.options[0];
-    el.innerHTML = `
-      <span class="planner-map-layout-label" id="plannerMapLayoutLabel">${escapeXml(cfg.label)}</span>
-      <div class="planner-map-layout-btns" role="group" aria-labelledby="plannerMapLayoutLabel">
-        ${cfg.options.map(o => `<button type="button" class="planner-map-layout-btn${o.key === plannerState.mapLayout ? ' is-active' : ''}" data-layout="${o.key}" aria-pressed="${o.key === plannerState.mapLayout}">${escapeXml(o.label)}</button>`).join('')}
-      </div>
-      <p class="planner-map-layout-hint">${escapeXml(current.hint)}</p>`;
-  }
-  document.getElementById('plannerMapLayout').addEventListener('click', e => {
-    const btn = e.target.closest('.planner-map-layout-btn');
-    if (!btn || !MAP_LAYOUTS.includes(btn.dataset.layout)) return;
-    plannerState.mapLayout = btn.dataset.layout;
-    pillHighlightState.factorId = null; // pill ids differ between grouped and separate
-    renderEcoMap();
-    persistPlannerState();
-    if (STEP_KEYS[plannerState.currentStep] === 'review') generatePlan(); // keep the PDF's map in sync
-    document.querySelector(`.planner-map-layout-btn[data-layout="${plannerState.mapLayout}"]`)?.focus();
-  });
 
   function updateGenerateState() {
     const any = RING_ORDER.some(r => plannerState.factors[r].risk.length || plannerState.factors[r].protective.length);
@@ -1399,7 +1219,15 @@ function initPlanner() {
   // whichever factor's combo is focused. Left: filtered options. Right (or
   // below, on narrow screens): a preview of the hovered/arrowed option with
   // its description and a "Learn more" link into the Treatment Library. ──
-  const SORTED_INTERVENTIONS = INTERVENTION_OPTIONS.slice().sort((a, b) => a.localeCompare(b));
+  // Built-in options plus every practice in the Treatment Library, so a
+  // practice added in the CMS shows up here too. Sorted on each use because
+  // the library can finish loading after this step first renders.
+  function sortedInterventions() {
+    const byKey = new Map();
+    INTERVENTION_OPTIONS.concat(Object.values(practiceLibrary).map(p => p.title))
+      .forEach(name => { const k = name.trim().toLowerCase(); if (!byKey.has(k)) byKey.set(k, name.trim()); });
+    return [...byKey.values()].sort((a, b) => a.localeCompare(b));
+  }
   const combo = { input: null, panel: null, options: [], active: -1, pointerType: 'mouse' };
 
   function comboPanel() {
@@ -1469,7 +1297,8 @@ function initPlanner() {
     if (combo.input && combo.input !== input) combo.input.setAttribute('aria-expanded', 'false');
     combo.input = input;
     const q = input.value.trim().toLowerCase();
-    combo.options = q ? SORTED_INTERVENTIONS.filter(opt => opt.toLowerCase().includes(q)) : SORTED_INTERVENTIONS;
+    const all = sortedInterventions();
+    combo.options = q ? all.filter(opt => opt.toLowerCase().includes(q)) : all;
     const list = panel.querySelector('.intervention-options');
     list.innerHTML = combo.options.length
       ? combo.options.map((opt, i) => `<li class="intervention-option" id="interventionOption${i}" role="option" aria-selected="false" data-index="${i}">${escapeXml(opt)}</li>`).join('')
@@ -2000,7 +1829,7 @@ function buildPrintDiagramHtml() {
       <span class="planner-ecomap-title planner-ecomap-title-risk">${escapeXml(p.ecoMapRiskLabel)}</span>
       <span class="planner-ecomap-title planner-ecomap-title-protective">${escapeXml(p.ecoMapProtectiveLabel)}</span>
     </div>`;
-  return `<div class="planner-ecomap-wrap print-diagram-wrap">${titlesHtml}${buildEcoMapSvg({ currentRing: null, locked: true, idPrefix: 'print', layout: plannerState.mapLayout })}</div>`;
+  return `<div class="planner-ecomap-wrap print-diagram-wrap">${titlesHtml}${buildEcoMapSvg({ currentRing: null, locked: true, idPrefix: 'print' })}</div>`;
 }
 
 // Date + time (with time zone) stamped at the top of every generated PDF,
@@ -2129,7 +1958,7 @@ window.addEventListener('beforeprint', () => {
 });
 
 // ── Load content, render, then wire up interactions ──
-fetch('content/resources.json')
+fetch('content/resources.json', { cache: 'no-cache' }) // always check for the latest library
   .then(res => res.json())
   .then(data => {
     (data.items || []).forEach(item => {

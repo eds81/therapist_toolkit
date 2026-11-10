@@ -10,17 +10,42 @@
     "typeLabel": "Resource type",
     "themeLabel": "Theme",
     "clearLabel": "Clear filters",
-    "audienceOptions": ["Clinician", "Youth", "Family", "Community", "Schools"],
-    "typeOptions": ["Assessment Tool", "Worksheet", "Handout", "Referral List", "Tip Sheet"],
-    "themeOptions": ["Risk Assessment & Safety Planning", "Coping Skills & Emotion Regulation", "Family Engagement", "School Coordination", "Community & Referrals", "Relapse Prevention & Transition"]
+    "audienceOptions": [
+      "Clinician",
+      "Youth",
+      "Family",
+      "Community",
+      "Schools"
+    ],
+    "typeOptions": [
+      "Assessment Tool",
+      "Worksheet",
+      "Handout",
+      "Referral List",
+      "Tip Sheet",
+      "Evidence-Based Practice"
+    ],
+    "themeOptions": [
+      "Risk Assessment & Safety Planning",
+      "Coping Skills & Emotion Regulation",
+      "Family Engagement",
+      "School Coordination",
+      "Community & Referrals",
+      "Relapse Prevention & Transition",
+      "Engagement & Treatment Process"
+    ]
   },
   "items": [
     {
       "id": "cssrs",
       "title": "Columbia Suicide Severity Rating Scale (C-SSRS)",
       "type": "Assessment Tool",
-      "audience": ["Clinician"],
-      "theme": ["Risk Assessment & Safety Planning"],
+      "audience": [
+        "Clinician"
+      ],
+      "theme": [
+        "Risk Assessment & Safety Planning"
+      ],
       "description": "A structured interview used to assess the severity and immediacy of suicidal ideation and behavior. Used at intake and re-administered as risk status changes throughout treatment.",
       "evidence": "A widely adopted, extensively studied risk-assessment instrument used across clinical and research settings for suicide risk stratification.",
       "fileUrl": ""
@@ -29,8 +54,14 @@
       "id": "stanley-brown",
       "title": "Stanley-Brown Safety Planning Intervention",
       "type": "Worksheet",
-      "audience": ["Clinician", "Youth", "Family"],
-      "theme": ["Risk Assessment & Safety Planning"],
+      "audience": [
+        "Clinician",
+        "Youth",
+        "Family"
+      ],
+      "theme": [
+        "Risk Assessment & Safety Planning"
+      ],
       "description": "A brief, collaborative worksheet completed with the client (and caregivers, when appropriate) that identifies warning signs, coping strategies, support contacts, and steps to reduce access to lethal means.",
       "evidence": "One of the most widely studied and disseminated safety-planning approaches in suicide prevention care.",
       "fileUrl": ""
@@ -39,8 +70,13 @@
       "id": "dbt-skills",
       "title": "DBT Skills: Distress Tolerance & Emotion Regulation",
       "type": "Handout",
-      "audience": ["Clinician", "Youth"],
-      "theme": ["Coping Skills & Emotion Regulation"],
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
       "description": "Skill-building handouts adapted from Dialectical Behavior Therapy to help clients tolerate intense emotions and reduce crisis-driven behavior.",
       "evidence": "DBT has a substantial evidence base for reducing self-harm and suicidal behavior, including in adolescent populations.",
       "fileUrl": ""
@@ -49,8 +85,13 @@
       "id": "cbt-restructuring",
       "title": "CBT Cognitive Restructuring Techniques",
       "type": "Handout",
-      "audience": ["Clinician", "Youth"],
-      "theme": ["Coping Skills & Emotion Regulation"],
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
       "description": "Guided worksheets to help clients identify, examine, and reframe unhelpful thought patterns that contribute to distress.",
       "evidence": "CBT is one of the most extensively researched therapeutic approaches for youth depression and anxiety.",
       "fileUrl": ""
@@ -59,8 +100,13 @@
       "id": "behavioral-activation",
       "title": "Behavioral Activation Planning Sheet",
       "type": "Worksheet",
-      "audience": ["Clinician", "Youth"],
-      "theme": ["Coping Skills & Emotion Regulation"],
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
       "description": "Helps clients schedule small, achievable, values-aligned activities to counter withdrawal and low mood.",
       "evidence": "Behavioral activation is a well-established, evidence-based component of depression treatment.",
       "fileUrl": ""
@@ -69,8 +115,13 @@
       "id": "mh-referrals",
       "title": "Vetted Mental Health Referrals",
       "type": "Referral List",
-      "audience": ["Clinician", "Community"],
-      "theme": ["Community & Referrals"],
+      "audience": [
+        "Clinician",
+        "Community"
+      ],
+      "theme": [
+        "Community & Referrals"
+      ],
       "description": "A curated, regularly updated list of community mental health providers for step-down or ongoing care once Rise treatment ends.",
       "evidence": "Maintained and vetted directly by the Rise and CU Boulder team based on client feedback and provider responsiveness.",
       "fileUrl": ""
@@ -79,8 +130,15 @@
       "id": "post-rise-options",
       "title": "Post-Rise Therapy Options",
       "type": "Referral List",
-      "audience": ["Clinician", "Family", "Community"],
-      "theme": ["Community & Referrals", "Relapse Prevention & Transition"],
+      "audience": [
+        "Clinician",
+        "Family",
+        "Community"
+      ],
+      "theme": [
+        "Community & Referrals",
+        "Relapse Prevention & Transition"
+      ],
       "description": "A guide to what happens after the Rise treatment window ends, including options by insurance status and geography.",
       "evidence": "Compiled from partner agency intake criteria and updated as availability changes.",
       "fileUrl": ""
@@ -89,8 +147,12 @@
       "id": "family-support-guide",
       "title": "How to Support Your Teen: A Family Guide",
       "type": "Handout",
-      "audience": ["Family"],
-      "theme": ["Family Engagement"],
+      "audience": [
+        "Family"
+      ],
+      "theme": [
+        "Family Engagement"
+      ],
       "description": "Plain-language psychoeducation for caregivers on what to expect during treatment and how to support a teen at home.",
       "evidence": "Grounded in family-inclusive treatment literature; detailed citations to be added.",
       "fileUrl": ""
@@ -99,8 +161,13 @@
       "id": "family-engagement-guide",
       "title": "Family Engagement Guide",
       "type": "Tip Sheet",
-      "audience": ["Family", "Clinician"],
-      "theme": ["Family Engagement"],
+      "audience": [
+        "Family",
+        "Clinician"
+      ],
+      "theme": [
+        "Family Engagement"
+      ],
       "description": "Suggestions for clinicians on involving caregivers productively in treatment, even in higher-conflict households.",
       "evidence": "Grounded in family-inclusive treatment literature; detailed citations to be added.",
       "fileUrl": ""
@@ -109,8 +176,12 @@
       "id": "youth-coping-worksheet",
       "title": "Youth Coping Skills Worksheet",
       "type": "Worksheet",
-      "audience": ["Youth"],
-      "theme": ["Coping Skills & Emotion Regulation"],
+      "audience": [
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
       "description": "A self-guided worksheet helping youth identify and practice personal coping strategies for distress.",
       "evidence": "Grounded in CBT/DBT coping-skills literature; detailed citations to be added.",
       "fileUrl": ""
@@ -119,8 +190,12 @@
       "id": "youth-safety-plan",
       "title": "Youth Safety Planning Template",
       "type": "Worksheet",
-      "audience": ["Youth"],
-      "theme": ["Risk Assessment & Safety Planning"],
+      "audience": [
+        "Youth"
+      ],
+      "theme": [
+        "Risk Assessment & Safety Planning"
+      ],
       "description": "A youth-facing version of the safety plan, written in accessible language for the client to keep and reference.",
       "evidence": "Adapted from the Stanley-Brown Safety Planning Intervention for a youth reading level.",
       "fileUrl": ""
@@ -129,8 +204,12 @@
       "id": "mindfulness-grounding",
       "title": "Mindfulness & Grounding Tools",
       "type": "Worksheet",
-      "audience": ["Youth"],
-      "theme": ["Coping Skills & Emotion Regulation"],
+      "audience": [
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
       "description": "Brief grounding exercises youth can use independently between sessions to manage acute distress.",
       "evidence": "Grounded in mindfulness-based intervention literature; detailed citations to be added.",
       "fileUrl": ""
@@ -139,8 +218,13 @@
       "id": "school-tip-sheet",
       "title": "School Navigation Tip Sheet",
       "type": "Tip Sheet",
-      "audience": ["Clinician", "Schools"],
-      "theme": ["School Coordination"],
+      "audience": [
+        "Clinician",
+        "Schools"
+      ],
+      "theme": [
+        "School Coordination"
+      ],
       "description": "Practical guidance for navigating school partnership complexities, coordinating with counselors, and managing referrals.",
       "evidence": "Compiled from therapist co-design sessions on real school-coordination challenges.",
       "fileUrl": ""
@@ -149,8 +233,13 @@
       "id": "district-info",
       "title": "District-Specific Info Guides",
       "type": "Tip Sheet",
-      "audience": ["Clinician", "Schools"],
-      "theme": ["School Coordination"],
+      "audience": [
+        "Clinician",
+        "Schools"
+      ],
+      "theme": [
+        "School Coordination"
+      ],
       "description": "Detailed guides for the schools and districts Rise frequently partners with, including key contacts and procedures.",
       "evidence": "Compiled and maintained directly by the Rise team.",
       "fileUrl": ""
@@ -159,11 +248,1813 @@
       "id": "multi-system-coordination",
       "title": "Multi-System Coordination Guide",
       "type": "Tip Sheet",
-      "audience": ["Clinician", "Schools", "Community"],
-      "theme": ["School Coordination", "Community & Referrals"],
+      "audience": [
+        "Clinician",
+        "Schools",
+        "Community"
+      ],
+      "theme": [
+        "School Coordination",
+        "Community & Referrals"
+      ],
       "description": "Resources for collaborating across hospitals, clinics, and school teams when a case spans multiple systems.",
       "evidence": "Compiled from therapist co-design sessions on real multi-system cases.",
       "fileUrl": ""
+    },
+    {
+      "id": "ebp-psychoeducation",
+      "title": "Psychoeducation",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician"
+      ],
+      "theme": [
+        "Engagement & Treatment Process"
+      ],
+      "description": "Teaching the youth or caregiver about the nature of a youth’s problem, contributing factors to a problem, and/or rationale and description of a proposed intervention.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "client",
+          "label": "Teen Depression: More Than Just Moodiness (NIMH)",
+          "url": "https://www.nimh.nih.gov/health/publications/teen-depression"
+        },
+        {
+          "group": "client",
+          "label": "Suicidal feelings: guide for young people (YoungMinds)",
+          "url": "https://www.youngminds.org.uk/young-person/my-feelings/suicidal-feelings/"
+        },
+        {
+          "group": "research",
+          "label": "Research article (ScienceDirect)",
+          "url": "https://www.sciencedirect.com/science/article/pii/S0738399117305918"
+        },
+        {
+          "group": "other",
+          "label": "Frequently Asked Questions About Suicide",
+          "url": ""
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "Meza & ECCA",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-elicit-client-issues-concerns",
+      "title": "Elicit Client Issues/Concerns",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician"
+      ],
+      "theme": [
+        "Engagement & Treatment Process"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "Meza",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-agenda-setting",
+      "title": "Agenda Setting",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician"
+      ],
+      "theme": [
+        "Engagement & Treatment Process"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-treatment-goal-setting-review",
+      "title": "Treatment Goal Setting/Review",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician"
+      ],
+      "theme": [
+        "Engagement & Treatment Process"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-tracking-review-client-s-progress",
+      "title": "Tracking/Review Client's Progress",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician"
+      ],
+      "theme": [
+        "Engagement & Treatment Process"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-homework-assignment-review",
+      "title": "Homework Assignment/Review",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician"
+      ],
+      "theme": [
+        "Engagement & Treatment Process"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "Meza & ECCA",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-individualized-flexible-treatment-delivery",
+      "title": "Individualized/Flexible Treatment Delivery",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician"
+      ],
+      "theme": [
+        "Engagement & Treatment Process"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "Meza",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-therapeutic-alliance-relationship-building",
+      "title": "Therapeutic Alliance/Relationship Building",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician"
+      ],
+      "theme": [
+        "Engagement & Treatment Process"
+      ],
+      "description": "Developing a trusting, supportive and engaging relationship between clinical providers and patients.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "research",
+          "label": "Research article (APA PsycNet)",
+          "url": "https://psycnet.apa.org/record/2018-51673-002"
+        },
+        {
+          "group": "other",
+          "label": "Working Alliance Measure",
+          "url": ""
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "Meza",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-addressing-treatment-barriers",
+      "title": "Addressing Treatment Barriers",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician"
+      ],
+      "theme": [
+        "Engagement & Treatment Process"
+      ],
+      "description": "Therapist identifies, inquires about, or aims to reduce barriers to treatment participation. This may include problem solving about practical barriers to attendance, or discussing or improving the feasibility of assigned homework action.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "therapist",
+          "label": "TIB Book Chapter",
+          "url": ""
+        },
+        {
+          "group": "research",
+          "label": "Research article (PubMed)",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/20455147/"
+        },
+        {
+          "group": "other",
+          "label": "Article (PubMed Central)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8183976/"
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-digital-app-based-tools",
+      "title": "Digital/App-Based Tools",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician"
+      ],
+      "theme": [
+        "Engagement & Treatment Process"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "Meza",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-commitment-to-safety",
+      "title": "Commitment to Safety",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Risk Assessment & Safety Planning"
+      ],
+      "description": "Obtaining a commitment from youth to follow safety plan. Note that this is NOT a no suicide contract. Evidence does not support use of no suicide contracts, but many evidence-based treatments integrate youth commitment to utilizing safety plan when experiencing suicidal and/or self-harm urges.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "client",
+          "label": "Obtaining Commitment to Safety Script",
+          "url": ""
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "Meza",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-safety-planning",
+      "title": "Safety Planning",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Risk Assessment & Safety Planning"
+      ],
+      "description": "Engaging in safety planning exercises where specific methods of coping during an acute suicidal or self-harm crisis are identified.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "therapist",
+          "label": "Safety plan template (American Academy of Pediatrics)",
+          "url": "https://downloads.aap.org/AAP/PDF/Safety-Plan_FINAL.pdf"
+        },
+        {
+          "group": "therapist",
+          "label": "Safety Planning Guide: Quick Guide for Clinicians (Suicide Prevention Resource Center)",
+          "url": "https://sprc.org/wp-content/uploads/2023/01/SafetyPlanningGuide-Quick-Guide-for-Clinicians.pdf"
+        },
+        {
+          "group": "client",
+          "label": "Make A Safety Plan (in this toolkit)",
+          "url": "safety-plan.html"
+        },
+        {
+          "group": "research",
+          "label": "Research article (JAMA Network)",
+          "url": "https://jamanetwork.com/journals/jamapediatrics/fullarticle/2834286"
+        },
+        {
+          "group": "other",
+          "label": "Article (PubMed)",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/29998307/"
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "Meza",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-means-safety-lethal-means-restriction",
+      "title": "Means Safety/Lethal Means Restriction",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Risk Assessment & Safety Planning"
+      ],
+      "description": "Lethal means counseling is assessing whether a person at risk for suicide has access to a firearm or other lethal means, and working with them and their family and support system to limit their access until they are no longer at elevated risk.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "therapist",
+          "label": "Lethal Means Counseling Guide (Clinician)",
+          "url": ""
+        },
+        {
+          "group": "client",
+          "label": "Lock to Live",
+          "url": ""
+        },
+        {
+          "group": "research",
+          "label": "Research article (PubMed Central)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6191653/"
+        },
+        {
+          "group": "other",
+          "label": "Means Matters (Harvard)",
+          "url": ""
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "Meza",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-safety-skills",
+      "title": "Safety Skills",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Risk Assessment & Safety Planning"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-distress-tolerance",
+      "title": "Distress Tolerance",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "Skills that assist youth in navigating an emotional crisis and staying safe in the moment.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "client",
+          "label": "DBT Distress Tolerance Handouts",
+          "url": ""
+        },
+        {
+          "group": "research",
+          "label": "Research article (JAMA Network)",
+          "url": "https://jamanetwork.com/journals/jamapsychiatry/fullarticle/2685324"
+        },
+        {
+          "group": "other",
+          "label": "Open-source list of DBT distress tolerance skills and descriptions",
+          "url": ""
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "Meza",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-emotion-regulation",
+      "title": "Emotion Regulation",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "Skills to help youth with naming and understanding their own emotions, decrease the frequency of unpleasant emotions, decrease vulnerability to emotions, and decrease emotional suffering. DBT emotion regulation skills include: STOP skill, Opposite Action, ABC PLEASE, Build Mastery, Cope Ahead and Positive Self-Talk.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "client",
+          "label": "DBT Emotion Regulation Descriptions",
+          "url": ""
+        },
+        {
+          "group": "other",
+          "label": "DBT Emotion Regulation Handouts",
+          "url": ""
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "Meza",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-impulse-control",
+      "title": "Impulse Control",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "Skills designed to assist youth in resisting urges to engage in self-harm or other impulsive and/or dangerous behavior.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "therapist",
+          "label": "Bringing up self-injury with your clients",
+          "url": ""
+        },
+        {
+          "group": "therapist",
+          "label": "Urge monitoring (VA MIRECC)",
+          "url": "https://www.mirecc.va.gov/visn5/EBT/CBT-SUD/Urge-Monitoring.asp"
+        },
+        {
+          "group": "client",
+          "label": "Urge Surfing (Distress Tolerance skill)",
+          "url": ""
+        },
+        {
+          "group": "client",
+          "label": "Pros and Cons (DBT skill)",
+          "url": ""
+        },
+        {
+          "group": "client",
+          "label": "STOP (DBT skill)",
+          "url": ""
+        },
+        {
+          "group": "research",
+          "label": "Research article (Journal of Child Psychology and Psychiatry)",
+          "url": "https://acamh.onlinelibrary.wiley.com/doi/10.1111/jcpp.13780"
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "Meza",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-mindfulness",
+      "title": "Mindfulness",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "Mindfulness is an approach where patients learn mindfulness skills to foster acceptance of thoughts and feelings, focusing on present-moment awareness in a nonjudgmental way.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "client",
+          "label": "DBT Mindfulness Module",
+          "url": ""
+        },
+        {
+          "group": "research",
+          "label": "Research article (PubMed Central)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9907375/"
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "Meza",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-problem-solving",
+      "title": "Problem Solving",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "Teaching specific steps to approach and solve future problems for clients.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "client",
+          "label": "Problem Solving Packet",
+          "url": ""
+        },
+        {
+          "group": "research",
+          "label": "Research article (ScienceDirect)",
+          "url": "https://www.sciencedirect.com/science/article/pii/S0272735809000269"
+        },
+        {
+          "group": "other",
+          "label": "ACT-Based Values-Guided Problem Solving",
+          "url": ""
+        },
+        {
+          "group": "other",
+          "label": "Problem-solving resource (UCLA)",
+          "url": "https://ucla.app.box.com/s/p2uay1e7mleuj3psurfe5qgxe1gg7cu2"
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "Meza & ECCA",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-interpersonal-effectiveness-skills",
+      "title": "Interpersonal Effectiveness Skills",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "Interpersonal effectiveness skills are all about improving interactions and relationships with other people. These skills include strategies for getting people to meet your needs, getting them to do what you want, and getting them to take your opinions seriously. The goals are to strengthen existing relationships, build new ones, and end ones that are unhealthy or toxic. These skills include DEAR MAN, GIVE, FAST and Boundary Building.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "client",
+          "label": "DBT Interpersonal Effectiveness Descriptions",
+          "url": ""
+        },
+        {
+          "group": "other",
+          "label": "DBT Interpersonal Effectiveness Handouts",
+          "url": ""
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "Meza & ECCA",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-assertiveness-training",
+      "title": "Assertiveness Training",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "Teaching assertiveness skills with others, which may involve rehearsal of assertive interactions. This may include how to appropriately state wants or needs, how to say “no” to undesired activities, and how to respond when told “no” after stating a request.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "therapist",
+          "label": "Social skills training videos (VA MIRECC)",
+          "url": "https://www.mirecc.va.gov/visn5/training/sst/sst_video.asp"
+        },
+        {
+          "group": "client",
+          "label": "Assertive Communication",
+          "url": ""
+        },
+        {
+          "group": "research",
+          "label": "Research article (Springer)",
+          "url": "https://link.springer.com/article/10.1007/s41042-026-00297-7"
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-behavioral-activation-activity-scheduling",
+      "title": "Behavioral Activation/Activity Scheduling",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "Identifying enjoyable activities (e.g., helping others, social activities, sports) and making a plan to participate in these activities outside of session to improve mood.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "client",
+          "label": "Weekly BA Schedule",
+          "url": ""
+        },
+        {
+          "group": "research",
+          "label": "Research article (PubMed Central)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6445819/"
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "Meza & ECCA",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-cognitive-restructuring",
+      "title": "Cognitive Restructuring",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "Skills for practicing a balanced/helpful way of thinking about stressors and the implications of these events.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "client",
+          "label": "7 Column Thought Record Sheet",
+          "url": ""
+        },
+        {
+          "group": "research",
+          "label": "Research article (PubMed Central)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3073681/pdf/nihms264132.pdf"
+        },
+        {
+          "group": "research",
+          "label": "Research article (ResearchGate)",
+          "url": "https://www.researchgate.net/publication/390327607_Transforming_Negative_Thoughts_into_Self-Confidence_The_Impact_of_Cognitive_Restructuring_on_Adolescents"
+        },
+        {
+          "group": "other",
+          "label": "Other thought record sheet",
+          "url": ""
+        },
+        {
+          "group": "other",
+          "label": "Cognitive distortion sheet",
+          "url": ""
+        },
+        {
+          "group": "other",
+          "label": "Cognitive Conceptualization Diagram",
+          "url": ""
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "Meza",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-exposure",
+      "title": "Exposure",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "Exposure therapy is essentially as it sounds: gradual and repeated exposure to feared situations. Exposures can take many forms. They can be imaginal (imagined feared outcomes or circumstances), or in vivo (take place in real life); they can occur gradually (graduated), or they can take place very quickly and intensely (flooding). Exposures can target situations (situational exposures) or uncomfortable or distressing physical sensations (interoceptive or sensational exposures). Exposure is by far the most successful treatment for anxiety disorders that has been developed to date.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "client",
+          "label": "READY Toolkit",
+          "url": ""
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "Meza",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-trauma-narrative",
+      "title": "Trauma Narrative",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "Assisting the youth in describing a trauma or really bad experience in detail and repeatedly reviewing this material with the youth. This can include using play to help the child and parent co-create a narrative of the traumatic experience.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "therapist",
+          "label": "The trauma narrative (clinical guide)",
+          "url": ""
+        },
+        {
+          "group": "therapist",
+          "label": "Analogies to introduce the trauma narrative",
+          "url": ""
+        },
+        {
+          "group": "client",
+          "label": "Dealing With Trauma: A TF-CBT Workbook for Teens",
+          "url": ""
+        },
+        {
+          "group": "research",
+          "label": "Research article (Wiley Online Library)",
+          "url": "https://onlinelibrary.wiley.com/doi/10.1002/da.20744"
+        },
+        {
+          "group": "other",
+          "label": "Your Very Own TF-CBT Workbook",
+          "url": ""
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-modeling",
+      "title": "Modeling",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician"
+      ],
+      "theme": [
+        "Engagement & Treatment Process"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-skills-practice-role-play",
+      "title": "Skills Practice/Role Play",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician"
+      ],
+      "theme": [
+        "Engagement & Treatment Process"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-performance-feedback",
+      "title": "Performance Feedback",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician"
+      ],
+      "theme": [
+        "Engagement & Treatment Process"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-positive-reinforcement-rewards",
+      "title": "Positive Reinforcement/Rewards",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Family"
+      ],
+      "theme": [
+        "Family Engagement"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-live-caregiver-youth-coaching",
+      "title": "Live Caregiver-Youth Coaching",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Family"
+      ],
+      "theme": [
+        "Family Engagement"
+      ],
+      "description": "Providing specific and direct guidance to caregivers to use skills during an in-vivo youth-caregiver interaction in session.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "research",
+          "label": "Research article (Springer)",
+          "url": "https://link.springer.com/article/10.1007/s10488-024-01395-x"
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-antecedent-management",
+      "title": "Antecedent Management",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Family"
+      ],
+      "theme": [
+        "Family Engagement"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-differential-reinforcement-planned-ignoring",
+      "title": "Differential Reinforcement/Planned Ignoring",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Family"
+      ],
+      "theme": [
+        "Family Engagement"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Probably not"
+    },
+    {
+      "id": "ebp-redirection-distraction",
+      "title": "Redirection/Distraction",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Family"
+      ],
+      "theme": [
+        "Family Engagement"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Probably not"
+    },
+    {
+      "id": "ebp-following-the-child-s-lead",
+      "title": "Following the Child's Lead",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Family"
+      ],
+      "theme": [
+        "Family Engagement"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Probably not"
+    },
+    {
+      "id": "ebp-parent-child-quality-time",
+      "title": "Parent-Child Quality Time",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Family"
+      ],
+      "theme": [
+        "Family Engagement"
+      ],
+      "description": "Increasing youth and caregiver positive/quality one-on-one time.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "therapist",
+          "label": "Center for Play Therapy therapist and parent resources (in the context of Child-Parent Relationship Therapy)",
+          "url": ""
+        },
+        {
+          "group": "research",
+          "label": "Research article (Springer)",
+          "url": "https://link.springer.com/article/10.1007/s10802-019-00526-5"
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-effective-commands",
+      "title": "Effective Commands",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Family"
+      ],
+      "theme": [
+        "Family Engagement"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Probably not"
+    },
+    {
+      "id": "ebp-consequences",
+      "title": "Consequences",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Family"
+      ],
+      "theme": [
+        "Family Engagement"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Probably not"
+    },
+    {
+      "id": "ebp-behavioral-contracting",
+      "title": "Behavioral Contracting",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Family"
+      ],
+      "theme": [
+        "Family Engagement"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-caregiver-coping",
+      "title": "Caregiver Coping",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Family"
+      ],
+      "theme": [
+        "Family Engagement"
+      ],
+      "description": "Facilitating caregiver learning or practicing strategies to more effectively handle stressful situations (e.g., self-care, problem-solving about respite, coping skills).",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "therapist",
+          "label": "Strengthening Your Resilience: Take Care of Yourself as You Care for Others",
+          "url": ""
+        },
+        {
+          "group": "client",
+          "label": "For parents: the importance of self-care",
+          "url": ""
+        },
+        {
+          "group": "client",
+          "label": "Taking care of yourself and your family",
+          "url": ""
+        },
+        {
+          "group": "research",
+          "label": "Research article (Frontiers in Psychology)",
+          "url": "https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2019.01336/full"
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-youth-education-academic-support",
+      "title": "Youth Education/Academic Support",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Schools"
+      ],
+      "theme": [
+        "School Coordination"
+      ],
+      "description": "Assisting youth with specific academic problems, such as homework or study skills. This may include topics such as organization, time management, problem solving, and positive study skills.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "research",
+          "label": "Research article (Springer)",
+          "url": "https://link.springer.com/article/10.1007/s10488-024-01395-x"
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-end-of-session-positive",
+      "title": "End of Session Positive",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician"
+      ],
+      "theme": [
+        "Engagement & Treatment Process"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-progressive-muscle-relaxation",
+      "title": "Progressive Muscle Relaxation",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "Actively contracting muscles to create tension and progressively releasing for short-term stress relief.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "therapist",
+          "label": "Progressive Muscle Relaxation Scripts for Children",
+          "url": ""
+        },
+        {
+          "group": "research",
+          "label": "Research article (PubMed Central)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8272667/"
+        },
+        {
+          "group": "research",
+          "label": "Research article (Wiley Online Library)",
+          "url": "https://onlinelibrary.wiley.com/doi/pdf/10.1155/2021/5924040"
+        },
+        {
+          "group": "other",
+          "label": "VA Resource for Progressive Muscle Relaxation",
+          "url": ""
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-if-then-planning",
+      "title": "If-Then Planning",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-facing-your-inner-critic",
+      "title": "Facing Your Inner Critic",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-self-compassion",
+      "title": "Self-Compassion",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-affect-identification-feeling-thermometer",
+      "title": "Affect Identification/Feeling Thermometer",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "Facilitating learning about emotions, including linking emotions with their names, identifying physical sensations associated with emotions, or recognizing environmental cues for particular emotions.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "client",
+          "label": "Feelings Wheel",
+          "url": ""
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-feeling-thermometer",
+      "title": "Feeling Thermometer",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Undecided"
+    },
+    {
+      "id": "ebp-common-reactions-to-trauma",
+      "title": "Common Reactions to Trauma",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician"
+      ],
+      "theme": [
+        "Engagement & Treatment Process"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-caregiver-emotion-coaching",
+      "title": "Caregiver Emotion Coaching",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Family"
+      ],
+      "theme": [
+        "Family Engagement"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-caregiver-support-for-safety-plan",
+      "title": "Caregiver Support for Safety Plan",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth",
+        "Family"
+      ],
+      "theme": [
+        "Risk Assessment & Safety Planning",
+        "Family Engagement"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-drawing-on-strengths",
+      "title": "Drawing on Strengths",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-chain-functional-analysis",
+      "title": "Chain/Functional Analysis",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Risk Assessment & Safety Planning"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-praise-reinforcement",
+      "title": "Praise/Reinforcement",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Family"
+      ],
+      "theme": [
+        "Family Engagement"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "ECCA",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-crisis-survival-skills",
+      "title": "Crisis Survival Skills",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Risk Assessment & Safety Planning"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-diary-card-youth",
+      "title": "Diary Card (Youth)",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-motivational-interviewing",
+      "title": "Motivational Interviewing",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician"
+      ],
+      "theme": [
+        "Engagement & Treatment Process"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-pros-cons",
+      "title": "Pros/Cons",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-thanks-notes",
+      "title": "Thanks Notes",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Family"
+      ],
+      "theme": [
+        "Family Engagement"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-hope-box",
+      "title": "Hope Box",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Risk Assessment & Safety Planning"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-dialectical-thinking",
+      "title": "Dialectical Thinking",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-cognitive-defusion",
+      "title": "Cognitive Defusion",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "The process of altering the influence of thoughts on behavior by changing one’s relationship to them, rather than attempting to change their content, frequency, or form.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "client",
+          "label": "Defusion Menu (from Raimy Teams)",
+          "url": ""
+        },
+        {
+          "group": "research",
+          "label": "Research article (Springer)",
+          "url": "https://link.springer.com/content/pdf/10.1007/s40732-017-0254-z.pdf"
+        },
+        {
+          "group": "research",
+          "label": "Research article (PubMed)",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/14998740/"
+        },
+        {
+          "group": "other",
+          "label": "Defusion techniques (other open-source option)",
+          "url": ""
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-diary-card-parent",
+      "title": "Diary Card (Parent)",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Family"
+      ],
+      "theme": [
+        "Family Engagement"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-worry-time",
+      "title": "Worry Time",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "Worry time is a scheduled daily period set aside for worrying, used to contain habitual worry and keep it from taking over the rest of the day.",
+      "evidence": "",
+      "details": "",
+      "links": [
+        {
+          "group": "client",
+          "label": "Worry Time (UCLA)",
+          "url": ""
+        }
+      ],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Yes"
+    },
+    {
+      "id": "ebp-silver-linings",
+      "title": "Silver Linings",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-taking-ownership",
+      "title": "Taking Ownership",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician"
+      ],
+      "theme": [
+        "Engagement & Treatment Process"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-gratitude",
+      "title": "Gratitude",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-identifying-thoughts-feelings-behaviors",
+      "title": "Identifying Thoughts, Feelings, Behaviors",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-stimulus-control",
+      "title": "Stimulus Control",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-coping-cards",
+      "title": "Coping Cards",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Coping Skills & Emotion Regulation"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-family-album",
+      "title": "Family Album",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Family"
+      ],
+      "theme": [
+        "Family Engagement"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Maybe"
+    },
+    {
+      "id": "ebp-counseling-about-disinhibiting-effects-of-substances",
+      "title": "Counseling about Disinhibiting Effects of Substances",
+      "type": "Evidence-Based Practice",
+      "audience": [
+        "Clinician",
+        "Youth"
+      ],
+      "theme": [
+        "Risk Assessment & Safety Planning"
+      ],
+      "description": "",
+      "evidence": "",
+      "details": "",
+      "links": [],
+      "relatedResources": [],
+      "fileUrl": "",
+      "source": "",
+      "reviewStatus": "Yes"
     }
   ]
 }

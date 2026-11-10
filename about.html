@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=49" />
 </head>
 <body>
 
@@ -133,38 +133,15 @@
   </div>
 </header>
 
-<!-- WHY -->
-<section class="why" id="why">
+<!-- PAGE HEADER + SECTION LINKS -->
+<section class="about-header" id="top">
   <div class="section-inner">
-    <div class="section-label" data-fade id="whyLabel"></div>
-    <h2 data-fade data-delay="1" id="whyHeading"></h2>
-    <div class="why-grid" id="whyGrid"></div>
-    <blockquote class="pull-quote" data-fade id="whyPullQuote"></blockquote>
+    <div class="section-label" data-fade id="aboutPageLabel"></div>
+    <h1 data-fade data-delay="1" id="aboutPageHeading"></h1>
+    <p class="section-intro" data-fade data-delay="2" id="aboutPageIntro"></p>
   </div>
 </section>
-
-<!-- TOOLKIT -->
-<section class="toolkit" id="toolkit">
-  <div class="section-inner">
-    <div class="section-label" data-fade id="toolkitLabel"></div>
-    <h2 data-fade data-delay="1" id="toolkitHeading"></h2>
-    <p class="section-intro" data-fade data-delay="2" id="toolkitIntro"></p>
-    <div class="goal-banner" data-goal-banner="about" hidden></div>
-
-    <div class="toolkit-tabs" data-fade data-delay="3" id="toolkitTabsNav"></div>
-
-    <div class="tab-panel active" id="tab-roadmap"></div>
-    <div class="tab-panel" id="tab-schools"></div>
-
-    <div class="how-to-use" data-fade id="howToUse">
-      <h3 id="howToUseHeading"></h3>
-      <p class="how-to-use-intro" id="howToUseIntro"></p>
-      <div class="how-to-use-steps" id="howToUseSteps"></div>
-      <ul class="how-to-use-tips" id="howToUseTips"></ul>
-      <p class="how-to-use-feedback" id="howToUseFeedback"></p>
-    </div>
-  </div>
-</section>
+<nav class="about-subnav" id="aboutSubnav" aria-label="On this page"></nav>
 
 <!-- ABOUT / OUR MODEL -->
 <section class="about" id="about">
@@ -199,6 +176,34 @@
     </div>
 
     <div class="model-steps" id="modelSteps"></div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="why" id="why">
+  <div class="section-inner">
+    <div class="section-label" data-fade id="whyLabel"></div>
+    <h2 data-fade data-delay="1" id="whyHeading"></h2>
+    <div class="why-grid" id="whyGrid"></div>
+    <blockquote class="pull-quote" data-fade id="whyPullQuote"></blockquote>
+  </div>
+</section>
+
+<!-- TREATMENT ROADMAP + HOW TO USE -->
+<section class="toolkit" id="toolkit">
+  <div class="section-inner">
+    <div class="section-label" data-fade id="toolkitLabel"></div>
+    <h2 data-fade data-delay="1" id="roadmapHeading"></h2>
+    <div class="goal-banner" data-goal-banner="about" hidden></div>
+    <div class="about-roadmap" data-fade data-delay="2" id="aboutRoadmap"></div>
+
+    <div class="how-to-use" data-fade id="howToUse">
+      <h3 id="howToUseHeading"></h3>
+      <p class="how-to-use-intro" id="howToUseIntro"></p>
+      <div class="how-to-use-steps" id="howToUseSteps"></div>
+      <ul class="how-to-use-tips" id="howToUseTips"></ul>
+      <p class="how-to-use-feedback" id="howToUseFeedback"></p>
+    </div>
   </div>
 </section>
 
@@ -238,6 +243,19 @@
   </div>
 </section>
 
+<!-- EXPLORE THE TOOLS -->
+<section class="about-explore" id="explore">
+  <div class="section-inner">
+    <div class="about-explore-card" data-fade>
+      <div>
+        <h2 id="exploreHeading"></h2>
+        <p id="exploreBody"></p>
+      </div>
+      <div class="about-explore-actions" id="exploreActions"></div>
+    </div>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer class="footer">
   <div class="footer-inner">
@@ -246,8 +264,8 @@
   </div>
 </footer>
 
-<script src="content-loader.js?v=1"></script>
-<script src="about.js?v=2"></script>
-<script src="goal-banner.js"></script>
+<script src="content-loader.js?v=2"></script>
+<script src="about.js?v=3"></script>
+<script src="goal-banner.js?v=3"></script>
 </body>
 </html>
