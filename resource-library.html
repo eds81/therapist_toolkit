@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=49" />
+  <link rel="stylesheet" href="styles.css?v=51" />
 </head>
 <body>
 
@@ -102,6 +102,10 @@
 <!-- SEARCH + FILTERS + RESULTS -->
 <section class="reslib-main">
   <div class="section-inner">
+    <!-- Two tabs: practices you use in session vs. handouts & tools you give out -->
+    <div class="reslib-tabs" role="tablist" id="reslibTabs"></div>
+    <p class="reslib-tab-intro" id="reslibTabIntro"></p>
+
     <div class="reslib-search">
       <svg class="icon-sm"><use href="#i-search"/></svg>
       <input type="text" id="reslibSearch" />
@@ -109,28 +113,15 @@
 
     <div class="reslib-layout">
       <aside class="reslib-sidebar">
-        <div class="reslib-filter-group">
-          <span class="reslib-filter-label" id="reslibAudienceLabel"></span>
-          <div class="reslib-chips" id="reslibAudienceChips"></div>
-        </div>
-
-        <div class="reslib-filter-group">
-          <span class="reslib-filter-label" id="reslibTypeLabel"></span>
-          <div class="reslib-chips" id="reslibTypeChips"></div>
-        </div>
-
-        <div class="reslib-filter-group">
-          <span class="reslib-filter-label" id="reslibThemeLabel"></span>
-          <div class="reslib-chips" id="reslibThemeChips"></div>
-        </div>
-
+        <div id="reslibFilters"></div>
         <button type="button" class="reslib-clear" id="reslibClearBtn"></button>
       </aside>
 
-      <div class="reslib-results">
-        <p class="reslib-count" id="reslibCount"></p>
+      <div class="reslib-results" role="tabpanel" id="reslibPanel">
+        <p class="reslib-count" id="reslibCount" aria-live="polite"></p>
         <div class="reslib-grid" id="reslibGrid"></div>
         <p class="reslib-empty" id="reslibEmpty" hidden></p>
+        <div class="reslib-coming" id="reslibComing" hidden></div>
       </div>
     </div>
   </div>
@@ -159,7 +150,7 @@
   </div>
 </div>
 
-<script src="resource-library.js?v=4"></script>
+<script src="resource-library.js?v=5"></script>
 <script src="goal-banner.js?v=3"></script>
 </body>
 </html>

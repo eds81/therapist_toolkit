@@ -30,22 +30,51 @@ const AUDIENCE_ICON = {
   Schools: 'i-school'
 };
 
+// Two tabs: practices you use in session, and handouts & tools you give out.
+// Each tab has its own filters; search and filters apply within the tab.
+const TABS = ['practices', 'tools'];
+const inTab = (item, tab) => (tab === 'practices') === (item.type === PRACTICE_TYPE);
+
 const reslibState = {
   data: null,
+  tab: 'practices',
   search: '',
-  audience: new Set(),
-  type: new Set(),
-  theme: new Set()
+  filters: { theme: new Set(), type: new Set(), audience: new Set() }
 };
 
-function matchesFilters(item) {
-  const q = reslibState.search.trim().toLowerCase();
-  if (q && !(`${item.title} ${item.description}`.toLowerCase().includes(q))) return false;
-  if (reslibState.audience.size && !item.audience.some(a => reslibState.audience.has(a))) return false;
-  if (reslibState.type.size && !reslibState.type.has(item.type)) return false;
-  if (reslibState.theme.size && !item.theme.some(t => reslibState.theme.has(t))) return false;
-  return true;
+// Which filter groups each tab offers, in order. Options come from the CMS
+// filter lists; the Handouts & Tools type list leaves out practices, and its
+// audience list leaves out the CMS "hidden" audiences (e.g. Clinician).
+function filterGroups(tab) {
+  const f = reslibState.data.filters;
+  const hidden = new Set((reslibState.data.tabs && reslibState.data.tabs.hiddenAudiences) || []);
+  if (tab === 'practices') return [{ key: 'theme', label: f.themeLabel, options: f.themeOptions }];
+  return [
+    { key: 'type', label: f.typeLabel, options: f.typeOptions.filter(o => o !== PRACTICE_TYPE) },
+    { key: 'audience', label: f.audienceLabel, options: f.audienceOptions.filter(o => !hidden.has(o)) },
+    { key: 'theme', label: f.themeLabel, options: f.themeOptions },
+  ];
 }
+
+function valuesOf(item, key) {
+  if (key === 'type') return [item.type];
+  return item[key] || [];
+}
+
+// Search + every active filter group, optionally ignoring one group (used to
+// count what each option in that group would give). Within a group: any of
+// the selected options; across groups: all of them.
+function matches(item, ignoreKey) {
+  const q = reslibState.search.trim().toLowerCase();
+  if (q && !(`${item.title} ${item.description || ''}`.toLowerCase().includes(q))) return false;
+  return filterGroups(reslibState.tab).every(g => {
+    if (g.key === ignoreKey) return true;
+    const sel = reslibState.filters[g.key];
+    return !sel.size || valuesOf(item, g.key).some(v => sel.has(v));
+  });
+}
+
+const tabItems = tab => reslibState.data.items.filter(i => inTab(i, tab));
 
 function cardHtml(item) {
   return `
@@ -65,32 +94,101 @@ function cardHtml(item) {
     </button>`;
 }
 
-function renderResults() {
-  const items = reslibState.data.items.filter(isListed).filter(matchesFilters);
-  const grid = document.getElementById('reslibGrid');
-  const empty = document.getElementById('reslibEmpty');
-  const count = document.getElementById('reslibCount');
-
-  count.textContent = `${items.length} resource${items.length === 1 ? '' : 's'}`;
-  grid.innerHTML = items.map(cardHtml).join('');
-  empty.hidden = items.length > 0;
-
-  grid.querySelectorAll('.reslib-card').forEach(card => {
-    card.addEventListener('click', () => openDetail(card.dataset.id));
-  });
+function renderTabs() {
+  const t = reslibState.data.tabs;
+  document.getElementById('reslibTabs').innerHTML = TABS.map(tab => {
+    const on = tab === reslibState.tab;
+    const n = tabItems(tab).filter(isListed).length;
+    return `<button type="button" role="tab" class="reslib-tab${on ? ' is-active' : ''}" data-tab="${tab}" aria-selected="${on}" aria-controls="reslibPanel" tabindex="${on ? 0 : -1}">${t[tab].label} <span class="reslib-tab-count">${n}</span></button>`;
+  }).join('');
+  document.getElementById('reslibTabIntro').textContent = t[reslibState.tab].intro;
 }
 
-function renderChips(containerId, options, activeSet, onToggle) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = options.map(opt => `
-    <button type="button" class="reslib-chip${activeSet.has(opt) ? ' active' : ''}" data-value="${opt}">${opt}</button>`).join('');
-  container.querySelectorAll('.reslib-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      const val = chip.dataset.value;
-      activeSet.has(val) ? activeSet.delete(val) : activeSet.add(val);
-      chip.classList.toggle('active');
-      renderResults();
-    });
+// Filter options with a count each. Options no item in this tab uses are
+// hidden; options that would currently give no results are disabled.
+function renderFilters() {
+  const items = tabItems(reslibState.tab);
+  document.getElementById('reslibFilters').innerHTML = filterGroups(reslibState.tab).map(g => {
+    const sel = reslibState.filters[g.key];
+    const base = items.filter(i => matches(i, g.key)).filter(isListed);
+    const chips = g.options.map(opt => {
+      if (!items.some(i => valuesOf(i, g.key).includes(opt))) return '';
+      const n = base.filter(i => valuesOf(i, g.key).includes(opt)).length;
+      const on = sel.has(opt);
+      return `<button type="button" class="reslib-chip${on ? ' active' : ''}" data-group="${g.key}" data-value="${escHtml(opt)}" aria-pressed="${on}"${!n && !on ? ' disabled' : ''}>${opt}<span class="reslib-chip-count">${n}</span></button>`;
+    }).join('');
+    return chips ? `
+      <div class="reslib-filter-group">
+        <span class="reslib-filter-label">${g.label}</span>
+        <div class="reslib-chips">${chips}</div>
+      </div>` : '';
+  }).join('');
+}
+
+function renderResults() {
+  const t = reslibState.data.tabs;
+  const all = tabItems(reslibState.tab).filter(i => matches(i));
+  const items = all.filter(isListed);
+  const grid = document.getElementById('reslibGrid');
+  const empty = document.getElementById('reslibEmpty');
+  const word = items.length === 1 ? t[reslibState.tab].countSingular : t[reslibState.tab].countPlural;
+  document.getElementById('reslibCount').textContent = `${items.length} ${word}`;
+  grid.innerHTML = items.map(cardHtml).join('');
+
+  // Practices still waiting for a write-up: listed by name below the cards
+  // (search and filters apply), each opening its detail view.
+  const pending = reslibState.tab === 'practices' ? all.filter(i => !isListed(i)) : [];
+  const coming = document.getElementById('reslibComing');
+  coming.hidden = !pending.length;
+  coming.innerHTML = pending.length ? `
+    <h3>${t.comingSoonHeading} <span>${pending.length}</span></h3>
+    <p>${t.comingSoonNote}</p>
+    <div class="reslib-coming-list">${pending.map(i => `<button type="button" class="reslib-coming-item" data-id="${i.id}">${i.title}</button>`).join('')}</div>` : '';
+
+  empty.textContent = t.emptyText;
+  empty.hidden = items.length > 0 || pending.length > 0;
+}
+
+function render() {
+  renderTabs();
+  renderFilters();
+  renderResults();
+}
+
+function setTab(tab, focus) {
+  if (!TABS.includes(tab) || tab === reslibState.tab) return;
+  reslibState.tab = tab;
+  Object.values(reslibState.filters).forEach(set => set.clear());
+  const url = new URL(window.location.href);
+  url.searchParams.set('tab', tab);
+  history.replaceState(null, '', url);
+  render();
+  if (focus) document.querySelector(`.reslib-tab[data-tab="${tab}"]`).focus();
+}
+
+function initTabsAndFilters() {
+  const tabs = document.getElementById('reslibTabs');
+  tabs.addEventListener('click', e => {
+    const btn = e.target.closest('.reslib-tab');
+    if (btn) setTab(btn.dataset.tab);
+  });
+  tabs.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    const i = TABS.indexOf(reslibState.tab);
+    setTab(TABS[(i + (e.key === 'ArrowRight' ? 1 : TABS.length - 1)) % TABS.length], true);
+  });
+  document.getElementById('reslibFilters').addEventListener('click', e => {
+    const chip = e.target.closest('.reslib-chip');
+    if (!chip || chip.disabled) return;
+    const set = reslibState.filters[chip.dataset.group];
+    set.has(chip.dataset.value) ? set.delete(chip.dataset.value) : set.add(chip.dataset.value);
+    renderFilters();
+    renderResults();
+    document.querySelector(`.reslib-chip[data-group="${chip.dataset.group}"][data-value="${CSS.escape(chip.dataset.value)}"]`)?.focus();
+  });
+  document.getElementById('reslibPanel').addEventListener('click', e => {
+    const card = e.target.closest('.reslib-card, .reslib-coming-item');
+    if (card) openDetail(card.dataset.id);
   });
 }
 
@@ -199,16 +297,15 @@ function initSearchAndClear() {
   const searchInput = document.getElementById('reslibSearch');
   searchInput.addEventListener('input', () => {
     reslibState.search = searchInput.value;
+    renderFilters();
     renderResults();
   });
 
   document.getElementById('reslibClearBtn').addEventListener('click', () => {
     reslibState.search = '';
-    reslibState.audience.clear();
-    reslibState.type.clear();
-    reslibState.theme.clear();
+    Object.values(reslibState.filters).forEach(set => set.clear());
     searchInput.value = '';
-    document.querySelectorAll('.reslib-chip.active').forEach(c => c.classList.remove('active'));
+    renderFilters();
     renderResults();
   });
 }
@@ -239,16 +336,14 @@ fetch('content/resources.json', { cache: 'no-cache' }) // always check for the l
     document.getElementById('reslibSub').textContent = data.intro.sub;
     document.getElementById('reslibPdfNotice').textContent = data.intro.pdfNotice;
     document.getElementById('reslibSearch').placeholder = data.filters.searchPlaceholder;
-    document.getElementById('reslibAudienceLabel').textContent = data.filters.audienceLabel;
-    document.getElementById('reslibTypeLabel').textContent = data.filters.typeLabel;
-    document.getElementById('reslibThemeLabel').textContent = data.filters.themeLabel;
     document.getElementById('reslibClearBtn').textContent = data.filters.clearLabel;
 
-    renderChips('reslibAudienceChips', data.filters.audienceOptions, reslibState.audience);
-    renderChips('reslibTypeChips', data.filters.typeOptions, reslibState.type);
-    renderChips('reslibThemeChips', data.filters.themeOptions, reslibState.theme);
-    renderResults();
+    // ?tab=tools opens Handouts & Tools; a ?practice= link opens Practices.
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('tab') === 'tools' && !params.get('practice')) reslibState.tab = 'tools';
+    render();
 
+    initTabsAndFilters();
     initSearchAndClear();
     initModal();
     initMobileNav();

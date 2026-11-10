@@ -35,6 +35,26 @@
       "Engagement & Treatment Process"
     ]
   },
+  "tabs": {
+    "practices": {
+      "label": "Practices",
+      "intro": "Evidence-based practices and strategies to use in session, each with handouts and research where available. These are the same practices offered in the Planning Tool’s Select Interventions step.",
+      "countSingular": "practice",
+      "countPlural": "practices"
+    },
+    "tools": {
+      "label": "Handouts & Tools",
+      "intro": "Assessments, worksheets, handouts, tip sheets and referral lists to use with youth, families and schools.",
+      "countSingular": "resource",
+      "countPlural": "resources"
+    },
+    "comingSoonHeading": "Write-ups coming soon",
+    "comingSoonNote": "These practices are already offered in the Planning Tool. Their full write-ups are being added; open one to see any links collected so far.",
+    "emptyText": "Nothing matches those filters. Try removing one, or clear them all.",
+    "hiddenAudiences": [
+      "Clinician"
+    ]
+  },
   "items": [
     {
       "id": "cssrs",

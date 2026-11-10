@@ -2204,3 +2204,37 @@ body.scgate-open { overflow: hidden; }
 .reslib-link-group a svg { flex-shrink: 0; }
 .reslib-link-pending { font-size: 14px; color: var(--text-mid); line-height: 1.4; }
 .reslib-link-pending em { font-style: normal; font-size: 11px; font-weight: 800; color: var(--text-light); background: var(--cream); border: 1px dashed var(--cream-dark); border-radius: 100px; padding: 1px 8px; margin-left: 4px; white-space: nowrap; }
+
+/* Treatment Library — Practices / Handouts & Tools tabs, filter counts,
+   and the "Write-ups coming soon" list */
+.reslib-tabs { display: flex; gap: 6px; border-bottom: 2px solid var(--cream-dark); margin-bottom: 14px; flex-wrap: wrap; }
+.reslib-tab {
+  font-family: var(--font); font-size: 16px; font-weight: 800; color: var(--text-mid);
+  background: none; border: none; border-bottom: 3px solid transparent; margin-bottom: -2px;
+  padding: 10px 16px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+  transition: color .15s, border-color .15s;
+}
+.reslib-tab:hover { color: var(--teal-dark); }
+.reslib-tab.is-active { color: var(--teal-dark); border-bottom-color: var(--teal); }
+.reslib-tab:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; border-radius: 6px; }
+.reslib-tab-count { font-size: 12px; font-weight: 800; color: var(--teal-dark); background: var(--teal-light); border-radius: 100px; padding: 1px 9px; }
+.reslib-tab.is-active .reslib-tab-count { background: var(--teal); color: var(--white); }
+.reslib-tab-intro { font-size: 14px; color: var(--text-mid); max-width: 760px; margin-bottom: 20px; line-height: 1.6; }
+.reslib-chip-count { margin-left: auto; font-size: 11px; font-weight: 800; color: var(--text-light); background: var(--cream); border-radius: 100px; padding: 0 7px; min-width: 22px; text-align: center; }
+.reslib-chip.active .reslib-chip-count { background: var(--teal-light); color: var(--teal-dark); }
+.reslib-chip:disabled { opacity: .45; cursor: default; }
+.reslib-chip:disabled:hover { background: transparent; }
+.reslib-chip:focus-visible { outline: 3px solid var(--yellow); outline-offset: 1px; }
+.reslib-coming { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--cream-dark); }
+.reslib-coming h3 { font-size: 17px; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.reslib-coming h3 span { font-size: 12px; font-weight: 800; color: var(--text-mid); background: var(--cream-dark); border-radius: 100px; padding: 1px 9px; }
+.reslib-coming p { font-size: 13px; color: var(--text-light); margin-bottom: 14px; max-width: 640px; }
+.reslib-coming-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.reslib-coming-item {
+  font-family: var(--font); font-size: 13px; font-weight: 700; color: var(--text-mid);
+  background: var(--white); border: 1.5px dashed var(--cream-dark); border-radius: 100px; padding: 5px 13px; cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+.reslib-coming-item:hover { border-color: var(--teal); color: var(--teal-dark); }
+.reslib-coming-item:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+#reslibFilters { display: flex; flex-direction: column; gap: 22px; }

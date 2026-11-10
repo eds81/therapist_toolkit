@@ -536,6 +536,26 @@ collections:
                 name: "themeOptions"
                 widget: "list"
                 field: {label: "Option", name: "option", widget: "string"}
+          - label: "Tabs (Practices vs. Handouts & Tools)"
+            name: "tabs"
+            widget: "object"
+            fields:
+              - label: "Practices Tab (every Evidence-Based Practice item)"
+                name: "practices"
+                widget: "object"
+                fields: &reslib_tab_fields
+                  - {label: "Tab Label", name: "label", widget: "string"}
+                  - {label: "Intro (shown under the tabs)", name: "intro", widget: "text"}
+                  - {label: "Count word, singular (e.g. practice)", name: "countSingular", widget: "string"}
+                  - {label: "Count word, plural (e.g. practices)", name: "countPlural", widget: "string"}
+              - label: "Handouts & Tools Tab (every other item)"
+                name: "tools"
+                widget: "object"
+                fields: *reslib_tab_fields
+              - {label: "'Write-ups coming soon' Heading", name: "comingSoonHeading", widget: "string"}
+              - {label: "'Write-ups coming soon' Note", name: "comingSoonNote", widget: "text"}
+              - {label: "No-Results Message", name: "emptyText", widget: "string"}
+              - {label: "Audiences not offered as a filter (e.g. Clinician — almost every item is for clinicians)", name: "hiddenAudiences", widget: "list", required: false, field: {label: "Audience", name: "audience", widget: "string"}}
           - label: "Resources (add or remove freely)"
             name: "items"
             widget: "list"
