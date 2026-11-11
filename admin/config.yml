@@ -616,14 +616,68 @@ collections:
               - {label: "Search Field Label", name: "label", widget: "string"}
               - {label: "Search Placeholder", name: "placeholder", widget: "string"}
               - {label: "Search Button Label", name: "buttonLabel", widget: "string"}
-              - {label: "Empty Search Message", name: "noInputError", widget: "string"}
-              - {label: "Loading Text", name: "loadingText", widget: "string"}
-              - {label: "Coming Soon Heading", name: "comingSoonHeading", widget: "string"}
-              - {label: "Coming Soon Message", name: "comingSoonBody", widget: "text"}
               - {label: "Results Heading", name: "resultsHeading", widget: "string"}
               - {label: "Map Heading", name: "mapHeading", widget: "string"}
               - {label: "Empty Map Caption", name: "mapEmptyCaption", widget: "string"}
               - {label: "Map Attribution", name: "mapAttributionNote", widget: "string"}
+              - {label: "'All' Filter Label", name: "allLabel", widget: "string"}
+              - {label: "Count word, singular", name: "countSingular", widget: "string"}
+              - {label: "Count word, plural", name: "countPlural", widget: "string"}
+              - {label: "No-Results Message", name: "emptyText", widget: "string"}
+          - label: "Resources (the searchable list and map)"
+            name: "communityResources"
+            widget: "object"
+            fields:
+              - label: "Sections (filter buttons — keep the keys)"
+                name: "sections"
+                widget: "list"
+                summary: "{{label}}"
+                fields:
+                  - {label: "Key (do not change)", name: "key", widget: "string"}
+                  - {label: "Label", name: "label", widget: "string"}
+                  - {label: "Intro (shown when this section is selected)", name: "intro", widget: "text"}
+              - label: "Field Labels"
+                name: "labels"
+                widget: "object"
+                fields:
+                  - {label: "Phone", name: "phone", widget: "string"}
+                  - {label: "Website", name: "website", widget: "string"}
+                  - {label: "Email", name: "email", widget: "string"}
+                  - {label: "Address", name: "address", widget: "string"}
+                  - {label: "Who it's for", name: "eligibility", widget: "string"}
+                  - {label: "Cost", name: "cost", widget: "string"}
+                  - {label: "Payment", name: "payment", widget: "string"}
+                  - {label: "How to refer", name: "referral", widget: "string"}
+                  - {label: "Languages", name: "languages", widget: "string"}
+                  - {label: "Notes", name: "notes", widget: "string"}
+                  - {label: "Rise vetted badge", name: "vetted", widget: "string"}
+                  - {label: "Verified", name: "verified", widget: "string"}
+                  - {label: "Show on map button", name: "showOnMap", widget: "string"}
+                  - {label: "More details", name: "details", widget: "string"}
+              - label: "Resources (add or remove freely)"
+                name: "items"
+                widget: "list"
+                summary: "{{name}} — {{section}}"
+                fields:
+                  - {label: "ID (internal — leave as is; new entries get one automatically)", name: "id", widget: "string", required: false}
+                  - {label: "Name", name: "name", widget: "string"}
+                  - {label: "Section", name: "section", widget: "select", options: [{label: "Therapy & Psychiatric Care", value: "therapy"}, {label: "Suicide Safety", value: "safety"}, {label: "Basic Needs", value: "basic"}, {label: "Youth & Family Organizations", value: "youth"}, {label: "Office Space for Sessions", value: "space"}]}
+                  - {label: "Category", name: "category", widget: "string", required: false}
+                  - {label: "Description / What It Offers", name: "description", widget: "text", required: false}
+                  - {label: "Who It's For / Eligibility", name: "eligibility", widget: "text", required: false}
+                  - {label: "Website", name: "website", widget: "string", required: false}
+                  - {label: "Phone (several numbers OK; each becomes tap-to-call)", name: "phone", widget: "string", required: false}
+                  - {label: "Email (organization inbox, not a person)", name: "email", widget: "string", required: false}
+                  - {label: "Address", name: "address", widget: "text", required: false}
+                  - {label: "Cost", name: "cost", widget: "string", required: false}
+                  - {label: "Payment Accepted", name: "payment", widget: "string", required: false}
+                  - {label: "Referral Process", name: "referral", widget: "text", required: false}
+                  - {label: "Languages Offered", name: "languages", widget: "string", required: false}
+                  - {label: "Notes", name: "notes", widget: "text", required: false}
+                  - {label: "Rise Vetted", name: "riseVetted", widget: "boolean", required: false, default: false}
+                  - {label: "Date Verified (YYYY-MM-DD)", name: "verified", widget: "string", required: false}
+                  - {label: "Map latitude (optional — pin only shows when both are set)", name: "lat", widget: "number", value_type: "float", required: false}
+                  - {label: "Map longitude", name: "lng", widget: "number", value_type: "float", required: false}
 
       - file: "content/schools.json"
         name: "navigatingSchools"

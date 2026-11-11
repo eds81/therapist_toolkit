@@ -1,8 +1,6 @@
 /* =============================================
-   FIND A REFERRAL — search UI shell + dynamic map
-   No real referral data yet: both the results list and the map stay
-   empty until a vetted dataset/API is connected. See getReferralResults()
-   and renderReferralMarkers() below for where that plugs in.
+   COMMUNITY RESOURCES — searchable list of local referrals + map
+   (data: content/community-resources.json, editable in the CMS)
    ============================================= */
 
 function icon(id, extraClass) {
@@ -26,90 +24,170 @@ function initReferralMap() {
     maxZoom: 18
   }).addTo(referralMap);
 
-  L.Icon.Default.mergeOptions({
-    iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
-  });
 
   referralMarkersLayer = L.layerGroup().addTo(referralMap);
 }
 
-// Plots whatever results came back. Each result is expected to eventually
-// carry { lat, lng, title } once a real dataset exists — for now this is
-// always called with an empty array, so the map just stays on its default
-// view with no pins (never fabricated).
-function renderReferralMarkers(results) {
+// ── Community Resources — searchable list + map ─────────────
+// Data: content/community-resources.json → communityResources.items (CMS:
+// Community Resources). Search and the section filter narrow the list; the
+// map shows a pin for every listed resource that has coordinates.
+const crState = { data: null, items: [], section: 'all', query: '', markers: {}, activeId: null };
+
+function esc(str) {
+  return String(str == null ? '' : str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// Phone text can hold several numbers ("Boulder: (303) 579-4404; Longmont: …")
+// or a short code like 988 — every number becomes a tap-to-call link.
+function phoneHtml(text) {
+  return esc(text).replace(/(\(?\b\d{3}\)?[\s.-]*\d{3}[\s.-]*\d{4}\b|\b988\b)/g, m => {
+    const digits = m.replace(/\D/g, '');
+    return `<a href="tel:${digits}">${m}</a>`;
+  });
+}
+// Web addresses inside referral text become links.
+function linkify(text) {
+  return esc(text).replace(/https?:\/\/[^\s<]+[^\s<.,)]/g, u => `<a href="${u}" target="_blank" rel="noopener">${u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}</a>`);
+}
+const hostOf = url => url.replace(/^https?:\/\/(www\.)?/, '').split('/')[0];
+
+function sectionLabel(key) {
+  const s = crState.data.communityResources.sections.find(x => x.key === key);
+  return s ? s.label : '';
+}
+
+function matchesQuery(item, q) {
+  if (!q) return true;
+  const hay = [item.name, item.category, item.description, item.eligibility, item.address, item.languages, item.notes, item.cost, sectionLabel(item.section)]
+    .join(' ').toLowerCase();
+  return q.toLowerCase().split(/\s+/).filter(Boolean).every(word => hay.includes(word));
+}
+
+function visibleItems() {
+  return crState.items.filter(i => (crState.section === 'all' || i.section === crState.section) && matchesQuery(i, crState.query));
+}
+
+function resourceCardHtml(item) {
+  const L = crState.data.communityResources.labels;
+  const row = (label, value, html) => value ? `<div class="cr-detail"><dt>${label}</dt><dd>${html || esc(value)}</dd></div>` : '';
+  const details = [
+    row(L.eligibility, item.eligibility), row(L.cost, item.cost), row(L.payment, item.payment),
+    row(L.referral, item.referral, linkify(item.referral)), row(L.languages, item.languages), row(L.notes, item.notes),
+    row(L.verified, item.verified),
+  ].join('');
+  const contact = [
+    item.phone ? `<span class="cr-contact cr-phone">${icon('i-phone', 'icon-xs')}<span>${phoneHtml(item.phone)}</span></span>` : '',
+    item.website ? `<a class="cr-contact" href="${esc(item.website)}" target="_blank" rel="noopener">${icon('i-globe', 'icon-xs')}<span>${esc(hostOf(item.website))}</span></a>` : '',
+    item.email ? `<a class="cr-contact" href="mailto:${esc(item.email)}">${icon('i-mail', 'icon-xs')}<span>${esc(item.email)}</span></a>` : '',
+  ].join('');
+  const hasPin = typeof item.lat === 'number';
+  return `
+    <article class="cr-card${crState.activeId === item.id ? ' is-active' : ''}" id="cr-${item.id}" data-id="${item.id}">
+      <div class="cr-card-top">
+        <span class="cr-section-tag cr-section-${item.section}">${esc(sectionLabel(item.section))}</span>
+        ${item.riseVetted ? `<span class="cr-vetted">${icon('i-check', 'icon-xs')}${esc(L.vetted)}</span>` : ''}
+      </div>
+      <h3>${esc(item.name)}</h3>
+      ${item.category ? `<p class="cr-category">${esc(item.category)}</p>` : ''}
+      ${item.description ? `<p class="cr-desc">${esc(item.description)}</p>` : ''}
+      ${contact ? `<div class="cr-contacts">${contact}</div>` : ''}
+      ${item.address ? `<p class="cr-address">${icon('i-map-pin', 'icon-xs')}<span>${esc(item.address)}</span></p>` : ''}
+      <div class="cr-card-actions">
+        ${details ? `<details class="cr-more"><summary>${esc(L.details)}</summary><dl>${details}</dl></details>` : ''}
+        ${hasPin ? `<button type="button" class="cr-map-btn" data-id="${item.id}">${esc(L.showOnMap)}</button>` : ''}
+      </div>
+    </article>`;
+}
+
+function renderSectionChips() {
+  const rp = crState.data.referralPage;
+  const sections = crState.data.communityResources.sections;
+  const count = key => crState.items.filter(i => (key === 'all' || i.section === key) && matchesQuery(i, crState.query)).length;
+  document.getElementById('crSections').innerHTML = [{ key: 'all', label: rp.allLabel }].concat(sections).map(s => {
+    const on = s.key === crState.section;
+    return `<button type="button" class="cr-chip${on ? ' is-active' : ''}" data-section="${s.key}" aria-pressed="${on}">${esc(s.label)} <span>${count(s.key)}</span></button>`;
+  }).join('');
+  const current = sections.find(s => s.key === crState.section);
+  const intro = document.getElementById('crSectionIntro');
+  intro.textContent = current ? current.intro : '';
+  intro.hidden = !current;
+}
+
+function renderResources() {
+  const rp = crState.data.referralPage;
+  const items = visibleItems();
+  document.getElementById('crCount').textContent = `${items.length} ${items.length === 1 ? rp.countSingular : rp.countPlural}`;
+  document.getElementById('referralResults').innerHTML = items.length
+    ? items.map(resourceCardHtml).join('')
+    : `<p class="cr-empty">${esc(rp.emptyText)}</p>`;
+  renderReferralMarkers(items);
+}
+
+function render_all() {
+  renderSectionChips();
+  renderResources();
+}
+
+// Pins are drawn in CSS (.cr-pin) rather than Leaflet's default image
+// marker, whose image path breaks when loaded from a CDN.
+const CR_PIN = L.divIcon({ className: 'cr-pin', html: '<span></span>', iconSize: [22, 22], iconAnchor: [11, 22], popupAnchor: [0, -20] });
+
+// One pin per listed resource with coordinates; the view fits the pins.
+function renderReferralMarkers(items) {
   if (!referralMarkersLayer) return;
   referralMarkersLayer.clearLayers();
-  if (!results.length) return;
+  crState.markers = {};
   const bounds = [];
-  results.forEach(r => {
-    if (typeof r.lat !== 'number' || typeof r.lng !== 'number') return;
-    L.marker([r.lat, r.lng]).addTo(referralMarkersLayer).bindPopup(r.title || '');
-    bounds.push([r.lat, r.lng]);
+  items.forEach(item => {
+    if (typeof item.lat !== 'number' || typeof item.lng !== 'number') return;
+    const marker = L.marker([item.lat, item.lng], { title: item.name, icon: CR_PIN, alt: item.name }).addTo(referralMarkersLayer)
+      .bindPopup(`<strong>${esc(item.name)}</strong><br>${esc(item.address)}${item.phone ? `<br>${phoneHtml(item.phone)}` : ''}`);
+    marker.on('click', () => highlightCard(item.id, true));
+    crState.markers[item.id] = marker;
+    bounds.push([item.lat, item.lng]);
   });
   if (bounds.length) referralMap.fitBounds(bounds, { padding: [32, 32], maxZoom: 14 });
+  else referralMap.setView(REFERRAL_DEFAULT_CENTER, REFERRAL_DEFAULT_ZOOM);
 }
 
-// ── Find a Referral — search state, logic, results, and data source kept
-// separate so a real referral dataset/API can later replace
-// getReferralResults() without touching the input handling or rendering. ──
-const referralState = { status: 'idle' }; // idle | loading | done
-
-// Data source placeholder — swap this for a real API/dataset later. It
-// intentionally never returns fabricated facilities.
-async function getReferralResults(query) {
-  await new Promise(resolve => setTimeout(resolve, 450));
-  return [];
-}
-
-function renderReferralResults(rp) {
-  const el = document.getElementById('referralResults');
-  if (referralState.status === 'idle') { el.innerHTML = ''; return; }
-  if (referralState.status === 'loading') {
-    el.innerHTML = `<p class="referral-status">${rp.loadingText}</p>`;
-    return;
-  }
-  // status === 'done' — no dataset yet, so every search lands here.
-  // Once real results exist, map them into result cards above this fallback.
-  el.innerHTML = `
-    <div class="referral-empty">
-      <div class="referral-empty-icon" aria-hidden="true">${icon('i-help-circle')}</div>
-      <p class="referral-empty-heading">${rp.comingSoonHeading}</p>
-      <p class="referral-empty-body">${rp.comingSoonBody}</p>
-    </div>`;
+function highlightCard(id, scroll) {
+  crState.activeId = id;
+  document.querySelectorAll('.cr-card').forEach(c => c.classList.toggle('is-active', c.dataset.id === id));
+  const card = document.getElementById('cr-' + id);
+  if (card && scroll) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function initReferralSearch(data) {
-  const rp = data.referralPage;
-  const form = document.getElementById('referralForm');
   const input = document.getElementById('referralInput');
-  const errorEl = document.getElementById('referralError');
-
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    const query = input.value.trim();
-    if (!query) {
-      errorEl.textContent = rp.noInputError;
-      errorEl.hidden = false;
-      input.setAttribute('aria-invalid', 'true');
-      input.focus();
-      return;
-    }
-    errorEl.hidden = true;
-    input.removeAttribute('aria-invalid');
-    referralState.status = 'loading';
-    renderReferralResults(rp);
-    const results = await getReferralResults(query);
-    referralState.status = 'done';
-    renderReferralResults(rp);
-    renderReferralMarkers(results);
+  const form = document.getElementById('referralForm');
+  const update = () => { crState.query = input.value.trim(); render_all(); };
+  input.addEventListener('input', update);
+  form.addEventListener('submit', e => { e.preventDefault(); update(); document.getElementById('crResultsTop').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  document.getElementById('crSections').addEventListener('click', e => {
+    const chip = e.target.closest('.cr-chip');
+    if (!chip) return;
+    crState.section = chip.dataset.section;
+    render_all();
   });
+  document.getElementById('referralResults').addEventListener('click', e => {
+    const btn = e.target.closest('.cr-map-btn');
+    if (!btn) return;
+    const marker = crState.markers[btn.dataset.id];
+    if (!marker) return;
+    highlightCard(btn.dataset.id, false);
+    referralMap.setView(marker.getLatLng(), 14);
+    marker.openPopup();
+    document.getElementById('referralMap').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+  render_all();
 }
 
 function render(data) {
   const rp = data.referralPage;
+  crState.data = data;
+  crState.items = (data.communityResources && data.communityResources.items) || [];
+  crState.items.forEach((item, i) => { if (!item.id) item.id = 'resource-' + i; });
 
   document.getElementById('refLabel').textContent = rp.sectionLabel;
   document.getElementById('refHeading').textContent = rp.heading;

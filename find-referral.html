@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <link rel="stylesheet" href="styles.css?v=5" />
+  <link rel="stylesheet" href="styles.css?v=53" />
 </head>
 <body>
 
@@ -25,6 +25,18 @@
     <circle cx="12" cy="12" r="10"/>
     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
     <line x1="12" y1="17" x2="12.01" y2="17"/>
+  </symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+  </symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+  </symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="20 6 9 17 4 12"/>
   </symbol>
   <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
     <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
@@ -89,10 +101,13 @@
       <p class="referral-error" id="referralError" role="alert" hidden></p>
     </form>
 
-    <div class="referral-layout">
+    <div class="cr-sections" id="crSections" role="group" aria-label="Filter by section"></div>
+    <p class="cr-section-intro" id="crSectionIntro" hidden></p>
+
+    <div class="referral-layout" id="crResultsTop">
       <div class="referral-results-col">
-        <h4 class="referral-col-heading" id="refResultsHeading"></h4>
-        <div class="referral-results" id="referralResults" aria-live="polite"></div>
+        <h4 class="referral-col-heading"><span id="refResultsHeading"></span> · <span id="crCount" aria-live="polite"></span></h4>
+        <div class="referral-results cr-list" id="referralResults"></div>
       </div>
       <div class="referral-map-col">
         <h4 class="referral-col-heading" id="refMapHeading"></h4>
@@ -114,7 +129,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script src="content-loader.js?v=2"></script>
-<script src="find-referral.js?v=2"></script>
+<script src="find-referral.js?v=4"></script>
 <script src="goal-banner.js?v=3"></script>
 </body>
 </html>

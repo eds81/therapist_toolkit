@@ -96,10 +96,10 @@
           "reply": "Within 1 business day",
           "note": "For non-urgent logistics, not crisis response",
           "buttonLabel": "Email the Rise team",
-          "mailto": "mailto:team@riseagainstsuicide.org",
+          "mailto": "mailto:referral@riseagainstsuicide.org",
           "schedulingUrl": "",
-          "secondaryText": "team@riseagainstsuicide.org",
-          "secondaryHref": "mailto:team@riseagainstsuicide.org"
+          "secondaryText": "referral@riseagainstsuicide.org",
+          "secondaryHref": "mailto:referral@riseagainstsuicide.org"
         }
       ],
       "prototypeNote": "Contact links and the scheduling link below are placeholders for this prototype — swap in real addresses and links via the CMS."

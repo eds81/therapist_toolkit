@@ -2238,3 +2238,65 @@ body.scgate-open { overflow: hidden; }
 .reslib-coming-item:hover { border-color: var(--teal); color: var(--teal-dark); }
 .reslib-coming-item:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
 #reslibFilters { display: flex; flex-direction: column; gap: 22px; }
+
+/* =============================================
+   COMMUNITY RESOURCES — section filter, resource cards, sticky map
+   ============================================= */
+.cr-sections { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 10px; }
+.cr-chip {
+  font-family: var(--font); font-size: 13px; font-weight: 800; color: var(--text-mid);
+  background: var(--white); border: 2px solid var(--cream-dark); border-radius: 100px; padding: 6px 14px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px; transition: border-color .15s, background .15s, color .15s;
+}
+.cr-chip span { font-size: 11px; background: var(--cream); color: var(--text-mid); border-radius: 100px; padding: 0 7px; }
+.cr-chip:hover { border-color: var(--teal); color: var(--teal-dark); }
+.cr-chip.is-active { background: var(--teal); border-color: var(--teal); color: var(--white); }
+.cr-chip.is-active span { background: rgba(255,255,255,.25); color: var(--white); }
+.cr-chip:focus-visible, .cr-map-btn:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.cr-section-intro { font-size: 14px; color: var(--text-mid); margin-bottom: 8px; max-width: 760px; }
+.referral-map-col { position: sticky; top: 84px; }
+.cr-list { display: flex; flex-direction: column; gap: 14px; }
+.cr-card {
+  background: var(--white); border: 2px solid var(--cream-dark); border-radius: var(--radius); padding: 18px 20px;
+  transition: border-color .2s, box-shadow .2s; scroll-margin-top: 90px;
+}
+.cr-card.is-active { border-color: var(--teal); box-shadow: var(--shadow-sm); }
+.cr-card-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
+.cr-section-tag { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; border-radius: 100px; padding: 2px 9px; background: var(--teal-light); color: var(--teal-dark); }
+.cr-section-safety { background: #FDECEA; color: #8B2E22; }
+.cr-section-basic { background: #FEF0E6; color: #9A4A12; }
+.cr-section-youth { background: var(--green-light); color: hsl(112,35%,22%); }
+.cr-section-space { background: #EFEAF7; color: #5B4A8A; }
+.cr-vetted { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 800; color: var(--green-dark); }
+.cr-vetted svg { stroke: var(--green-dark); }
+.cr-card h3 { font-size: 17px; margin-bottom: 2px; }
+.cr-category { font-size: 12px; font-weight: 700; color: var(--text-light); margin-bottom: 6px; }
+.cr-desc { font-size: 14px; color: var(--text-mid); line-height: 1.55; margin-bottom: 10px; }
+.cr-contacts { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-bottom: 8px; }
+.cr-contact { display: inline-flex; align-items: flex-start; gap: 6px; font-size: 13px; font-weight: 700; color: var(--teal-dark); overflow-wrap: anywhere; }
+.cr-contact svg { stroke: var(--teal); flex-shrink: 0; margin-top: 2px; }
+.cr-contact a, a.cr-contact { color: var(--teal-dark); }
+.cr-contact a:hover, a.cr-contact:hover { text-decoration: underline; }
+.cr-address { display: flex; align-items: flex-start; gap: 6px; font-size: 13px; color: var(--text-mid); margin-bottom: 4px; }
+.cr-address svg { stroke: var(--text-light); flex-shrink: 0; margin-top: 2px; }
+.cr-card-actions { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 8px 16px; margin-top: 8px; }
+.cr-more { flex: 1; min-width: 220px; }
+.cr-more summary { cursor: pointer; font-size: 13px; font-weight: 800; color: var(--teal); list-style: revert; }
+.cr-more dl { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+.cr-detail dt { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--text-light); }
+.cr-detail dd { font-size: 13px; color: var(--text); line-height: 1.5; overflow-wrap: anywhere; }
+.cr-detail dd a { color: var(--teal-dark); font-weight: 700; }
+.cr-map-btn {
+  font-family: var(--font); font-size: 12px; font-weight: 800; color: var(--teal-dark); background: var(--teal-light);
+  border: none; border-radius: 100px; padding: 5px 12px; cursor: pointer;
+}
+.cr-map-btn:hover { background: var(--teal); color: var(--white); }
+.cr-empty { font-size: 14px; color: var(--text-mid); background: var(--cream); border-radius: var(--radius-sm); padding: 16px; }
+@media (max-width: 900px) { .referral-map-col { position: static; order: -1; } .referral-layout { display: flex; flex-direction: column; } }
+/* Community Resources map pins */
+.cr-pin { background: none; border: none; }
+.cr-pin span {
+  display: block; width: 22px; height: 22px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+  background: var(--teal); border: 2.5px solid var(--white); box-shadow: 0 1px 4px rgba(0,0,0,.35);
+}
+.cr-pin:hover span, .leaflet-marker-icon.cr-pin:focus span { background: var(--teal-dark); }

@@ -238,7 +238,7 @@
       ],
       "riseHeading": "Rise Against Suicide",
       "riseContactLabel": "Email",
-    "riseContact": "team@riseagainstsuicide.org",
+    "riseContact": "referral@riseagainstsuicide.org",
       "whenRiseHeading": "Contact Rise about",
       "whenRise": [
         "New referrals (through the Rise RMS)",
@@ -250,13 +250,12 @@
       "crisis": [
         "Immediate danger: call 911",
         "988 Suicide & Crisis Lifeline: call or text 988 (24/7)",
-        "Colorado Crisis Services: 1-844-493-8255, or text TALK to 38255",
         "Follow your school's own risk assessment procedures"
       ],
       "localHeading": "Local community resources",
       "localPlaceholder": "Add local resources for this school's community (one per line)",
       "printLabel": "Print contact card",
-      "prototypeNote": "The Rise contact address is a placeholder for this prototype. Confirm it, and the crisis lines, in the CMS before sharing cards with schools."
+      "prototypeNote": ""
     },
     "guidelines": {
       "heading": "Rise School Guidelines",
