@@ -1,16 +1,8 @@
 {
   "planner": {
-    "navLabel": "Planning Tool",
-    "sectionLabel": "Interactive Tool",
-    "heading": "Client Ecological Formulation & Treatment Planner",
-    "intro": "Map the risk and protective factors shaping a client's world — client, peer, family, school, and community/structural — then generate a starting-point treatment plan and resource list drawn from this toolkit. The goal throughout: reducing the client's suicidal ideation.",
-    "disclaimer": "This tool offers a starting point, not a clinical decision. Always apply your own clinical judgment, and follow your standard risk assessment and safety planning protocol regardless of what it suggests.",
-    "riskColumnLabel": "Risk / Vulnerability",
-    "protectiveColumnLabel": "Protective / Buffering",
-    "ecoMapRiskLabel": "Risks",
     "ecoMapProtectiveLabel": "Protectors",
-    "centerLabel": "Client",
-    "centerSub": "current context",
+    "addButtonLabel": "Add",
+    "heading": "Client Ecological Formulation & Treatment Planner",
     "rings": [
       {
         "key": "community",
@@ -43,53 +35,16 @@
         "placeholderProtective": "e.g. coping + treatment skills"
       }
     ],
-    "addButtonLabel": "Add",
-    "stepHint": "Enter as many or as few factors as apply at this level — you can leave it blank and move on if it isn't relevant to this client.",
-    "backButtonLabel": "Back",
-    "nextButtonLabel": "Next",
-    "reviewButtonLabel": "Review Plan",
-    "reviewHeading": "Review Your Client Ecological Formulation",
-    "reviewIntro": "Here's the full map from what you entered. Add, remove, or adjust anything before generating the plan.",
-    "generateButtonLabel": "Generate Treatment Plan",
-    "resetButtonLabel": "Start Over",
-    "downloadButtonLabel": "Download Plan (PDF)",
-    "downloadHint": "Opens your browser's print dialog — choose “Save as PDF” as the destination to download it.",
-    "emptyStateText": "Add at least one risk or protective factor above, then generate a plan.",
-    "outputHeadings": {
-      "resources": "Recommended Resources",
-      "more": "Explore More"
-    },
     "emailPlan": {
       "buttonLabel": "Email My Plan to the Rise Team",
       "address": "feedback@riseagainstsuicide.org",
       "hint": "Opt-in — opens your email client with a plain-text summary of what you entered (factors, severities, and interventions), not the formatted PDF. Please remove or de-identify any client details before sending. Sharing this helps the Rise and toolkit development team improve the service."
     },
-    "goal": {
-      "label": "Goal",
-      "statement": "Reduce the client's suicidal ideation",
-      "steps": {
-        "ring": "As you map this level, ask: what here raises or lowers the client's suicidal ideation?",
-        "topFactors": "Choose the factors most closely tied to the client's suicidal ideation. These become the focus of treatment.",
-        "resourcePlan": "Pick interventions that directly target what drives the client's suicidal ideation, or strengthen what protects against it.",
-        "review": "Every phase of this plan works toward one outcome: reducing the client's suicidal ideation."
-      },
-      "focusLabel": "In this phase",
-      "checkLabel": "Check",
-      "phases": [
-        {
-          "focus": "Understand what is driving the client's suicidal ideation, and keep them safe while you work on it. Assess current risk, build a safety plan together, and map the factors that raise and lower it.",
-          "check": "Do I know what is driving this client's suicidal ideation, and is a safety plan in place?"
-        },
-        {
-          "focus": "Give the client skills to manage suicidal thoughts when they show up and lower them over time. Teach and practice emotion regulation, problem-solving, and support-seeking, aimed at the top factors you identified.",
-          "check": "Is the client using these skills when suicidal thoughts or urges come up?"
-        },
-        {
-          "focus": "Make the reduction in suicidal ideation last after Rise ends. Consolidate skills, re-screen to measure change since intake, update the safety plan, and link the client to their next step in care.",
-          "check": "Has the client's suicidal ideation decreased since intake, and is care in place to keep it that way?"
-        }
-      ]
-    },
+    "reviewButtonLabel": "Review Plan",
+    "reviewHeading": "Review Your Client Ecological Formulation",
+    "centerSub": "current context",
+    "intro": "Map the risk and protective factors shaping a client's world — client, peer, family, school, and community/structural — then generate a starting-point treatment plan and resource list drawn from this toolkit. The goal throughout: reducing the client's suicidal ideation.",
+    "generateButtonLabel": "Generate Treatment Plan",
     "phase3Checklist": {
       "heading": "Phase 3 Checklist",
       "intro": "Activities to complete before your final session with the client.",
@@ -135,8 +90,53 @@
         }
       ]
     },
+    "nextButtonLabel": "Next",
+    "phaseCommentPlaceholder": "Add any notes for this phase…",
+    "riskColumnLabel": "Risk / Vulnerability",
+    "sectionLabel": "Interactive Tool",
+    "downloadHint": "Opens your browser's print dialog — choose “Save as PDF” as the destination to download it.",
     "phaseCommentLabel": "Comments",
-    "phaseCommentPlaceholder": "Add any notes for this phase…"
+    "emptyStateText": "Add at least one risk or protective factor above, then generate a plan.",
+    "navLabel": "Treatment Planning Tool",
+    "outputHeadings": {
+      "resources": "Recommended Resources",
+      "more": "Explore More"
+    },
+    "resetButtonLabel": "Start Over",
+    "goal": {
+      "label": "Goal",
+      "statement": "Reduce the client's suicidal ideation",
+      "steps": {
+        "ring": "As you map this level, ask: what here raises or lowers the client's suicidal ideation?",
+        "topFactors": "Choose the factors most closely tied to the client's suicidal ideation. These become the focus of treatment.",
+        "resourcePlan": "Pick interventions that directly target what drives the client's suicidal ideation, or strengthen what protects against it.",
+        "review": "Every phase of this plan works toward one outcome: reducing the client's suicidal ideation."
+      },
+      "focusLabel": "In this phase",
+      "checkLabel": "Check",
+      "phases": [
+        {
+          "focus": "Understand what is driving the client's suicidal ideation, and keep them safe while you work on it. Assess current risk, build a safety plan together, and map the factors that raise and lower it.",
+          "check": "Do I know what is driving this client's suicidal ideation, and is a safety plan in place?"
+        },
+        {
+          "focus": "Give the client skills to manage suicidal thoughts when they show up and lower them over time. Teach and practice emotion regulation, problem-solving, and support-seeking, aimed at the top factors you identified.",
+          "check": "Is the client using these skills when suicidal thoughts or urges come up?"
+        },
+        {
+          "focus": "Make the reduction in suicidal ideation last after Rise ends. Consolidate skills, re-screen to measure change since intake, update the safety plan, and link the client to their next step in care.",
+          "check": "Has the client's suicidal ideation decreased since intake, and is care in place to keep it that way?"
+        }
+      ]
+    },
+    "stepHint": "Enter as many or as few factors as apply at this level — you can leave it blank and move on if it isn't relevant to this client.",
+    "reviewIntro": "Here's the full map from what you entered. Add, remove, or adjust anything before generating the plan.",
+    "protectiveColumnLabel": "Protective / Buffering",
+    "downloadButtonLabel": "Download Plan (PDF)",
+    "ecoMapRiskLabel": "Risks",
+    "disclaimer": "This tool offers a starting point, not a clinical decision. Always apply your own clinical judgment, and follow your standard risk assessment and safety planning protocol regardless of what it suggests.",
+    "backButtonLabel": "Back",
+    "centerLabel": "Client"
   },
   "resourceCategories": [
     {
