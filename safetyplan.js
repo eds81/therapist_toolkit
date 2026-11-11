@@ -66,7 +66,7 @@ function render(data) {
 
   document.getElementById('spSteps').innerHTML = p.steps.map(step => `
     <div class="sp-step" data-step="${step.key}">
-      <h3>${step.heading}</h3>
+      <h3 class="sp-step-heading">${icon(SP_STEP_ICONS[step.key] || 'ic-clipboard', 'icon-sm')}<span>${step.heading}</span></h3>
       <p class="sp-step-intro">${step.intro}</p>
       <div class="planner-input-group">
         <input type="text" class="planner-input" data-step="${step.key}" placeholder="${step.placeholder}" />
@@ -76,9 +76,10 @@ function render(data) {
     </div>`).join('');
 
   const stepLabels = p.steps.map(s => s.stepLabel).concat(['Review']);
+  const stepKeys = p.steps.map(s => s.key).concat(['review']);
   document.getElementById('spStepper').innerHTML = stepLabels.map((label, i) => `
-    <button type="button" class="planner-step-item" data-step-index="${i}">
-      <span class="planner-step-dot">${i + 1}</span>
+    <button type="button" class="planner-step-item" data-step-index="${i}" aria-label="Step ${i + 1}: ${label}">
+      <span class="planner-step-dot">${icon(SP_STEP_ICONS[stepKeys[i]] || 'ic-clipboard', 'step-icon')}</span>
       <span class="planner-step-label">${label}</span>
     </button>`).join('');
 
@@ -86,6 +87,10 @@ function render(data) {
     `<strong>${data.footer.orgName}</strong><span>${data.footer.subLine}</span>`;
   document.getElementById('footerRight').innerHTML = `<p>${data.footer.fundingText}</p>`;
 }
+
+// What each safety plan step is about, at a glance.
+const SP_STEP_ICONS = { warningSigns: 'ic-alert', internalCoping: 'ic-sun', distraction: 'ic-coffee', askForHelp: 'ic-users',
+  professionals: 'ic-briefcase', environment: 'ic-lock', review: 'ic-clipboard' };
 
 function initSafetyPlan() {
   const section = document.getElementById('safetyPlan');

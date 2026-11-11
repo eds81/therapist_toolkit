@@ -7,9 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=53" />
+  <link rel="stylesheet" href="styles.css?v=58" />
 </head>
 <body>
+<script src="icons.js?v=1"></script>
 
 <!-- SVG SPRITE -->
 <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
@@ -135,6 +136,7 @@
          and the map/factors below belong conceptually under Phase 1. -->
     <div class="planner-review-phase-head planner-review-phase-head-1" id="plannerReviewPhase1Head" hidden>
       <span class="planner-review-phase-num">1</span>
+      <span class="planner-review-phase-icon" aria-hidden="true"><svg class="icon"><use href="#ic-search"/></svg></span>
       <div>
         <h3 id="plannerPhase1Title"></h3>
         <span class="planner-review-phase-sessions" id="plannerPhase1Sessions"></span>
@@ -200,6 +202,7 @@
 
       <div class="planner-review-phase-head planner-review-phase-head-2" id="plannerReviewPhase2Head">
         <span class="planner-review-phase-num">2</span>
+      <span class="planner-review-phase-icon" aria-hidden="true"><svg class="icon"><use href="#ic-tool"/></svg></span>
         <div>
           <h3 id="plannerPhase2Title"></h3>
           <span class="planner-review-phase-sessions" id="plannerPhase2Sessions"></span>
@@ -214,6 +217,7 @@
 
       <div class="planner-review-phase-head planner-review-phase-head-3" id="plannerReviewPhase3Head">
         <span class="planner-review-phase-num">3</span>
+      <span class="planner-review-phase-icon" aria-hidden="true"><svg class="icon"><use href="#ic-flag"/></svg></span>
         <div>
           <h3 id="plannerPhase3Title"></h3>
           <span class="planner-review-phase-sessions" id="plannerPhase3Sessions"></span>
@@ -249,7 +253,7 @@
 </footer>
 
 <script src="content-loader.js?v=2"></script>
-<script src="planner.js?v=62"></script>
+<script src="planner.js?v=63"></script>
 <script src="goal-banner.js?v=3"></script>
 </body>
 </html>

@@ -689,9 +689,12 @@ function renderPlanner(data) {
   document.getElementById('plannerProtectiveRows').innerHTML = rowsHtml('protective');
 
   const stepLabels = p.rings.map(r => r.label).concat(['Top Factors', 'Resources', 'Review']);
+  // Each step's icon shows what it covers (the step title still gives its number).
+  const STEP_ICONS = { community: 'ic-building', school: 'ic-school', family: 'ic-home', peer: 'ic-users', client: 'ic-user',
+    topFactors: 'ic-star', resourcePlan: 'ic-tool', review: 'ic-clipboard' };
   document.getElementById('plannerStepper').innerHTML = stepLabels.map((label, i) => `
-    <button type="button" class="planner-step-item" data-step-index="${i}" data-ring="${STEP_KEYS[i]}">
-      <span class="planner-step-dot">${i + 1}</span>
+    <button type="button" class="planner-step-item" data-step-index="${i}" data-ring="${STEP_KEYS[i]}" aria-label="Step ${i + 1}: ${label}">
+      <span class="planner-step-dot">${icon(STEP_ICONS[STEP_KEYS[i]] || 'ic-clipboard', 'step-icon')}</span>
       <span class="planner-step-label">${label}</span>
     </button>`).join('');
 }
@@ -1644,6 +1647,7 @@ function phase3ChecklistHtml() {
         <label>
           <input type="checkbox" class="planner-checklist-input" data-check-index="${i}"${checked ? ' checked' : ''}/>
           <span class="planner-checklist-box" aria-hidden="true"></span>
+          ${it.icon ? `<span class="planner-checklist-icon" aria-hidden="true">${icon(it.icon, 'icon-sm')}</span>` : ''}
           <span class="planner-checklist-text">
             <strong>${escapeXml(it.text)}</strong>
             ${it.detail ? `<span class="planner-checklist-detail">${escapeXml(it.detail)}</span>` : ''}
@@ -1767,6 +1771,7 @@ function generatePlan() {
   // until hovered/focused or clicked (see initPhaseStripNav/styles.css).
   const priorityStripHtml = phases.map((ph, i) => `
     <div class="planner-phase-card phase-${i + 1}" data-phase-index="${i}" role="button" tabindex="0">
+      ${icon(['ic-search', 'ic-tool', 'ic-flag'][i] || 'ic-flag', 'phase-card-icon')}
       <strong>${ph.title}</strong>
       <span>${ph.sessions}</span>
     </div>`).join('');

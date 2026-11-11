@@ -38,6 +38,10 @@ const schState = {
   contact: { fields: {}, local: '' }
 };
 
+// Icons that show what each tab and role is about, at a glance.
+const SCH_TAB_ICONS = { tips: 'ic-lightbulb', card: 'ic-id-card', contact: 'ic-phone', guidelines: 'ic-shield' };
+const SCH_ROLE_ICONS = { rise: 'ic-heart', school: 'ic-school', therapist: 'ic-user' };
+
 // ── Tabs ─────────────────────────────────────
 const TAB_KEYS = ['tips', 'card', 'contact', 'guidelines'];
 
@@ -105,7 +109,7 @@ function rolesHtml(sp) {
         ${sp.roles.map((r, i) => `
           <div class="schools-role schools-role-${i + 1}" data-role-key="${esc(r.key || '')}">
             <span class="schools-role-badge" hidden>${esc(picker ? picker.bestFitLabel : '')}</span>
-            <strong>${esc(r.who)}</strong>
+            <strong class="schools-role-who">${icon(SCH_ROLE_ICONS[r.key] || 'ic-user', 'icon-sm')}${esc(r.who)}</strong>
             <p>${esc(r.role)}</p>
           </div>`).join('')}
       </div>
@@ -166,7 +170,7 @@ function renderTips(sp) {
       <li class="schools-tip" id="tip-${i + 1}">
         <span class="schools-tip-num" aria-hidden="true">${i + 1}</span>
         <div class="schools-tip-body">
-          <span class="schools-tip-kicker">Tip ${i + 1}</span>
+          <span class="schools-tip-kicker">${tip.icon ? icon(tip.icon, 'icon-xs') : ''}Tip ${i + 1}</span>
           <h3>${esc(tip.title)}</h3>
           <p>${esc(tip.body)}</p>
           ${link ? `<div class="schools-tip-link">${link}</div>` : ''}
@@ -535,7 +539,7 @@ function render(data) {
   document.getElementById('schQuote').innerHTML = `"${esc(sp.quote.text)}"<cite>— ${esc(sp.quote.cite)}</cite>`;
 
   document.getElementById('schTabsNav').innerHTML = TAB_KEYS.map((key, i) =>
-    `<button type="button" class="tab-btn${i === 0 ? ' active' : ''}" role="tab" aria-selected="${i === 0}" data-tab="${key}">${esc(sp.tabs[key])}</button>`
+    `<button type="button" class="tab-btn tab-btn-icon${i === 0 ? ' active' : ''}" role="tab" aria-selected="${i === 0}" data-tab="${key}">${icon(SCH_TAB_ICONS[key] || 'ic-layers', 'icon-xs')}${esc(sp.tabs[key])}</button>`
   ).join('');
 
   renderTips(sp);

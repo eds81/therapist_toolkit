@@ -27,7 +27,7 @@
   --shadow-md: 0 8px 32px rgba(0,0,0,.12);
 
   --font:  'Nunito', sans-serif;
-  --max-w: 1100px;
+  --max-w: 1360px; /* page width for every page's headers and content (matches Community Resources) */
 
   --ease-out: cubic-bezier(.22,.68,0,1.2);
 }
@@ -150,7 +150,7 @@ h4 { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 8px; 
 .hero-dots { position: absolute; width: 120px; height: 80px; background-image: radial-gradient(var(--teal) 1.5px, transparent 1.5px); background-size: 12px 12px; opacity: .25; pointer-events: none; }
 .hero-dots-tr { top: 24px; right: 24px; }
 .hero-dots-bl { bottom: 80px; left: 24px; }
-.hero-content { max-width: var(--max-w); margin: 0 auto; position: relative; z-index: 2; }
+.hero-content { max-width: calc(var(--max-w) - 48px); margin: 0 auto; position: relative; z-index: 2; }
 .hero-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
 .badge { display: inline-block; font-size: 12px; font-weight: 800; padding: 5px 14px; border-radius: 100px; letter-spacing: .05em; }
 .badge-teal  { background: var(--teal); color: var(--white); }
@@ -161,7 +161,7 @@ h4 { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 8px; 
 .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 64px; }
 
 .hero-stats {
-  max-width: var(--max-w); margin: 0 auto;
+  max-width: calc(var(--max-w) - 48px); margin: 0 auto;
   display: grid; grid-template-columns: repeat(4, 1fr);
   gap: 1px; background: var(--cream-dark);
   border-radius: var(--radius) var(--radius) 0 0;
@@ -2300,3 +2300,65 @@ body.scgate-open { overflow: hidden; }
   background: var(--teal); border: 2.5px solid var(--white); box-shadow: 0 1px 4px rgba(0,0,0,.35);
 }
 .cr-pin:hover span, .leaflet-marker-icon.cr-pin:focus span { background: var(--teal-dark); }
+
+/* Community Resources — map-first layout: wider page, list on the left,
+   a large map on the right that stays in view while the list scrolls. */
+.referral-page .referral-layout { grid-template-columns: minmax(340px, 5fr) 7fr; gap: 28px; }
+.referral-page .referral-map-col { position: sticky; top: 84px; }
+.referral-page .referral-map { height: calc(100vh - 150px); min-height: 480px; max-height: 860px; border: 2px solid var(--cream-dark); }
+@media (max-width: 900px) {
+  .referral-page .referral-map-col { position: static; }
+  .referral-page .referral-map { height: 60vh; min-height: 360px; max-height: 520px; }
+}
+
+/* =============================================
+   ICONS added for at-a-glance recognition (shared set: icons.js)
+   ============================================= */
+/* Planning Tool + Safety Plan steppers: an icon in each step's circle */
+.planner-step-dot .step-icon { width: 15px; height: 15px; stroke: currentColor; }
+.planner-step-dot { color: var(--text-light); }
+.planner-phase-card .phase-card-icon { width: 20px; height: 20px; stroke: currentColor; margin-bottom: 6px; opacity: .95; }
+.planner-review-phase-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--teal-light); }
+.planner-review-phase-icon svg { width: 18px; height: 18px; stroke: var(--teal-dark); }
+.planner-review-phase-head-1 .planner-review-phase-icon { background: #FEF0E6; } .planner-review-phase-head-1 .planner-review-phase-icon svg { stroke: var(--orange); }
+.planner-review-phase-head-2 .planner-review-phase-icon { background: var(--green-light); } .planner-review-phase-head-2 .planner-review-phase-icon svg { stroke: var(--green-dark); }
+.planner-checklist-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: -4px; }
+.planner-checklist-icon svg { stroke: var(--teal-dark); width: 17px; height: 17px; }
+.sp-step-heading { display: flex; align-items: center; gap: 10px; }
+.sp-step-heading svg { stroke: var(--teal); flex-shrink: 0; }
+
+/* Treatment Library tabs and resource groups */
+.reslib-tab svg { stroke: currentColor; flex-shrink: 0; }
+.reslib-link-group h5 { display: flex; align-items: center; gap: 6px; }
+.reslib-link-group h5 svg { stroke: var(--text-light); }
+
+/* Community Resources filters and card tags */
+.cr-chip svg { stroke: currentColor; flex-shrink: 0; }
+.cr-section-tag { display: inline-flex; align-items: center; gap: 5px; }
+.cr-section-tag svg { stroke: currentColor; width: 12px; height: 12px; }
+
+/* Navigating Schools tabs, roles, tips */
+.tab-btn-icon { display: inline-flex; align-items: center; gap: 7px; }
+.tab-btn-icon svg { stroke: currentColor; flex-shrink: 0; }
+.schools-role-who { display: flex !important; align-items: center; gap: 8px; }
+.schools-role-who svg { stroke: var(--teal-dark); flex-shrink: 0; }
+.schools-role-2 .schools-role-who svg { stroke: var(--orange); }
+.schools-role-3 .schools-role-who svg { stroke: var(--green-dark); }
+.schools-tip-kicker { display: inline-flex; align-items: center; gap: 6px; }
+.schools-tip-kicker svg { stroke: var(--teal); }
+
+/* Home: tool icons, FAQ question icons */
+.tour-title { display: flex; align-items: center; gap: 8px; }
+.tour-title svg { stroke: var(--teal); flex-shrink: 0; }
+.journey-chip { display: inline-flex; align-items: center; gap: 6px; }
+.journey-chip svg { stroke: currentColor; flex-shrink: 0; }
+.faq-q { display: flex; align-items: center; gap: 12px; }
+.faq-q svg { stroke: var(--teal); flex-shrink: 0; width: 22px; height: 22px; }
+
+/* About: roadmap phase + research step icons */
+.phase-header { display: flex; align-items: center; gap: 7px; }
+.phase-header svg { stroke: currentColor; flex-shrink: 0; width: 16px; height: 16px; }
+.aim-top { display: flex; align-items: flex-start; justify-content: space-between; }
+.aim-icon { width: 30px; height: 30px; stroke: rgba(255,255,255,.85); }
+/* checklist links line up with the item text when the item has an icon (box 22 + gap 12 + icon 32 + gap 12) */
+.planner-checklist-item:has(.planner-checklist-icon) .planner-checklist-link-row { padding-left: 78px; }

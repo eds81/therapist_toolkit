@@ -99,7 +99,7 @@ function renderTabs() {
   document.getElementById('reslibTabs').innerHTML = TABS.map(tab => {
     const on = tab === reslibState.tab;
     const n = tabItems(tab).filter(isListed).length;
-    return `<button type="button" role="tab" class="reslib-tab${on ? ' is-active' : ''}" data-tab="${tab}" aria-selected="${on}" aria-controls="reslibPanel" tabindex="${on ? 0 : -1}">${t[tab].label} <span class="reslib-tab-count">${n}</span></button>`;
+    return `<button type="button" role="tab" class="reslib-tab${on ? ' is-active' : ''}" data-tab="${tab}" aria-selected="${on}" aria-controls="reslibPanel" tabindex="${on ? 0 : -1}">${icon(tab === 'practices' ? 'ic-star' : 'ic-file-text', 'icon-sm')}${t[tab].label} <span class="reslib-tab-count">${n}</span></button>`;
   }).join('');
   document.getElementById('reslibTabIntro').textContent = t[reslibState.tab].intro;
 }
@@ -127,7 +127,9 @@ function renderFilters() {
 
 function renderResults() {
   const t = reslibState.data.tabs;
-  const all = tabItems(reslibState.tab).filter(i => matches(i));
+  // A–Z by title (cards and the "coming soon" list alike).
+  const all = tabItems(reslibState.tab).filter(i => matches(i))
+    .sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: 'base' }));
   const items = all.filter(isListed);
   const grid = document.getElementById('reslibGrid');
   const empty = document.getElementById('reslibEmpty');
@@ -215,6 +217,7 @@ const LINK_GROUPS = [
   ['research', 'Research'],
   ['other', 'More resources'],
 ];
+const LINK_GROUP_ICONS = { therapist: 'ic-user', client: 'ic-users', research: 'ic-book-open', other: 'ic-layers' };
 function escHtml(str) {
   return String(str == null ? '' : str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
@@ -226,7 +229,7 @@ function practiceLinksHtml(item) {
     if (!list.length) return '';
     return `
       <div class="reslib-link-group">
-        <h5>${heading}</h5>
+        <h5>${icon(LINK_GROUP_ICONS[key] || 'ic-layers', 'icon-xs')}${heading}</h5>
         <ul>${list.map(l => l.url
           ? `<li><a href="${escHtml(l.url)}"${/^https?:/.test(l.url) ? ' target="_blank" rel="noopener"' : ''}>${escHtml(l.label)}${icon('i-arrow-right', 'icon-xs')}</a></li>`
           : `<li><span class="reslib-link-pending">${escHtml(l.label)} <em>link coming soon</em></span></li>`).join('')}</ul>

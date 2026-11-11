@@ -21,7 +21,8 @@
         "widget": "none",
         "linkText": "",
         "linkHref": "",
-        "pendingText": ""
+        "pendingText": "",
+        "icon": "ic-users"
       },
       {
         "title": "Connect with your school partner and answer key questions",
@@ -29,7 +30,8 @@
         "widget": "interviewGuide",
         "linkText": "",
         "linkHref": "",
-        "pendingText": ""
+        "pendingText": "",
+        "icon": "ic-message"
       },
       {
         "title": "Clarify the roles of school personnel, the Rise therapist, and Rise admin",
@@ -37,7 +39,8 @@
         "widget": "roles",
         "linkText": "",
         "linkHref": "",
-        "pendingText": ""
+        "pendingText": "",
+        "icon": "ic-layers"
       },
       {
         "title": "Get a Release of Information to communicate with the youth's school",
@@ -45,7 +48,8 @@
         "widget": "none",
         "linkText": "Download the standard ROI form",
         "linkHref": "",
-        "pendingText": "Standard ROI form coming soon"
+        "pendingText": "Standard ROI form coming soon",
+        "icon": "ic-edit"
       },
       {
         "title": "Learn the school's policies and practices",
@@ -53,7 +57,8 @@
         "widget": "none",
         "linkText": "",
         "linkHref": "",
-        "pendingText": ""
+        "pendingText": "",
+        "icon": "ic-book-open"
       },
       {
         "title": "Be prepared to support youth through school re-entry after a crisis",
@@ -61,7 +66,8 @@
         "widget": "none",
         "linkText": "Open the school re-entry resource guide",
         "linkHref": "",
-        "pendingText": "Re-entry resource guide coming soon"
+        "pendingText": "Re-entry resource guide coming soon",
+        "icon": "ic-refresh"
       }
     ],
     "interviewGuide": {
@@ -108,12 +114,49 @@
       "bestFitLabel": "Their role",
       "clearLabel": "Show all",
       "options": [
-        { "label": "Getting connected with a therapist", "matchKeys": ["school"], "note": "The school links the youth with a therapist. The school partner (QRS) enters the referral to Rise." },
-        { "label": "Finding a time and place to meet at school", "matchKeys": ["school"], "note": "The school partner (QRS) helps with scheduling around the youth's classes and finding a private space. Give them at least 24 hours' notice." },
-        { "label": "Paying for therapy", "matchKeys": ["rise"], "note": "Rise funds therapy, so there is no cost to the youth or family." },
-        { "label": "What happens in sessions, and what stays private", "matchKeys": ["therapist"], "note": "The therapist provides therapy and explains confidentiality: what stays between them, and when information has to be shared to keep the youth safe." },
-        { "label": "Checking whether things are getting better", "matchKeys": ["therapist"], "note": "The therapist assesses outcomes, including changes in suicidal ideation, through screenings during treatment." },
-        { "label": "Next steps in care after Rise", "matchKeys": ["therapist", "rise"], "note": "The therapist links the youth to follow-up care, and Rise supports that linkage when needed." }
+        {
+          "label": "Getting connected with a therapist",
+          "matchKeys": [
+            "school"
+          ],
+          "note": "The school links the youth with a therapist. The school partner (QRS) enters the referral to Rise."
+        },
+        {
+          "label": "Finding a time and place to meet at school",
+          "matchKeys": [
+            "school"
+          ],
+          "note": "The school partner (QRS) helps with scheduling around the youth's classes and finding a private space. Give them at least 24 hours' notice."
+        },
+        {
+          "label": "Paying for therapy",
+          "matchKeys": [
+            "rise"
+          ],
+          "note": "Rise funds therapy, so there is no cost to the youth or family."
+        },
+        {
+          "label": "What happens in sessions, and what stays private",
+          "matchKeys": [
+            "therapist"
+          ],
+          "note": "The therapist provides therapy and explains confidentiality: what stays between them, and when information has to be shared to keep the youth safe."
+        },
+        {
+          "label": "Checking whether things are getting better",
+          "matchKeys": [
+            "therapist"
+          ],
+          "note": "The therapist assesses outcomes, including changes in suicidal ideation, through screenings during treatment."
+        },
+        {
+          "label": "Next steps in care after Rise",
+          "matchKeys": [
+            "therapist",
+            "rise"
+          ],
+          "note": "The therapist links the youth to follow-up care, and Rise supports that linkage when needed."
+        }
       ]
     },
     "schoolCard": {
@@ -238,7 +281,7 @@
       ],
       "riseHeading": "Rise Against Suicide",
       "riseContactLabel": "Email",
-    "riseContact": "referral@riseagainstsuicide.org",
+      "riseContact": "referral@riseagainstsuicide.org",
       "whenRiseHeading": "Contact Rise about",
       "whenRise": [
         "New referrals (through the Rise RMS)",
@@ -260,8 +303,8 @@
     "guidelines": {
       "heading": "Rise School Guidelines",
       "source": "From the Rise Program Manual",
-    "printLabel": "Print guidelines",
-    "downloadHint": "Opens your browser's print dialog.",
+      "printLabel": "Print guidelines",
+      "downloadHint": "Opens your browser's print dialog.",
       "intro": "When seeing Rise clients in the school setting, the Rise provider is a representative of Rise Against Suicide. Follow the school's policies and procedures, as well as the Rise protocol below.",
       "items": [
         "The QRS is the only school staff member the Rise provider communicates with at the school. Never reach out to the principal or a school administrator unless directed to by the QRS.",

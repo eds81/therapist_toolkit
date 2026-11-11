@@ -56,6 +56,9 @@ const TOOL_PREVIEWS = {
     </div>`,
 };
 
+// One icon per tool, used wherever that tool is named on the home page.
+const TOOL_ICONS = { planner: 'ic-target', safety: 'ic-shield', library: 'ic-book-open', community: 'ic-map-pin', schools: 'ic-school', selfcare: 'ic-heart' };
+
 function render(data) {
   // HERO
   document.getElementById('heroBadges').innerHTML = data.hero.badges
@@ -87,7 +90,7 @@ function render(data) {
     <a class="tour-card tour-card-${t.key}" href="${t.href}" data-fade data-delay="${(i % 3) + 1}">
       <div class="tour-preview" aria-hidden="true">${TOOL_PREVIEWS[t.key] || ''}</div>
       <div class="tour-body">
-        <h3>${t.title}</h3>
+        <h3 class="tour-title">${icon(TOOL_ICONS[t.key] || 'ic-layers', 'icon-sm')}<span>${t.title}</span></h3>
         <p>${t.tagline}</p>
         <p class="tour-when"><strong>${tour.useWhenLabel}:</strong> ${t.useWhen}</p>
         <span class="tour-open">${tour.openLabel} ${t.title} ${icon('i-arrow-right', 'icon-xs')}</span>
@@ -99,7 +102,7 @@ function render(data) {
   const phases = data.toolkit.tabs.roadmap.phases;
   const chip = key => {
     const t = toolByKey[key];
-    return t ? `<a class="journey-chip journey-chip-${key}" href="${t.href}">${t.title}</a>` : '';
+    return t ? `<a class="journey-chip journey-chip-${key}" href="${t.href}">${icon(TOOL_ICONS[key] || 'ic-layers', 'icon-xs')}${t.title}</a>` : '';
   };
   document.getElementById('journeyLabel').textContent = journey.sectionLabel;
   document.getElementById('journeyHeading').textContent = journey.heading;
@@ -142,27 +145,27 @@ function render(data) {
   document.getElementById('faqHeading').textContent = data.faqSection.heading;
   // The FAQ headings carry their original numbers ("3. How Was…"); with
   // "Why" shown above as cards the numbering would skip, so drop it here.
-  const faqItem = (heading, body, open) => `
+  const faqItem = (heading, body, open, ic) => `
     <details class="faq-item"${open ? ' open' : ''}>
-      <summary><span>${heading.replace(/^\s*\d+\.\s*/, '')}</span></summary>
+      <summary><span class="faq-q">${ic ? icon(ic, 'icon-sm') : ''}<span>${heading.replace(/^\s*\d+\.\s*/, '')}</span></span></summary>
       <div class="faq-item-body">${body}</div>
     </details>`;
   document.getElementById('faqAccordion').innerHTML = [
-    faqItem(faq.goal.heading, faq.goal.paragraphs.map(p => `<p>${p}</p>`).join(''), true),
+    faqItem(faq.goal.heading, faq.goal.paragraphs.map(p => `<p>${p}</p>`).join(''), true, 'ic-target'),
     faqItem(faq.how.heading, `<p>${faq.how.intro}</p>` + faq.how.pairs.map(pair => `
       <div class="faq-pair">
         <p class="faq-concern"><strong>Therapist concern:</strong> ${pair.concern}</p>
         <p class="faq-solution"><strong>Toolkit solution:</strong> ${pair.solution}</p>
-      </div>`).join('')),
+      </div>`).join(''), false, 'ic-users'),
     faqItem(faq.includes.heading, faq.includes.items.map(it => `
       <div class="faq-includes-item">
         <span class="faq-letter">${it.letter}.</span>
         <p><strong>${it.title}:</strong> ${it.body}</p>
-      </div>`).join('')),
+      </div>`).join(''), false, 'ic-layers'),
     faqItem(faq.useIt.heading, `<p>${faq.useIt.intro}</p>` +
       faq.useIt.guidance.map(g => `<p><strong>${g.title}</strong> ${g.body}</p>`).join('') +
       `<ul class="how-to-use-tips">${faq.useIt.tips.map(t => `<li>${t}</li>`).join('')}</ul>` +
-      `<p>${faq.useIt.closing.pre} <a href="${faq.useIt.closing.linkHref}">${faq.useIt.closing.linkText}</a> ${faq.useIt.closing.post}</p>`),
+      `<p>${faq.useIt.closing.pre} <a href="${faq.useIt.closing.linkHref}">${faq.useIt.closing.linkText}</a> ${faq.useIt.closing.post}</p>`, false, 'ic-compass'),
   ].join('');
 
   // FOOTER

@@ -449,6 +449,7 @@ collections:
                     summary: "{{text}}"
                     fields:
                       - {label: "Activity", name: "text", widget: "string"}
+                      - {label: "Icon (optional)", name: "icon", widget: "select", required: false, options: ["ic-star", "ic-compass", "ic-check-circle", "ic-shield", "ic-users", "ic-user", "ic-message", "ic-layers", "ic-edit", "ic-book-open", "ic-refresh", "ic-heart", "ic-target", "ic-flag", "ic-tool", "ic-lightbulb", "ic-home", "ic-school", "ic-phone", "ic-alert", "ic-key", "ic-map-pin"]}
                       - {label: "Detail", name: "detail", widget: "text", required: false}
                       - label: "Links (optional — add one or more)"
                         name: "links"
@@ -713,6 +714,7 @@ collections:
                   - {label: "Title", name: "title", widget: "string"}
                   - {label: "Body", name: "body", widget: "text"}
                   - {label: "Extra Module", name: "widget", widget: "select", options: ["none", "interviewGuide", "roles"], default: "none", hint: "interviewGuide shows the interview questions below this tip; roles shows the Who Does What cards."}
+                  - {label: "Icon (optional)", name: "icon", widget: "select", required: false, options: ["ic-star", "ic-compass", "ic-check-circle", "ic-shield", "ic-users", "ic-user", "ic-message", "ic-layers", "ic-edit", "ic-book-open", "ic-refresh", "ic-heart", "ic-target", "ic-flag", "ic-tool", "ic-lightbulb", "ic-home", "ic-school", "ic-phone", "ic-alert", "ic-key", "ic-map-pin"]}
                   - {label: "Link Text (optional)", name: "linkText", widget: "string", required: false}
                   - {label: "Link / File URL (optional — e.g. the ROI form or re-entry guide)", name: "linkHref", widget: "string", required: false}
                   - {label: "Shown When No Link Yet (e.g. 'ROI form coming soon')", name: "pendingText", widget: "string", required: false}

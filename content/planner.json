@@ -12,11 +12,36 @@
     "centerLabel": "Client",
     "centerSub": "current context",
     "rings": [
-      { "key": "community", "label": "Community / Structural", "placeholderRisk": "e.g. limited healthcare access", "placeholderProtective": "e.g. community resources" },
-      { "key": "school",    "label": "School",                  "placeholderRisk": "e.g. academic stress",           "placeholderProtective": "e.g. trusted teacher" },
-      { "key": "family",    "label": "Family",                  "placeholderRisk": "e.g. family conflict",           "placeholderProtective": "e.g. supportive caregiver" },
-      { "key": "peer",      "label": "Peer",                     "placeholderRisk": "e.g. social isolation",          "placeholderProtective": "e.g. close friend" },
-      { "key": "client",    "label": "Client (Individual)",      "placeholderRisk": "e.g. hopelessness / SI",         "placeholderProtective": "e.g. coping + treatment skills" }
+      {
+        "key": "community",
+        "label": "Community / Structural",
+        "placeholderRisk": "e.g. limited healthcare access",
+        "placeholderProtective": "e.g. community resources"
+      },
+      {
+        "key": "school",
+        "label": "School",
+        "placeholderRisk": "e.g. academic stress",
+        "placeholderProtective": "e.g. trusted teacher"
+      },
+      {
+        "key": "family",
+        "label": "Family",
+        "placeholderRisk": "e.g. family conflict",
+        "placeholderProtective": "e.g. supportive caregiver"
+      },
+      {
+        "key": "peer",
+        "label": "Peer",
+        "placeholderRisk": "e.g. social isolation",
+        "placeholderProtective": "e.g. close friend"
+      },
+      {
+        "key": "client",
+        "label": "Client (Individual)",
+        "placeholderRisk": "e.g. hopelessness / SI",
+        "placeholderProtective": "e.g. coping + treatment skills"
+      }
     ],
     "addButtonLabel": "Add",
     "stepHint": "Enter as many or as few factors as apply at this level — you can leave it blank and move on if it isn't relevant to this client.",
@@ -73,58 +98,87 @@
         {
           "text": "Assess and consolidate skills, and promote self-efficacy",
           "detail": "Review which skills have helped most, practice them once more, and help the client name what they can now do on their own.",
-          "links": []
+          "links": [],
+          "icon": "ic-star"
         },
         {
           "text": "Ensure continuity of care",
           "detail": "Link the client from treatment to their next step: a warm handoff to ongoing care, school supports, or community resources.",
           "links": [
-            { "text": "Community Resources", "href": "find-referral.html" },
-            { "text": "Navigating Schools", "href": "schools.html" }
-          ]
+            {
+              "text": "Community Resources",
+              "href": "find-referral.html"
+            },
+            {
+              "text": "Navigating Schools",
+              "href": "schools.html"
+            }
+          ],
+          "icon": "ic-compass"
         },
         {
           "text": "Reflect on the Rise treatment experience and complete final screenings",
           "detail": "Look back on progress together, and re-administer screenings to measure change in suicidal ideation since intake.",
-          "links": []
+          "links": [],
+          "icon": "ic-check-circle"
         },
         {
           "text": "Revisit the safety plan",
           "detail": "Update warning signs, coping strategies, and supports so the plan reflects where the client is now.",
           "links": [
-            { "text": "Make A Safety Plan", "href": "safety-plan.html" }
-          ]
+            {
+              "text": "Make A Safety Plan",
+              "href": "safety-plan.html"
+            }
+          ],
+          "icon": "ic-shield"
         }
       ]
     },
     "phaseCommentLabel": "Comments",
     "phaseCommentPlaceholder": "Add any notes for this phase…"
   },
-
   "resourceCategories": [
     {
       "icon": "i-clipboard",
       "colorClass": "lib-teal",
       "title": "Clinician Resources",
-      "items": ["EBP worksheets & handouts", "Training videos & manuals", "Links to key papers", "Visual research summaries"]
+      "items": [
+        "EBP worksheets & handouts",
+        "Training videos & manuals",
+        "Links to key papers",
+        "Visual research summaries"
+      ]
     },
     {
       "icon": "i-map-pin",
       "colorClass": "lib-green",
       "title": "Community Referrals",
-      "items": ["Vetted mental health referrals", "Post-Rise therapy options", "Community support resources"]
+      "items": [
+        "Vetted mental health referrals",
+        "Post-Rise therapy options",
+        "Community support resources"
+      ]
     },
     {
       "icon": "i-family",
       "colorClass": "lib-yellow",
       "title": "Parent & Family",
-      "items": ["Psychoeducation materials", "How to support your teen", "Family engagement guides"]
+      "items": [
+        "Psychoeducation materials",
+        "How to support your teen",
+        "Family engagement guides"
+      ]
     },
     {
       "icon": "i-star",
       "colorClass": "lib-purple",
       "title": "Youth-Facing",
-      "items": ["Coping skills worksheets", "Safety planning templates", "Mindfulness & grounding tools"]
+      "items": [
+        "Coping skills worksheets",
+        "Safety planning templates",
+        "Mindfulness & grounding tools"
+      ]
     }
   ]
 }

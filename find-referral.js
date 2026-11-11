@@ -34,6 +34,9 @@ function initReferralMap() {
 // map shows a pin for every listed resource that has coordinates.
 const crState = { data: null, items: [], section: 'all', query: '', markers: {}, activeId: null };
 
+// What each section is about, at a glance (filters and card tags).
+const CR_SECTION_ICONS = { all: 'ic-layers', therapy: 'ic-message', safety: 'ic-shield', basic: 'ic-bag', youth: 'ic-users', space: 'ic-key' };
+
 function esc(str) {
   return String(str == null ? '' : str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
@@ -85,7 +88,7 @@ function resourceCardHtml(item) {
   return `
     <article class="cr-card${crState.activeId === item.id ? ' is-active' : ''}" id="cr-${item.id}" data-id="${item.id}">
       <div class="cr-card-top">
-        <span class="cr-section-tag cr-section-${item.section}">${esc(sectionLabel(item.section))}</span>
+        <span class="cr-section-tag cr-section-${item.section}">${icon(CR_SECTION_ICONS[item.section] || 'ic-layers', 'icon-xs')}${esc(sectionLabel(item.section))}</span>
         ${item.riseVetted ? `<span class="cr-vetted">${icon('i-check', 'icon-xs')}${esc(L.vetted)}</span>` : ''}
       </div>
       <h3>${esc(item.name)}</h3>
@@ -106,7 +109,7 @@ function renderSectionChips() {
   const count = key => crState.items.filter(i => (key === 'all' || i.section === key) && matchesQuery(i, crState.query)).length;
   document.getElementById('crSections').innerHTML = [{ key: 'all', label: rp.allLabel }].concat(sections).map(s => {
     const on = s.key === crState.section;
-    return `<button type="button" class="cr-chip${on ? ' is-active' : ''}" data-section="${s.key}" aria-pressed="${on}">${esc(s.label)} <span>${count(s.key)}</span></button>`;
+    return `<button type="button" class="cr-chip${on ? ' is-active' : ''}" data-section="${s.key}" aria-pressed="${on}">${icon(CR_SECTION_ICONS[s.key] || 'ic-layers', 'icon-xs')}${esc(s.label)} <span>${count(s.key)}</span></button>`;
   }).join('');
   const current = sections.find(s => s.key === crState.section);
   const intro = document.getElementById('crSectionIntro');

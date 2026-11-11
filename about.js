@@ -84,7 +84,7 @@ function render(data) {
             const phaseHtml = `
               <div class="roadmap-phase phase-${i + 1}">
                 <div class="phase-top">
-                  <div class="phase-header">${phase.title}</div>
+                  <div class="phase-header">${icon(['ic-search', 'ic-tool', 'ic-flag'][i] || 'ic-flag', 'icon-sm')}<span>${phase.title}</span></div>
                   <div class="phase-sessions">${phase.sessions}</div>
                   <ul class="phase-items">${phase.items.map(it => `<li>${it}</li>`).join('')}</ul>
                 </div>
@@ -135,7 +135,7 @@ function render(data) {
   document.getElementById('aimsRow').innerHTML = aims.map((aim, i) => {
     const cardHtml = `
       <div class="aim-card ${aim.colorClass}" data-fade data-delay="${i + 1}">
-        <div class="aim-num">${aim.num}</div>
+        <div class="aim-top"><div class="aim-num">${aim.num}</div>${icon(['ic-search', 'ic-edit', 'ic-check-circle'][i] || 'ic-check-circle', 'aim-icon')}</div>
         <h3>${aim.title}</h3>
         <p>${aim.body}</p>
       </div>`;
