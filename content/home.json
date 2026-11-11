@@ -46,8 +46,8 @@
     "tools": [
       {
         "key": "planner",
-        "title": "Planning Tool",
-        "tagline": "Map the risk and protective factors in your client's world, choose the top ones, and build a three-phase treatment plan you can print.",
+        "title": "Treatment Planning Tool",
+        "tagline": "Create your treatment plan by identifying and mapping the suicide risk and protective factors for your client, selecting interventions that target those factors, and building out a three-phase treatment plan.",
         "useWhen": "In sessions 1–4, then revisit as things change",
         "href": "planning-tool.html"
       },
