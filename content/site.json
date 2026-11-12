@@ -1,17 +1,16 @@
 {
   "goal": {
     "label": "The Goal",
-    "headline": "Reducing suicidal ideation.",
+    "headline": "Reducing suicidal thoughts and behaviors.",
     "contexts": {
-      "about": "Every section of this toolkit points toward one outcome: reducing suicidal ideation in the youth Rise serves. Use it to keep each session focused on that goal.",
-      "planner": "Every step of this planner works toward one outcome: reducing the client's suicidal ideation. Map, prioritize, and plan around what drives it and what protects against it.",
-      "safetyPlan": "A safety plan helps the client get through moments of suicidal ideation safely, and gives you a shared tool for reducing it over time.",
-      "library": "Every resource here is selected for its role in reducing youth suicidal ideation: assessing it, coping with it, or building the supports that protect against it.",
-      "referral": "Reductions in suicidal ideation last when care continues. Linking the client to their next step helps protect the progress made in treatment.",
-      "schools": "School connectedness is one of the strongest protectors against youth suicidal ideation. Strong school partnerships help keep the client safe and supported where they spend most of their day."
+      "about": "Every section of this toolkit points toward one outcome: reducing suicidal thoughts and behaviors in the youth Rise serves. Use it to keep each session focused on that goal.",
+      "planner": "Every step of this planner works toward one outcome: reducing the client's suicidal thoughts and behaviors. Map, prioritize, and plan around what drives them and what protects against them.",
+      "safetyPlan": "A safety plan helps the client stay safe when suicidal thoughts and behaviors come up, and gives you a shared tool for reducing them over time.",
+      "library": "Every resource here is selected for its role in reducing youth suicidal thoughts and behaviors: assessing them, coping with them, or building the supports that protect against them.",
+      "referral": "Reductions in suicidal thoughts and behaviors last when care continues. Linking the client to their next step helps protect the progress made in treatment.",
+      "schools": "School connectedness is one of the strongest protectors against youth suicidal thoughts and behaviors. Strong school partnerships help keep the client safe and supported where they spend most of their day."
     }
   },
-
   "footer": {
     "orgName": "Therapist Toolkit",
     "subLine": "Rise Against Suicide × University of Colorado Boulder",

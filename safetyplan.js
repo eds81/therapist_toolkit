@@ -54,7 +54,7 @@ function render(data) {
   document.getElementById('spHeading').textContent = p.heading;
   document.getElementById('spIntro').textContent = p.intro;
   document.getElementById('spCrisisBanner').innerHTML = `${icon('i-phone', 'icon-sm')}<span>${p.crisisBanner}</span>`;
-  document.getElementById('spDisclaimer').innerHTML = `${icon('i-shield', 'icon-sm')}<span>${p.disclaimer}</span>`;
+  document.getElementById('spDisclaimer').innerHTML = `${icon('ic-shield', 'icon-xs')}<span>${p.disclaimer}</span>`;
   document.getElementById('spReviewHeading').textContent = p.reviewHeading;
   document.getElementById('spReviewIntro').textContent = p.reviewIntro;
   document.getElementById('spBackBtn').textContent = p.backButtonLabel;
@@ -77,10 +77,12 @@ function render(data) {
 
   const stepLabels = p.steps.map(s => s.stepLabel).concat(['Review']);
   const stepKeys = p.steps.map(s => s.key).concat(['review']);
+  // One tile per step: number + icon, label, and how many items it has so far.
   document.getElementById('spStepper').innerHTML = stepLabels.map((label, i) => `
-    <button type="button" class="planner-step-item" data-step-index="${i}" aria-label="Step ${i + 1}: ${label}">
-      <span class="planner-step-dot">${icon(SP_STEP_ICONS[stepKeys[i]] || 'ic-clipboard', 'step-icon')}</span>
-      <span class="planner-step-label">${label}</span>
+    <button type="button" class="sp-track-item" data-step-index="${i}" data-key="${stepKeys[i]}" aria-label="Step ${i + 1}: ${label}">
+      <span class="sp-track-icon">${icon(SP_STEP_ICONS[stepKeys[i]] || 'ic-clipboard')}<b>${i + 1}</b></span>
+      <span class="sp-track-label">${label}</span>
+      <span class="sp-track-count"></span>
     </button>`).join('');
 
   document.getElementById('footerLeft').innerHTML =
@@ -109,17 +111,26 @@ function initSafetyPlan() {
 
   function updateActionState() {
     const any = SP_STEP_KEYS.some(k => spState.items[k].length);
+    renderStepperState(); // keep each tile's "N added" count current
     document.getElementById('spDownloadBtn').disabled = !any;
     document.getElementById('spEmptyState').style.display = any ? 'none' : 'block';
   }
 
+  // A step tile is "filled" once it has at least one item; the current step is
+  // highlighted. Every step can be opened at any time.
   function renderStepperState() {
-    document.querySelectorAll('.planner-step-item').forEach(item => {
+    document.querySelectorAll('.sp-track-item').forEach(item => {
       const i = parseInt(item.dataset.stepIndex, 10);
+      const key = item.dataset.key;
+      const n = spState.items[key] ? spState.items[key].length : 0;
       item.classList.toggle('is-current', i === spState.currentStep);
-      item.classList.toggle('is-done', i < spState.currentStep);
-      item.classList.add('is-clickable'); // free navigation — every step is reachable at any time
+      item.classList.toggle('is-filled', n > 0);
+      item.setAttribute('aria-current', i === spState.currentStep ? 'step' : 'false');
+      item.querySelector('.sp-track-count').textContent = key === 'review' ? '' : n ? `${n} added` : '';
     });
+    const filled = SP_STEP_KEYS.filter(k => spState.items[k].length).length;
+    document.getElementById('spProgressText').textContent = `Step ${spState.currentStep + 1} of ${STEP_KEYS.length} · ${filled} of ${SP_STEP_KEYS.length} sections filled in`;
+    document.getElementById('spProgressBar').style.width = `${(spState.currentStep / (STEP_KEYS.length - 1)) * 100}%`;
   }
 
   function buildPrintSheet() {
@@ -229,7 +240,7 @@ function initSafetyPlan() {
 
   document.getElementById('spBackBtn').addEventListener('click', () => goToStep(spState.currentStep - 1));
   document.getElementById('spNextBtn').addEventListener('click', () => goToStep(spState.currentStep + 1));
-  document.querySelectorAll('.planner-step-item').forEach(item => {
+  document.querySelectorAll('.sp-track-item').forEach(item => {
     item.addEventListener('click', () => goToStep(parseInt(item.dataset.stepIndex, 10)));
   });
 

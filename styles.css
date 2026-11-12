@@ -4,6 +4,7 @@
    ============================================= */
 
 :root {
+  --nav-h: 119px; /* sticky header height: top row + tools row (68px below 1200px) */
   --teal:       #0091A8;
   --teal-dark:  #006E82;
   --teal-light: #D6F0F4;
@@ -119,15 +120,28 @@ h4 { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 8px; 
 .nav-logo { display: flex; flex-direction: column; line-height: 1.2; text-decoration: none; flex-shrink: 0; white-space: nowrap; }
 .logo-rise { font-size: 17px; font-weight: 900; color: var(--teal-dark); }
 .logo-sub  { font-size: 11px; color: var(--text-light); font-weight: 600; }
-.nav-links { display: flex; align-items: center; gap: 18px; }
-.nav-links a { white-space: nowrap; font-size: 14px; font-weight: 700; color: var(--text-mid); transition: color .15s; position: relative; }
-.nav-links a::after {
-  content: ''; position: absolute; bottom: -3px; left: 0;
-  width: 0; height: 2px; background: var(--teal);
-  transition: width .2s ease;
+/* About sits apart from the tools as a quieter info link */
+.nav-about {
+  display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
+  font-size: 13px; font-weight: 700; color: var(--text-light);
+  padding: 6px 12px; border-radius: 100px; transition: color .15s, background .15s;
 }
-.nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
-.nav-links a:hover, .nav-links a.active { color: var(--teal); }
+.nav-about svg { width: 16px; height: 16px; stroke: currentColor; }
+.nav-about:hover, .nav-about.active { color: var(--teal-dark); background: var(--cream); }
+.nav-about:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+
+/* The six toolkit tools: one row of matching tabs */
+.nav-tools { border-top: 1px solid var(--cream-dark); background: #FCFBF8; }
+.nav-tools-inner { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; display: flex; gap: 4px; }
+.nav-tool {
+  flex: 1 1 auto; display: flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap;
+  height: 49px; padding: 0 12px; font-size: 14px; font-weight: 800; color: var(--text-mid);
+  border-bottom: 3px solid transparent; transition: color .15s, background .15s, border-color .15s;
+}
+.nav-tool svg { width: 18px; height: 18px; stroke: var(--teal); flex-shrink: 0; }
+.nav-tool:hover { color: var(--teal-dark); background: var(--teal-light); }
+.nav-tool.active { color: var(--teal-dark); background: var(--white); border-bottom-color: var(--teal); }
+.nav-tool:focus-visible { outline: 3px solid var(--yellow); outline-offset: -3px; }
 .nav-hamburger {
   display: none; background: none; border: none;
   cursor: pointer; color: var(--teal-dark); padding: 4px;
@@ -138,7 +152,13 @@ h4 { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 8px; 
   padding: 12px 24px 20px; gap: 12px;
 }
 .nav-mobile.open { display: flex; }
-.nav-mobile a { font-size: 15px; font-weight: 700; color: var(--text-mid); padding: 8px 0; border-bottom: 1px solid var(--cream-dark); }
+.nav-mobile { gap: 4px; }
+.nav-mobile-label { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .07em; color: var(--text-light); padding: 4px 0; }
+.nav-mobile a { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 800; color: var(--text-mid); padding: 10px 12px; border-radius: var(--radius-sm); }
+.nav-mobile a svg { width: 18px; height: 18px; stroke: var(--teal); flex-shrink: 0; }
+.nav-mobile a.active { background: var(--teal-light); color: var(--teal-dark); }
+.nav-mobile a.nav-mobile-about { margin-top: 10px; border-top: 1px solid var(--cream-dark); border-radius: 0; padding-top: 14px; font-size: 14px; font-weight: 700; color: var(--text-light); }
+.nav-mobile a.nav-mobile-about svg { stroke: currentColor; }
 
 /* =============================================
    HERO
@@ -809,7 +829,21 @@ body.scgate-open { overflow: hidden; }
 
 /* Stepper */
 .planner-stepper-row { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 28px; }
-.planner-stepper { display: flex; align-items: flex-start; gap: 4px; overflow-x: auto; flex: 1; }
+.planner-stepper { overflow-x: auto; flex: 1; min-width: 0; padding-bottom: 4px; }
+.planner-stepper-steps { display: flex; align-items: flex-start; gap: 4px; min-width: 640px; }
+/* Treatment Roadmap phases above the steps they cover */
+.planner-phase-bar { display: flex; gap: 4px; min-width: 640px; margin-bottom: 10px; }
+.planner-phase-seg {
+  min-width: 64px; border-top: 4px solid var(--cream-dark); padding: 6px 4px 0; text-align: center;
+  display: flex; flex-direction: column; gap: 1px; opacity: .6; transition: opacity .15s;
+}
+.planner-phase-seg.is-current { opacity: 1; }
+.planner-phase-seg-name { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .05em; color: var(--text-mid); }
+.planner-phase-seg-sub { font-size: 11px; font-weight: 700; color: var(--text-light); line-height: 1.25; }
+.planner-phase-seg-0 { border-top-color: var(--text-light); }
+.planner-phase-seg-1 { border-top-color: var(--orange); } .planner-phase-seg-1 .planner-phase-seg-name { color: #A6531A; }
+.planner-phase-seg-2 { border-top-color: var(--green-dark); } .planner-phase-seg-2 .planner-phase-seg-name { color: hsl(112,35%,28%); }
+.planner-phase-seg-3 { border-top-color: var(--teal); } .planner-phase-seg-3 .planner-phase-seg-name { color: var(--teal-dark); }
 .planner-restart-link {
   flex-shrink: 0; background: none; border: none; font-family: var(--font);
   font-size: 12px; font-weight: 800; color: var(--text-light); cursor: pointer;
@@ -1301,8 +1335,8 @@ body.scgate-open { overflow: hidden; }
   display: flex; align-items: flex-start; gap: 10px;
   background: #FDECEA; border-left: 3px solid #C0392B;
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  padding: 14px 16px; font-size: 13px; font-weight: 700; color: #8B2E22;
-  margin-bottom: 14px; max-width: 760px;
+  padding: 10px 14px; font-size: 13px; font-weight: 700; color: #8B2E22;
+  margin-bottom: 24px; max-width: 760px;
 }
 .sp-crisis-banner svg { flex-shrink: 0; stroke: #C0392B; margin-top: 2px; }
 
@@ -1474,7 +1508,6 @@ body.scgate-open { overflow: hidden; }
   .step-arrow     { transform: rotate(90deg); }
   .roadmap        { flex-direction: column; }
   .phase-arrow    { transform: rotate(90deg); align-self: center; padding-top: 0; padding-left: 0; }
-  .nav-links      { display: none; }
   .nav-hamburger  { display: flex; }
   .planner-layout { grid-template-columns: 1fr; }
   .how-to-use-steps { grid-template-columns: 1fr; }
@@ -1528,7 +1561,7 @@ body.scgate-open { overflow: hidden; }
 .reslib-layout { display: grid; grid-template-columns: 250px 1fr; gap: 32px; align-items: start; }
 
 .reslib-sidebar {
-  position: sticky; top: 84px;
+  position: sticky; top: calc(var(--nav-h) + 16px);
   background: var(--white); border: 1px solid var(--cream-dark); border-radius: var(--radius);
   padding: 22px; display: flex; flex-direction: column; gap: 22px;
 }
@@ -1736,7 +1769,7 @@ body.scgate-open { overflow: hidden; }
 .schools-tips { list-style: none; display: flex; flex-direction: column; gap: 16px; }
 .schools-tip {
   display: flex; gap: 18px; background: var(--white); border-radius: var(--radius);
-  padding: 24px 28px; box-shadow: var(--shadow-sm); scroll-margin-top: 90px;
+  padding: 24px 28px; box-shadow: var(--shadow-sm); scroll-margin-top: calc(var(--nav-h) + 22px);
 }
 .schools-tip-num {
   flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
@@ -2008,10 +2041,11 @@ body.scgate-open { overflow: hidden; }
   }
 }
 
-/* Seven nav links no longer fit beside the logo below ~1200px — switch to
-   the hamburger menu there instead of letting links wrap. */
+/* The six tool tabs no longer fit in one row below ~1200px — switch to the
+   hamburger menu there (tools first, About set apart at the bottom). */
 @media (max-width: 1200px) {
-  .nav-links     { display: none; }
+  :root { --nav-h: 68px; }
+  .nav-tools, .nav-about { display: none; }
   .nav-hamburger { display: flex; }
 }
 
@@ -2029,7 +2063,7 @@ body.scgate-open { overflow: hidden; }
    HOME — What's inside / How it fits together / Why / Questions
    ============================================= */
 .tour { background: var(--white); }
-.tour, .journey, .home-why, .faq { scroll-margin-top: 70px; }
+.tour, .journey, .home-why, .faq { scroll-margin-top: var(--nav-h); }
 .tour .section-intro, .journey .section-intro { margin-bottom: 32px; }
 .tour-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .tour-card {
@@ -2254,11 +2288,11 @@ body.scgate-open { overflow: hidden; }
 .cr-chip.is-active span { background: rgba(255,255,255,.25); color: var(--white); }
 .cr-chip:focus-visible, .cr-map-btn:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
 .cr-section-intro { font-size: 14px; color: var(--text-mid); margin-bottom: 8px; max-width: 760px; }
-.referral-map-col { position: sticky; top: 84px; }
+.referral-map-col { position: sticky; top: calc(var(--nav-h) + 16px); }
 .cr-list { display: flex; flex-direction: column; gap: 14px; }
 .cr-card {
   background: var(--white); border: 2px solid var(--cream-dark); border-radius: var(--radius); padding: 18px 20px;
-  transition: border-color .2s, box-shadow .2s; scroll-margin-top: 90px;
+  transition: border-color .2s, box-shadow .2s; scroll-margin-top: calc(var(--nav-h) + 22px);
 }
 .cr-card.is-active { border-color: var(--teal); box-shadow: var(--shadow-sm); }
 .cr-card-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
@@ -2304,8 +2338,8 @@ body.scgate-open { overflow: hidden; }
 /* Community Resources — map-first layout: wider page, list on the left,
    a large map on the right that stays in view while the list scrolls. */
 .referral-page .referral-layout { grid-template-columns: minmax(340px, 5fr) 7fr; gap: 28px; }
-.referral-page .referral-map-col { position: sticky; top: 84px; }
-.referral-page .referral-map { height: calc(100vh - 150px); min-height: 480px; max-height: 860px; border: 2px solid var(--cream-dark); }
+.referral-page .referral-map-col { position: sticky; top: calc(var(--nav-h) + 16px); }
+.referral-page .referral-map { height: calc(100vh - var(--nav-h) - 82px); min-height: 480px; max-height: 860px; border: 2px solid var(--cream-dark); }
 @media (max-width: 900px) {
   .referral-page .referral-map-col { position: static; }
   .referral-page .referral-map { height: 60vh; min-height: 360px; max-height: 520px; }
@@ -2362,3 +2396,252 @@ body.scgate-open { overflow: hidden; }
 .aim-icon { width: 30px; height: 30px; stroke: rgba(255,255,255,.85); }
 /* checklist links line up with the item text when the item has an icon (box 22 + gap 12 + icon 32 + gap 12) */
 .planner-checklist-item:has(.planner-checklist-icon) .planner-checklist-link-row { padding-left: 78px; }
+
+/* =============================================
+   HOME — linked partner badges, Discover outcomes link, team photo
+   ============================================= */
+.hero { padding-bottom: 64px; }
+.hero-actions { margin-bottom: 24px; }
+.hero-split { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 48px; align-items: center; }
+.badge-link { transition: filter .15s, box-shadow .15s; text-decoration: none; }
+.badge-link:hover { filter: brightness(1.08); box-shadow: 0 2px 8px rgba(0,0,0,.15); text-decoration: underline; }
+.badge-link:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.hero-outcomes, .about-outcomes { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 14px; color: var(--text-mid); }
+.hero-outcomes svg, .about-outcomes svg { stroke: var(--teal); flex-shrink: 0; }
+.hero-outcomes a, .about-outcomes a { color: var(--teal); font-weight: 800; text-decoration: underline; }
+.hero-outcomes-pending { font-weight: 800; color: var(--text-mid); }
+.hero-outcomes-pending em { font-style: normal; font-size: 11px; font-weight: 800; color: var(--text-light); background: var(--white); border: 1px dashed var(--cream-dark); border-radius: 100px; padding: 1px 8px; margin-left: 4px; white-space: nowrap; }
+.about-outcomes { margin: 4px 0 40px; }
+.hero-photo { margin: 0; width: 100%; max-width: 500px; justify-self: center; }
+.hero-photo img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); box-shadow: var(--shadow-md); }
+.hero-photo figcaption { font-size: 13px; color: var(--text-light); margin-top: 8px; text-align: center; }
+.hero-photo-empty {
+  aspect-ratio: 4 / 3; border-radius: var(--radius); border: 2px dashed #B9D9DE; background: rgba(255,255,255,.7);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 24px; text-align: center;
+  font-size: 14px; font-weight: 800; color: var(--text-light);
+}
+.hero-photo-empty svg { width: 44px; height: 44px; stroke: #9CC9D0; }
+@media (max-width: 900px) {
+  .hero-split { grid-template-columns: 1fr; gap: 32px; }
+  .hero-photo { max-width: 520px; }
+}
+
+/* "What's inside" preview: a practice's pop-up card from the Treatment Library */
+.pv-ebp { width: 100%; max-width: 230px; background: var(--white); border-radius: 10px; box-shadow: var(--shadow-sm); padding: 10px 12px; display: flex; flex-direction: column; gap: 5px; }
+.pv-ebp-top { display: flex; align-items: center; gap: 6px; }
+.pv-ebp-icon { width: 20px; height: 20px; border-radius: 5px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; }
+.pv-ebp-icon svg { width: 12px; height: 12px; stroke: var(--teal-dark); }
+.pv-ebp-title { font-size: 13px; font-weight: 900; color: var(--teal-dark); line-height: 1.1; }
+.pv-ebp-theme { align-self: flex-start; font-size: 8px; font-weight: 800; color: #5B4A8A; background: #EFEAF7; border-radius: 100px; padding: 1px 6px; }
+.pv-ebp .pv-bar { flex: none; width: 85%; height: 5px; }
+.pv-ebp .pv-bar-long { width: 100%; }
+.pv-ebp-links { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 2px; }
+.pv-ebp-links > div { display: flex; flex-direction: column; gap: 2px; }
+.pv-ebp-link { font-size: 8.5px; font-weight: 800; color: var(--teal-dark); }
+
+/* =============================================
+   TREATMENT PLANNING TOOL — page header, roadmap band, Start Here step,
+   "File an extension" links
+   ============================================= */
+.planner-header { background: var(--cream); }
+.planner-header .section-inner { padding-bottom: 40px; }
+.planner-header h1 { font-size: clamp(30px, 4.5vw, 48px); font-weight: 900; color: var(--teal-dark); line-height: 1.15; margin-bottom: 6px; }
+.planner-subheading { font-size: 17px; font-weight: 800; color: var(--text-mid); margin-bottom: 18px; }
+.planner-intro { max-width: 820px; margin-bottom: 24px; }
+.planner-intro p { font-size: 16px; color: var(--text-mid); line-height: 1.7; margin-bottom: 12px; }
+.planner-header .goal-banner { margin-bottom: 0; }
+
+.planner-roadmap { background: var(--white); }
+.planner-roadmap .journey-phase { background: var(--cream); box-shadow: none; }
+.journey-focus { list-style: none; margin: -4px 0 14px; display: flex; flex-direction: column; gap: 4px; }
+.journey-focus li { font-size: 13px; font-weight: 800; color: var(--text); padding-left: 16px; position: relative; }
+.journey-focus li::before { content: ''; position: absolute; left: 0; top: 7px; width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: .35; }
+.journey-interventions { margin-top: 14px; border-top: 1px solid var(--cream-dark); padding-top: 10px; }
+.journey-interventions summary { cursor: pointer; font-size: 13px; font-weight: 800; color: var(--teal); }
+.journey-interventions ul { margin: 8px 0 0 18px; font-size: 13px; color: var(--text-mid); line-height: 1.55; }
+.journey-phase-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 14px; }
+.journey-goto {
+  font-family: var(--font); font-size: 13px; font-weight: 800; color: var(--white); background: var(--teal);
+  border: none; border-radius: 100px; padding: 7px 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+}
+.journey-goto svg { stroke: currentColor; }
+.journey-goto:hover { background: var(--teal-dark); }
+.journey-goto:focus-visible, .journey-extension:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.journey-extension { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 800; color: var(--teal-dark); text-decoration: underline; }
+.journey-extension svg { stroke: currentColor; }
+.planner-roadmap .journey-chips { margin-top: 0; }
+.planner-roadmap .journey-phase-actions { margin-top: auto; padding-top: 14px; }
+#roadmap, #planner { scroll-margin-top: calc(var(--nav-h) + 12px); }
+.planner-disclaimer { scroll-margin-top: calc(var(--nav-h) + 22px); }
+
+/* Step 1: Start Here — a short guided tour, one slide at a time */
+.planner-orient { margin-bottom: 24px; }
+.po-tour { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 22px 28px 24px; }
+.po-tour-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+.po-dots { display: flex; gap: 6px; }
+.po-dot { width: 28px; height: 6px; border-radius: 3px; background: var(--cream-dark); transition: background .2s; }
+.po-dot.is-done { background: #9CC9D0; }
+.po-dot.is-current { background: var(--teal); }
+.po-skip {
+  display: inline-flex; align-items: center; gap: 5px; background: none; border: none; cursor: pointer;
+  font-family: var(--font); font-size: 13px; font-weight: 800; color: var(--text-light); text-decoration: underline; padding: 4px 0;
+}
+.po-skip svg, .journey-goto svg, .planner-extension a svg { stroke: currentColor; }
+.po-skip:hover { color: var(--teal-dark); }
+.po-skip:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; border-radius: 4px; }
+.po-slide { min-height: 340px; animation: poFade .25s ease; }
+@keyframes poFade { from { opacity: 0; transform: translateX(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .po-slide { animation: none; } }
+.po-slide-text { margin-bottom: 16px; max-width: 720px; }
+.po-slide h4 { font-size: 22px; color: var(--teal-dark); line-height: 1.25; margin-bottom: 6px; }
+.po-slide-text p { font-size: 15px; color: var(--text-mid); line-height: 1.6; }
+.po-hint { font-size: 13px !important; color: var(--text-light) !important; font-style: italic; margin-top: 4px; }
+.po-tour-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--cream-dark); }
+.po-count { font-size: 13px; font-weight: 800; color: var(--text-light); }
+.po-start { display: inline-flex; align-items: center; gap: 8px; }
+.po-start svg { stroke: currentColor; }
+
+/* slide 1: the five levels */
+.po-levels-layout { display: grid; grid-template-columns: minmax(220px, 300px) minmax(0, 1fr); gap: 28px; align-items: start; }
+.po-map { width: 100%; display: block; }
+.po-ring { cursor: pointer; stroke: var(--white); stroke-width: 2; transition: fill .18s, stroke .18s; }
+.po-ring-1 { fill: var(--teal-dark); } .po-ring-2 { fill: var(--teal); } .po-ring-3 { fill: #3AAFCA; }
+.po-ring-4 { fill: #8ED4DF; } .po-ring-5 { fill: var(--green-light); }
+.po-ring.is-dim { fill: #E6F0F1; }
+.po-ring.is-active { stroke: var(--yellow); stroke-width: 4; }
+.po-ring-label { pointer-events: none; text-anchor: middle; font-family: var(--font); font-size: 10.5px; font-weight: 900; fill: var(--white); transition: fill .18s; }
+.po-ring-label-4 { fill: var(--teal-dark); }
+.po-ring-label-5 { fill: hsl(112,35%,25%); font-size: 12px; }
+.po-ring-label.is-dim { fill: var(--text-light); }
+.po-level-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.po-level-chip {
+  display: inline-flex; align-items: center; gap: 6px; font-family: var(--font); font-size: 13px; font-weight: 800; color: var(--text-mid);
+  background: var(--white); border: 2px solid var(--cream-dark); border-radius: 100px; padding: 5px 12px; cursor: pointer; transition: all .15s;
+}
+.po-level-chip svg { stroke: currentColor; }
+.po-level-chip:hover { border-color: var(--teal); color: var(--teal-dark); }
+.po-level-chip.is-active { background: var(--teal); border-color: var(--teal); color: var(--white); }
+.po-level-chip:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.po-level-detail { background: var(--cream); border-left: 6px solid var(--teal); border-radius: var(--radius-sm); padding: 16px 18px; }
+.po-level-detail.po-level-1 { border-left-color: var(--teal-dark); } .po-level-detail.po-level-3 { border-left-color: #3AAFCA; }
+.po-level-detail.po-level-4 { border-left-color: #8ED4DF; } .po-level-detail.po-level-5 { border-left-color: var(--green); }
+.po-level-detail h5 { display: flex; align-items: center; gap: 8px; font-size: 17px; color: var(--teal-dark); margin-bottom: 6px; }
+.po-level-detail h5 svg { stroke: var(--teal); }
+.po-level-detail > p { font-size: 14px; color: var(--text-mid); line-height: 1.55; margin-bottom: 10px; }
+.po-examples { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.po-eg { font-size: 13px; line-height: 1.45; border-radius: 8px; padding: 8px 10px; }
+.po-eg b { display: block; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 2px; }
+.po-eg-risk { background: #FDECEA; color: #8B2E22; }
+.po-eg-protective { background: var(--green-light); color: hsl(112,35%,22%); }
+
+/* each level keeps its ring color on the chip and the detail card */
+.po-level-chip-1.is-active { background: var(--teal-dark); border-color: var(--teal-dark); }
+.po-level-chip-3.is-active { background: #3AAFCA; border-color: #3AAFCA; }
+.po-level-chip-4.is-active { background: #8ED4DF; border-color: #8ED4DF; color: var(--teal-dark); }
+.po-level-chip-5.is-active { background: var(--green); border-color: var(--green); }
+
+/* slides 2–4: one Treatment Roadmap phase each, in that phase's color */
+.po-dot-1.is-current, .po-dot-1.is-done { background: var(--orange); }
+.po-dot-2.is-current, .po-dot-2.is-done { background: var(--green-dark); }
+.po-dot-3.is-current, .po-dot-3.is-done { background: var(--teal); }
+.po-phase { --ph: var(--teal); --ph-bg: var(--teal-light); --ph-ink: var(--teal-dark); max-width: 820px; }
+.po-phase-1 { --ph: var(--orange); --ph-bg: #FEF0E6; --ph-ink: #A6531A; }
+.po-phase-2 { --ph: var(--green-dark); --ph-bg: var(--green-light); --ph-ink: hsl(112,35%,26%); }
+.po-phase-head { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+.po-phase-badge { width: 64px; height: 64px; border-radius: 18px; background: var(--ph); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.po-phase-badge svg { width: 30px; height: 30px; stroke: var(--white); }
+.po-phase-kicker { display: block; font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .07em; color: var(--ph-ink); margin-bottom: 2px; }
+.po-phase h4 { margin-bottom: 0; color: var(--text); font-size: 24px; }
+.po-phase-why { background: var(--ph-bg); border-left: 5px solid var(--ph); border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 20px; }
+.po-phase-why span { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .07em; color: var(--ph-ink); margin-bottom: 4px; }
+.po-phase-why span svg { stroke: currentColor; }
+.po-phase-why p { font-size: 18px; font-weight: 800; color: var(--text); line-height: 1.45; }
+.po-phase-do { display: block; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .07em; color: var(--text-light); margin-bottom: 10px; }
+.po-tasks { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.po-task { display: flex; gap: 12px; align-items: flex-start; border: 2px solid var(--cream-dark); border-radius: var(--radius-sm); padding: 14px; }
+.po-task-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--ph-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.po-task-icon svg { width: 20px; height: 20px; stroke: var(--ph-ink); }
+.po-task strong { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 15px; color: var(--text); margin-bottom: 3px; }
+.po-task strong em { font-style: normal; font-size: 11px; font-weight: 800; color: var(--ph-ink); background: var(--ph-bg); border-radius: 100px; padding: 1px 8px; }
+.po-task p { font-size: 14px; color: var(--text-mid); line-height: 1.5; }
+.po-note { display: flex; align-items: flex-start; gap: 6px; margin-top: 16px; font-size: 13px; color: var(--text-light); }
+.po-note svg { stroke: currentColor; flex-shrink: 0; margin-top: 2px; }
+@media (max-width: 760px) {
+  .po-levels-layout { grid-template-columns: 1fr; }
+  .po-map-wrap { max-width: 260px; margin: 0 auto; }
+  .po-slide { min-height: 0; }
+}
+@media (max-width: 520px) {
+  .po-tour { padding: 18px 16px 20px; }
+  .po-dot { width: 18px; }
+  .po-phase-badge { width: 52px; height: 52px; border-radius: 14px; }
+  .po-phase h4 { font-size: 20px; }
+  .po-phase-why p { font-size: 16px; }
+  .po-examples { grid-template-columns: 1fr; }
+  .po-count { display: none; }
+}
+
+/* "File an extension" — Phase 2 suggestion and Phase 3 button on the plan */
+.planner-extension {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 4px 0 18px;
+  background: var(--white); border: 1.5px dashed #B9D9DE; border-radius: var(--radius-sm); padding: 12px 16px;
+  font-size: 14px; color: var(--text-mid);
+}
+.planner-extension > svg { stroke: var(--teal); flex-shrink: 0; }
+.planner-extension > span { flex: 1; min-width: 200px; }
+.planner-extension a:not(.btn) { display: inline-flex; align-items: center; gap: 4px; font-weight: 800; color: var(--teal-dark); text-decoration: underline; }
+.planner-extension a svg { stroke: currentColor; }
+.planner-extension-btn { padding: 9px 18px; font-size: 14px; }
+
+/* =============================================
+   MAKE A SAFETY PLAN — the tool card: progress, step tiles, current step
+   ============================================= */
+.sp-tool { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 22px 26px 26px; }
+.sp-tracker-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.sp-progress-text { font-size: 13px; font-weight: 800; color: var(--text-mid); }
+.sp-progress { height: 6px; border-radius: 3px; background: var(--cream-dark); overflow: hidden; margin-bottom: 16px; }
+.sp-progress span { display: block; height: 100%; background: var(--teal); border-radius: 3px; transition: width .3s ease; }
+.sp-tracker { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin-bottom: 26px; }
+.sp-track-item {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center;
+  font-family: var(--font); cursor: pointer; background: var(--cream); border: 2px solid transparent;
+  border-radius: var(--radius-sm); padding: 12px 6px 10px; transition: border-color .15s, background .15s;
+}
+.sp-track-item:hover { border-color: #B9E2E9; }
+.sp-track-item:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.sp-track-icon { position: relative; width: 38px; height: 38px; border-radius: 50%; background: var(--white); border: 2px solid var(--cream-dark); display: flex; align-items: center; justify-content: center; }
+.sp-track-icon svg { width: 18px; height: 18px; stroke: var(--text-light); }
+.sp-track-icon b {
+  position: absolute; top: -6px; right: -8px; min-width: 18px; height: 18px; border-radius: 9px; padding: 0 4px;
+  background: var(--white); border: 1.5px solid var(--cream-dark); font-size: 10px; font-weight: 900; color: var(--text-light);
+  display: flex; align-items: center; justify-content: center;
+}
+.sp-track-label { font-size: 12px; font-weight: 800; color: var(--text-mid); line-height: 1.25; }
+.sp-track-count { font-size: 11px; font-weight: 800; color: var(--green-dark); min-height: 14px; }
+.sp-track-item.is-filled .sp-track-icon { background: var(--teal-light); border-color: var(--teal-light); }
+.sp-track-item.is-filled .sp-track-icon svg { stroke: var(--teal-dark); }
+.sp-track-item.is-current { background: var(--white); border-color: var(--teal); box-shadow: var(--shadow-sm); }
+.sp-track-item.is-current .sp-track-icon { background: var(--teal); border-color: var(--teal); }
+.sp-track-item.is-current .sp-track-icon svg { stroke: var(--white); }
+.sp-track-item.is-current .sp-track-icon b { border-color: var(--teal); color: var(--teal-dark); }
+.sp-track-item.is-current .sp-track-label { color: var(--teal-dark); }
+.sp-tool .planner-step-header { border-top: 1px solid var(--cream-dark); padding-top: 22px; }
+.sp-disclaimer-note { display: flex; align-items: flex-start; gap: 6px; margin-top: 14px; font-size: 12px; color: var(--text-light); max-width: 760px; }
+.sp-disclaimer-note svg { stroke: currentColor; flex-shrink: 0; margin-top: 1px; }
+@media (max-width: 900px) {
+  .sp-tracker { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 4px; }
+  .sp-track-item { flex: 0 0 104px; scroll-snap-align: start; }
+}
+@media (max-width: 520px) { .sp-tool { padding: 18px 14px 20px; } .sp-progress-text { font-size: 12px; } }
+/* the progress line and the step's own heading already name the step */
+.sp-tool #spStepTitle { display: none; }
+.sp-tool .planner-step-header { margin-bottom: 12px; }
+
+/* Treatment Planning Tool — the phase bar + steps stay in view while you work */
+.planner-stepper-row {
+  position: sticky; top: var(--nav-h); z-index: 40; background: var(--cream);
+  padding: 12px 0 8px; margin-bottom: 20px; border-bottom: 1px solid transparent;
+}
+.planner-stepper-row.is-stuck { border-bottom-color: var(--cream-dark); box-shadow: 0 8px 12px -10px rgba(0,0,0,.15); }
+.planner-ecomap-wrap.is-compact { max-width: 660px; }
+@media (max-width: 760px) { .planner-stepper-row { position: static; } }

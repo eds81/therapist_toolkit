@@ -3,16 +3,58 @@
     "navLabel": "Make A Safety Plan",
     "sectionLabel": "Interactive Tool",
     "heading": "Make A Safety Plan",
-    "intro": "Build a personalized safety plan step by step, together with the client, to help them stay safe through moments of suicidal ideation. Each step focuses on one part of the plan — add as many items as apply, then review the whole plan before printing a copy for the client to keep.",
+    "intro": "Build a personalized safety plan step by step, together with the client, to help them stay safe when suicidal thoughts and behaviors come up. Each step focuses on one part of the plan — add as many items as apply, then review the whole plan before printing a copy for the client to keep.",
     "crisisBanner": "If you or someone you know is in immediate danger, call 911. You can also call or text the 988 Suicide & Crisis Lifeline, available 24/7.",
     "disclaimer": "This tool is a starting point for completing the Stanley-Brown Safety Planning Intervention together with a client. It saves only in this browser — nothing is sent anywhere.",
     "steps": [
-      { "key": "warningSigns",   "stepLabel": "Warning Signs",           "heading": "My Warning Signs",           "intro": "A warning sign is something the client thinks, feels, or does as suicidal thoughts are starting to develop.", "placeholder": "e.g. trouble sleeping, pulling away from friends", "addButtonLabel": "Add warning sign" },
-      { "key": "internalCoping", "stepLabel": "Coping Strategies",       "heading": "My Coping Strategies",       "intro": "Coping strategies are things the client can do on their own to feel a little better in the moment, without needing to contact anyone else.", "placeholder": "e.g. listen to music, go for a walk, draw", "addButtonLabel": "Add coping strategy" },
-      { "key": "distraction",    "stepLabel": "Distractions",            "heading": "My Distractions",            "intro": "Distractions are people or places that may offer comfort or help the client take a break from the situation, so they can start feeling or thinking differently.", "placeholder": "e.g. a friend's house, the school gym", "addButtonLabel": "Add distraction" },
-      { "key": "askForHelp",     "stepLabel": "Supports",                "heading": "My Supports",                "intro": "Supports are people the client feels comfortable talking to about what they're going through, and who can help. When possible, it helps to talk with them about being a support before a crisis happens.", "placeholder": "e.g. a parent, sibling, coach, or friend", "addButtonLabel": "Add support" },
-      { "key": "professionals",  "stepLabel": "Professional Supports",   "heading": "My Professional Supports",   "intro": "Professional contacts are people who can provide professional care and support, including therapists, doctors, and crisis lines.", "placeholder": "e.g. therapist name and phone number", "addButtonLabel": "Add professional support" },
-      { "key": "environment",    "stepLabel": "Safer Environment",       "heading": "My Safer Environment",       "intro": "Having items nearby that could be used for self-harm can be dangerous during a crisis. What items might need to be stored safely, given to someone else, or removed — and how?", "placeholder": "e.g. ask a parent to store medications", "addButtonLabel": "Add safety step" }
+      {
+        "key": "warningSigns",
+        "stepLabel": "Warning Signs",
+        "heading": "My Warning Signs",
+        "intro": "A warning sign is something the client thinks, feels, or does as suicidal thoughts are starting to develop.",
+        "placeholder": "e.g. trouble sleeping, pulling away from friends",
+        "addButtonLabel": "Add warning sign"
+      },
+      {
+        "key": "internalCoping",
+        "stepLabel": "Coping Strategies",
+        "heading": "My Coping Strategies",
+        "intro": "Coping strategies are things the client can do on their own to feel a little better in the moment, without needing to contact anyone else.",
+        "placeholder": "e.g. listen to music, go for a walk, draw",
+        "addButtonLabel": "Add coping strategy"
+      },
+      {
+        "key": "distraction",
+        "stepLabel": "Distractions",
+        "heading": "My Distractions",
+        "intro": "Distractions are people or places that may offer comfort or help the client take a break from the situation, so they can start feeling or thinking differently.",
+        "placeholder": "e.g. a friend's house, the school gym",
+        "addButtonLabel": "Add distraction"
+      },
+      {
+        "key": "askForHelp",
+        "stepLabel": "Supports",
+        "heading": "My Supports",
+        "intro": "Supports are people the client feels comfortable talking to about what they're going through, and who can help. When possible, it helps to talk with them about being a support before a crisis happens.",
+        "placeholder": "e.g. a parent, sibling, coach, or friend",
+        "addButtonLabel": "Add support"
+      },
+      {
+        "key": "professionals",
+        "stepLabel": "Professional Supports",
+        "heading": "My Professional Supports",
+        "intro": "Professional contacts are people who can provide professional care and support, including therapists, doctors, and crisis lines.",
+        "placeholder": "e.g. therapist name and phone number",
+        "addButtonLabel": "Add professional support"
+      },
+      {
+        "key": "environment",
+        "stepLabel": "Safer Environment",
+        "heading": "My Safer Environment",
+        "intro": "Having items nearby that could be used for self-harm can be dangerous during a crisis. What items might need to be stored safely, given to someone else, or removed — and how?",
+        "placeholder": "e.g. ask a parent to store medications",
+        "addButtonLabel": "Add safety step"
+      }
     ],
     "stepHint": "Add as many or as few as apply — you can leave it blank and move on if it isn't relevant yet.",
     "backButtonLabel": "Back",

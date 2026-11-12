@@ -7,10 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=58" />
+  <link rel="stylesheet" href="styles.css?v=65" />
 </head>
 <body>
-<script src="icons.js?v=1"></script>
+<script src="icons.js?v=2"></script>
 
 <!-- SVG SPRITE -->
 <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
@@ -45,27 +45,30 @@
       <span class="logo-rise">Therapist Toolkit</span>
       <span class="logo-sub">Rise Against Suicide × CU Boulder</span>
     </a>
-    <nav class="nav-links">
-      <a href="about.html">About</a>
-      <a href="planning-tool.html">Planning Tool</a>
-      <a href="safety-plan.html" class="active">Make A Safety Plan</a>
-      <a href="resource-library.html">Treatment Library</a>
-      <a href="find-referral.html">Community Resources</a>
-      <a href="schools.html">Navigating Schools</a>
-      <a href="self-care.html">Self-Care &amp; Support</a>
-    </nav>
+    <a href="about.html" class="nav-about"><svg class="icon" aria-hidden="true"><use href="#ic-info"/></svg><span>About Our Partnership</span></a>
     <button class="nav-hamburger" aria-label="Open menu" id="hamburgerBtn">
       <svg class="icon"><use href="#i-menu"/></svg>
     </button>
   </div>
+  <nav class="nav-tools" aria-label="Toolkit tools">
+    <div class="nav-tools-inner">
+      <a href="planning-tool.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-target"/></svg><span>Treatment Planning Tool</span></a>
+      <a href="safety-plan.html" class="nav-tool active" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#ic-shield"/></svg><span>Make A Safety Plan</span></a>
+      <a href="resource-library.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-book-open"/></svg><span>Treatment Library</span></a>
+      <a href="find-referral.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-map-pin"/></svg><span>Community Resources</span></a>
+      <a href="schools.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-school"/></svg><span>Navigating Schools</span></a>
+      <a href="self-care.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-heart"/></svg><span>Self-Care &amp; Support</span></a>
+    </div>
+  </nav>
   <div class="nav-mobile" id="navMobile">
-    <a href="about.html">About</a>
-    <a href="planning-tool.html">Planning Tool</a>
-    <a href="safety-plan.html" class="active">Make A Safety Plan</a>
-    <a href="resource-library.html">Treatment Library</a>
-    <a href="find-referral.html">Community Resources</a>
-    <a href="schools.html">Navigating Schools</a>
-    <a href="self-care.html">Self-Care &amp; Support</a>
+    <span class="nav-mobile-label">Toolkit tools</span>
+    <a href="planning-tool.html"><svg class="icon" aria-hidden="true"><use href="#ic-target"/></svg><span>Treatment Planning Tool</span></a>
+    <a href="safety-plan.html" class="active" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#ic-shield"/></svg><span>Make A Safety Plan</span></a>
+    <a href="resource-library.html"><svg class="icon" aria-hidden="true"><use href="#ic-book-open"/></svg><span>Treatment Library</span></a>
+    <a href="find-referral.html"><svg class="icon" aria-hidden="true"><use href="#ic-map-pin"/></svg><span>Community Resources</span></a>
+    <a href="schools.html"><svg class="icon" aria-hidden="true"><use href="#ic-school"/></svg><span>Navigating Schools</span></a>
+    <a href="self-care.html"><svg class="icon" aria-hidden="true"><use href="#ic-heart"/></svg><span>Self-Care &amp; Support</span></a>
+    <a href="about.html" class="nav-mobile-about"><svg class="icon" aria-hidden="true"><use href="#ic-info"/></svg><span>About Our Partnership</span></a>
   </div>
 </header>
 
@@ -77,13 +80,16 @@
     <p class="section-intro" data-fade data-delay="2" id="spIntro"></p>
     <div class="goal-banner" data-goal-banner="safetyPlan" hidden></div>
 
-    <div class="sp-crisis-banner" data-fade data-delay="3" id="spCrisisBanner"></div>
-    <div class="planner-disclaimer" data-fade data-delay="3" id="spDisclaimer"></div>
+    <div class="sp-crisis-banner" id="spCrisisBanner"></div>
 
-    <div class="planner-stepper-row">
-      <div class="planner-stepper" id="spStepper"></div>
+    <!-- The tool: progress, the seven steps as tiles, then the current step -->
+    <div class="sp-tool">
+    <div class="sp-tracker-top">
+      <span class="sp-progress-text" id="spProgressText"></span>
       <button type="button" class="planner-restart-link" id="spRestartLink"></button>
     </div>
+    <div class="sp-progress" aria-hidden="true"><span id="spProgressBar"></span></div>
+    <div class="sp-tracker" id="spStepper"></div>
 
     <div class="planner-step-header" id="spStepHeader">
       <h3 id="spStepTitle"></h3>
@@ -108,6 +114,8 @@
     </div>
     <p class="planner-empty-state" id="spEmptyState"></p>
     <p class="planner-download-hint" id="spDownloadHint" hidden></p>
+    </div>
+    <p class="sp-disclaimer-note" id="spDisclaimer"></p>
   </div>
 
   <div class="sp-print-sheet" id="spPrintSheet"></div>
@@ -122,7 +130,7 @@
 </footer>
 
 <script src="content-loader.js?v=2"></script>
-<script src="safetyplan.js?v=4"></script>
+<script src="safetyplan.js?v=5"></script>
 <script src="goal-banner.js?v=3"></script>
 </body>
 </html>

@@ -22,7 +22,13 @@ collections:
             name: "hero"
             widget: "object"
             fields:
-              - {label: "Badges", name: "badges", widget: "list", field: {label: "Badge", name: "badge", widget: "string"}}
+              - label: "Badges (each links to the partner's website)"
+                name: "badges"
+                widget: "list"
+                summary: "{{text}}"
+                fields:
+                  - {label: "Text", name: "text", widget: "string"}
+                  - {label: "Link (website address)", name: "href", widget: "string", required: false}
               - {label: "Headline — Line 1", name: "headlineLine1", widget: "string"}
               - {label: "Headline — Line 2", name: "headlineLine2", widget: "string"}
               - {label: "Subheading", name: "sub", widget: "text", hint: "You can use <em>word</em> to italicize or <strong>word</strong> to bold a word."}
@@ -38,14 +44,22 @@ collections:
                 fields:
                   - {label: "Text", name: "text", widget: "string"}
                   - {label: "Link", name: "href", widget: "string"}
-              - label: "Stat Cards"
-                name: "stats"
-                widget: "list"
+              - label: "Discover Group Outcomes (PDF link under the buttons; also shown on the About page)"
+                name: "discoverOutcomes"
+                widget: "object"
                 fields:
-                  - {label: "Number (leave blank for a text-only stat)", name: "count", widget: "number", required: false}
-                  - {label: "Suffix (e.g. %, %+)", name: "suffix", widget: "string", required: false}
-                  - {label: "Text (used instead of Number, e.g. 'Ages 3–19')", name: "text", widget: "string", required: false}
-                  - {label: "Label", name: "label", widget: "string"}
+                  - {label: "Text before the link", name: "text", widget: "string"}
+                  - {label: "Link Text", name: "linkText", widget: "string"}
+                  - {label: "PDF", name: "pdf", widget: "file", required: false, hint: "Upload the outcomes PDF. Until one is uploaded, the link shows as 'coming soon'."}
+                  - {label: "'Coming soon' tag", name: "pendingNote", widget: "string"}
+              - label: "Photo (beside the headline)"
+                name: "photo"
+                widget: "object"
+                fields:
+                  - {label: "Photo", name: "src", widget: "image", required: false, hint: "Upload the photo of Sheri and Anabel presenting. Until then, a placeholder shows."}
+                  - {label: "Description for screen readers", name: "alt", widget: "string"}
+                  - {label: "Caption (optional)", name: "caption", widget: "string", required: false}
+                  - {label: "Placeholder text (shown until a photo is uploaded)", name: "placeholder", widget: "string"}
           - label: "What's Inside (one card per tool)"
             name: "tour"
             widget: "object"
@@ -65,45 +79,107 @@ collections:
                   - {label: "What it does", name: "tagline", widget: "text"}
                   - {label: "When to use it", name: "useWhen", widget: "string"}
                   - {label: "Link", name: "href", widget: "string"}
-          - label: "How It Fits Together (tools in each treatment phase)"
-            name: "journey"
+
+      - file: "content/about.json"
+        name: "about"
+        label: "About Our Partnership"
+        fields:
+          - label: "Page Header & Closing Call-to-Action"
+            name: "aboutPage"
             widget: "object"
             fields:
               - {label: "Section Label", name: "sectionLabel", widget: "string"}
               - {label: "Heading", name: "heading", widget: "string"}
               - {label: "Intro", name: "intro", widget: "text"}
-              - label: "Phases (fixed set of 3 — titles and sessions come from About → Treatment Roadmap)"
-                name: "phases"
-                widget: "list"
+              - label: "Closing Call-to-Action"
+                name: "explore"
+                widget: "object"
                 fields:
-                  - {label: "What happens in this phase", name: "note", widget: "text"}
-                  - {label: "Tools used (by key)", name: "tools", widget: "select", multiple: true, options: ["planner", "safety", "library", "community", "schools", "selfcare"]}
-              - {label: "'Throughout' Row Title", name: "throughoutTitle", widget: "string"}
-              - label: "Throughout Treatment"
-                name: "throughout"
-                widget: "list"
-                fields:
-                  - {label: "Tool (by key)", name: "tool", widget: "select", options: ["planner", "safety", "library", "community", "schools", "selfcare"]}
-                  - {label: "Note", name: "note", widget: "string"}
-          - label: "Why It Exists (the research cards themselves are edited under About → Why This Toolkit)"
-            name: "whySummary"
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - {label: "Body", name: "body", widget: "text"}
+                  - {label: "Primary Button Text", name: "primaryText", widget: "string"}
+                  - {label: "Primary Button Link", name: "primaryHref", widget: "string"}
+                  - {label: "Secondary Button Text", name: "secondaryText", widget: "string"}
+                  - {label: "Secondary Button Link", name: "secondaryHref", widget: "string"}
+          - label: "Our Research Model (Discover, Design, Build, Test — the center of this page)"
+            name: "research"
             widget: "object"
             fields:
               - {label: "Section Label", name: "sectionLabel", widget: "string"}
               - {label: "Heading", name: "heading", widget: "string"}
-              - {label: "Link Text", name: "linkText", widget: "string"}
-              - {label: "Link Target", name: "linkHref", widget: "string"}
+              - {label: "Intro", name: "intro", widget: "text", hint: "You can use <em>word</em> to italicize a word."}
+              - label: "Research Aims (fixed set of 3 — do not add or remove)"
+                name: "aims"
+                widget: "list"
+                fields:
+                  - {label: "Number", name: "num", widget: "string"}
+                  - {label: "Color", name: "colorClass", widget: "select", options: ["aim-teal", "aim-green", "aim-lime"]}
+                  - {label: "Title", name: "title", widget: "string"}
+                  - {label: "Body", name: "body", widget: "text"}
+              - {label: "Quotes Heading", name: "quotesHeading", widget: "string"}
+              - label: "Therapist Quotes (add or remove freely)"
+                name: "quotes"
+                widget: "list"
+                fields:
+                  - {label: "Quote", name: "text", widget: "text"}
+                  - {label: "Citation", name: "cite", widget: "string"}
+                  - {label: "Topic Tag", name: "domain", widget: "string"}
+          - label: "Why It Exists"
+            name: "why"
+            widget: "object"
+            fields:
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Heading", name: "heading", widget: "string"}
+              - label: "Cards (fixed set of 4 — do not add or remove)"
+                name: "cards"
+                widget: "list"
+                fields:
+                  - label: "Icon"
+                    name: "icon"
+                    widget: "select"
+                    options: &icon_options
+                      - i-user
+                      - i-users
+                      - i-chat
+                      - i-check-circle
+                      - i-gap
+                      - i-shield
+                      - i-help-circle
+                      - i-zap
+                      - i-clipboard
+                      - i-map-pin
+                      - i-family
+                      - i-star
+                      - i-file-text
+                      - i-school
+                      - i-share-2
+                      - i-heart
+                      - i-play-circle
+                      - i-moon
+                      - i-calendar
+                      - i-code
+                      - i-message
+                      - i-book
+                  - {label: "Color", name: "colorClass", widget: "select", options: ["why-icon-red", "why-icon-orange", "why-icon-yellow", "why-icon-teal"]}
+                  - {label: "Bold Lead-in", name: "lead", widget: "string"}
+                  - {label: "Body", name: "body", widget: "text"}
+                  - {label: "Citation", name: "citation", widget: "string"}
+              - label: "Pull Quote"
+                name: "pullQuote"
+                widget: "object"
+                fields:
+                  - {label: "Quote", name: "text", widget: "text"}
+                  - {label: "Citation", name: "cite", widget: "string"}
           - label: "Questions Section (heading above the FAQ below)"
             name: "faqSection"
             widget: "object"
             fields:
               - {label: "Section Label", name: "sectionLabel", widget: "string"}
               - {label: "Heading", name: "heading", widget: "string"}
-          - label: "Toolkit FAQ (verbatim client copy, shown on the home page)"
+          - label: "Toolkit FAQ (verbatim client copy, shown as expandable questions)"
             name: "toolkitFaq"
             widget: "object"
             fields:
-              - {label: "Section Label", name: "sectionLabel", widget: "string"}
               - label: "1. Goal"
                 name: "goal"
                 widget: "object"
@@ -113,7 +189,7 @@ collections:
                     name: "paragraphs"
                     widget: "list"
                     field: {label: "Paragraph", name: "paragraph", widget: "text"}
-              - label: "2. Why"
+              - label: "2. Why (answered by the Why It Exists section above, so not repeated in the list)"
                 name: "why"
                 widget: "object"
                 fields:
@@ -166,184 +242,6 @@ collections:
                       - {label: "Link Text", name: "linkText", widget: "string"}
                       - {label: "Link Target", name: "linkHref", widget: "string"}
                       - {label: "Text After Link", name: "post", widget: "string"}
-
-      - file: "content/about.json"
-        name: "about"
-        label: "About"
-        fields:
-          - label: "Page Header, Section Links & Closing Call-to-Action"
-            name: "aboutPage"
-            widget: "object"
-            fields:
-              - {label: "Section Label", name: "sectionLabel", widget: "string"}
-              - {label: "Heading", name: "heading", widget: "string"}
-              - {label: "Intro", name: "intro", widget: "text"}
-              - label: "Section Links (the row of links under the header)"
-                name: "sectionNav"
-                widget: "list"
-                summary: "{{label}}"
-                fields:
-                  - {label: "Label", name: "label", widget: "string"}
-                  - {label: "Target (e.g. #research)", name: "href", widget: "string"}
-              - label: "Closing Call-to-Action"
-                name: "explore"
-                widget: "object"
-                fields:
-                  - {label: "Heading", name: "heading", widget: "string"}
-                  - {label: "Body", name: "body", widget: "text"}
-                  - {label: "Primary Button Text", name: "primaryText", widget: "string"}
-                  - {label: "Primary Button Link", name: "primaryHref", widget: "string"}
-                  - {label: "Secondary Button Text", name: "secondaryText", widget: "string"}
-                  - {label: "Secondary Button Link", name: "secondaryHref", widget: "string"}
-          - label: "About / Ecosystem Section"
-            name: "about"
-            widget: "object"
-            fields:
-              - {label: "Section Label", name: "sectionLabel", widget: "string"}
-              - {label: "Heading — Line 1", name: "headingLine1", widget: "string"}
-              - {label: "Heading — Line 2", name: "headingLine2", widget: "string"}
-              - {label: "Intro Paragraph", name: "intro", widget: "text"}
-              - label: "Partnership Note (short line + link down to Team section)"
-                name: "partnershipNote"
-                widget: "object"
-                fields:
-                  - {label: "Text", name: "text", widget: "string"}
-                  - {label: "Link Text", name: "linkText", widget: "string"}
-                  - {label: "Link Target (e.g. #team)", name: "linkHref", widget: "string"}
-              - {label: "Ecosystem Diagram Hint", name: "ecosystemHint", widget: "string"}
-              - label: "Ecosystem Layers (fixed set of 4 — do not add or remove)"
-                name: "ecosystemLegend"
-                widget: "list"
-                fields:
-                  - {label: "Layer key (do not change)", name: "layer", widget: "string"}
-                  - {label: "Title", name: "title", widget: "string"}
-                  - {label: "Description", name: "body", widget: "text"}
-                  - {label: "Tags", name: "tags", widget: "list", field: {label: "Tag", name: "tag", widget: "string"}, required: false}
-              - label: "Model Steps (fixed set of 4 — do not add or remove)"
-                name: "modelSteps"
-                widget: "list"
-                fields:
-                  - label: "Icon"
-                    name: "icon"
-                    widget: "select"
-                    options: &icon_options
-                      - i-user
-                      - i-users
-                      - i-chat
-                      - i-check-circle
-                      - i-gap
-                      - i-shield
-                      - i-help-circle
-                      - i-zap
-                      - i-clipboard
-                      - i-map-pin
-                      - i-family
-                      - i-star
-                      - i-file-text
-                      - i-school
-                      - i-share-2
-                      - i-heart
-                      - i-play-circle
-                      - i-moon
-                      - i-calendar
-                      - i-code
-                      - i-message
-                      - i-book
-                  - {label: "Color", name: "colorClass", widget: "select", options: ["step-teal", "step-green"]}
-                  - {label: "Text", name: "text", widget: "string"}
-          - label: "Why This Toolkit Section (its cards also appear in the Home page FAQ)"
-            name: "why"
-            widget: "object"
-            fields:
-              - {label: "Section Label", name: "sectionLabel", widget: "string"}
-              - {label: "Heading", name: "heading", widget: "string"}
-              - label: "Cards (fixed set of 4 — do not add or remove)"
-                name: "cards"
-                widget: "list"
-                fields:
-                  - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
-                  - {label: "Color", name: "colorClass", widget: "select", options: ["why-icon-red", "why-icon-orange", "why-icon-yellow", "why-icon-teal"]}
-                  - {label: "Bold Lead-in", name: "lead", widget: "string"}
-                  - {label: "Body", name: "body", widget: "text"}
-                  - {label: "Citation", name: "citation", widget: "string"}
-              - label: "Pull Quote"
-                name: "pullQuote"
-                widget: "object"
-                fields:
-                  - {label: "Quote", name: "text", widget: "text"}
-                  - {label: "Citation", name: "cite", widget: "string"}
-          - label: "Toolkit Section"
-            name: "toolkit"
-            widget: "object"
-            fields:
-              - {label: "Section Label (above the Treatment Roadmap heading)", name: "sectionLabel", widget: "string"}
-              - label: "Treatment Roadmap (its phase titles and sessions also appear on the Home page and in the Planning Tool)"
-                name: "tabs"
-                widget: "object"
-                fields:
-                  - label: "1. Treatment Roadmap"
-                    name: "roadmap"
-                    widget: "object"
-                    fields:
-                      - {label: "Short Label (not currently shown)", name: "tabLabel", widget: "string", required: false}
-                      - {label: "Heading", name: "heading", widget: "string"}
-                      - {label: "Therapist Concern (quoted)", name: "concern", widget: "string", required: false}
-                      - {label: "Intro", name: "intro", widget: "text"}
-                      - label: "Phases (fixed set of 3 — do not add or remove)"
-                        name: "phases"
-                        widget: "list"
-                        fields:
-                          - {label: "Title", name: "title", widget: "string"}
-                          - {label: "Session Range", name: "sessions", widget: "string"}
-                          - {label: "Focus Items", name: "items", widget: "list", field: {label: "Item", name: "item", widget: "string"}}
-                          - {label: "Sample Interventions", name: "interventions", widget: "list", field: {label: "Intervention", name: "intervention", widget: "string"}}
-              - label: "How to Use This Toolkit"
-                name: "howToUse"
-                widget: "object"
-                fields:
-                  - {label: "Heading", name: "heading", widget: "string"}
-                  - {label: "Intro", name: "intro", widget: "text"}
-                  - label: "Steps (fixed set of 4 — do not add or remove)"
-                    name: "steps"
-                    widget: "list"
-                    fields:
-                      - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
-                      - {label: "Title", name: "title", widget: "string"}
-                      - {label: "Body", name: "body", widget: "text"}
-                  - label: "General Tips (add or remove freely)"
-                    name: "tips"
-                    widget: "list"
-                    field: {label: "Tip", name: "tip", widget: "string"}
-                  - label: "Feedback Line"
-                    name: "feedback"
-                    widget: "object"
-                    fields:
-                      - {label: "Text", name: "text", widget: "text"}
-                      - {label: "Link Text", name: "linkText", widget: "string"}
-                      - {label: "Link Target", name: "linkHref", widget: "string", hint: "Currently points to #team as a placeholder — update to a real mailto: or contact link when one exists."}
-          - label: "Research Section"
-            name: "research"
-            widget: "object"
-            fields:
-              - {label: "Section Label", name: "sectionLabel", widget: "string"}
-              - {label: "Heading", name: "heading", widget: "string"}
-              - {label: "Intro", name: "intro", widget: "text", hint: "You can use <em>word</em> to italicize a word."}
-              - label: "Research Aims (fixed set of 3 — do not add or remove)"
-                name: "aims"
-                widget: "list"
-                fields:
-                  - {label: "Number", name: "num", widget: "string"}
-                  - {label: "Color", name: "colorClass", widget: "select", options: ["aim-teal", "aim-green", "aim-lime"]}
-                  - {label: "Title", name: "title", widget: "string"}
-                  - {label: "Body", name: "body", widget: "text"}
-              - {label: "Quotes Heading", name: "quotesHeading", widget: "string"}
-              - label: "Therapist Quotes (add or remove freely)"
-                name: "quotes"
-                widget: "list"
-                fields:
-                  - {label: "Quote", name: "text", widget: "text"}
-                  - {label: "Citation", name: "cite", widget: "string"}
-                  - {label: "Topic Tag", name: "domain", widget: "string"}
           - label: "Team Section"
             name: "team"
             widget: "object"
@@ -364,16 +262,17 @@ collections:
 
       - file: "content/planner.json"
         name: "planningTool"
-        label: "Planning Tool"
+        label: "Treatment Planning Tool"
         fields:
-          - label: "Planning Tool Section"
+          - label: "Treatment Planning Tool"
             name: "planner"
             widget: "object"
             fields:
               - {label: "Nav Label", name: "navLabel", widget: "string"}
               - {label: "Section Label", name: "sectionLabel", widget: "string"}
               - {label: "Heading", name: "heading", widget: "string"}
-              - {label: "Intro", name: "intro", widget: "text"}
+              - {label: "Subheading", name: "subheading", widget: "string", required: false}
+              - {label: "Intro", name: "intro", widget: "text", hint: "Leave a blank line between paragraphs."}
               - {label: "Disclaimer", name: "disclaimer", widget: "text", hint: "Shown above the tool. Keep this — it's the clinical-judgment safeguard."}
               - {label: "Risk Column Label", name: "riskColumnLabel", widget: "string"}
               - {label: "Protective Column Label", name: "protectiveColumnLabel", widget: "string"}
@@ -387,8 +286,60 @@ collections:
                 fields:
                   - {label: "Key (do not change)", name: "key", widget: "string"}
                   - {label: "Label", name: "label", widget: "string"}
-                  - {label: "Risk Placeholder", name: "placeholderRisk", widget: "string"}
-                  - {label: "Protective Placeholder", name: "placeholderProtective", widget: "string"}
+                  - {label: "Risk Placeholder (example shown in the input box and on Start Here)", name: "placeholderRisk", widget: "string"}
+                  - {label: "Protective Placeholder (example shown in the input box and on Start Here)", name: "placeholderProtective", widget: "string"}
+                  - {label: "Description (Start Here circle map)", name: "description", widget: "text", required: false}
+              - label: "Step 1: Start Here (a short guided tour before Community / Structural)"
+                name: "orientation"
+                widget: "object"
+                fields:
+                  - {label: "Stepper Label", name: "stepLabel", widget: "string"}
+                  - {label: "Stepper Group Label (above the step)", name: "stepperGroupLabel", widget: "string"}
+                  - {label: "Step Title", name: "title", widget: "string"}
+                  - {label: "Step Hint", name: "hint", widget: "text"}
+                  - label: "Tour Buttons & Labels"
+                    name: "tour"
+                    widget: "object"
+                    fields:
+                      - {label: "Skip Link", name: "skipLabel", widget: "string"}
+                      - {label: "Back Button", name: "backLabel", widget: "string"}
+                      - {label: "Next Button", name: "nextLabel", widget: "string"}
+                      - {label: "Last Slide Button", name: "startLabel", widget: "string"}
+                      - {label: "'Why this phase' Label", name: "whyLabel", widget: "string"}
+                      - {label: "'What you do in the planner' Label", name: "doLabel", widget: "string"}
+                  - label: "Phase Slides (slides 2–4, one per phase; titles, sessions and colors come from the Roadmap Phases)"
+                    name: "phases"
+                    widget: "list"
+                    fields:
+                      - {label: "Why this phase", name: "intention", widget: "text"}
+                      - label: "What you do in the planner"
+                        name: "tasks"
+                        widget: "list"
+                        summary: "{{title}}"
+                        fields:
+                          - {label: "Icon", name: "icon", widget: "select", options: ["ic-layers", "ic-star", "ic-tool", "ic-clipboard", "ic-check-circle", "ic-target", "ic-compass", "ic-search", "ic-flag", "ic-book-open", "ic-edit", "ic-shield"]}
+                          - {label: "Title", name: "title", widget: "string"}
+                          - {label: "Text", name: "text", widget: "string"}
+                          - {label: "Where (e.g. 'Step 7')", name: "where", widget: "string", required: false}
+                  - {label: "Note (last slide)", name: "note", widget: "string", required: false}
+                  - label: "Slide 1: Five Levels Circle Map (each level's description, prompts and examples are edited under Ecological Levels)"
+                    name: "levels"
+                    widget: "object"
+                    fields:
+                      - {label: "Heading", name: "heading", widget: "string"}
+                      - {label: "Intro", name: "intro", widget: "text"}
+                      - {label: "Hint", name: "hint", widget: "string"}
+                      - {label: "'Risk example' Label", name: "riskLabel", widget: "string"}
+                      - {label: "'Protective example' Label", name: "protectiveLabel", widget: "string"}
+              - label: "File an Extension (Rise portal link: suggested in Phase 2, a button in Phase 3)"
+                name: "extension"
+                widget: "object"
+                fields:
+                  - {label: "Link (Rise portal)", name: "href", widget: "string"}
+                  - {label: "Phase 2 Text", name: "phase2Text", widget: "string"}
+                  - {label: "Phase 2 Link Text", name: "phase2LinkText", widget: "string"}
+                  - {label: "Phase 3 Text", name: "phase3Text", widget: "string"}
+                  - {label: "Phase 3 Button Text", name: "phase3ButtonText", widget: "string"}
               - {label: "Add Button Label", name: "addButtonLabel", widget: "string"}
               - {label: "Step Hint (shown on each of the 5 entry steps)", name: "stepHint", widget: "text"}
               - {label: "Back Button Label", name: "backButtonLabel", widget: "string"}
@@ -414,7 +365,7 @@ collections:
                   - {label: "Button Label", name: "buttonLabel", widget: "string"}
                   - {label: "Email Address", name: "address", widget: "string"}
                   - {label: "Hint Text", name: "hint", widget: "text"}
-              - label: "Treatment Goal (reducing suicidal ideation — shown on every step, under each phase on Review, and in the PDF/email)"
+              - label: "Treatment Goal (reducing suicidal thoughts and behaviors — shown on every step, under each phase on Review, and in the PDF/email)"
                 name: "goal"
                 widget: "object"
                 fields:
@@ -424,6 +375,7 @@ collections:
                     name: "steps"
                     widget: "object"
                     fields:
+                      - {label: "Start Here", name: "orientation", widget: "text", required: false}
                       - {label: "Mapping steps (Community → Client)", name: "ring", widget: "text"}
                       - {label: "Identify Top Factors", name: "topFactors", widget: "text"}
                       - {label: "Select Interventions", name: "resourcePlan", widget: "text"}
@@ -434,7 +386,7 @@ collections:
                     name: "phases"
                     widget: "list"
                     fields:
-                      - {label: "In this phase (how this phase reduces suicidal ideation)", name: "focus", widget: "text"}
+                      - {label: "In this phase (how this phase reduces suicidal thoughts and behaviors)", name: "focus", widget: "text"}
                       - {label: "Check (yes/no question for the therapist)", name: "check", widget: "string"}
               - label: "Phase 3 Checklist (shown under Phase 3 on Review and in the printed plan)"
                 name: "phase3Checklist"
@@ -461,7 +413,7 @@ collections:
                           - {label: "Link Target (e.g. schools.html)", name: "href", widget: "string"}
               - {label: "Phase Comment Label (Comments box under each Phase 1/2/3 section on Review)", name: "phaseCommentLabel", widget: "string"}
               - {label: "Phase Comment Placeholder", name: "phaseCommentPlaceholder", widget: "string"}
-          - label: "Resource Categories (summary cards used by the Planning Tool's recommendations — for the full searchable library, edit the Treatment Library collection instead)"
+          - label: "Resource Categories (summary cards used by the Treatment Planning Tool's recommendations — for the full searchable library, edit the Treatment Library collection instead)"
             name: "resourceCategories"
             widget: "list"
             fields:
@@ -469,6 +421,39 @@ collections:
               - {label: "Color", name: "colorClass", widget: "select", options: ["lib-teal", "lib-green", "lib-yellow", "lib-purple"]}
               - {label: "Title", name: "title", widget: "string"}
               - {label: "Items", name: "items", widget: "list", field: {label: "Item", name: "item", widget: "string"}}
+          - label: "Treatment Roadmap — 'Your toolkit across a Rise treatment' (top of the page)"
+            name: "journey"
+            widget: "object"
+            fields:
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Intro", name: "intro", widget: "text"}
+              - label: "Phases (fixed set of 3 — titles, sessions and interventions are in Roadmap Phases below)"
+                name: "phases"
+                widget: "list"
+                fields:
+                  - {label: "What happens in this phase", name: "note", widget: "text"}
+                  - {label: "Tools used (by key)", name: "tools", widget: "select", multiple: true, options: ["planner", "safety", "library", "community", "schools", "selfcare"]}
+          - label: "Roadmap Phases (titles and sessions are also used by the stepper and the plan on Review)"
+            name: "toolkit"
+            widget: "object"
+            fields:
+              - label: "Treatment Roadmap"
+                name: "tabs"
+                widget: "object"
+                fields:
+                  - label: "Roadmap"
+                    name: "roadmap"
+                    widget: "object"
+                    fields:
+                      - label: "Phases (fixed set of 3 — do not add or remove)"
+                        name: "phases"
+                        widget: "list"
+                        fields:
+                          - {label: "Title", name: "title", widget: "string"}
+                          - {label: "Session Range", name: "sessions", widget: "string"}
+                          - {label: "Focus Items", name: "items", widget: "list", field: {label: "Item", name: "item", widget: "string"}}
+                          - {label: "Sample Interventions", name: "interventions", widget: "list", field: {label: "Intervention", name: "intervention", widget: "string"}}
 
       - file: "content/safety-plan.json"
         name: "safetyPlan"
@@ -556,7 +541,8 @@ collections:
               - {label: "'Write-ups coming soon' Heading", name: "comingSoonHeading", widget: "string"}
               - {label: "'Write-ups coming soon' Note", name: "comingSoonNote", widget: "text"}
               - {label: "No-Results Message", name: "emptyText", widget: "string"}
-              - {label: "Audiences not offered as a filter (e.g. Clinician — almost every item is for clinicians)", name: "hiddenAudiences", widget: "list", required: false, field: {label: "Audience", name: "audience", widget: "string"}}
+              - {label: "Audiences not offered in 'Who is it for?' (e.g. Schools)", name: "hiddenAudiences", widget: "list", required: false, field: {label: "Audience", name: "audience", widget: "string"}}
+              - {label: "Resource types hidden from Handouts & Tools (e.g. Referral List — covered by Community Resources)", name: "hiddenTypes", widget: "list", required: false, field: {label: "Type", name: "type", widget: "string"}}
           - label: "Resources (add or remove freely)"
             name: "items"
             widget: "list"
@@ -981,7 +967,7 @@ collections:
         name: "siteWide"
         label: "Site-wide (goal banner & footer)"
         fields:
-          - label: "The Goal (banner shown on the tool pages — reducing suicidal ideation)"
+          - label: "The Goal (banner shown on the tool pages — reducing suicidal thoughts and behaviors)"
             name: "goal"
             widget: "object"
             fields:
@@ -991,8 +977,8 @@ collections:
                 name: "contexts"
                 widget: "object"
                 fields:
-                  - {label: "About page (Toolkit section)", name: "about", widget: "text"}
-                  - {label: "Planning Tool", name: "planner", widget: "text"}
+                  - {label: "About page (not currently shown)", name: "about", widget: "text", required: false}
+                  - {label: "Treatment Planning Tool", name: "planner", widget: "text"}
                   - {label: "Make A Safety Plan", name: "safetyPlan", widget: "text"}
                   - {label: "Treatment Library", name: "library", widget: "text"}
                   - {label: "Community Resources", name: "referral", widget: "text"}

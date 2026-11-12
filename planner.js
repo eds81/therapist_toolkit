@@ -45,10 +45,23 @@ function practiceDescription(name) {
 
 // ── Planner: Client Ecological Formulation & Treatment Plan ──
 const RING_ORDER = ['community', 'school', 'family', 'peer', 'client'];
-// Two curation steps sit between entering factors and the final review: pick
-// the top 3 contributors, then build a downloadable resource plan.
-const STEP_KEYS = [...RING_ORDER, 'topFactors', 'resourcePlan', 'review'];
-const NON_RING_STEP_KEYS = ['topFactors', 'resourcePlan', 'review'];
+// A "Start here" orientation comes first, then one step per ring. Two
+// curation steps sit between entering factors and the final review: pick
+// the top contributors, then choose interventions for each.
+const STEP_KEYS = ['orientation', ...RING_ORDER, 'topFactors', 'resourcePlan', 'review'];
+const NON_RING_STEP_KEYS = ['orientation', 'topFactors', 'resourcePlan', 'review'];
+// Saved progress from before the orientation step existed points one step too
+// early; this version number tells the loader to shift it.
+const PLANNER_STEPS_VERSION = 2;
+
+// Which Treatment Roadmap phase each step belongs to (-1 = "Start"), so the
+// stepper can group its steps under the roadmap's three phases.
+function stepPhaseIndex(key) {
+  if (key === 'orientation') return -1;
+  if (key === 'resourcePlan') return 1;
+  if (key === 'review') return 2;
+  return 0; // the five rings + choosing top factors = Phase 1 (case conceptualization)
+}
 
 // How much a given factor is impacting the client (risk) or how strong a
 // support it is (protective). Drives phase-priority scoring and sort order.
@@ -512,6 +525,7 @@ function persistPlannerState() {
   try {
     localStorage.setItem(PLANNER_STORAGE_KEY, JSON.stringify({
       factors: plannerState.factors,
+      stepsVersion: PLANNER_STEPS_VERSION,
       currentStep: plannerState.currentStep,
       furthestStep: plannerState.furthestStep,
       hasGenerated: plannerState.hasGenerated,
@@ -545,8 +559,10 @@ function loadPersistedPlannerState() {
         protective: (saved.factors[r].protective || []).map(toFactor)
       };
     });
-    plannerState.currentStep = saved.currentStep || 0;
-    plannerState.furthestStep = saved.furthestStep || 0;
+    const shift = saved.stepsVersion === PLANNER_STEPS_VERSION ? 0 : 1;
+    const clampStep = n => Math.min(STEP_KEYS.length - 1, Math.max(0, (n || 0) + shift));
+    plannerState.currentStep = clampStep(saved.currentStep);
+    plannerState.furthestStep = clampStep(saved.furthestStep);
     plannerState.hasGenerated = !!saved.hasGenerated;
     if (saved.topContributors) {
       // At least 3 slots, but never truncate — a clinician may have added a
@@ -580,7 +596,7 @@ const RING_RECOMMENDATIONS = {
   client: {
     risk: {
       phaseIndex: 0, resourceKeys: ['clinician', 'youth'],
-      planNote: "Individual-level risk (e.g. hopelessness, suicidal ideation) makes safety the priority — lead with the Columbia Suicide Severity Rating Scale (C-SSRS) and a Stanley-Brown Safety Plan before moving to skills work."
+      planNote: "Individual-level risk (e.g. hopelessness, suicidal thoughts and behaviors, non-suicidal self-injury) makes safety the priority — lead with the Columbia Suicide Severity Rating Scale (C-SSRS) and a Stanley-Brown Safety Plan before moving to skills work."
     },
     protective: {
       phaseIndex: 2, resourceKeys: ['youth'],
@@ -637,7 +653,12 @@ function renderPlanner(data) {
 
   document.getElementById('plannerLabel').textContent = p.sectionLabel;
   document.getElementById('plannerHeading').textContent = p.heading;
-  document.getElementById('plannerIntro').textContent = p.intro;
+  document.getElementById('plannerSubheading').textContent = p.subheading || '';
+  document.getElementById('plannerIntro').innerHTML = String(p.intro || '').split(/\n\s*\n/)
+    .map(para => `<p>${escapeXml(para.trim())}</p>`).join('');
+  renderRoadmapBand(data);
+  renderOrientation(data);
+  renderExtensionLinks(p);
   document.getElementById('plannerDisclaimer').innerHTML = `${icon('i-shield', 'icon-sm')}<span>${p.disclaimer}</span>`;
   document.getElementById('plannerRiskLabel').textContent = p.riskColumnLabel;
   document.getElementById('plannerProtectiveLabel').textContent = p.protectiveColumnLabel;
@@ -688,15 +709,253 @@ function renderPlanner(data) {
   document.getElementById('plannerRiskRows').innerHTML = rowsHtml('risk');
   document.getElementById('plannerProtectiveRows').innerHTML = rowsHtml('protective');
 
-  const stepLabels = p.rings.map(r => r.label).concat(['Top Factors', 'Resources', 'Review']);
+  const orient = p.orientation || {};
+  const stepLabels = [orient.stepLabel || 'Start Here'].concat(p.rings.map(r => r.label), ['Top Factors', 'Interventions', 'Treatment Plan']);
   // Each step's icon shows what it covers (the step title still gives its number).
-  const STEP_ICONS = { community: 'ic-building', school: 'ic-school', family: 'ic-home', peer: 'ic-users', client: 'ic-user',
+  const STEP_ICONS = { orientation: 'ic-compass', community: 'ic-building', school: 'ic-school', family: 'ic-home', peer: 'ic-users', client: 'ic-user',
     topFactors: 'ic-star', resourcePlan: 'ic-tool', review: 'ic-clipboard' };
-  document.getElementById('plannerStepper').innerHTML = stepLabels.map((label, i) => `
-    <button type="button" class="planner-step-item" data-step-index="${i}" data-ring="${STEP_KEYS[i]}" aria-label="Step ${i + 1}: ${label}">
-      <span class="planner-step-dot">${icon(STEP_ICONS[STEP_KEYS[i]] || 'ic-clipboard', 'step-icon')}</span>
-      <span class="planner-step-label">${label}</span>
-    </button>`).join('');
+
+  // The roadmap's phases sit above the steps they cover, so the planner
+  // visibly moves through Phase 1 → 2 → 3.
+  const groups = [];
+  STEP_KEYS.forEach(key => {
+    const ph = stepPhaseIndex(key);
+    if (!groups.length || groups[groups.length - 1].phase !== ph) groups.push({ phase: ph, count: 0 });
+    groups[groups.length - 1].count++;
+  });
+  const phaseBarHtml = groups.map(g => {
+    let name = orient.stepperGroupLabel || 'Start', sub = '';
+    if (g.phase >= 0) {
+      const title = (roadmapPhases[g.phase] && roadmapPhases[g.phase].title) || `Phase ${g.phase + 1}`;
+      const m = title.match(/^(Phase\s*\d+)\s*[:\-–]\s*(.+)$/i);
+      name = m ? m[1] : title;
+      sub = m ? m[2] : '';
+    }
+    return `<div class="planner-phase-seg planner-phase-seg-${g.phase + 1}" data-phase="${g.phase}" style="flex:${g.count}">
+      <span class="planner-phase-seg-name">${escapeXml(name)}</span>${sub ? `<span class="planner-phase-seg-sub">${escapeXml(sub)}</span>` : ''}
+    </div>`;
+  }).join('');
+  document.getElementById('plannerStepper').innerHTML = `
+    <div class="planner-phase-bar" aria-hidden="true">${phaseBarHtml}</div>
+    <div class="planner-stepper-steps">${stepLabels.map((label, i) => `
+      <button type="button" class="planner-step-item" data-step-index="${i}" data-ring="${STEP_KEYS[i]}" aria-label="Step ${i + 1}: ${label}">
+        <span class="planner-step-dot">${icon(STEP_ICONS[STEP_KEYS[i]] || 'ic-clipboard', 'step-icon')}</span>
+        <span class="planner-step-label">${label}</span>
+      </button>`).join('')}
+    </div>`;
+}
+
+// ── Treatment Roadmap band (top of the page) ──
+// One card per phase: what happens, the roadmap's focus items, the toolkit
+// tools that do the most work, sample interventions, and a button that jumps
+// to that phase's steps in the planner below.
+const TOOL_ICONS = { planner: 'ic-target', safety: 'ic-shield', library: 'ic-book-open', community: 'ic-map-pin', schools: 'ic-school', selfcare: 'ic-heart' };
+const PHASE_ICONS = ['ic-search', 'ic-tool', 'ic-flag'];
+const PHASE_FIRST_STEP = [STEP_KEYS.indexOf(RING_ORDER[0]), STEP_KEYS.indexOf('resourcePlan'), STEP_KEYS.indexOf('review')];
+
+function renderRoadmapBand(data) {
+  const journey = data.journey;
+  const phases = (data.toolkit && data.toolkit.tabs.roadmap.phases) || [];
+  if (!journey) { document.getElementById('roadmap').hidden = true; return; }
+  const toolByKey = {};
+  ((data.tour && data.tour.tools) || []).forEach(t => { toolByKey[t.key] = t; });
+  const ext = data.planner.extension;
+  const chip = key => {
+    const t = toolByKey[key];
+    if (!t) return '';
+    const href = key === 'planner' ? '#planner' : t.href;
+    return `<a class="journey-chip journey-chip-${key}" href="${href}">${icon(TOOL_ICONS[key] || 'ic-layers', 'icon-xs')}${escapeXml(t.title)}</a>`;
+  };
+  document.getElementById('journeyLabel').textContent = journey.sectionLabel;
+  document.getElementById('journeyHeading').textContent = journey.heading;
+  document.getElementById('journeyIntro').textContent = journey.intro;
+  document.getElementById('journeyPhases').innerHTML = journey.phases.map((jp, i) => {
+    const ph = phases[i] || {};
+    let extHtml = '';
+    if (ext && ext.href && i === 1) extHtml = `<a class="journey-extension" href="${ext.href}" target="_blank" rel="noopener">${icon('ic-refresh', 'icon-xs')}${escapeXml(ext.phase2LinkText)}</a>`;
+    if (ext && ext.href && i === 2) extHtml = `<a class="journey-extension" href="${ext.href}" target="_blank" rel="noopener">${icon('ic-refresh', 'icon-xs')}${escapeXml(ext.phase3ButtonText)}</a>`;
+    return `
+      <div class="journey-phase journey-phase-${i + 1}">
+        <div class="journey-phase-head">
+          <span class="journey-phase-num">${i + 1}</span>
+          <div>
+            <strong>${escapeXml(ph.title || '')}</strong>
+            <span>${escapeXml(ph.sessions || '')}</span>
+          </div>
+        </div>
+        <p>${escapeXml(jp.note)}</p>
+        ${(ph.items || []).length ? `<ul class="journey-focus">${ph.items.map(it => `<li>${escapeXml(it)}</li>`).join('')}</ul>` : ''}
+        <div class="journey-chips">${jp.tools.map(chip).join('')}</div>
+        ${(ph.interventions || []).length ? `
+        <details class="journey-interventions">
+          <summary>Sample interventions</summary>
+          <ul>${ph.interventions.map(it => `<li>${escapeXml(it)}</li>`).join('')}</ul>
+        </details>` : ''}
+        <div class="journey-phase-actions">
+          <button type="button" class="journey-goto" data-goto-phase="${i}">${icon(PHASE_ICONS[i] || 'ic-flag', 'icon-xs')}Plan Phase ${i + 1} ${icon('i-arrow-right', 'icon-xs')}</button>
+          ${extHtml}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── Step 1: Start Here ──
+// A short guided tour, one slide at a time: the five levels (circle map),
+// then one slide per Treatment Roadmap phase — why the phase matters, and what
+// you do for it in the planner. Back/Next move through it; "Skip intro" and
+// the last slide's "Start mapping" go to the first mapping step.
+const ORIENT_RING_ICONS = { community: 'ic-building', school: 'ic-school', family: 'ic-home', peer: 'ic-users', client: 'ic-user' };
+const ORIENT_RING_RADII = [140, 113, 86, 59, 32]; // community (outer) → client (center)
+
+function renderOrientation(data) {
+  const p = data.planner;
+  const o = p.orientation;
+  const el = document.getElementById('plannerOrientationSection');
+  if (!o) return;
+  const lv = o.levels || {};
+  const t = o.tour || {};
+  const rings = RING_ORDER.map(k => p.rings.find(r => r.key === k)).filter(Boolean);
+  const stripEg = x => String(x || '').replace(/^e\.g\.\s*/i, '');
+  const firstRingStep = STEP_KEYS.indexOf(RING_ORDER[0]);
+
+  const ringSvg = `
+    <svg viewBox="-4 -4 308 308" class="po-map" role="img" aria-label="Five nested circles: community/structural, school, family, peer, and the client at the center">
+      ${rings.map((r, i) => `<circle class="po-ring po-ring-${i + 1}" data-level="${r.key}" cx="150" cy="150" r="${ORIENT_RING_RADII[i]}"><title>${escapeXml(r.label)}</title></circle>`).join('')}
+      ${rings.map((r, i) => i < rings.length - 1
+        ? `<text class="po-ring-label po-ring-label-${i + 1}" data-level="${r.key}" x="150" y="${150 - ORIENT_RING_RADII[i] + 18}">${escapeXml(r.label)}</text>`
+        : `<text class="po-ring-label po-ring-label-${i + 1}" data-level="${r.key}" x="150" y="154">${escapeXml(r.label.replace(/\s*\(.*\)/, ''))}</text>`).join('')}
+    </svg>`;
+
+  const levelsSlide = `
+    <div class="po-slide-text">
+      <h4>${escapeXml(lv.heading || '')}</h4>
+      <p>${escapeXml(lv.intro || '')}</p>
+      ${lv.hint ? `<p class="po-hint">${escapeXml(lv.hint)}</p>` : ''}
+    </div>
+    <div class="po-levels-layout">
+      <div class="po-map-wrap">${ringSvg}</div>
+      <div>
+        <div class="po-level-chips" role="tablist" aria-label="Levels">
+          ${rings.map((r, i) => `<button type="button" class="po-level-chip po-level-chip-${i + 1}" role="tab" data-level="${r.key}" aria-selected="false">${icon(ORIENT_RING_ICONS[r.key] || 'ic-layers', 'icon-xs')}${escapeXml(r.label)}</button>`).join('')}
+        </div>
+        <div class="po-level-detail" role="tabpanel" aria-live="polite"></div>
+      </div>
+    </div>`;
+
+  const roadmapPhases = (data.toolkit && data.toolkit.tabs.roadmap.phases) || [];
+  const PHASE_ICONS = ['ic-search', 'ic-tool', 'ic-flag'];
+  const phaseSlide = (ph, i) => {
+    const rp = roadmapPhases[i] || {};
+    const m = String(rp.title || `Phase ${i + 1}`).match(/^(Phase\s*\d+)\s*[:\-–]\s*(.+)$/i);
+    const last = i === o.phases.length - 1;
+    return `
+    <div class="po-phase po-phase-${i + 1}">
+      <div class="po-phase-head">
+        <span class="po-phase-badge">${icon(PHASE_ICONS[i] || 'ic-flag')}</span>
+        <div>
+          <span class="po-phase-kicker">${escapeXml(m ? m[1] : `Phase ${i + 1}`)}${rp.sessions ? ` · ${escapeXml(rp.sessions)}` : ''}</span>
+          <h4>${escapeXml(m ? m[2] : rp.title || '')}</h4>
+        </div>
+      </div>
+      <div class="po-phase-why">
+        <span>${icon('ic-target', 'icon-xs')}${escapeXml(t.whyLabel || 'Why this phase')}</span>
+        <p>${escapeXml(ph.intention)}</p>
+      </div>
+      <span class="po-phase-do">${escapeXml(t.doLabel || 'What you do in the planner')}</span>
+      <div class="po-tasks">${(ph.tasks || []).map(tk => `
+        <div class="po-task">
+          <span class="po-task-icon">${icon(tk.icon || 'ic-check-circle')}</span>
+          <div>
+            <strong>${escapeXml(tk.title)}${tk.where ? `<em>${escapeXml(tk.where)}</em>` : ''}</strong>
+            <p>${escapeXml(tk.text)}</p>
+          </div>
+        </div>`).join('')}
+      </div>
+      ${last && o.note ? `<p class="po-note">${icon('ic-lock', 'icon-xs')}<span>${escapeXml(o.note)}</span></p>` : ''}
+    </div>`;
+  };
+
+  const slides = [levelsSlide, ...(o.phases || []).map(phaseSlide)];
+  el.innerHTML = `
+    <div class="po-tour">
+      <div class="po-tour-top">
+        <div class="po-dots" aria-hidden="true">${slides.map((_, i) => `<span class="po-dot po-dot-${i}" data-dot="${i}"></span>`).join('')}</div>
+        <button type="button" class="po-skip" data-goto-step="${firstRingStep}">${escapeXml(t.skipLabel || 'Skip intro')} ${icon('i-arrow-right', 'icon-xs')}</button>
+      </div>
+      ${slides.map((html, i) => `<div class="po-slide" data-slide="${i}" hidden>${html}</div>`).join('')}
+      <div class="po-tour-nav">
+        <button type="button" class="btn btn-outline po-back">${escapeXml(t.backLabel || 'Back')}</button>
+        <span class="po-count" aria-live="polite"></span>
+        <button type="button" class="btn btn-primary po-next">${escapeXml(t.nextLabel || 'Next')}</button>
+        <button type="button" class="btn btn-primary po-start" data-goto-step="${firstRingStep}">${escapeXml(t.startLabel || 'Start mapping')} ${icon('i-arrow-right', 'icon-xs')}</button>
+      </div>
+    </div>`;
+
+  // ── slide navigation ──
+  let current = 0;
+  const show = i => {
+    current = Math.max(0, Math.min(slides.length - 1, i));
+    el.querySelectorAll('.po-slide').forEach(sl => { sl.hidden = parseInt(sl.dataset.slide, 10) !== current; });
+    el.querySelectorAll('.po-dot').forEach(d => {
+      const n = parseInt(d.dataset.dot, 10);
+      d.classList.toggle('is-current', n === current);
+      d.classList.toggle('is-done', n < current);
+    });
+    el.querySelector('.po-back').style.visibility = current === 0 ? 'hidden' : 'visible';
+    const last = current === slides.length - 1;
+    el.querySelector('.po-next').hidden = last;
+    el.querySelector('.po-start').hidden = !last;
+    el.querySelector('.po-count').textContent = `${current + 1} of ${slides.length}`;
+  };
+  el.querySelector('.po-back').addEventListener('click', () => show(current - 1));
+  el.querySelector('.po-next').addEventListener('click', () => show(current + 1));
+  plannerState.resetOrientationTour = () => show(0);
+  show(0);
+
+  // ── five levels: click a ring or a level chip to see it (hover previews on the map) ──
+  const detail = el.querySelector('.po-level-detail');
+  let pinned = RING_ORDER[0];
+  function showLevel(key) {
+    const r = rings.find(x => x.key === key);
+    const idx = rings.indexOf(r);
+    el.querySelectorAll('.po-ring, .po-ring-label').forEach(n => {
+      n.classList.toggle('is-active', n.dataset.level === key);
+      n.classList.toggle('is-dim', n.dataset.level !== key);
+    });
+    el.querySelectorAll('.po-level-chip').forEach(c => {
+      c.classList.toggle('is-active', c.dataset.level === key);
+      c.setAttribute('aria-selected', String(c.dataset.level === key));
+    });
+    detail.className = `po-level-detail po-level-${idx + 1}`;
+    detail.innerHTML = `
+      <h5>${icon(ORIENT_RING_ICONS[key] || 'ic-layers', 'icon-sm')}${escapeXml(r.label)}</h5>
+      ${r.description ? `<p>${escapeXml(r.description)}</p>` : ''}
+      <div class="po-examples">
+        <span class="po-eg po-eg-risk"><b>${escapeXml(lv.riskLabel || p.riskColumnLabel)}</b>${escapeXml(stripEg(r.placeholderRisk))}</span>
+        <span class="po-eg po-eg-protective"><b>${escapeXml(lv.protectiveLabel || p.protectiveColumnLabel)}</b>${escapeXml(stripEg(r.placeholderProtective))}</span>
+      </div>`;
+  }
+  el.querySelectorAll('.po-ring').forEach(ring => {
+    ring.addEventListener('mouseenter', () => showLevel(ring.dataset.level));
+    ring.addEventListener('mouseleave', () => showLevel(pinned));
+    ring.addEventListener('click', () => { pinned = ring.dataset.level; showLevel(pinned); });
+  });
+  el.querySelectorAll('.po-level-chip').forEach(chip => {
+    chip.addEventListener('click', () => { pinned = chip.dataset.level; showLevel(pinned); });
+  });
+  showLevel(pinned);
+}
+
+// ── "File an extension" (Rise portal) — Phase 2 suggests it, Phase 3 offers a button ──
+function renderExtensionLinks(p) {
+  const ext = p.extension;
+  const el2 = document.getElementById('plannerPhase2Extension');
+  const el3 = document.getElementById('plannerPhase3Extension');
+  if (!ext || !ext.href) { el2.hidden = true; el3.hidden = true; return; }
+  el2.innerHTML = `${icon('ic-refresh', 'icon-sm')}<span>${escapeXml(ext.phase2Text)}</span>
+    <a href="${ext.href}" target="_blank" rel="noopener">${escapeXml(ext.phase2LinkText)} ${icon('i-arrow-right', 'icon-xs')}</a>`;
+  el3.innerHTML = `${icon('ic-refresh', 'icon-sm')}<span>${escapeXml(ext.phase3Text)}</span>
+    <a class="btn btn-primary planner-extension-btn" href="${ext.href}" target="_blank" rel="noopener">${escapeXml(ext.phase3ButtonText)}</a>`;
 }
 
 function initPlanner() {
@@ -838,7 +1097,8 @@ function initPlanner() {
 
   function updateGenerateState() {
     const any = RING_ORDER.some(r => plannerState.factors[r].risk.length || plannerState.factors[r].protective.length);
-    document.getElementById('plannerEmptyState').style.display = any ? 'none' : 'block';
+    const onOrientation = STEP_KEYS[plannerState.currentStep] === 'orientation';
+    document.getElementById('plannerEmptyState').style.display = any || onOrientation ? 'none' : 'block';
   }
 
   // ── Wizard: one ecological level per step, full map only on Review ──
@@ -851,6 +1111,25 @@ function initPlanner() {
       item.classList.toggle('is-done', i < plannerState.currentStep);
       item.classList.add('is-clickable'); // free navigation — every step is reachable at any time
     });
+    const currentPhase = stepPhaseIndex(STEP_KEYS[plannerState.currentStep]);
+    document.querySelectorAll('.planner-phase-seg').forEach(seg => {
+      seg.classList.toggle('is-current', parseInt(seg.dataset.phase, 10) === currentPhase);
+    });
+  }
+
+  // When you move to another step from further down the page, bring the new
+  // step's start up to just under the sticky step bar (no jump if it's already
+  // in view, e.g. on first load).
+  function scrollToStepStart() {
+    if (plannerState.initialRender) return;
+    const header = document.getElementById('plannerStepHeader');
+    const bar = document.querySelector('.planner-stepper-row');
+    const navH = document.getElementById('mainNav').offsetHeight;
+    const offset = navH + (getComputedStyle(bar).position === 'sticky' ? bar.offsetHeight : 0) + 12;
+    const top = header.getBoundingClientRect().top;
+    if (top < offset || top > window.innerHeight * 0.6) {
+      window.scrollTo({ top: window.scrollY + top - offset, behavior: 'smooth' });
+    }
   }
 
   function goToStep(index) {
@@ -860,6 +1139,7 @@ function initPlanner() {
 
     const stepKey = STEP_KEYS[index];
     const isRingStep = RING_ORDER.includes(stepKey);
+    const isOrientation = stepKey === 'orientation';
     const isTopFactorsStep = stepKey === 'topFactors';
     const isResourcePlanStep = stepKey === 'resourcePlan';
     const onReview = stepKey === 'review';
@@ -874,7 +1154,9 @@ function initPlanner() {
       row.classList.toggle('step-hidden', isRingStep && row.dataset.ring !== stepKey);
     });
 
-    document.getElementById('plannerStepNav').hidden = onReview;
+    // Start Here has its own Back/Next inside the tour, so the planner's own nav stays out of the way.
+    document.getElementById('plannerStepNav').hidden = onReview || isOrientation;
+    if (isOrientation && plannerState.resetOrientationTour) plannerState.resetOrientationTour();
     document.getElementById('plannerActions').hidden = !onReview;
     document.getElementById('plannerDownloadHint').hidden = !onReview;
     document.getElementById('plannerEmailHint').hidden = !onReview;
@@ -883,12 +1165,16 @@ function initPlanner() {
     document.getElementById('plannerOutput').hidden = !(onReview && plannerState.hasGenerated);
     // The add-factor forms only belong on ring steps — Review has nothing left
     // to add, and both curation steps (Top Factors, Resources) stand on their own.
-    document.getElementById('plannerLayout').hidden = isTopFactorsStep || isResourcePlanStep || onReview;
+    document.getElementById('plannerLayout').hidden = isOrientation || isTopFactorsStep || isResourcePlanStep || onReview;
     // The ecological map belongs on ring steps and Review — both curation
     // steps (Top Factors, Resources) stand on their own without it. Its
     // "Phase 1" header only belongs on Review, since steps 1–5 already have
     // their own per-ring step header above.
-    document.getElementById('plannerEcoMapWrap').hidden = isTopFactorsStep || isResourcePlanStep;
+    document.getElementById('plannerEcoMapWrap').hidden = isOrientation || isTopFactorsStep || isResourcePlanStep;
+    document.getElementById('plannerOrientationSection').hidden = !isOrientation;
+    // Smaller map while entering factors, so the whole step (and the sticky
+    // step bar) fits on screen; full size on the Treatment Plan.
+    document.getElementById('plannerEcoMapWrap').classList.toggle('is-compact', isRingStep);
     document.getElementById('plannerReviewPhase1Head').hidden = !onReview;
     document.getElementById('plannerPriorityStrip').hidden = !onReview;
     document.getElementById('plannerTopFactorsSection').hidden = !isTopFactorsStep;
@@ -901,7 +1187,10 @@ function initPlanner() {
     // no separate custom heading/intro. The last three steps conclude the
     // mapping activity as three named phases.
     let title, hint;
-    if (onReview) {
+    if (isOrientation) {
+      title = `Step ${index + 1} of ${STEP_KEYS.length}: ${(p.orientation && p.orientation.title) || 'Start Here'}`;
+      hint = (p.orientation && p.orientation.hint) || '';
+    } else if (onReview) {
       title = `Step ${index + 1} of ${STEP_KEYS.length}: Treatment Plan`;
       hint = '';
     } else if (isRingStep) {
@@ -919,16 +1208,21 @@ function initPlanner() {
     document.getElementById('plannerStepHint').textContent = hint;
     // Same goal reminder on every step, worded for what that step asks of you.
     const goalStepKey = isRingStep ? 'ring' : stepKey;
-    document.getElementById('plannerStepGoal').innerHTML = stepGoalHtml(goalStepKey);
+    document.getElementById('plannerStepHint').hidden = !hint;
+    document.getElementById('plannerStepGoal').innerHTML = isOrientation ? '' : stepGoalHtml(goalStepKey);
+    document.getElementById('plannerStepGoal').hidden = isOrientation;
 
     if (!onReview) {
       document.getElementById('plannerBackBtn').hidden = index === 0;
       // The step right before Review doubles as "Generate" — one click both
       // reviews and generates the plan, instead of a separate button on Review.
-      document.getElementById('plannerNextBtn').textContent = index === STEP_KEYS.length - 2 ? p.generateButtonLabel : p.nextButtonLabel;
+      document.getElementById('plannerNextBtn').textContent = index === STEP_KEYS.length - 2 ? p.generateButtonLabel
+        : p.nextButtonLabel;
     }
 
     renderStepperState();
+    updateGenerateState();
+    scrollToStepStart();
     renderEcoMap();
     persistPlannerState();
 
@@ -1404,10 +1698,11 @@ function initPlanner() {
     document.getElementById('plannerDownloadHint').hidden = true;
     document.getElementById('plannerEmailBtn').hidden = true;
     document.getElementById('plannerEmailHint').hidden = true;
-    plannerState.currentStep = 0;
-    plannerState.furthestStep = 0;
+    const firstRingStep = STEP_KEYS.indexOf(RING_ORDER[0]);
+    plannerState.currentStep = firstRingStep;
+    plannerState.furthestStep = firstRingStep;
     plannerState.hasGenerated = false;
-    goToStep(0);
+    goToStep(firstRingStep);
     updateGenerateState();
     try { localStorage.removeItem(PLANNER_STORAGE_KEY); } catch (e) { /* ignore */ }
   }
@@ -1428,6 +1723,16 @@ function initPlanner() {
   });
   document.querySelectorAll('.planner-step-item').forEach(item => {
     item.addEventListener('click', () => goToStep(parseInt(item.dataset.stepIndex, 10)));
+  });
+  document.getElementById('plannerOrientationSection').addEventListener('click', e => {
+    const btn = e.target.closest('[data-goto-step]');
+    if (btn) goToStep(parseInt(btn.dataset.gotoStep, 10));
+  });
+  document.querySelectorAll('.journey-goto[data-goto-phase]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      goToStep(PHASE_FIRST_STEP[parseInt(btn.dataset.gotoPhase, 10)]);
+      document.getElementById('plannerDisclaimer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
   });
 
   document.querySelectorAll('.planner-phase-comment-input').forEach(el => {
@@ -1453,7 +1758,9 @@ function initPlanner() {
 
   // Restore any previously entered factors (and the step/output the clinician
   // was on) before landing on the current step.
+  plannerState.initialRender = true;
   goToStep(plannerState.currentStep); // already generates the plan if this lands on Review
+  plannerState.initialRender = false;
   updateGenerateState();
 }
 
@@ -1876,7 +2183,7 @@ function buildPrintSheet(data, ringLabelByKey, phases, notes) {
   document.getElementById('plannerPrintSheet').innerHTML = `
     ${printTimestamp()}
     <h1>Client Ecological Formulation &amp; Treatment Plan</h1>
-    <p class="print-date">Therapist Toolkit Planning Tool</p>
+    <p class="print-date">Therapist Toolkit Treatment Planning Tool</p>
     ${plannerGoal() ? `<p class="print-goal">Treatment ${escapeXml(plannerGoal().label.toLowerCase())}: ${escapeXml(plannerGoal().statement)}.</p>` : ''}
     <p class="print-disclaimer">${data.planner.disclaimer}</p>
 
@@ -1930,6 +2237,14 @@ const scrollProgress = document.getElementById('scrollProgress');
 window.addEventListener('scroll', () => {
   const total = document.documentElement.scrollHeight - window.innerHeight;
   scrollProgress.style.width = (window.scrollY / total * 100) + '%';
+}, { passive: true });
+
+// ── Sticky step bar: a soft shadow once it's pinned under the header ──
+window.addEventListener('scroll', () => {
+  const bar = document.querySelector('.planner-stepper-row');
+  if (!bar) return;
+  const pinned = bar.getBoundingClientRect().top <= document.getElementById('mainNav').offsetHeight + 1 && window.scrollY > 0;
+  bar.classList.toggle('is-stuck', pinned && getComputedStyle(bar).position === 'sticky');
 }, { passive: true });
 
 // ── Nav scrolled state ───────────────────────

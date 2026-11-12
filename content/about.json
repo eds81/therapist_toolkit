@@ -1,258 +1,20 @@
 {
   "aboutPage": {
-    "sectionLabel": "About the Toolkit",
-    "heading": "Supporting the therapists who support youth",
-    "intro": "The Therapist Toolkit gathers practical, evidence-informed tools for therapists treating youth with suicidal ideation in the Rise short-term model, in one place. Everything here serves one goal: reducing suicidal ideation in the youth you treat. It was co-designed with Rise therapists, clinical experts and researchers.",
-    "sectionNav": [
-      {
-        "label": "Our Model",
-        "href": "#about"
-      },
-      {
-        "label": "Why",
-        "href": "#why"
-      },
-      {
-        "label": "Treatment Roadmap",
-        "href": "#toolkit"
-      },
-      {
-        "label": "How to Use It",
-        "href": "#howToUse"
-      },
-      {
-        "label": "Research",
-        "href": "#research"
-      },
-      {
-        "label": "Team",
-        "href": "#team"
-      }
-    ],
+    "sectionLabel": "About Our Partnership",
+    "heading": "About Our Partnership",
+    "intro": "Rise Against Suicide pairs youth at risk with community therapists who deliver free, short-term therapy in schools and other community settings. CU Boulder brings research expertise to help strengthen that system, starting with the therapists doing the work. Together, we co-designed this toolkit with Rise therapists using the Discover, Design, Build, Test model.",
     "explore": {
       "heading": "Ready to start?",
-      "body": "See all six tools, and how they fit across a Rise treatment, on the home page.",
+      "body": "See all six tools on the home page, or start planning a client's treatment.",
       "primaryText": "Explore the tools",
       "primaryHref": "index.html#tour",
-      "secondaryText": "Start the Planning Tool",
+      "secondaryText": "Start the Treatment Planning Tool",
       "secondaryHref": "planning-tool.html"
     }
   },
-  "about": {
-    "sectionLabel": "Our Model",
-    "headingLine1": "Youth at the Center.",
-    "headingLine2": "The Ecosystem is Essential.",
-    "intro": "Rise Against Suicide pairs youth at risk with community therapists who deliver free, short-term therapy in schools and other community settings. CU Boulder brings research expertise to help strengthen that system — starting with the therapists doing the work.",
-    "partnershipNote": {
-      "text": "This toolkit is built through a partnership between Rise Against Suicide and the University of Colorado Boulder.",
-      "linkText": "More about the partnership",
-      "linkHref": "#team"
-    },
-    "ecosystemHint": "Hover or click any ring to explore each layer of support.",
-    "ecosystemLegend": [
-      {
-        "layer": "youth",
-        "title": "Youth",
-        "body": "The young person receiving care. Their needs, strengths, and wellbeing drive every decision in this model.",
-        "tags": []
-      },
-      {
-        "layer": "network",
-        "title": "Close Personal Network",
-        "body": "The people immediately surrounding the youth in their daily life.",
-        "tags": [
-          "Parents",
-          "Peers"
-        ]
-      },
-      {
-        "layer": "providers",
-        "title": "Clinical Providers",
-        "body": "Trained professionals who directly deliver or coordinate mental health care.",
-        "tags": [
-          "Therapists",
-          "Counselors",
-          "Psychiatrists",
-          "Other Providers"
-        ]
-      },
-      {
-        "layer": "systems",
-        "title": "Systems & Settings",
-        "body": "The institutions and organizations where youth encounter support and receive care.",
-        "tags": [
-          "Schools",
-          "Clinics",
-          "Hospitals",
-          "Community Orgs"
-        ]
-      }
-    ],
-    "modelSteps": [
-      {
-        "icon": "i-user",
-        "colorClass": "step-teal",
-        "text": "Youth referred to Rise"
-      },
-      {
-        "icon": "i-users",
-        "colorClass": "step-teal",
-        "text": "Paired with a therapist from the Rise roster"
-      },
-      {
-        "icon": "i-chat",
-        "colorClass": "step-teal",
-        "text": "Therapist provides up to 10 sessions"
-      },
-      {
-        "icon": "i-check-circle",
-        "colorClass": "step-green",
-        "text": "Youth completes treatment or is referred for follow-up"
-      }
-    ]
-  },
-  "why": {
-    "sectionLabel": "Study Rationale",
-    "heading": "Why This Toolkit?",
-    "cards": [
-      {
-        "icon": "i-gap",
-        "colorClass": "why-icon-red",
-        "lead": "Large gaps in care.",
-        "body": "More than 50% of youth with detected suicide risk receive no follow-up care",
-        "citation": "(Kim et al., 2019)"
-      },
-      {
-        "icon": "i-shield",
-        "colorClass": "why-icon-orange",
-        "lead": "Structural & attitudinal barriers.",
-        "body": "Cost, insurance, waitlists, stigma, and negative beliefs all block access to treatment",
-        "citation": "(Kodish et al., 2020)"
-      },
-      {
-        "icon": "i-help-circle",
-        "colorClass": "why-icon-yellow",
-        "lead": "Therapist hesitancy.",
-        "body": "Many therapists feel unsure, uncomfortable, or fearful about doing this work",
-        "citation": "(Schmidt et al., 2016; Singer et al., 2011)"
-      },
-      {
-        "icon": "i-zap",
-        "colorClass": "why-icon-teal",
-        "lead": "Therapist burnout is real.",
-        "body": "Therapists doing this work report high exhaustion and emotional demand, and need more support",
-        "citation": "(Villarreal-Otalora et al., 2023)"
-      }
-    ],
-    "pullQuote": {
-      "text": "Burnout is challenging. It's very hard seeing people in really difficult places over and over, especially when your entire caseload looks like that.",
-      "cite": "Rise therapist"
-    }
-  },
-  "toolkit": {
-    "sectionLabel": "Treatment Roadmap",
-    "tabs": {
-      "roadmap": {
-        "tabLabel": "1. Treatment Roadmap",
-        "heading": "Treatment Planning / Roadmap",
-        "concern": "“12 sessions isn’t enough.”",
-        "intro": "We know 12 sessions is short — that's why we built this toolkit. Developed with therapists and clinical and research experts in youth suicide prevention, the Treatment Roadmap structures our brief model around its central goal, reducing suicidal ideation, and what matters most in a short window to get there: reducing risk and stabilizing crisis, building emotion regulation, problem-solving and support-seeking skills, and building a life worth living. Click any phase below to expand it and see sample evidence-based interventions for that stage.",
-        "phases": [
-          {
-            "title": "Phase 1: Assess & Understand",
-            "sessions": "Sessions 1–4",
-            "items": [
-              "Suicide Risk Assessment & Safety Planning",
-              "Case Conceptualization & Treatment Plan"
-            ],
-            "interventions": [
-              "Columbia Suicide Severity Rating Scale (C-SSRS)",
-              "Stanley-Brown Safety Planning Intervention",
-              "Crisis response planning",
-              "Means restriction counseling",
-              "Family/caregiver psychoeducation"
-            ]
-          },
-          {
-            "title": "Phase 2: Train & Teach Skills",
-            "sessions": "Sessions 5–8",
-            "items": [
-              "Teach and Practice Skills"
-            ],
-            "interventions": [
-              "DBT skills: distress tolerance & emotion regulation",
-              "CBT cognitive restructuring techniques",
-              "ACT and mindfulness exercises",
-              "Somatic grounding interventions",
-              "Coping card development",
-              "Behavioral activation"
-            ]
-          },
-          {
-            "title": "Phase 3: Consolidate & Next Steps",
-            "sessions": "Sessions 9–12",
-            "items": [
-              "Relapse Prevention",
-              "Linkage to Care",
-              "Termination"
-            ],
-            "interventions": [
-              "Warning sign identification & review",
-              "Updated safety plan review",
-              "Warm handoff to ongoing care provider",
-              "Family/caregiver transition support",
-              "Final screenings to measure change in suicidal ideation",
-              "Termination rituals & strengths review"
-            ]
-          }
-        ]
-      }
-    },
-    "howToUse": {
-      "heading": "How Do I Use This Toolkit?",
-      "intro": "This toolkit is designed to be flexible: use what works for you, your clients, and your workflow.",
-      "steps": [
-        {
-          "tab": "roadmap",
-          "icon": "i-map-pin",
-          "title": "Start with the Treatment Roadmap.",
-          "body": "Use it to help you plan and deliver your therapy. Revisit session by session to see where you are and what comes next."
-        },
-        {
-          "tab": "library",
-          "icon": "i-book",
-          "title": "Dip into the Treatment Library when you need something specific.",
-          "body": "Align it with the Roadmap, and treat it like a search tool: pull a handout for a family session, grab an assessment before intake, or find a referral when treatment is wrapping up."
-        },
-        {
-          "tab": "schools",
-          "icon": "i-school",
-          "title": "Turn to Navigating Schools before or during any school-facing work.",
-          "body": "Review the sample questions ahead of a school meeting, or reference the role-clarification tips when a case starts to feel tangled between systems."
-        },
-        {
-          "tab": "selfcare",
-          "icon": "i-heart",
-          "title": "Revisit Therapist Self-Care regularly, not just when things feel hard.",
-          "body": "Build a check-in by integrating these tools into your own routine — weekly, monthly, whatever's sustainable — so you catch signs of strain early rather than after burnout sets in."
-        }
-      ],
-      "tips": [
-        "You don't need to use every tool with every client. Pick what's relevant to the case in front of you.",
-        "Tools can be adapted. Use your clinical judgment to fit language, pacing, and content to each youth and family.",
-        "Come back often. This is meant to be a living resource you return to throughout a case, not a one-time read!",
-        "If you want support, or to talk through a case, remember you can also schedule a consultation call with our licensed clinical psychologist."
-      ],
-      "feedback": {
-        "text": "If you have suggestions to improve our toolkit, please let us know! The goal is to support you best — we need your help knowing how to do this.",
-        "linkText": "Contact us",
-        "linkHref": "#team"
-      }
-    }
-  },
   "research": {
-    "sectionLabel": "Research Process",
-    "heading": "Discover. Design. Test.",
+    "sectionLabel": "Our Research Model",
+    "heading": "Discover. Design. Build. Test.",
     "intro": "This toolkit is being co-designed through a rigorous, community-engaged research process with Rise therapists — not built for them, but <em>with</em> them.",
     "aims": [
       {
@@ -307,6 +69,141 @@
         "domain": "Toolkit Vision"
       }
     ]
+  },
+  "why": {
+    "sectionLabel": "Why It Exists",
+    "heading": "Why This Toolkit?",
+    "cards": [
+      {
+        "icon": "i-gap",
+        "colorClass": "why-icon-red",
+        "lead": "Large gaps in care.",
+        "body": "More than 50% of youth with detected suicide risk receive no follow-up care",
+        "citation": "(Kim et al., 2019)"
+      },
+      {
+        "icon": "i-shield",
+        "colorClass": "why-icon-orange",
+        "lead": "Structural & attitudinal barriers.",
+        "body": "Cost, insurance, waitlists, stigma, and negative beliefs all block access to treatment",
+        "citation": "(Kodish et al., 2020)"
+      },
+      {
+        "icon": "i-help-circle",
+        "colorClass": "why-icon-yellow",
+        "lead": "Therapist hesitancy.",
+        "body": "Many therapists feel unsure, uncomfortable, or fearful about doing this work",
+        "citation": "(Schmidt et al., 2016; Singer et al., 2011)"
+      },
+      {
+        "icon": "i-zap",
+        "colorClass": "why-icon-teal",
+        "lead": "Therapist burnout is real.",
+        "body": "Therapists doing this work report high exhaustion and emotional demand, and need more support",
+        "citation": "(Villarreal-Otalora et al., 2023)"
+      }
+    ],
+    "pullQuote": {
+      "text": "Burnout is challenging. It's very hard seeing people in really difficult places over and over, especially when your entire caseload looks like that.",
+      "cite": "Rise therapist"
+    }
+  },
+  "faqSection": {
+    "sectionLabel": "Questions",
+    "heading": "Questions about the toolkit"
+  },
+  "toolkitFaq": {
+    "goal": {
+      "heading": "1. What Is the Goal of This Toolkit?",
+      "paragraphs": [
+        "The goal of this toolkit is to reduce suicidal thoughts and behaviors among youth served through the Rise short-term treatment model. It does this by supporting the therapists who work with them: consolidating practical, evidence-informed tools in one place and by providing resources, tips and strategies to make your day-to-day practice easier, more efficient, and more connected.",
+        "Rather than replacing clinical judgment or training, it's meant to give therapists a clear roadmap, vetted resources, guidance for working with schools, and support for their own sustainability in this rewarding, yet challenging, work."
+      ]
+    },
+    "why": {
+      "heading": "2. Why Was This Toolkit Developed?"
+    },
+    "how": {
+      "heading": "3. How Was This Toolkit Developed?",
+      "intro": "We listened to your experiences and collaboratively designed solutions to address your needs. We used a framework called the Discover, Design, Build, Test model.",
+      "pairs": [
+        {
+          "concern": "12 sessions isn't enough.",
+          "solution": "We know 12 sessions is short. That's why we built this toolkit. Developed with therapists, clinical and research experts in youth suicide prevention, the Treatment Roadmap structures our brief model around what matters most in a short window: reducing risk and stabilizing crisis, building emotion regulation, problem-solving and support seeking skills, and building a life worth living, all in service of reducing suicidal thoughts and behaviors."
+        },
+        {
+          "concern": "We spend too much time looking for resources.",
+          "solution": "We have created a vetted Treatment Library for you to pull from. Search for exactly what you need to help clients link to resources in the community, referrals for therapy after your treatment wraps, and access a library of evidence-based worksheets and tools to use in therapy with youth, families and schools."
+        },
+        {
+          "concern": "Working in the schools is complicated.",
+          "solution": "We have built a school navigation page filled with resources to support your work in schools. We have a list of questions for you to ask schools to get to know the lay of the land, we have tips for navigating tricky interactions, and suggestions for collaborating with schools to best support youth and families."
+        },
+        {
+          "concern": "This work takes a personal toll.",
+          "solution": "Working with youth at risk for suicide is some of the hardest clinical work there is. These tools help you spot burnout early, build resilience into your practice, provide you with tips and tricks for your peers, and allow you to schedule a consultation call with our licensed clinical psychologist."
+        }
+      ]
+    },
+    "includes": {
+      "heading": "4. What Does This Toolkit Include?",
+      "items": [
+        {
+          "letter": "a",
+          "title": "Treatment Roadmap",
+          "body": "Your guide through the clinical process: starting with risk assessment and safety planning, skill building and practice, consolidation and transition planning."
+        },
+        {
+          "letter": "b",
+          "title": "Treatment Library",
+          "body": "Your one-stop-shop for therapy resources. From vetted community resources to suggested referrals, browse recommended clinical assessment tools, youth and family handouts, intervention worksheets, and more."
+        },
+        {
+          "letter": "c",
+          "title": "Navigating Schools",
+          "body": "Your tips and tricks for navigating the complexity of schools. Learn what questions to ask to get the information you need, how to clarify roles and responsibilities, and how to coordinate with school teams."
+        },
+        {
+          "letter": "d",
+          "title": "Therapist Self-Care",
+          "body": "Your reminder to care for yourself. Strategies for managing vicarious trauma and compassion fatigue, recognizing signs and developing action plans to address burnout, and connecting with your peers."
+        }
+      ]
+    },
+    "useIt": {
+      "heading": "5. How Do I Use This Toolkit?",
+      "intro": "This toolkit is designed to be flexible: use what works for you, your clients and your workflow. Here are some suggestions:",
+      "guidance": [
+        {
+          "title": "Start with the Treatment Roadmap and Treatment Planning Tool.",
+          "body": "Use it to help you plan and deliver your therapy. Revisit session by session to see where you are and what comes next."
+        },
+        {
+          "title": "Dip into the Treatment Library when you need something specific.",
+          "body": "Align it with the Roadmap, and treat it like a search tool: pull a handout for a family session, grab an assessment before intake, or find a referral when treatment is wrapping up."
+        },
+        {
+          "title": "Turn to Navigating Schools before or during any school-facing work.",
+          "body": "Review the sample questions ahead of a school meeting, or reference the role-clarification tips when a case starts to feel tangled between systems."
+        },
+        {
+          "title": "Revisit Therapist Self-Care regularly, not just when things feel hard.",
+          "body": "Build a check-in by integrating these tools into your own routine - weekly, monthly, whatever's sustainable - so you catch signs of strain early rather than after burnout sets in."
+        }
+      ],
+      "tips": [
+        "You don't need to use every tool with every client. Pick what's relevant to the case in front of you.",
+        "Tools can be adapted. Use your clinical judgment to fit language, pacing, and content to each youth and family.",
+        "Come back often. This is meant to be a living resource you return to throughout a case, not a one-time read!",
+        "If you want support, or to talk through a case, remember you can also schedule a consultation call with our licensed clinical psychologist."
+      ],
+      "closing": {
+        "pre": "If you have suggestions to improve our toolkit, please let us know!",
+        "linkText": "Contact us here.",
+        "linkHref": "about.html#team",
+        "post": "The goal is to support you best – we need your help knowing how to do this!"
+      }
+    }
   },
   "team": {
     "sectionLabel": "The Team",

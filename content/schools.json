@@ -62,7 +62,7 @@
       },
       {
         "title": "Be prepared to support youth through school re-entry after a crisis",
-        "body": "Youth with suicidal thoughts and behaviors often move in and out of schools and other systems of care. A supported return to school helps protect the progress made in reducing suicidal ideation, so be prepared to support youth through these transitions.",
+        "body": "Youth with suicidal thoughts and behaviors often move in and out of schools and other systems of care. A supported return to school helps protect the progress made in reducing suicidal thoughts and behaviors, so be prepared to support youth through these transitions.",
         "widget": "none",
         "linkText": "Open the school re-entry resource guide",
         "linkHref": "",
@@ -104,7 +104,7 @@
       {
         "key": "therapist",
         "who": "The therapist",
-        "role": "Provides therapy to the youth, assesses outcomes (including changes in suicidal ideation), and links to follow-up care."
+        "role": "Provides therapy to the youth, assesses outcomes (including changes in suicidal thoughts and behaviors), and links to follow-up care."
       }
     ],
     "rolesHeading": "Who does what",
@@ -147,7 +147,7 @@
           "matchKeys": [
             "therapist"
           ],
-          "note": "The therapist assesses outcomes, including changes in suicidal ideation, through screenings during treatment."
+          "note": "The therapist assesses outcomes, including changes in suicidal thoughts and behaviors, through screenings during treatment."
         },
         {
           "label": "Next steps in care after Rise",
@@ -238,9 +238,9 @@
       "interviewEmpty": "No answers yet. Add them under Tip 2 on the Tips tab.",
       "interviewEditLabel": "Edit answers",
       "mapHeading": "School drivers & protectors from your map",
-      "mapIntro": "Pulled automatically from the School ring of your Planning Tool map in this browser.",
+      "mapIntro": "Pulled automatically from the School ring of your Treatment Planning Tool map in this browser.",
       "mapEmpty": "No School factors on your map yet.",
-      "mapLinkLabel": "Open the Planning Tool",
+      "mapLinkLabel": "Open the Treatment Planning Tool",
       "riskLabel": "Drivers (risk)",
       "protectiveLabel": "Protectors",
       "printLabel": "Print school card",

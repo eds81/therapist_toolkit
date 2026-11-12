@@ -33,7 +33,10 @@ const AUDIENCE_ICON = {
 // Two tabs: practices you use in session, and handouts & tools you give out.
 // Each tab has its own filters; search and filters apply within the tab.
 const TABS = ['practices', 'tools'];
-const inTab = (item, tab) => (tab === 'practices') === (item.type === PRACTICE_TYPE);
+// Resource types hidden from Handouts & Tools in the CMS (e.g. Referral List,
+// now covered by Community Resources) are left out of the tab entirely.
+const hiddenTypes = () => new Set((reslibState.data && reslibState.data.tabs && reslibState.data.tabs.hiddenTypes) || []);
+const inTab = (item, tab) => (tab === 'practices') === (item.type === PRACTICE_TYPE) && !hiddenTypes().has(item.type);
 
 const reslibState = {
   data: null,
@@ -43,14 +46,15 @@ const reslibState = {
 };
 
 // Which filter groups each tab offers, in order. Options come from the CMS
-// filter lists; the Handouts & Tools type list leaves out practices, and its
-// audience list leaves out the CMS "hidden" audiences (e.g. Clinician).
+// filter lists; the Handouts & Tools type list leaves out practices and the
+// CMS "hidden" types, and its audience list leaves out the CMS "hidden"
+// audiences (e.g. Schools).
 function filterGroups(tab) {
   const f = reslibState.data.filters;
   const hidden = new Set((reslibState.data.tabs && reslibState.data.tabs.hiddenAudiences) || []);
   if (tab === 'practices') return [{ key: 'theme', label: f.themeLabel, options: f.themeOptions }];
   return [
-    { key: 'type', label: f.typeLabel, options: f.typeOptions.filter(o => o !== PRACTICE_TYPE) },
+    { key: 'type', label: f.typeLabel, options: f.typeOptions.filter(o => o !== PRACTICE_TYPE && !hiddenTypes().has(o)) },
     { key: 'audience', label: f.audienceLabel, options: f.audienceOptions.filter(o => !hidden.has(o)) },
     { key: 'theme', label: f.themeLabel, options: f.themeOptions },
   ];

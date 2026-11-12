@@ -1,132 +1,29 @@
 /* =============================================
-   ABOUT PAGE — Why / Toolkit / Our Model / Research / Team
+   ABOUT OUR PARTNERSHIP — research model (Discover, Design, Build, Test),
+   why the toolkit exists, toolkit FAQ, team
    ============================================= */
 
 function icon(id, extraClass) {
   return `<svg class="icon${extraClass ? ' ' + extraClass : ''}"><use href="#${id}"/></svg>`;
 }
 
-function concernHtml(tab) {
-  return tab.concern
-    ? `<div class="tab-concern"><span class="tab-concern-label">Therapist concern</span><p>${tab.concern}</p></div>`
-    : '';
+function linkAttrs(href) {
+  return /^https?:/.test(href) ? ` href="${href}" target="_blank" rel="noopener"` : ` href="${href}"`;
 }
 
 function render(data) {
-  // PAGE HEADER + SECTION LINKS
+  // PAGE HEADER + CLOSING CALL-TO-ACTION
   const page = data.aboutPage;
   document.getElementById('aboutPageLabel').textContent = page.sectionLabel;
   document.getElementById('aboutPageHeading').textContent = page.heading;
   document.getElementById('aboutPageIntro').textContent = page.intro;
-  document.getElementById('aboutSubnav').innerHTML = `<div class="about-subnav-inner">${page.sectionNav
-    .map(l => `<a href="${l.href}" data-target="${l.href.replace('#', '')}">${l.label}</a>`).join('')}</div>`;
   document.getElementById('exploreHeading').textContent = page.explore.heading;
   document.getElementById('exploreBody').textContent = page.explore.body;
   document.getElementById('exploreActions').innerHTML = `
     <a class="btn btn-primary" href="${page.explore.primaryHref}">${page.explore.primaryText}</a>
     <a class="btn btn-outline" href="${page.explore.secondaryHref}">${page.explore.secondaryText}</a>`;
 
-  // ABOUT / ECOSYSTEM
-  document.getElementById('aboutLabel').textContent = data.about.sectionLabel;
-  document.getElementById('aboutHeading').innerHTML = `${data.about.headingLine1}<br/>${data.about.headingLine2}`;
-  document.getElementById('aboutIntro').textContent = data.about.intro;
-  document.getElementById('partnershipNote').innerHTML =
-    `${data.about.partnershipNote.text} <a href="${data.about.partnershipNote.linkHref}">${data.about.partnershipNote.linkText}</a>`;
-  document.getElementById('ecoHint').textContent = data.about.ecosystemHint;
-  document.getElementById('ecoLegend').innerHTML = data.about.ecosystemLegend.map(layer => `
-    <div class="eco-legend-item" data-layer="${layer.layer}">
-      <div class="eco-swatch eco-swatch-${layer.layer}"></div>
-      <div class="eco-legend-body">
-        <strong>${layer.title}</strong>
-        <p>${layer.body}</p>
-        ${layer.tags.length ? `<ul class="eco-tags">${layer.tags.map(t => `<li>${t}</li>`).join('')}</ul>` : ''}
-      </div>
-    </div>`).join('');
-
-  const steps = data.about.modelSteps;
-  document.getElementById('modelSteps').innerHTML = steps.map((step, i) => {
-    const stepHtml = `
-      <div class="model-step" data-fade data-delay="${i + 1}">
-        <div class="step-icon-wrap ${step.colorClass}">${icon(step.icon)}</div>
-        <p>${step.text}</p>
-      </div>`;
-    const arrowHtml = i < steps.length - 1
-      ? `<div class="step-arrow" data-fade data-delay="${i + 2}">${icon('i-arrow-right', 'icon-sm')}</div>`
-      : '';
-    return stepHtml + arrowHtml;
-  }).join('');
-
-  // WHY
-  document.getElementById('whyLabel').textContent = data.why.sectionLabel;
-  document.getElementById('whyHeading').textContent = data.why.heading;
-  document.getElementById('whyGrid').innerHTML = data.why.cards.map((card, i) => `
-    <div class="why-card" data-fade data-delay="${i + 1}">
-      <div class="why-icon ${card.colorClass}">${icon(card.icon)}</div>
-      <p><strong>${card.lead}</strong> ${card.body} <em>${card.citation}</em>.</p>
-    </div>`).join('');
-  document.getElementById('whyPullQuote').innerHTML =
-    `"${data.why.pullQuote.text}"<cite>— ${data.why.pullQuote.cite}</cite>`;
-
-  // TREATMENT ROADMAP
-  const roadmap = data.toolkit.tabs.roadmap;
-  document.getElementById('toolkitLabel').textContent = data.toolkit.sectionLabel;
-  document.getElementById('roadmapHeading').textContent = roadmap.heading;
-  document.getElementById('aboutRoadmap').innerHTML = `
-    <div class="tab-layout">
-      <div class="tab-text">
-        ${concernHtml(roadmap)}
-        <p>${roadmap.intro}</p>
-        <a class="btn btn-primary about-roadmap-cta" href="planning-tool.html">Plan a client's treatment ${icon('i-arrow-right', 'icon-xs')}</a>
-      </div>
-      <div class="tab-visual">
-        <div class="roadmap">
-          ${roadmap.phases.map((phase, i) => {
-            const phaseHtml = `
-              <div class="roadmap-phase phase-${i + 1}">
-                <div class="phase-top">
-                  <div class="phase-header">${icon(['ic-search', 'ic-tool', 'ic-flag'][i] || 'ic-flag', 'icon-sm')}<span>${phase.title}</span></div>
-                  <div class="phase-sessions">${phase.sessions}</div>
-                  <ul class="phase-items">${phase.items.map(it => `<li>${it}</li>`).join('')}</ul>
-                </div>
-                <button class="phase-expand-btn" aria-expanded="false">
-                  <span>Sample interventions</span>
-                  ${icon('i-plus', 'icon-xs expand-icon')}
-                </button>
-                <div class="phase-expanded" hidden>
-                  <ul>${phase.interventions.map(it => `<li>${it}</li>`).join('')}</ul>
-                </div>
-              </div>`;
-            const arrowHtml = i < roadmap.phases.length - 1
-              ? `<div class="phase-arrow">${icon('i-arrow-right')}</div>` : '';
-            return phaseHtml + arrowHtml;
-          }).join('')}
-        </div>
-      </div>
-    </div>`;
-
-  // HOW TO USE THIS TOOLKIT
-  const howTo = data.toolkit.howToUse;
-  document.getElementById('howToUseHeading').textContent = howTo.heading;
-  document.getElementById('howToUseIntro').textContent = howTo.intro;
-  const STEP_LINK_HREFS = { roadmap: 'planning-tool.html', library: 'resource-library.html', schools: 'schools.html', selfcare: 'self-care.html' };
-  document.getElementById('howToUseSteps').innerHTML = howTo.steps.map(step => {
-    const href = STEP_LINK_HREFS[step.tab];
-    const tag = href ? 'a' : 'div';
-    const hrefAttr = href ? ` href="${href}"` : '';
-    return `
-      <${tag} class="how-to-use-step" ${hrefAttr}>
-        <div class="how-to-use-icon">${icon(step.icon)}</div>
-        <div>
-          <h4>${step.title}</h4>
-          <p>${step.body}</p>
-        </div>
-      </${tag}>`;
-  }).join('');
-  document.getElementById('howToUseTips').innerHTML = howTo.tips.map(t => `<li>${t}</li>`).join('');
-  document.getElementById('howToUseFeedback').innerHTML =
-    `${howTo.feedback.text} <a href="${howTo.feedback.linkHref}">${howTo.feedback.linkText}</a>`;
-
-  // RESEARCH
+  // RESEARCH MODEL
   document.getElementById('researchLabel').textContent = data.research.sectionLabel;
   document.getElementById('researchHeading').textContent = data.research.heading;
   document.getElementById('researchIntro').innerHTML = data.research.intro;
@@ -144,6 +41,15 @@ function render(data) {
     return cardHtml + arrowHtml;
   }).join('');
 
+  // Discover group outcomes PDF (same link as on the home page; edited under Home → Hero)
+  const outcomes = data.hero && data.hero.discoverOutcomes;
+  const outcomesEl = document.getElementById('aboutOutcomes');
+  if (outcomes) {
+    outcomesEl.innerHTML = `${icon('ic-file-text', 'icon-sm')}<span>${outcomes.text}</span> ` + (outcomes.pdf
+      ? `<a${linkAttrs(outcomes.pdf)}>${outcomes.linkText}</a>`
+      : `<span class="hero-outcomes-pending">${outcomes.linkText} <em>${outcomes.pendingNote || 'coming soon'}</em></span>`);
+  } else outcomesEl.hidden = true;
+
   document.getElementById('quotesHeading').textContent = data.research.quotesHeading;
   document.querySelector('[data-carousel="research"] .carousel-track').innerHTML = data.research.quotes.map(q => `
     <div class="carousel-slide">
@@ -153,6 +59,46 @@ function render(data) {
         <span class="quote-domain">${q.domain}</span>
       </footer>
     </div>`).join('');
+
+  // WHY IT EXISTS
+  document.getElementById('whyLabel').textContent = data.why.sectionLabel;
+  document.getElementById('whyHeading').textContent = data.why.heading;
+  document.getElementById('whyGrid').innerHTML = data.why.cards.map((card, i) => `
+    <div class="why-card" data-fade data-delay="${i + 1}">
+      <div class="why-icon ${card.colorClass}">${icon(card.icon)}</div>
+      <p><strong>${card.lead}</strong> ${card.body} <em>${card.citation}</em>.</p>
+    </div>`).join('');
+  document.getElementById('whyPullQuote').innerHTML =
+    `"${data.why.pullQuote.text}"<cite>— ${data.why.pullQuote.cite}</cite>`;
+
+  // QUESTIONS — the FAQ copy, unchanged, as expandable sections. Its "why"
+  // question is the section just above, so it isn't repeated; the original
+  // numbers ("3. How Was…") are dropped so the list doesn't skip a number.
+  const faq = data.toolkitFaq;
+  document.getElementById('faqLabel').textContent = data.faqSection.sectionLabel;
+  document.getElementById('faqHeading').textContent = data.faqSection.heading;
+  const faqItem = (heading, body, open, ic) => `
+    <details class="faq-item"${open ? ' open' : ''}>
+      <summary><span class="faq-q">${ic ? icon(ic, 'icon-sm') : ''}<span>${heading.replace(/^\s*\d+\.\s*/, '')}</span></span></summary>
+      <div class="faq-item-body">${body}</div>
+    </details>`;
+  document.getElementById('faqAccordion').innerHTML = [
+    faqItem(faq.goal.heading, faq.goal.paragraphs.map(p => `<p>${p}</p>`).join(''), true, 'ic-target'),
+    faqItem(faq.how.heading, `<p>${faq.how.intro}</p>` + faq.how.pairs.map(pair => `
+      <div class="faq-pair">
+        <p class="faq-concern"><strong>Therapist concern:</strong> ${pair.concern}</p>
+        <p class="faq-solution"><strong>Toolkit solution:</strong> ${pair.solution}</p>
+      </div>`).join(''), false, 'ic-users'),
+    faqItem(faq.includes.heading, faq.includes.items.map(it => `
+      <div class="faq-includes-item">
+        <span class="faq-letter">${it.letter}.</span>
+        <p><strong>${it.title}:</strong> ${it.body}</p>
+      </div>`).join(''), false, 'ic-layers'),
+    faqItem(faq.useIt.heading, `<p>${faq.useIt.intro}</p>` +
+      faq.useIt.guidance.map(g => `<p><strong>${g.title}</strong> ${g.body}</p>`).join('') +
+      `<ul class="how-to-use-tips">${faq.useIt.tips.map(t => `<li>${t}</li>`).join('')}</ul>` +
+      `<p>${faq.useIt.closing.pre} <a href="${faq.useIt.closing.linkHref}">${faq.useIt.closing.linkText}</a> ${faq.useIt.closing.post}</p>`, false, 'ic-compass'),
+  ].join('');
 
   // TEAM
   document.getElementById('teamLabel').textContent = data.team.sectionLabel;
@@ -172,80 +118,14 @@ function render(data) {
   document.getElementById('footerRight').innerHTML = `<p>${data.footer.fundingText}</p>`;
 }
 
-// ── Ecosystem diagram ────────────────────────
-function initEcosystem() {
-  const svg     = document.getElementById('ecoSvg');
-  const rings   = document.querySelectorAll('.eco-ring');
-  const items   = document.querySelectorAll('.eco-legend-item');
-  if (!svg) return;
-
-  function activate(layer) {
-    svg.classList.add('has-active');
-    rings.forEach(r => r.classList.toggle('eco-active', r.dataset.layer === layer));
-    items.forEach(i => i.classList.toggle('eco-active', i.dataset.layer === layer));
-  }
-
-  function deactivate() {
-    svg.classList.remove('has-active');
-    rings.forEach(r => r.classList.remove('eco-active'));
-    items.forEach(i => i.classList.remove('eco-active'));
-  }
-
-  rings.forEach(ring => {
-    ring.setAttribute('tabindex', '0');
-    ring.setAttribute('role', 'button');
-    ring.addEventListener('mouseenter', () => activate(ring.dataset.layer));
-    ring.addEventListener('mouseleave', deactivate);
-    ring.addEventListener('focus',      () => activate(ring.dataset.layer));
-    ring.addEventListener('blur',       deactivate);
-    ring.addEventListener('click',      () => {
-      const already = ring.classList.contains('eco-active') && svg.classList.contains('has-active');
-      already ? deactivate() : activate(ring.dataset.layer);
-    });
-  });
-
-  items.forEach(item => {
-    item.addEventListener('mouseenter', () => activate(item.dataset.layer));
-    item.addEventListener('mouseleave', deactivate);
-    item.addEventListener('click', () => {
-      const already = item.classList.contains('eco-active');
-      already ? deactivate() : activate(item.dataset.layer);
-    });
-  });
-}
-
-// ── Old deep links + section links ───────────
-function initSectionLinks() {
-  // Old links into the retired tabs: about.html#tab-schools → Navigating
-  // Schools page; #tab-roadmap → the Treatment Roadmap section.
+// ── Old deep links ───────────────────────────
+// Sections that moved off this page: the Treatment Roadmap and ecosystem now
+// live on the Treatment Planning Tool page, and the schools tab has its own page.
+function redirectOldLinks() {
   const hash = window.location.hash.replace('#', '');
-  if (hash === 'tab-schools') { window.location.replace('schools.html'); return; }
-  if (hash === 'tab-roadmap') document.getElementById('toolkit').scrollIntoView();
-
-  // Highlight the section link for whichever section is in view.
-  const links = [...document.querySelectorAll('#aboutSubnav a')];
-  const sections = links.map(l => document.getElementById(l.dataset.target)).filter(Boolean);
-  function update() {
-    const line = 140; // just below the sticky nav + section links
-    let current = null;
-    sections.forEach(sec => { if (sec.getBoundingClientRect().top <= line) current = sec.id; });
-    links.forEach(l => l.classList.toggle('is-active', l.dataset.target === current));
-  }
-  window.addEventListener('scroll', update, { passive: true });
-  update();
-}
-
-// ── Expandable roadmap phases ────────────────
-function initRoadmapExpand() {
-  document.querySelectorAll('.phase-expand-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const expanded = btn.getAttribute('aria-expanded') === 'true';
-      const content  = btn.nextElementSibling;
-
-      btn.setAttribute('aria-expanded', String(!expanded));
-      content.hidden = expanded;
-    });
-  });
+  if (hash === 'tab-schools') { window.location.replace('schools.html'); return true; }
+  if (['tab-roadmap', 'toolkit', 'howToUse', 'about'].includes(hash)) { window.location.replace('planning-tool.html#roadmap'); return true; }
+  return false;
 }
 
 // ── Quote carousel ───────────────────────────
@@ -348,12 +228,11 @@ navMobile.querySelectorAll('a').forEach(a => {
 });
 
 // ── Load content, render, then wire up interactions ──
-loadSiteContent()
-  .then(data => {
-    render(data);
-    initEcosystem();
-    initSectionLinks();
-    initRoadmapExpand();
-    initCarousel();
-    initFadeObserver();
-  });
+if (!redirectOldLinks()) {
+  loadSiteContent()
+    .then(data => {
+      render(data);
+      initCarousel();
+      initFadeObserver();
+    });
+}

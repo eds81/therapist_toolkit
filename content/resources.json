@@ -1,12 +1,12 @@
 {
   "intro": {
     "heading": "Treatment Library",
-    "sub": "Your one-stop-shop for therapy resources — vetted clinical assessment tools, community referrals, and youth and family handouts, all searchable in one place and selected to help reduce youth suicidal ideation.",
+    "sub": "Search for treatment resources including evidence-based practices, worksheets, handouts and assessment tools, to use in your therapy practice. Everything here is selected to help reduce youth suicidal thoughts and behaviors.",
     "pdfNotice": "PDF files for each resource are being finalized and will appear here as they're added. Items below show what each resource is and why it's included, even before its file is uploaded."
   },
   "filters": {
     "searchPlaceholder": "Search resources by name or keyword…",
-    "audienceLabel": "Who it's for",
+    "audienceLabel": "Who is it for?",
     "typeLabel": "Resource type",
     "themeLabel": "Theme",
     "clearLabel": "Clear filters",
@@ -38,21 +38,24 @@
   "tabs": {
     "practices": {
       "label": "Practices",
-      "intro": "Evidence-based practices and strategies to use in session, each with handouts and research where available. These are the same practices offered in the Planning Tool’s Select Interventions step.",
+      "intro": "Evidence-based practices and strategies to use in session, each with handouts and research where available. These are the same practices offered in the Treatment Planning Tool’s Select Interventions step.",
       "countSingular": "practice",
       "countPlural": "practices"
     },
     "tools": {
       "label": "Handouts & Tools",
-      "intro": "Assessments, worksheets, handouts, tip sheets and referral lists to use with youth, families and schools.",
+      "intro": "Assessments, worksheets, handouts and tip sheets to use with clients and families, and in your own practice. For referrals, see Community Resources.",
       "countSingular": "resource",
       "countPlural": "resources"
     },
     "comingSoonHeading": "Write-ups coming soon",
-    "comingSoonNote": "These practices are already offered in the Planning Tool. Their full write-ups are being added; open one to see any links collected so far.",
+    "comingSoonNote": "These practices are already offered in the Treatment Planning Tool. Their full write-ups are being added; open one to see any links collected so far.",
     "emptyText": "Nothing matches those filters. Try removing one, or clear them all.",
     "hiddenAudiences": [
-      "Clinician"
+      "Schools"
+    ],
+    "hiddenTypes": [
+      "Referral List"
     ]
   },
   "items": [

@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Planning Tool | Therapist Toolkit</title>
+  <title>Treatment Planning Tool | Therapist Toolkit</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=58" />
+  <link rel="stylesheet" href="styles.css?v=65" />
 </head>
 <body>
-<script src="icons.js?v=1"></script>
+<script src="icons.js?v=2"></script>
 
 <!-- SVG SPRITE -->
 <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
@@ -53,6 +53,9 @@
     <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
     <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
   </symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+  </symbol>
   <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round">
     <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
   </symbol>
@@ -71,39 +74,59 @@
       <span class="logo-rise">Therapist Toolkit</span>
       <span class="logo-sub">Rise Against Suicide × CU Boulder</span>
     </a>
-    <nav class="nav-links">
-      <a href="about.html">About</a>
-      <a href="planning-tool.html" class="active">Planning Tool</a>
-    <a href="safety-plan.html">Make A Safety Plan</a>
-      <a href="resource-library.html">Treatment Library</a>
-      <a href="find-referral.html">Community Resources</a>
-      <a href="schools.html">Navigating Schools</a>
-    <a href="self-care.html">Self-Care &amp; Support</a>
-    </nav>
+    <a href="about.html" class="nav-about"><svg class="icon" aria-hidden="true"><use href="#ic-info"/></svg><span>About Our Partnership</span></a>
     <button class="nav-hamburger" aria-label="Open menu" id="hamburgerBtn">
       <svg class="icon"><use href="#i-menu"/></svg>
     </button>
   </div>
+  <nav class="nav-tools" aria-label="Toolkit tools">
+    <div class="nav-tools-inner">
+      <a href="planning-tool.html" class="nav-tool active" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#ic-target"/></svg><span>Treatment Planning Tool</span></a>
+      <a href="safety-plan.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-shield"/></svg><span>Make A Safety Plan</span></a>
+      <a href="resource-library.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-book-open"/></svg><span>Treatment Library</span></a>
+      <a href="find-referral.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-map-pin"/></svg><span>Community Resources</span></a>
+      <a href="schools.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-school"/></svg><span>Navigating Schools</span></a>
+      <a href="self-care.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-heart"/></svg><span>Self-Care &amp; Support</span></a>
+    </div>
+  </nav>
   <div class="nav-mobile" id="navMobile">
-    <a href="about.html">About</a>
-    <a href="planning-tool.html" class="active">Planning Tool</a>
-    <a href="safety-plan.html">Make A Safety Plan</a>
-    <a href="resource-library.html">Treatment Library</a>
-    <a href="find-referral.html">Community Resources</a>
-    <a href="schools.html">Navigating Schools</a>
-    <a href="self-care.html">Self-Care &amp; Support</a>
+    <span class="nav-mobile-label">Toolkit tools</span>
+    <a href="planning-tool.html" class="active" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#ic-target"/></svg><span>Treatment Planning Tool</span></a>
+    <a href="safety-plan.html"><svg class="icon" aria-hidden="true"><use href="#ic-shield"/></svg><span>Make A Safety Plan</span></a>
+    <a href="resource-library.html"><svg class="icon" aria-hidden="true"><use href="#ic-book-open"/></svg><span>Treatment Library</span></a>
+    <a href="find-referral.html"><svg class="icon" aria-hidden="true"><use href="#ic-map-pin"/></svg><span>Community Resources</span></a>
+    <a href="schools.html"><svg class="icon" aria-hidden="true"><use href="#ic-school"/></svg><span>Navigating Schools</span></a>
+    <a href="self-care.html"><svg class="icon" aria-hidden="true"><use href="#ic-heart"/></svg><span>Self-Care &amp; Support</span></a>
+    <a href="about.html" class="nav-mobile-about"><svg class="icon" aria-hidden="true"><use href="#ic-info"/></svg><span>About Our Partnership</span></a>
   </div>
 </header>
+
+<!-- PAGE HEADER -->
+<section class="planner-header" id="top">
+  <div class="section-inner">
+    <div class="section-label" data-fade id="plannerLabel"></div>
+    <h1 data-fade data-delay="1" id="plannerHeading"></h1>
+    <p class="planner-subheading" data-fade data-delay="1" id="plannerSubheading"></p>
+    <div class="planner-intro" data-fade data-delay="2" id="plannerIntro"></div>
+    <div class="goal-banner" data-goal-banner="planner" hidden></div>
+  </div>
+</section>
+
+<!-- TREATMENT ROADMAP — your toolkit across a Rise treatment. The planner's
+     steps below follow these same three phases. -->
+<section class="journey planner-roadmap" id="roadmap">
+  <div class="section-inner">
+    <div class="section-label" data-fade id="journeyLabel"></div>
+    <h2 data-fade data-delay="1" id="journeyHeading"></h2>
+    <p class="section-intro" data-fade data-delay="2" id="journeyIntro"></p>
+    <div class="journey-phases" data-fade data-delay="3" id="journeyPhases"></div>
+  </div>
+</section>
 
 <!-- PLANNER -->
 <section class="planner" id="planner">
   <div class="section-inner">
-    <div class="section-label" data-fade id="plannerLabel"></div>
-    <h2 data-fade data-delay="1" id="plannerHeading"></h2>
-    <p class="section-intro" data-fade data-delay="2" id="plannerIntro"></p>
-    <div class="goal-banner" data-goal-banner="planner" hidden></div>
-
-    <div class="planner-disclaimer" data-fade data-delay="3" id="plannerDisclaimer"></div>
+    <div class="planner-disclaimer" id="plannerDisclaimer"></div>
 
     <div class="planner-stepper-row">
       <div class="planner-stepper" id="plannerStepper"></div>
@@ -121,7 +144,10 @@
          jumps to that phase's section below (see initPhaseStripNav). -->
     <div class="planner-phase-strip" id="plannerPriorityStrip" hidden></div>
 
-    <div class="planner-layout" data-fade data-delay="4" id="plannerLayout">
+    <!-- STEP 1: START HERE — orientation to the tool, the five levels, and the ecosystem -->
+    <div class="planner-orient" id="plannerOrientationSection" hidden></div>
+
+    <div class="planner-layout" id="plannerLayout">
       <div class="planner-col planner-col-risk">
         <h3 class="planner-col-heading planner-col-heading-risk" id="plannerRiskLabel"></h3>
         <div class="planner-rows" id="plannerRiskRows"></div>
@@ -210,6 +236,7 @@
         </div>
       </div>
       <div class="planner-output-block" id="plannerOutputInterventions"></div>
+      <div class="planner-extension" id="plannerPhase2Extension"></div>
       <div class="planner-phase-comment" id="plannerPhase2Comment">
         <label for="plannerPhase2CommentInput" id="plannerPhase2CommentLabel"></label>
         <textarea id="plannerPhase2CommentInput" class="planner-phase-comment-input" data-phase-index="1" rows="3"></textarea>
@@ -225,6 +252,7 @@
         </div>
       </div>
       <div class="planner-output-block planner-checklist" id="plannerPhase3Checklist"></div>
+      <div class="planner-extension planner-extension-3" id="plannerPhase3Extension"></div>
       <div class="planner-phase-comment" id="plannerPhase3Comment">
         <label for="plannerPhase3CommentInput" id="plannerPhase3CommentLabel"></label>
         <textarea id="plannerPhase3CommentInput" class="planner-phase-comment-input" data-phase-index="2" rows="3"></textarea>
@@ -253,7 +281,7 @@
 </footer>
 
 <script src="content-loader.js?v=2"></script>
-<script src="planner.js?v=63"></script>
+<script src="planner.js?v=68"></script>
 <script src="goal-banner.js?v=3"></script>
 </body>
 </html>

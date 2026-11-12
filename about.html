@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About | Therapist Toolkit</title>
+  <title>About Our Partnership | Therapist Toolkit</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=58" />
+  <link rel="stylesheet" href="styles.css?v=65" />
 </head>
 <body>
-<script src="icons.js?v=1"></script>
+<script src="icons.js?v=2"></script>
 
 <!-- SVG SPRITE -->
 <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
@@ -110,31 +110,34 @@
       <span class="logo-rise">Therapist Toolkit</span>
       <span class="logo-sub">Rise Against Suicide × CU Boulder</span>
     </a>
-    <nav class="nav-links">
-      <a href="about.html" class="active">About</a>
-      <a href="planning-tool.html">Planning Tool</a>
-      <a href="safety-plan.html">Make A Safety Plan</a>
-      <a href="resource-library.html">Treatment Library</a>
-      <a href="find-referral.html">Community Resources</a>
-      <a href="schools.html">Navigating Schools</a>
-      <a href="self-care.html">Self-Care &amp; Support</a>
-    </nav>
+    <a href="about.html" class="nav-about active" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#ic-info"/></svg><span>About Our Partnership</span></a>
     <button class="nav-hamburger" aria-label="Open menu" id="hamburgerBtn">
       <svg class="icon"><use href="#i-menu"/></svg>
     </button>
   </div>
+  <nav class="nav-tools" aria-label="Toolkit tools">
+    <div class="nav-tools-inner">
+      <a href="planning-tool.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-target"/></svg><span>Treatment Planning Tool</span></a>
+      <a href="safety-plan.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-shield"/></svg><span>Make A Safety Plan</span></a>
+      <a href="resource-library.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-book-open"/></svg><span>Treatment Library</span></a>
+      <a href="find-referral.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-map-pin"/></svg><span>Community Resources</span></a>
+      <a href="schools.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-school"/></svg><span>Navigating Schools</span></a>
+      <a href="self-care.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-heart"/></svg><span>Self-Care &amp; Support</span></a>
+    </div>
+  </nav>
   <div class="nav-mobile" id="navMobile">
-    <a href="about.html" class="active">About</a>
-    <a href="planning-tool.html">Planning Tool</a>
-    <a href="safety-plan.html">Make A Safety Plan</a>
-    <a href="resource-library.html">Treatment Library</a>
-    <a href="find-referral.html">Community Resources</a>
-    <a href="schools.html">Navigating Schools</a>
-    <a href="self-care.html">Self-Care &amp; Support</a>
+    <span class="nav-mobile-label">Toolkit tools</span>
+    <a href="planning-tool.html"><svg class="icon" aria-hidden="true"><use href="#ic-target"/></svg><span>Treatment Planning Tool</span></a>
+    <a href="safety-plan.html"><svg class="icon" aria-hidden="true"><use href="#ic-shield"/></svg><span>Make A Safety Plan</span></a>
+    <a href="resource-library.html"><svg class="icon" aria-hidden="true"><use href="#ic-book-open"/></svg><span>Treatment Library</span></a>
+    <a href="find-referral.html"><svg class="icon" aria-hidden="true"><use href="#ic-map-pin"/></svg><span>Community Resources</span></a>
+    <a href="schools.html"><svg class="icon" aria-hidden="true"><use href="#ic-school"/></svg><span>Navigating Schools</span></a>
+    <a href="self-care.html"><svg class="icon" aria-hidden="true"><use href="#ic-heart"/></svg><span>Self-Care &amp; Support</span></a>
+    <a href="about.html" class="nav-mobile-about active" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#ic-info"/></svg><span>About Our Partnership</span></a>
   </div>
 </header>
 
-<!-- PAGE HEADER + SECTION LINKS -->
+<!-- PAGE HEADER -->
 <section class="about-header" id="top">
   <div class="section-inner">
     <div class="section-label" data-fade id="aboutPageLabel"></div>
@@ -142,73 +145,8 @@
     <p class="section-intro" data-fade data-delay="2" id="aboutPageIntro"></p>
   </div>
 </section>
-<nav class="about-subnav" id="aboutSubnav" aria-label="On this page"></nav>
 
-<!-- ABOUT / OUR MODEL -->
-<section class="about" id="about">
-  <div class="section-inner">
-    <div class="section-label" data-fade id="aboutLabel"></div>
-    <h2 data-fade data-delay="1" id="aboutHeading"></h2>
-    <p class="section-intro" data-fade data-delay="2" id="aboutIntro"></p>
-    <p class="partnership-note" data-fade data-delay="2" id="partnershipNote"></p>
-
-    <div class="ecosystem" data-fade data-delay="3">
-      <p class="eco-hint" id="ecoHint"></p>
-      <div class="eco-layout">
-
-        <!-- SVG DIAGRAM -->
-        <div class="eco-diagram">
-          <svg viewBox="0 0 280 280" class="eco-svg" id="ecoSvg" role="img" aria-label="Concentric circle diagram showing the support ecosystem around youth">
-            <!-- Rings drawn largest-to-smallest so hover targets work naturally -->
-            <circle class="eco-ring" data-layer="systems"   cx="140" cy="140" r="130" aria-label="Systems and settings"/>
-            <circle class="eco-ring" data-layer="providers" cx="140" cy="140" r="95"  aria-label="Clinical providers"/>
-            <circle class="eco-ring" data-layer="network"   cx="140" cy="140" r="60"  aria-label="Close personal network"/>
-            <circle class="eco-ring" data-layer="youth"     cx="140" cy="140" r="32"  aria-label="Youth"/>
-            <!-- Center label (pointer-events:none so clicks pass through to circle) -->
-            <text x="140" y="136" class="eco-center-label" style="pointer-events:none">Youth</text>
-            <text x="140" y="150" class="eco-center-sub"   style="pointer-events:none">at the center</text>
-          </svg>
-        </div>
-
-        <!-- LEGEND -->
-        <div class="eco-legend" id="ecoLegend"></div>
-
-      </div>
-    </div>
-
-    <div class="model-steps" id="modelSteps"></div>
-  </div>
-</section>
-
-<!-- WHY -->
-<section class="why" id="why">
-  <div class="section-inner">
-    <div class="section-label" data-fade id="whyLabel"></div>
-    <h2 data-fade data-delay="1" id="whyHeading"></h2>
-    <div class="why-grid" id="whyGrid"></div>
-    <blockquote class="pull-quote" data-fade id="whyPullQuote"></blockquote>
-  </div>
-</section>
-
-<!-- TREATMENT ROADMAP + HOW TO USE -->
-<section class="toolkit" id="toolkit">
-  <div class="section-inner">
-    <div class="section-label" data-fade id="toolkitLabel"></div>
-    <h2 data-fade data-delay="1" id="roadmapHeading"></h2>
-    <div class="goal-banner" data-goal-banner="about" hidden></div>
-    <div class="about-roadmap" data-fade data-delay="2" id="aboutRoadmap"></div>
-
-    <div class="how-to-use" data-fade id="howToUse">
-      <h3 id="howToUseHeading"></h3>
-      <p class="how-to-use-intro" id="howToUseIntro"></p>
-      <div class="how-to-use-steps" id="howToUseSteps"></div>
-      <ul class="how-to-use-tips" id="howToUseTips"></ul>
-      <p class="how-to-use-feedback" id="howToUseFeedback"></p>
-    </div>
-  </div>
-</section>
-
-<!-- RESEARCH -->
+<!-- OUR RESEARCH MODEL — Discover, Design, Build, Test (the center of this page) -->
 <section class="research" id="research">
   <div class="section-inner">
     <div class="section-label" data-fade id="researchLabel"></div>
@@ -216,6 +154,7 @@
     <p class="section-intro" data-fade data-delay="2" id="researchIntro"></p>
 
     <div class="aims-row" id="aimsRow"></div>
+    <p class="about-outcomes" data-fade id="aboutOutcomes"></p>
 
     <!-- QUOTE CAROUSEL -->
     <h3 class="quotes-heading" data-fade id="quotesHeading"></h3>
@@ -231,6 +170,25 @@
       </button>
       <div class="carousel-dots"></div>
     </div>
+  </div>
+</section>
+
+<!-- WHY IT EXISTS -->
+<section class="why" id="why">
+  <div class="section-inner">
+    <div class="section-label" data-fade id="whyLabel"></div>
+    <h2 data-fade data-delay="1" id="whyHeading"></h2>
+    <div class="why-grid" id="whyGrid"></div>
+    <blockquote class="pull-quote" data-fade id="whyPullQuote"></blockquote>
+  </div>
+</section>
+
+<!-- QUESTIONS — the toolkit FAQ (verbatim client copy), as expandable sections -->
+<section class="faq" id="faq">
+  <div class="section-inner">
+    <div class="section-label" data-fade id="faqLabel"></div>
+    <h2 data-fade data-delay="1" id="faqHeading"></h2>
+    <div class="faq-accordion" data-fade data-delay="2" id="faqAccordion"></div>
   </div>
 </section>
 
@@ -266,7 +224,6 @@
 </footer>
 
 <script src="content-loader.js?v=2"></script>
-<script src="about.js?v=4"></script>
-<script src="goal-banner.js?v=3"></script>
+<script src="about.js?v=5"></script>
 </body>
 </html>

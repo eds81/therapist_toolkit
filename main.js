@@ -1,5 +1,5 @@
 /* =============================================
-   THERAPIST TOOLKIT — HOME PAGE (hero + FAQ + footer)
+   THERAPIST TOOLKIT — HOME PAGE (hero + what's inside + footer)
    ============================================= */
 
 function icon(id, extraClass) {
@@ -25,12 +25,17 @@ const TOOL_PREVIEWS = {
       ${['Warning signs', 'Coping strategies', 'Supports', 'Professional supports', 'Safer environment'].map((t, i) =>
         `<div class="pv-step"><span class="pv-step-num">${i + 1}</span><span class="pv-step-text">${t}</span><span class="pv-bar"></span></div>`).join('')}
     </div>`,
+  // A practice's pop-up card, as it opens in the Treatment Library
   library: `
-    <div class="pv-stack">
-      <div class="pv-search"><span class="pv-search-dot"></span>Search resources…</div>
-      <div class="pv-chips"><span>Worksheet</span><span>Handout</span><span class="is-on">Family</span><span>Schools</span></div>
-      <div class="pv-result"><span class="pv-badge">Handout</span><span class="pv-bar pv-bar-long"></span></div>
-      <div class="pv-result"><span class="pv-badge">Worksheet</span><span class="pv-bar"></span></div>
+    <div class="pv-ebp">
+      <div class="pv-ebp-top"><span class="pv-ebp-icon">${icon('ic-star')}</span><span class="pv-badge">Evidence-Based Practice</span></div>
+      <div class="pv-ebp-title">Safety Planning</div>
+      <span class="pv-ebp-theme">Risk Assessment &amp; Safety Planning</span>
+      <span class="pv-bar pv-bar-long"></span><span class="pv-bar"></span>
+      <div class="pv-ebp-links">
+        <div><span class="pv-label">For therapists</span><span class="pv-ebp-link">Safety plan template</span></div>
+        <div><span class="pv-label">For clients &amp; families</span><span class="pv-ebp-link">Make A Safety Plan</span></div>
+      </div>
     </div>`,
   community: `
     <div class="pv-stack">
@@ -59,30 +64,48 @@ const TOOL_PREVIEWS = {
 // One icon per tool, used wherever that tool is named on the home page.
 const TOOL_ICONS = { planner: 'ic-target', safety: 'ic-shield', library: 'ic-book-open', community: 'ic-map-pin', schools: 'ic-school', selfcare: 'ic-heart' };
 
+// An external link opens in a new tab.
+function linkAttrs(href) {
+  return /^https?:/.test(href) ? ` href="${href}" target="_blank" rel="noopener"` : ` href="${href}"`;
+}
+
 function render(data) {
-  // HERO
-  document.getElementById('heroBadges').innerHTML = data.hero.badges
-    .map((b, i) => `<span class="badge ${i === 0 ? 'badge-teal' : 'badge-green'}">${b}</span>`)
-    .join('');
+  // HERO — the two badges link to the partner organizations' websites
+  document.getElementById('heroBadges').innerHTML = data.hero.badges.map((b, i) => {
+    const badge = typeof b === 'string' ? { text: b } : b;
+    const cls = `badge ${i === 0 ? 'badge-teal' : 'badge-green'}`;
+    return badge.href
+      ? `<a class="${cls} badge-link"${linkAttrs(badge.href)}>${badge.text}</a>`
+      : `<span class="${cls}">${badge.text}</span>`;
+  }).join('');
   document.getElementById('heroHeadline').innerHTML = `${data.hero.headlineLine1}<br/>${data.hero.headlineLine2}`;
   document.getElementById('heroSub').innerHTML = data.hero.sub;
   document.getElementById('heroActions').innerHTML = `
     <a href="${data.hero.ctaPrimary.href}" class="btn btn-primary">${data.hero.ctaPrimary.text}</a>
     <a href="${data.hero.ctaSecondary.href}" class="btn btn-outline">${data.hero.ctaSecondary.text}</a>`;
-  document.getElementById('heroStats').innerHTML = data.hero.stats.map(stat => stat.count !== undefined ? `
-    <div class="stat-card">
-      <span class="stat-num" data-count="${stat.count}" data-suffix="${stat.suffix}">${stat.count}${stat.suffix}</span>
-      <span class="stat-label">${stat.label}</span>
-    </div>` : `
-    <div class="stat-card">
-      <span class="stat-num stat-text">${stat.text}</span>
-      <span class="stat-label">${stat.label}</span>
-    </div>`).join('');
+
+  // Discover group outcomes PDF — shown as "coming soon" until a PDF is uploaded
+  const outcomes = data.hero.discoverOutcomes;
+  const outcomesEl = document.getElementById('heroOutcomes');
+  if (outcomes) {
+    outcomesEl.innerHTML = `${icon('ic-file-text', 'icon-sm')}<span>${outcomes.text}</span> ` + (outcomes.pdf
+      ? `<a${linkAttrs(outcomes.pdf)}>${outcomes.linkText}</a>`
+      : `<span class="hero-outcomes-pending">${outcomes.linkText} <em>${outcomes.pendingNote || 'coming soon'}</em></span>`);
+  } else outcomesEl.hidden = true;
+
+  // Photo — a labeled placeholder until the photo is uploaded
+  const photo = data.hero.photo;
+  const photoEl = document.getElementById('heroPhoto');
+  if (!photo) photoEl.hidden = true;
+  else if (photo.src) {
+    photoEl.innerHTML = `<img src="${photo.src}" alt="${photo.alt || ''}" />${photo.caption ? `<figcaption>${photo.caption}</figcaption>` : ''}`;
+  } else {
+    photoEl.classList.add('is-placeholder');
+    photoEl.innerHTML = `<div class="hero-photo-empty" role="img" aria-label="${photo.placeholder}">${icon('ic-users')}<span>${photo.placeholder}</span></div>`;
+  }
 
   // WHAT'S INSIDE
   const tour = data.tour;
-  const toolByKey = {};
-  tour.tools.forEach(t => { toolByKey[t.key] = t; });
   document.getElementById('tourLabel').textContent = tour.sectionLabel;
   document.getElementById('tourHeading').textContent = tour.heading;
   document.getElementById('tourIntro').textContent = tour.intro;
@@ -97,110 +120,10 @@ function render(data) {
       </div>
     </a>`).join('');
 
-  // HOW IT FITS TOGETHER
-  const journey = data.journey;
-  const phases = data.toolkit.tabs.roadmap.phases;
-  const chip = key => {
-    const t = toolByKey[key];
-    return t ? `<a class="journey-chip journey-chip-${key}" href="${t.href}">${icon(TOOL_ICONS[key] || 'ic-layers', 'icon-xs')}${t.title}</a>` : '';
-  };
-  document.getElementById('journeyLabel').textContent = journey.sectionLabel;
-  document.getElementById('journeyHeading').textContent = journey.heading;
-  document.getElementById('journeyIntro').textContent = journey.intro;
-  document.getElementById('journeyPhases').innerHTML = journey.phases.map((jp, i) => {
-    const ph = phases[i] || {};
-    return `
-      <div class="journey-phase journey-phase-${i + 1}">
-        <div class="journey-phase-head">
-          <span class="journey-phase-num">${i + 1}</span>
-          <div>
-            <strong>${ph.title || ''}</strong>
-            <span>${ph.sessions || ''}</span>
-          </div>
-        </div>
-        <p>${jp.note}</p>
-        <div class="journey-chips">${jp.tools.map(chip).join('')}</div>
-      </div>`;
-  }).join('');
-  document.getElementById('journeyThroughout').innerHTML = `
-    <span class="journey-throughout-title">${journey.throughoutTitle}</span>
-    ${journey.throughout.map(x => `<span class="journey-throughout-item">${chip(x.tool)}<span>${x.note}</span></span>`).join('')}`;
-
-  // WHY IT EXISTS
-  document.getElementById('whyLabel').textContent = data.whySummary.sectionLabel;
-  document.getElementById('whyHeading').textContent = data.whySummary.heading;
-  document.getElementById('whyGrid').innerHTML = data.why.cards.map((card, i) => `
-    <div class="why-card" data-fade data-delay="${i + 1}">
-      <div class="why-icon ${card.colorClass}">${icon(card.icon)}</div>
-      <p><strong>${card.lead}</strong> ${card.body} <em>${card.citation}</em>.</p>
-    </div>`).join('');
-  const whyLink = document.getElementById('whyLink');
-  whyLink.href = data.whySummary.linkHref;
-  whyLink.innerHTML = `${data.whySummary.linkText} ${icon('i-arrow-right', 'icon-xs')}`;
-
-  // QUESTIONS — the FAQ copy, unchanged, as expandable sections. Its "why"
-  // section already appears above as the research cards, so it isn't repeated.
-  const faq = data.toolkitFaq;
-  document.getElementById('faqLabel').textContent = data.faqSection.sectionLabel;
-  document.getElementById('faqHeading').textContent = data.faqSection.heading;
-  // The FAQ headings carry their original numbers ("3. How Was…"); with
-  // "Why" shown above as cards the numbering would skip, so drop it here.
-  const faqItem = (heading, body, open, ic) => `
-    <details class="faq-item"${open ? ' open' : ''}>
-      <summary><span class="faq-q">${ic ? icon(ic, 'icon-sm') : ''}<span>${heading.replace(/^\s*\d+\.\s*/, '')}</span></span></summary>
-      <div class="faq-item-body">${body}</div>
-    </details>`;
-  document.getElementById('faqAccordion').innerHTML = [
-    faqItem(faq.goal.heading, faq.goal.paragraphs.map(p => `<p>${p}</p>`).join(''), true, 'ic-target'),
-    faqItem(faq.how.heading, `<p>${faq.how.intro}</p>` + faq.how.pairs.map(pair => `
-      <div class="faq-pair">
-        <p class="faq-concern"><strong>Therapist concern:</strong> ${pair.concern}</p>
-        <p class="faq-solution"><strong>Toolkit solution:</strong> ${pair.solution}</p>
-      </div>`).join(''), false, 'ic-users'),
-    faqItem(faq.includes.heading, faq.includes.items.map(it => `
-      <div class="faq-includes-item">
-        <span class="faq-letter">${it.letter}.</span>
-        <p><strong>${it.title}:</strong> ${it.body}</p>
-      </div>`).join(''), false, 'ic-layers'),
-    faqItem(faq.useIt.heading, `<p>${faq.useIt.intro}</p>` +
-      faq.useIt.guidance.map(g => `<p><strong>${g.title}</strong> ${g.body}</p>`).join('') +
-      `<ul class="how-to-use-tips">${faq.useIt.tips.map(t => `<li>${t}</li>`).join('')}</ul>` +
-      `<p>${faq.useIt.closing.pre} <a href="${faq.useIt.closing.linkHref}">${faq.useIt.closing.linkText}</a> ${faq.useIt.closing.post}</p>`, false, 'ic-compass'),
-  ].join('');
-
   // FOOTER
   document.getElementById('footerLeft').innerHTML =
     `<strong>${data.footer.orgName}</strong><span>${data.footer.subLine}</span>`;
   document.getElementById('footerRight').innerHTML = `<p>${data.footer.fundingText}</p>`;
-}
-
-// ── Stat counters ────────────────────────────
-function animateCount(el) {
-  const target = parseInt(el.dataset.count, 10);
-  const suffix = el.dataset.suffix || '';
-  const duration = 1200;
-  const start = performance.now();
-
-  function step(now) {
-    const progress = Math.min((now - start) / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    el.textContent = Math.round(eased * target) + suffix;
-    if (progress < 1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-}
-
-function initStatCounters() {
-  const statObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const el = entry.target;
-      if (el.dataset.count) animateCount(el);
-      statObserver.unobserve(el);
-    });
-  }, { threshold: 0.5 });
-
-  document.querySelectorAll('.stat-num[data-count]').forEach(el => statObserver.observe(el));
 }
 
 // ── Scroll fade-in animations ────────────────
@@ -252,6 +175,5 @@ navMobile.querySelectorAll('a').forEach(a => {
 loadSiteContent()
   .then(data => {
     render(data);
-    initStatCounters();
     initFadeObserver();
   });

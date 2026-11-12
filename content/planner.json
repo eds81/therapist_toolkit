@@ -2,37 +2,42 @@
   "planner": {
     "ecoMapProtectiveLabel": "Protectors",
     "addButtonLabel": "Add",
-    "heading": "Client Ecological Formulation & Treatment Planner",
+    "heading": "Treatment Planning Tool",
     "rings": [
       {
         "key": "community",
         "label": "Community / Structural",
         "placeholderRisk": "e.g. limited healthcare access",
-        "placeholderProtective": "e.g. community resources"
+        "placeholderProtective": "e.g. community resources",
+        "description": "The systems and conditions around the client and their family: access to care, the neighborhood, community organizations, and structural factors like poverty, discrimination and policy."
       },
       {
         "key": "school",
         "label": "School",
         "placeholderRisk": "e.g. academic stress",
-        "placeholderProtective": "e.g. trusted teacher"
+        "placeholderProtective": "e.g. trusted teacher",
+        "description": "Where the client spends most of their day: academics, school climate, belonging, and the staff who know them."
       },
       {
         "key": "family",
         "label": "Family",
         "placeholderRisk": "e.g. family conflict",
-        "placeholderProtective": "e.g. supportive caregiver"
+        "placeholderProtective": "e.g. supportive caregiver",
+        "description": "The client's home and caregivers: relationships, communication, supervision, and stress at home."
       },
       {
         "key": "peer",
         "label": "Peer",
         "placeholderRisk": "e.g. social isolation",
-        "placeholderProtective": "e.g. close friend"
+        "placeholderProtective": "e.g. close friend",
+        "description": "Friends, classmates, romantic relationships and online connections."
       },
       {
         "key": "client",
         "label": "Client (Individual)",
-        "placeholderRisk": "e.g. hopelessness / SI",
-        "placeholderProtective": "e.g. coping + treatment skills"
+        "placeholderRisk": "e.g. hopelessness / SI / non-suicidal self-injury (NSSI)",
+        "placeholderProtective": "e.g. coping + treatment skills",
+        "description": "The young person at the center: their thoughts, feelings and behaviors, history, coping skills and strengths."
       }
     ],
     "emailPlan": {
@@ -43,7 +48,7 @@
     "reviewButtonLabel": "Review Plan",
     "reviewHeading": "Review Your Client Ecological Formulation",
     "centerSub": "current context",
-    "intro": "Map the risk and protective factors shaping a client's world — client, peer, family, school, and community/structural — then generate a starting-point treatment plan and resource list drawn from this toolkit. The goal throughout: reducing the client's suicidal ideation.",
+    "intro": "With only 12 sessions, this tool keeps you focused on Rise's core goal: reducing suicidal thoughts and behaviors.\n\nFirst, map the risk and protective factors in your client's world, from the individual to the community, to find the right treatment targets. Then choose evidence-based practices for each target to build your plan.",
     "generateButtonLabel": "Generate Treatment Plan",
     "phase3Checklist": {
       "heading": "Phase 3 Checklist",
@@ -73,7 +78,7 @@
         },
         {
           "text": "Reflect on the Rise treatment experience and complete final screenings",
-          "detail": "Look back on progress together, and re-administer screenings to measure change in suicidal ideation since intake.",
+          "detail": "Look back on progress together, and re-administer screenings to measure change in suicidal thoughts and behaviors since intake.",
           "links": [],
           "icon": "ic-check-circle"
         },
@@ -105,27 +110,28 @@
     "resetButtonLabel": "Start Over",
     "goal": {
       "label": "Goal",
-      "statement": "Reduce the client's suicidal ideation",
+      "statement": "Reduce the client's suicidal thoughts and behaviors",
       "steps": {
-        "ring": "As you map this level, ask: what here raises or lowers the client's suicidal ideation?",
-        "topFactors": "Choose the factors most closely tied to the client's suicidal ideation. These become the focus of treatment.",
-        "resourcePlan": "Pick interventions that directly target what drives the client's suicidal ideation, or strengthen what protects against it.",
-        "review": "Every phase of this plan works toward one outcome: reducing the client's suicidal ideation."
+        "ring": "As you map this level, ask: what here raises or lowers the client's suicidal thoughts and behaviors?",
+        "topFactors": "Choose the factors most closely tied to the client's suicidal thoughts and behaviors. These become the focus of treatment.",
+        "resourcePlan": "Pick interventions that directly target what drives the client's suicidal thoughts and behaviors, or strengthen what protects against them.",
+        "review": "Every phase of this plan works toward one outcome: reducing the client's suicidal thoughts and behaviors.",
+        "orientation": "Keep one question in mind as you go: what raises or lowers this client's suicidal thoughts and behaviors?"
       },
       "focusLabel": "In this phase",
       "checkLabel": "Check",
       "phases": [
         {
-          "focus": "Understand what is driving the client's suicidal ideation, and keep them safe while you work on it. Assess current risk, build a safety plan together, and map the factors that raise and lower it.",
-          "check": "Do I know what is driving this client's suicidal ideation, and is a safety plan in place?"
+          "focus": "Understand what is driving the client's suicidal thoughts and behaviors, and keep them safe while you work on them. Assess current risk, build a safety plan together, and map the factors that raise and lower them.",
+          "check": "Do I know what is driving this client's suicidal thoughts and behaviors, and is a safety plan in place?"
         },
         {
           "focus": "Give the client skills to manage suicidal thoughts when they show up and lower them over time. Teach and practice emotion regulation, problem-solving, and support-seeking, aimed at the top factors you identified.",
           "check": "Is the client using these skills when suicidal thoughts or urges come up?"
         },
         {
-          "focus": "Make the reduction in suicidal ideation last after Rise ends. Consolidate skills, re-screen to measure change since intake, update the safety plan, and link the client to their next step in care.",
-          "check": "Has the client's suicidal ideation decreased since intake, and is care in place to keep it that way?"
+          "focus": "Make the reduction in suicidal thoughts and behaviors last after Rise ends. Consolidate skills, re-screen to measure change since intake, update the safety plan, and link the client to their next step in care.",
+          "check": "Have the client's suicidal thoughts and behaviors decreased since intake, and is care in place to keep it that way?"
         }
       ]
     },
@@ -136,7 +142,84 @@
     "ecoMapRiskLabel": "Risks",
     "disclaimer": "This tool offers a starting point, not a clinical decision. Always apply your own clinical judgment, and follow your standard risk assessment and safety planning protocol regardless of what it suggests.",
     "backButtonLabel": "Back",
-    "centerLabel": "Client"
+    "centerLabel": "Client",
+    "subheading": "Client Ecological Formulation & Treatment Planner",
+    "orientation": {
+      "stepLabel": "Start Here",
+      "title": "Start Here",
+      "hint": "A quick tour: the five levels, then what each phase is for. Use Next, or skip it.",
+      "stepperGroupLabel": "Start",
+      "levels": {
+        "heading": "Youth at the center: the five levels you'll map",
+        "intro": "Your client sits at the center of an ecosystem. In the planner you map the risk and protective factors at each level, working from the outside in.",
+        "hint": "Click a ring or a level to see what belongs there.",
+        "riskLabel": "Risk example",
+        "protectiveLabel": "Protective example"
+      },
+      "tour": {
+        "skipLabel": "Skip intro",
+        "backLabel": "Back",
+        "nextLabel": "Next",
+        "startLabel": "Start mapping",
+        "whyLabel": "Why this phase",
+        "doLabel": "What you do in the planner"
+      },
+      "phases": [
+        {
+          "intention": "Understand what is driving the client's suicidal thoughts and behaviors, and keep them safe.",
+          "tasks": [
+            {
+              "icon": "ic-layers",
+              "title": "Map the client's ecosystem",
+              "text": "Add risk and protective factors at each level, and rate how strongly each one affects the client.",
+              "where": "Steps 2–6"
+            },
+            {
+              "icon": "ic-star",
+              "title": "Choose the top factors",
+              "text": "Pick the factors most tied to suicidal thoughts and behaviors. These become your treatment targets.",
+              "where": "Step 7"
+            }
+          ]
+        },
+        {
+          "intention": "Build skills that target those drivers, so the client can manage suicidal thoughts when they come up.",
+          "tasks": [
+            {
+              "icon": "ic-tool",
+              "title": "Select interventions",
+              "text": "Match evidence-based practices from the Treatment Library to each top factor.",
+              "where": "Step 8"
+            }
+          ]
+        },
+        {
+          "intention": "Make the progress last after Rise ends, and link the client to their next step in care.",
+          "tasks": [
+            {
+              "icon": "ic-clipboard",
+              "title": "Review and print your plan",
+              "text": "See your full three-phase plan, add notes for each phase, and download a PDF.",
+              "where": "Step 9"
+            },
+            {
+              "icon": "ic-check-circle",
+              "title": "Wrap up with the Phase 3 checklist",
+              "text": "Re-screen, revisit the safety plan, link to care, and file an extension if needed.",
+              "where": "Step 9"
+            }
+          ]
+        }
+      ],
+      "note": "What you enter stays in this browser. Remove or de-identify client details before you print or share."
+    },
+    "extension": {
+      "href": "https://riseagainstsuicide.my.site.com/s/login/?ec=302&startURL=%2Fs%2F",
+      "phase2Text": "Need more time to build and practice skills?",
+      "phase2LinkText": "Consider filing an extension",
+      "phase3Text": "If the client needs more sessions before you wrap up, file an extension with Rise.",
+      "phase3ButtonText": "File an extension"
+    }
   },
   "resourceCategories": [
     {
@@ -180,5 +263,87 @@
         "Mindfulness & grounding tools"
       ]
     }
-  ]
+  ],
+  "journey": {
+    "sectionLabel": "Treatment Roadmap",
+    "heading": "Your toolkit across a Rise treatment",
+    "intro": "Rise treatment moves through three phases. Each one shows what to focus on, the tools that do the most work, and sample evidence-based interventions.",
+    "phases": [
+      {
+        "tools": [
+          "planner",
+          "safety"
+        ],
+        "note": "Assess risk, build the safety plan together, and map what is driving the client's suicidal thoughts and behaviors."
+      },
+      {
+        "tools": [
+          "library"
+        ],
+        "note": "Choose evidence-based interventions for the top factors and practice skills in session."
+      },
+      {
+        "tools": [
+          "safety",
+          "community"
+        ],
+        "note": "Re-screen, revisit the safety plan, and link the client to their next step in care."
+      }
+    ]
+  },
+  "toolkit": {
+    "tabs": {
+      "roadmap": {
+        "phases": [
+          {
+            "title": "Phase 1: Assess & Understand",
+            "sessions": "Sessions 1–4",
+            "items": [
+              "Suicide Risk Assessment & Safety Planning",
+              "Case Conceptualization & Treatment Plan"
+            ],
+            "interventions": [
+              "Columbia Suicide Severity Rating Scale (C-SSRS)",
+              "Stanley-Brown Safety Planning Intervention",
+              "Crisis response planning",
+              "Means restriction counseling",
+              "Family/caregiver psychoeducation"
+            ]
+          },
+          {
+            "title": "Phase 2: Train & Teach Skills",
+            "sessions": "Sessions 5–8",
+            "items": [
+              "Teach and Practice Skills"
+            ],
+            "interventions": [
+              "DBT skills: distress tolerance & emotion regulation",
+              "CBT cognitive restructuring techniques",
+              "ACT and mindfulness exercises",
+              "Somatic grounding interventions",
+              "Coping card development",
+              "Behavioral activation"
+            ]
+          },
+          {
+            "title": "Phase 3: Consolidate & Next Steps",
+            "sessions": "Sessions 9–12",
+            "items": [
+              "Relapse Prevention",
+              "Linkage to Care",
+              "Termination"
+            ],
+            "interventions": [
+              "Warning sign identification & review",
+              "Updated safety plan review",
+              "Warm handoff to ongoing care provider",
+              "Family/caregiver transition support",
+              "Final screenings to measure change in suicidal thoughts and behaviors",
+              "Termination rituals & strengths review"
+            ]
+          }
+        ]
+      }
+    }
+  }
 }
