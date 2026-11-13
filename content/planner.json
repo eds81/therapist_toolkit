@@ -49,7 +49,7 @@
     "reviewButtonLabel": "Review Plan",
     "reviewHeading": "Review Your Client Ecological Formulation",
     "centerSub": "current context",
-    "intro": "With only 12 sessions, this tool keeps you focused on the core goal of Rise's treatment: reducing suicidal thoughts and behaviors.\n\nFirst, map the risk and protective factors in your client's world, from the individual to the community, to find the right treatment targets. Then choose evidence-based practices for each target to build your plan.",
+    "intro": "With only 12 sessions, this tool keeps you focused on the core goal of Rise's treatment: reducing suicidal thoughts and behaviors.\n\nFirst, map the risk and protective factors in your client's world, from the individual to the community, to find the right treatment targets. Then choose evidence-based practices for each target to build your plan. ",
     "generateButtonLabel": "Generate Treatment Plan",
     "phase3Checklist": {
       "heading": "Phase 3 Checklist",
@@ -98,7 +98,7 @@
     },
     "nextButtonLabel": "Next",
     "phaseCommentPlaceholder": "Add any notes for this phase…",
-    "riskColumnLabel": "Risk / Vulnerability",
+    "riskColumnLabel": "Risk / Vulnerability ",
     "sectionLabel": "Interactive Tool",
     "downloadHint": "Opens your browser's print dialog — choose “Save as PDF” as the destination to download it.",
     "phaseCommentLabel": "Comments",
@@ -109,7 +109,7 @@
       "stepperGroupLabel": "Start",
       "levels": {
         "heading": "Youth at the center: the five levels you'll map",
-        "intro": "Your client sits at the center of an ecosystem. In the planner you map the risk and protective factors at each level, working from the outside in.",
+        "intro": "Your client sits at the center of an ecosystem. In the planner, you map the risk and protective factors at each level, working from the outside in.",
         "hint": "Click a ring or a level to see what belongs there.",
         "riskLabel": "Risk example",
         "protectiveLabel": "Protective example"
@@ -210,7 +210,7 @@
     "protectiveColumnLabel": "Protective / Buffering",
     "downloadButtonLabel": "Download Plan (PDF)",
     "ecoMapRiskLabel": "Risks",
-    "disclaimer": "This tool offers a starting point, not a clinical decision. Always apply your own clinical judgment, and follow your standard risk assessment and safety planning protocol regardless of what it suggests.",
+    "disclaimer": "This tool offers a starting point, not a clinical decision. Always apply your own clinical judgment, and follow your standard risk assessment and safety planning protocol.",
     "backButtonLabel": "Back",
     "extension": {
       "href": "https://riseagainstsuicide.my.site.com/s/login/?ec=302&startURL=%2Fs%2F",
