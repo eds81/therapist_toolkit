@@ -3,11 +3,13 @@
     "badges": [
       {
         "text": "Rise Against Suicide",
-        "href": "https://www.riseagainstsuicide.org/"
+        "href": "https://www.riseagainstsuicide.org/",
+        "logo": "/images/logo-rise-against-suicide.png"
       },
       {
         "text": "University of Colorado Boulder",
-        "href": "https://www.colorado.edu/"
+        "href": "https://www.colorado.edu/psych-neuro/",
+        "logo": "/images/logo-cu-boulder.png"
       }
     ],
     "headlineLine1": "Supporting Therapists.",
@@ -21,17 +23,17 @@
       "text": "Start the Treatment Planning Tool",
       "href": "planning-tool.html"
     },
-    "photo": {
-      "src": "",
-      "alt": "Sheri and Anabel presenting the Therapist Toolkit",
-      "caption": "Sheri and Anabel presenting the Therapist Toolkit",
-      "placeholder": "Photo coming soon: Sheri and Anabel presenting"
-    },
     "discoverOutcomes": {
-      "text": "What we heard from Rise therapists:",
-      "linkText": "Discover group outcomes (PDF)",
-      "pdf": "",
+      "text": "What we heard from Rise therapists",
+      "linkText": "Discover findings infographic",
+      "pdf": "/images/discover-findings-infographic.png",
       "pendingNote": "coming soon"
+    },
+    "news": {
+      "text": "In the news",
+      "linkText": "Expanding tools for therapists supporting suicidal youth",
+      "source": "CU Boulder Office for Outreach and Community Engagement",
+      "href": "https://www.colorado.edu/oce/2026/04/25/expanding-tools-therapists-supporting-suicidal-youth"
     }
   },
   "tour": {

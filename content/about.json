@@ -10,6 +10,11 @@
       "primaryHref": "index.html#tour",
       "secondaryText": "Start the Treatment Planning Tool",
       "secondaryHref": "planning-tool.html"
+    },
+    "photo": {
+      "src": "/images/anabel-and-sherry.jpg",
+      "alt": "Sherry Burkhard and Anabel Salimian standing on either side of their research poster at a CU Boulder poster session",
+      "caption": "Sherry Burkhard (Rise Against Suicide) and Anabel Salimian (CU Boulder) presenting the Discover findings"
     }
   },
   "research": {
@@ -200,7 +205,7 @@
       "closing": {
         "pre": "If you have suggestions to improve our toolkit, please let us know!",
         "linkText": "Contact us here.",
-        "linkHref": "about.html#team",
+        "linkHref": "mailto:referral@riseagainstsuicide.org?subject=Therapist%20Toolkit%20feedback",
         "post": "The goal is to support you best – we need your help knowing how to do this!"
       }
     }
@@ -216,7 +221,8 @@
         "logoLine2": "Boulder",
         "title": "University of Colorado Boulder",
         "body": "Led by Dr. Tamar, Assistant Professor in Psychology and Neuroscience. Research-driven co-design, qualitative analysis, and evidence-based resource development.",
-        "fundingTag": "Funded by CU Boulder Office for Public & Community Engaged Scholarship"
+        "fundingTag": "Funded by CU Boulder Office for Public & Community Engaged Scholarship",
+        "logo": "/images/logo-cu-boulder.png"
       },
       {
         "logoClass": "rise-logo",
@@ -224,7 +230,8 @@
         "logoLine2": "",
         "title": "Rise Against Suicide",
         "body": "A Boulder-based nonprofit providing timely, free therapy to youth with suicide risk through partnerships with schools and community organizations.",
-        "fundingTag": "Funded by Colorado Clinical Translational Science Institute"
+        "fundingTag": "Funded by Colorado Clinical Translational Science Institute",
+        "logo": "/images/logo-rise-against-suicide.png"
       }
     ]
   }

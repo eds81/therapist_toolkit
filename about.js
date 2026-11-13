@@ -8,7 +8,8 @@ function icon(id, extraClass) {
 }
 
 function linkAttrs(href) {
-  return /^https?:/.test(href) ? ` href="${href}" target="_blank" rel="noopener"` : ` href="${href}"`;
+  // External sites and files (PDFs, images) open in a new tab so people don't lose their place.
+  return /^https?:|\.(pdf|png|jpe?g|gif|webp)$/i.test(href) ? ` href="${href}" target="_blank" rel="noopener"` : ` href="${href}"`;
 }
 
 function render(data) {
@@ -17,6 +18,20 @@ function render(data) {
   document.getElementById('aboutPageLabel').textContent = page.sectionLabel;
   document.getElementById('aboutPageHeading').textContent = page.heading;
   document.getElementById('aboutPageIntro').textContent = page.intro;
+
+  // Photo beside the header
+  const photo = page.photo;
+  const photoEl = document.getElementById('aboutPhoto');
+  if (photo && photo.src) {
+    photoEl.innerHTML = `<img src="${photo.src}" alt="${photo.alt || ''}" />${photo.caption ? `<figcaption>${photo.caption}</figcaption>` : ''}`;
+  } else photoEl.hidden = true;
+
+  // In the news (same link as on the home page; edited under Home → Hero)
+  const news = data.hero && data.hero.news;
+  const newsEl = document.getElementById('aboutNews');
+  if (news && news.href) {
+    newsEl.innerHTML = `${icon('ic-message', 'icon-sm')}<span>${news.text}</span> <a${linkAttrs(news.href)}>${news.linkText}</a>${news.source ? `<span class="hero-news-source">${news.source}</span>` : ''}`;
+  } else newsEl.hidden = true;
   document.getElementById('exploreHeading').textContent = page.explore.heading;
   document.getElementById('exploreBody').textContent = page.explore.body;
   document.getElementById('exploreActions').innerHTML = `
@@ -106,7 +121,9 @@ function render(data) {
   document.getElementById('teamIntro').textContent = data.team.intro;
   document.getElementById('teamCards').innerHTML = data.team.members.map((m, i) => `
     <div class="team-card" data-fade data-delay="${i + 1}">
-      <div class="team-logo ${m.logoClass}">${m.logoLine1}${m.logoLine2 ? `<br/><span>${m.logoLine2}</span>` : ''}</div>
+      ${m.logo
+        ? `<div class="team-logo-img"><img src="${m.logo}" alt="${m.title} logo" /></div>`
+        : `<div class="team-logo ${m.logoClass}">${m.logoLine1}${m.logoLine2 ? `<br/><span>${m.logoLine2}</span>` : ''}</div>`}
       <h3>${m.title}</h3>
       <p>${m.body}</p>
       <div class="funding-tag">${m.fundingTag}</div>

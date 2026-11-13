@@ -29,6 +29,7 @@ collections:
                 fields:
                   - {label: "Text", name: "text", widget: "string"}
                   - {label: "Link (website address)", name: "href", widget: "string", required: false}
+                  - {label: "Logo (shown instead of the text badge)", name: "logo", widget: "image", required: false}
               - {label: "Headline — Line 1", name: "headlineLine1", widget: "string"}
               - {label: "Headline — Line 2", name: "headlineLine2", widget: "string"}
               - {label: "Subheading", name: "sub", widget: "text", hint: "You can use <em>word</em> to italicize or <strong>word</strong> to bold a word."}
@@ -44,22 +45,22 @@ collections:
                 fields:
                   - {label: "Text", name: "text", widget: "string"}
                   - {label: "Link", name: "href", widget: "string"}
-              - label: "Discover Group Outcomes (PDF link under the buttons; also shown on the About page)"
+              - label: "Discover Findings (link under the buttons; also shown on the About page)"
                 name: "discoverOutcomes"
                 widget: "object"
                 fields:
                   - {label: "Text before the link", name: "text", widget: "string"}
                   - {label: "Link Text", name: "linkText", widget: "string"}
-                  - {label: "PDF", name: "pdf", widget: "file", required: false, hint: "Upload the outcomes PDF. Until one is uploaded, the link shows as 'coming soon'."}
+                  - {label: "File (PDF or image)", name: "pdf", widget: "file", required: false, hint: "Upload the findings file (currently the infographic). With no file, the link shows as 'coming soon'."}
                   - {label: "'Coming soon' tag", name: "pendingNote", widget: "string"}
-              - label: "Photo (beside the headline)"
-                name: "photo"
+              - label: "In the News (article link under the buttons; also shown on the About page)"
+                name: "news"
                 widget: "object"
                 fields:
-                  - {label: "Photo", name: "src", widget: "image", required: false, hint: "Upload the photo of Sheri and Anabel presenting. Until then, a placeholder shows."}
-                  - {label: "Description for screen readers", name: "alt", widget: "string"}
-                  - {label: "Caption (optional)", name: "caption", widget: "string", required: false}
-                  - {label: "Placeholder text (shown until a photo is uploaded)", name: "placeholder", widget: "string"}
+                  - {label: "Text before the link", name: "text", widget: "string"}
+                  - {label: "Article title (link text)", name: "linkText", widget: "string"}
+                  - {label: "Source (shown under the link)", name: "source", widget: "string", required: false}
+                  - {label: "Article link", name: "href", widget: "string"}
           - label: "What's Inside (one card per tool)"
             name: "tour"
             widget: "object"
@@ -91,6 +92,13 @@ collections:
               - {label: "Section Label", name: "sectionLabel", widget: "string"}
               - {label: "Heading", name: "heading", widget: "string"}
               - {label: "Intro", name: "intro", widget: "text"}
+              - label: "Photo (beside the header)"
+                name: "photo"
+                widget: "object"
+                fields:
+                  - {label: "Photo", name: "src", widget: "image", required: false}
+                  - {label: "Description for screen readers", name: "alt", widget: "string"}
+                  - {label: "Caption (optional)", name: "caption", widget: "string", required: false}
               - label: "Closing Call-to-Action"
                 name: "explore"
                 widget: "object"
@@ -258,6 +266,7 @@ collections:
                   - {label: "Logo Line 2 (optional)", name: "logoLine2", widget: "string", required: false}
                   - {label: "Name", name: "title", widget: "string"}
                   - {label: "Description", name: "body", widget: "text"}
+                  - {label: "Logo image (shown instead of the text logo)", name: "logo", widget: "image", required: false}
                   - {label: "Funding Tag", name: "fundingTag", widget: "string"}
 
       - file: "content/planner.json"

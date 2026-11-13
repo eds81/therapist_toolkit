@@ -66,13 +66,22 @@ const TOOL_ICONS = { planner: 'ic-target', safety: 'ic-shield', library: 'ic-boo
 
 // An external link opens in a new tab.
 function linkAttrs(href) {
-  return /^https?:/.test(href) ? ` href="${href}" target="_blank" rel="noopener"` : ` href="${href}"`;
+  // External sites and files (PDFs, images) open in a new tab so people don't lose their place.
+  return /^https?:|\.(pdf|png|jpe?g|gif|webp)$/i.test(href) ? ` href="${href}" target="_blank" rel="noopener"` : ` href="${href}"`;
 }
 
 function render(data) {
-  // HERO — the two badges link to the partner organizations' websites
-  document.getElementById('heroBadges').innerHTML = data.hero.badges.map((b, i) => {
+  // HERO — the partner logos (or text badges, if no logo is set), each
+  // linking to that organization's website
+  const badgeEl = document.getElementById('heroBadges');
+  const withLogos = data.hero.badges.some(b => b && b.logo);
+  badgeEl.classList.toggle('hero-logos', withLogos);
+  badgeEl.innerHTML = data.hero.badges.map((b, i) => {
     const badge = typeof b === 'string' ? { text: b } : b;
+    if (badge.logo) {
+      const img = `<img src="${badge.logo}" alt="${badge.text}" />`;
+      return badge.href ? `<a class="hero-logo"${linkAttrs(badge.href)}>${img}</a>` : `<span class="hero-logo">${img}</span>`;
+    }
     const cls = `badge ${i === 0 ? 'badge-teal' : 'badge-green'}`;
     return badge.href
       ? `<a class="${cls} badge-link"${linkAttrs(badge.href)}>${badge.text}</a>`
@@ -93,16 +102,12 @@ function render(data) {
       : `<span class="hero-outcomes-pending">${outcomes.linkText} <em>${outcomes.pendingNote || 'coming soon'}</em></span>`);
   } else outcomesEl.hidden = true;
 
-  // Photo — a labeled placeholder until the photo is uploaded
-  const photo = data.hero.photo;
-  const photoEl = document.getElementById('heroPhoto');
-  if (!photo) photoEl.hidden = true;
-  else if (photo.src) {
-    photoEl.innerHTML = `<img src="${photo.src}" alt="${photo.alt || ''}" />${photo.caption ? `<figcaption>${photo.caption}</figcaption>` : ''}`;
-  } else {
-    photoEl.classList.add('is-placeholder');
-    photoEl.innerHTML = `<div class="hero-photo-empty" role="img" aria-label="${photo.placeholder}">${icon('ic-users')}<span>${photo.placeholder}</span></div>`;
-  }
+  // In the news — an article about the toolkit
+  const news = data.hero.news;
+  const newsEl = document.getElementById('heroNews');
+  if (news && news.href) {
+    newsEl.innerHTML = `${icon('ic-message', 'icon-sm')}<span>${news.text}</span> <a${linkAttrs(news.href)}>${news.linkText}</a>${news.source ? `<span class="hero-news-source">${news.source}</span>` : ''}`;
+  } else newsEl.hidden = true;
 
   // WHAT'S INSIDE
   const tour = data.tour;
