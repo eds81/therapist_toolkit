@@ -3,6 +3,7 @@
     "ecoMapProtectiveLabel": "Protectors",
     "addButtonLabel": "Add",
     "heading": "Treatment Planning Tool",
+    "subheading": "Client Ecological Formulation & Treatment Planner",
     "rings": [
       {
         "key": "community",
@@ -48,7 +49,7 @@
     "reviewButtonLabel": "Review Plan",
     "reviewHeading": "Review Your Client Ecological Formulation",
     "centerSub": "current context",
-    "intro": "With only 12 sessions, this tool keeps you focused on Rise's core goal: reducing suicidal thoughts and behaviors.\n\nFirst, map the risk and protective factors in your client's world, from the individual to the community, to find the right treatment targets. Then choose evidence-based practices for each target to build your plan.",
+    "intro": "With only 12 sessions, this tool keeps you focused on the core goal of Rise's treatment: reducing suicidal thoughts and behaviors.\n\nFirst, map the risk and protective factors in your client's world, from the individual to the community, to find the right treatment targets. Then choose evidence-based practices for each target to build your plan.",
     "generateButtonLabel": "Generate Treatment Plan",
     "phase3Checklist": {
       "heading": "Phase 3 Checklist",
@@ -101,49 +102,6 @@
     "sectionLabel": "Interactive Tool",
     "downloadHint": "Opens your browser's print dialog — choose “Save as PDF” as the destination to download it.",
     "phaseCommentLabel": "Comments",
-    "emptyStateText": "Add at least one risk or protective factor above, then generate a plan.",
-    "navLabel": "Treatment Planning Tool",
-    "outputHeadings": {
-      "resources": "Recommended Resources",
-      "more": "Explore More"
-    },
-    "resetButtonLabel": "Start Over",
-    "goal": {
-      "label": "Goal",
-      "statement": "Reduce the client's suicidal thoughts and behaviors",
-      "steps": {
-        "ring": "As you map this level, ask: what here raises or lowers the client's suicidal thoughts and behaviors?",
-        "topFactors": "Choose the factors most closely tied to the client's suicidal thoughts and behaviors. These become the focus of treatment.",
-        "resourcePlan": "Pick interventions that directly target what drives the client's suicidal thoughts and behaviors, or strengthen what protects against them.",
-        "review": "Every phase of this plan works toward one outcome: reducing the client's suicidal thoughts and behaviors.",
-        "orientation": "Keep one question in mind as you go: what raises or lowers this client's suicidal thoughts and behaviors?"
-      },
-      "focusLabel": "In this phase",
-      "checkLabel": "Check",
-      "phases": [
-        {
-          "focus": "Understand what is driving the client's suicidal thoughts and behaviors, and keep them safe while you work on them. Assess current risk, build a safety plan together, and map the factors that raise and lower them.",
-          "check": "Do I know what is driving this client's suicidal thoughts and behaviors, and is a safety plan in place?"
-        },
-        {
-          "focus": "Give the client skills to manage suicidal thoughts when they show up and lower them over time. Teach and practice emotion regulation, problem-solving, and support-seeking, aimed at the top factors you identified.",
-          "check": "Is the client using these skills when suicidal thoughts or urges come up?"
-        },
-        {
-          "focus": "Make the reduction in suicidal thoughts and behaviors last after Rise ends. Consolidate skills, re-screen to measure change since intake, update the safety plan, and link the client to their next step in care.",
-          "check": "Have the client's suicidal thoughts and behaviors decreased since intake, and is care in place to keep it that way?"
-        }
-      ]
-    },
-    "stepHint": "Enter as many or as few factors as apply at this level — you can leave it blank and move on if it isn't relevant to this client.",
-    "reviewIntro": "Here's the full map from what you entered. Add, remove, or adjust anything before generating the plan.",
-    "protectiveColumnLabel": "Protective / Buffering",
-    "downloadButtonLabel": "Download Plan (PDF)",
-    "ecoMapRiskLabel": "Risks",
-    "disclaimer": "This tool offers a starting point, not a clinical decision. Always apply your own clinical judgment, and follow your standard risk assessment and safety planning protocol regardless of what it suggests.",
-    "backButtonLabel": "Back",
-    "centerLabel": "Client",
-    "subheading": "Client Ecological Formulation & Treatment Planner",
     "orientation": {
       "stepLabel": "Start Here",
       "title": "Start Here",
@@ -213,13 +171,55 @@
       ],
       "note": "What you enter stays in this browser. Remove or de-identify client details before you print or share."
     },
+    "emptyStateText": "Add at least one risk or protective factor above, then generate a plan.",
+    "navLabel": "Treatment Planning Tool",
+    "outputHeadings": {
+      "resources": "Recommended Resources",
+      "more": "Explore More"
+    },
+    "resetButtonLabel": "Start Over",
+    "goal": {
+      "label": "Goal",
+      "statement": "Reduce the client's suicidal thoughts and behaviors",
+      "steps": {
+        "ring": "As you map this level, ask: what here raises or lowers the client's suicidal thoughts and behaviors?",
+        "topFactors": "Choose the factors most closely tied to the client's suicidal thoughts and behaviors. These become the focus of treatment.",
+        "resourcePlan": "Pick interventions that directly target what drives the client's suicidal thoughts and behaviors, or strengthen what protects against them.",
+        "review": "Every phase of this plan works toward one outcome: reducing the client's suicidal thoughts and behaviors.",
+        "orientation": "Keep one question in mind as you go: what raises or lowers this client's suicidal thoughts and behaviors?"
+      },
+      "focusLabel": "In this phase",
+      "checkLabel": "Check",
+      "phases": [
+        {
+          "focus": "Understand what is driving the client's suicidal thoughts and behaviors, and keep them safe while you work on them. Assess current risk, build a safety plan together, and map the factors that raise and lower them.",
+          "check": "Do I know what is driving this client's suicidal thoughts and behaviors, and is a safety plan in place?"
+        },
+        {
+          "focus": "Give the client skills to manage suicidal thoughts when they show up and lower them over time. Teach and practice emotion regulation, problem-solving, and support-seeking, aimed at the top factors you identified.",
+          "check": "Is the client using these skills when suicidal thoughts or urges come up?"
+        },
+        {
+          "focus": "Make the reduction in suicidal thoughts and behaviors last after Rise ends. Consolidate skills, re-screen to measure change since intake, update the safety plan, and link the client to their next step in care.",
+          "check": "Have the client's suicidal thoughts and behaviors decreased since intake, and is care in place to keep it that way?"
+        }
+      ]
+    },
+    "stepHint": "Enter as many or as few factors as apply at this level — you can leave it blank and move on if it isn't relevant to this client.",
+    "reviewIntro": "Here's the full map from what you entered. Add, remove, or adjust anything before generating the plan.",
+    "protectiveColumnLabel": "Protective / Buffering",
+    "downloadButtonLabel": "Download Plan (PDF)",
+    "ecoMapRiskLabel": "Risks",
+    "disclaimer": "This tool offers a starting point, not a clinical decision. Always apply your own clinical judgment, and follow your standard risk assessment and safety planning protocol regardless of what it suggests.",
+    "backButtonLabel": "Back",
     "extension": {
       "href": "https://riseagainstsuicide.my.site.com/s/login/?ec=302&startURL=%2Fs%2F",
       "phase2Text": "Need more time to build and practice skills?",
       "phase2LinkText": "Consider filing an extension",
       "phase3Text": "If the client needs more sessions before you wrap up, file an extension with Rise.",
       "phase3ButtonText": "File an extension"
-    }
+    },
+    "centerLabel": "Client"
   },
   "resourceCategories": [
     {
