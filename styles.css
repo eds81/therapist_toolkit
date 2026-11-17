@@ -1064,10 +1064,6 @@ body.scgate-open { overflow: hidden; }
 .planner-checklist { border-top: 4px solid var(--teal); }
 .planner-checklist-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .planner-checklist-head h3 { margin-bottom: 4px; }
-.planner-checklist-progress {
-  font-size: 12px; font-weight: 800; color: var(--teal-dark); background: var(--teal-light);
-  padding: 3px 12px; border-radius: 100px; white-space: nowrap;
-}
 .planner-checklist-intro { font-size: 14px; color: var(--text-mid); margin-bottom: 14px; }
 .planner-checklist-list { display: flex; flex-direction: column; gap: 10px; }
 .planner-checklist-item {
@@ -1075,24 +1071,10 @@ body.scgate-open { overflow: hidden; }
   padding: 12px 14px; transition: border-color .15s, background .15s;
 }
 .planner-checklist-item:hover { border-color: var(--teal); }
-.planner-checklist-item.is-done { background: var(--teal-light); border-color: #B9E2E9; }
-.planner-checklist-item label { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
-.planner-checklist-input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-.planner-checklist-box {
-  flex-shrink: 0; width: 22px; height: 22px; margin-top: 1px; border-radius: 6px;
-  border: 2px solid var(--teal); background: var(--white); position: relative;
-}
-.planner-checklist-input:checked + .planner-checklist-box { background: var(--teal); }
-.planner-checklist-input:checked + .planner-checklist-box::after {
-  content: ''; position: absolute; left: 6px; top: 2px; width: 6px; height: 11px;
-  border: solid var(--white); border-width: 0 3px 3px 0; transform: rotate(45deg);
-}
-.planner-checklist-input:focus-visible + .planner-checklist-box { outline: 3px solid var(--yellow); outline-offset: 2px; }
 .planner-checklist-text { display: flex; flex-direction: column; gap: 2px; }
 .planner-checklist-text strong { font-size: 15px; color: var(--text); }
-.planner-checklist-item.is-done .planner-checklist-text strong { color: var(--teal-dark); }
 .planner-checklist-detail { font-size: 13px; color: var(--text-mid); line-height: 1.5; }
-.planner-checklist-link-row { padding-left: 34px; margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.planner-checklist-link-row { padding-left: 0; margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px 18px; }
 .planner-checklist-link { font-size: 13px; font-weight: 800; color: var(--teal); }
 .planner-checklist-link:hover { text-decoration: underline; }
 
@@ -2356,7 +2338,7 @@ body.scgate-open { overflow: hidden; }
 .aim-top { display: flex; align-items: flex-start; justify-content: space-between; }
 .aim-icon { width: 30px; height: 30px; stroke: rgba(255,255,255,.85); }
 /* checklist links line up with the item text when the item has an icon (box 22 + gap 12 + icon 32 + gap 12) */
-.planner-checklist-item:has(.planner-checklist-icon) .planner-checklist-link-row { padding-left: 78px; }
+.planner-checklist-item:has(.planner-checklist-icon) .planner-checklist-link-row { padding-left: 44px; }
 
 /* =============================================
    HOME — linked partner badges, Discover outcomes link, team photo
@@ -2705,3 +2687,36 @@ a.journey-goto { text-decoration: none; }
 .intervention-factor-ring { font-size: 12px; font-weight: 700; color: var(--text-light); }
 /* With the roadmap on its own tab, the tool follows the header directly */
 .planner-header + .planner > .section-inner { padding-top: 8px; }
+
+/* Treatment Plan — Phase 3 as a plain list (no checkboxes) */
+.planner-checklist-row { display: flex; align-items: flex-start; gap: 12px; }
+.planner-checklist-item:hover { border-color: var(--cream-dark); }
+.planner-checklist-icon { margin-top: 0; }
+
+/* Treatment Plan — reorder top factors (drag handle + Move up / Move down) */
+.intervention-review-reorder-hint { font-size: 13px; color: var(--text-light); margin: -4px 0 6px; }
+.intervention-review-order { width: 92px; white-space: nowrap; padding: 12px 8px 12px 12px !important; }
+.intervention-review-order > * { vertical-align: middle; }
+.intervention-order-handle { display: inline-flex; cursor: grab; color: var(--text-light); padding: 4px; }
+.intervention-order-handle svg { stroke: currentColor; }
+.intervention-order-num { display: inline-block; min-width: 16px; font-size: 13px; font-weight: 900; color: var(--text-mid); text-align: center; }
+.intervention-order-btns { display: inline-flex; flex-direction: column; gap: 3px; margin-left: 4px; }
+.intervention-order-btn {
+  width: 26px; height: 22px; border-radius: 6px; border: 1.5px solid var(--cream-dark); background: var(--white);
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: var(--teal-dark); padding: 0;
+}
+.intervention-order-btn svg { stroke: currentColor; width: 13px; height: 13px; }
+.intervention-order-btn:hover:not(:disabled) { border-color: var(--teal); background: var(--teal-light); }
+.intervention-order-btn:focus-visible { outline: 3px solid var(--yellow); outline-offset: 1px; }
+.intervention-order-btn:disabled { opacity: .3; cursor: default; }
+.intervention-review-row[draggable="true"] { cursor: grab; }
+.intervention-review-row.is-dragging { opacity: .45; }
+.intervention-review-row.drop-before td { box-shadow: inset 0 3px 0 var(--teal); }
+.intervention-review-row.drop-after td { box-shadow: inset 0 -3px 0 var(--teal); }
+@media (max-width: 700px) {
+  /* stacked cards: the order controls sit in a row across the top of each card */
+  .intervention-review-order { width: auto; display: flex !important; align-items: center; gap: 8px; padding: 10px 12px 0 !important; }
+  .intervention-review-order::before { display: none !important; }
+  .intervention-order-btns { flex-direction: row; margin-left: auto; gap: 6px; }
+  .intervention-order-btn { width: 36px; height: 32px; }
+}

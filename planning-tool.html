@@ -7,10 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=70" />
+  <link rel="stylesheet" href="styles.css?v=71" />
 </head>
 <body>
-<script src="icons.js?v=2"></script>
+<script src="icons.js?v=3"></script>
 
 <!-- SVG SPRITE -->
 <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
@@ -52,6 +52,12 @@
   <symbol id="i-share-2" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
     <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+  </symbol>
+  <symbol id="i-arrow-up" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
+  </symbol>
+  <symbol id="i-arrow-down" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>
   </symbol>
   <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
@@ -235,6 +241,7 @@
         </div>
       </div>
       <div class="planner-output-block" id="plannerOutputInterventions"></div>
+      <p class="sr-only" id="plannerReorderAnnounce" aria-live="polite"></p>
       <div class="planner-extension" id="plannerPhase2Extension"></div>
       <div class="planner-phase-comment" id="plannerPhase2Comment">
         <label for="plannerPhase2CommentInput" id="plannerPhase2CommentLabel"></label>
@@ -280,7 +287,7 @@
 </footer>
 
 <script src="content-loader.js?v=3"></script>
-<script src="planner.js?v=70"></script>
+<script src="planner.js?v=72"></script>
 <script src="goal-banner.js?v=3"></script>
 </body>
 </html>

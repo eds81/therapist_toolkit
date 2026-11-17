@@ -465,13 +465,12 @@ collections:
                     fields:
                       - {label: "In this phase (how this phase reduces suicidal thoughts and behaviors)", name: "focus", widget: "text"}
                       - {label: "Check (yes/no question for the therapist)", name: "check", widget: "string"}
-              - label: "Phase 3 Checklist (shown under Phase 3 on Review and in the printed plan)"
+              - label: "Phase 3 Checklist (a plain list under Phase 3 on the Treatment Plan and in the printed plan)"
                 name: "phase3Checklist"
                 widget: "object"
                 fields:
                   - {label: "Heading", name: "heading", widget: "string"}
                   - {label: "Intro", name: "intro", widget: "text"}
-                  - {label: "Progress Label (e.g. 'complete' in '2 of 4 complete')", name: "progressLabel", widget: "string"}
                   - label: "Items"
                     name: "items"
                     widget: "list"

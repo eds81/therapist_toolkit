@@ -448,7 +448,7 @@ const plannerState = {
   topContributors: { risk: [null, null, null], protective: [null, null, null] },
   interventionsByFactor: {}, // factor id -> array of intervention strings; each top factor gets its own list
   phaseComments: ['', '', ''], // freeform notes per Phase 1/2/3, shown on Review and in the printed plan
-  phase3Checks: [], // checked state of each Phase 3 checklist item, by index
+  planOrder: [], // top-factor ids in the order the clinician arranged them on the Treatment Plan
   ringLabelByKey: {}
 };
 RING_ORDER.forEach(k => { plannerState.factors[k] = { risk: [], protective: [] }; });
@@ -469,7 +469,7 @@ function persistPlannerState() {
       topContributors: plannerState.topContributors,
       interventionsByFactor: plannerState.interventionsByFactor,
       phaseComments: plannerState.phaseComments,
-      phase3Checks: plannerState.phase3Checks
+      planOrder: plannerState.planOrder
     }));
   } catch (e) { /* localStorage unavailable (private browsing, quota, etc.) — fail silently */ }
 }
@@ -519,8 +519,8 @@ function loadPersistedPlannerState() {
     if (Array.isArray(saved.phaseComments)) {
       plannerState.phaseComments = [0, 1, 2].map(i => saved.phaseComments[i] || '');
     }
-    if (Array.isArray(saved.phase3Checks)) {
-      plannerState.phase3Checks = saved.phase3Checks.map(Boolean);
+    if (Array.isArray(saved.planOrder)) {
+      plannerState.planOrder = saved.planOrder.filter(id => typeof id === 'number');
     }
   } catch (e) { /* ignore corrupt or inaccessible storage */ }
 }
@@ -1543,7 +1543,7 @@ function initPlanner() {
     plannerState.topContributors = { risk: [null, null, null], protective: [null, null, null] };
     plannerState.interventionsByFactor = {};
     plannerState.phaseComments = ['', '', ''];
-    plannerState.phase3Checks = [];
+    plannerState.planOrder = [];
     document.querySelectorAll('.planner-phase-comment-input').forEach(el => { el.value = ''; });
     document.getElementById('plannerOutput').hidden = true;
     document.getElementById('plannerDownloadBtn').hidden = true;
@@ -1588,18 +1588,67 @@ function initPlanner() {
     });
   });
 
-  // Phase 3 checklist — delegated so it survives generatePlan() re-rendering
-  // the list. Updates state, the progress count, and the email summary in
-  // place rather than re-rendering (keeps keyboard focus on the checkbox).
-  document.getElementById('plannerPhase3Checklist').addEventListener('change', e => {
-    const box = e.target.closest('.planner-checklist-input');
-    if (!box) return;
-    const i = parseInt(box.dataset.checkIndex, 10);
-    plannerState.phase3Checks[i] = box.checked;
-    box.closest('.planner-checklist-item').classList.toggle('is-done', box.checked);
-    updatePhase3Progress();
-    document.getElementById('plannerEmailBtn').href = buildEmailPlanHref(plannerState.data);
+  // ── Treatment Plan: reorder top factors (drag-and-drop, or Move up /
+  // Move down buttons). Delegated on the container, which survives
+  // generatePlan() re-rendering the table. ──
+  const reorderEl = document.getElementById('plannerOutputInterventions');
+  const reorderAnnounce = document.getElementById('plannerReorderAnnounce');
+  function afterMove(factorId, focusDir) {
     persistPlannerState();
+    generatePlan(); // re-renders the table, the printed plan and the email summary
+    const order = selectedTopContributors();
+    const pos = order.findIndex(f => f.id === factorId);
+    const moved = order[pos];
+    if (moved && reorderAnnounce) reorderAnnounce.textContent = `Moved "${moved.text}" to position ${pos + 1} of ${order.length}.`;
+    // Keep keyboard focus on the moved factor's button (or the other one at an end).
+    if (focusDir) {
+      const btn = reorderEl.querySelector(`.intervention-order-btn[data-factor-id="${factorId}"][data-move="${focusDir}"]`);
+      const other = reorderEl.querySelector(`.intervention-order-btn[data-factor-id="${factorId}"][data-move="${focusDir === 'up' ? 'down' : 'up'}"]`);
+      (btn && !btn.disabled ? btn : other)?.focus();
+    }
+  }
+  reorderEl.addEventListener('click', e => {
+    const btn = e.target.closest('.intervention-order-btn');
+    if (!btn || btn.disabled) return;
+    const id = parseInt(btn.dataset.factorId, 10);
+    const ids = selectedTopContributors().map(f => f.id);
+    const from = ids.indexOf(id);
+    if (moveTopFactor(id, from + (btn.dataset.move === 'up' ? -1 : 1))) afterMove(id, btn.dataset.move);
+  });
+  let draggingId = null;
+  reorderEl.addEventListener('dragstart', e => {
+    const row = e.target.closest('.intervention-review-row');
+    if (!row) return;
+    draggingId = parseInt(row.dataset.factorId, 10);
+    row.classList.add('is-dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', String(draggingId));
+  });
+  reorderEl.addEventListener('dragover', e => {
+    const row = e.target.closest('.intervention-review-row');
+    if (draggingId === null || !row) return;
+    e.preventDefault();
+    const after = e.clientY > row.getBoundingClientRect().top + row.offsetHeight / 2;
+    reorderEl.querySelectorAll('.intervention-review-row').forEach(r => r.classList.remove('drop-before', 'drop-after'));
+    if (parseInt(row.dataset.factorId, 10) !== draggingId) row.classList.add(after ? 'drop-after' : 'drop-before');
+  });
+  reorderEl.addEventListener('drop', e => {
+    const row = e.target.closest('.intervention-review-row');
+    if (draggingId === null || !row) return;
+    e.preventDefault();
+    const ids = selectedTopContributors().map(f => f.id);
+    const targetId = parseInt(row.dataset.factorId, 10);
+    const after = row.classList.contains('drop-after');
+    let to = ids.indexOf(targetId) + (after ? 1 : 0);
+    if (ids.indexOf(draggingId) < to) to -= 1; // removing the dragged row shifts later positions up by one
+    const id = draggingId;
+    draggingId = null;
+    if (moveTopFactor(id, to)) afterMove(id, null);
+    else reorderEl.querySelectorAll('.intervention-review-row').forEach(r => r.classList.remove('drop-before', 'drop-after', 'is-dragging'));
+  });
+  reorderEl.addEventListener('dragend', () => {
+    draggingId = null;
+    reorderEl.querySelectorAll('.intervention-review-row').forEach(r => r.classList.remove('drop-before', 'drop-after', 'is-dragging'));
   });
 
   // Restore any previously entered factors (and the step/output the clinician
@@ -1630,7 +1679,30 @@ function selectedTopContributors() {
       if (f) list.push({ ...f, valence });
     });
   });
-  return list;
+  // The clinician's own order from the Treatment Plan (planOrder); factors
+  // not placed there yet keep their default spot (risk, then protective).
+  const rank = id => {
+    const i = plannerState.planOrder.indexOf(id);
+    return i === -1 ? Infinity : i;
+  };
+  return list
+    .map((f, i) => ({ f, i }))
+    .sort((a, b) => (rank(a.f.id) - rank(b.f.id)) || (a.i - b.i))
+    .map(x => x.f);
+}
+
+// Move one top factor to a new position on the Treatment Plan. Its
+// interventions are keyed by factor id, so they move with it.
+function moveTopFactor(factorId, toIndex) {
+  const ids = selectedTopContributors().map(f => f.id);
+  const from = ids.indexOf(factorId);
+  if (from === -1) return false;
+  toIndex = Math.max(0, Math.min(ids.length - 1, toIndex));
+  if (toIndex === from) return false;
+  ids.splice(from, 1);
+  ids.splice(toIndex, 0, factorId);
+  plannerState.planOrder = ids;
+  return true;
 }
 
 // All factors the clinician has entered (not just the top 3) — every
@@ -1678,14 +1750,27 @@ function interventionsHtml() {
   }
   // Two columns — each top factor on the left, the intervention(s) chosen
   // for it on the right — so it's clear which strategy targets which factor.
-  const rows = factors.map(f => {
+  const rows = factors.map((f, i) => {
     const list = plannerState.interventionsByFactor[f.id] || [];
+    const name = escapeXml(f.text);
+    // Reorder: drag the row by its handle, or use Move up / Move down
+    // (keyboard and screen-reader friendly).
+    const orderCell = `
+        <td class="intervention-review-order" data-label="Order">
+          <span class="intervention-order-handle" aria-hidden="true" title="Drag to reorder">${icon('ic-grip', 'icon-sm')}</span>
+          <span class="intervention-order-num" aria-hidden="true">${i + 1}</span>
+          <span class="intervention-order-btns">
+            <button type="button" class="intervention-order-btn" data-move="up" data-factor-id="${f.id}" aria-label="Move up: ${name}"${i === 0 ? ' disabled' : ''}>${icon('i-arrow-up', 'icon-xs')}</button>
+            <button type="button" class="intervention-order-btn" data-move="down" data-factor-id="${f.id}" aria-label="Move down: ${name}"${i === factors.length - 1 ? ' disabled' : ''}>${icon('i-arrow-down', 'icon-xs')}</button>
+          </span>
+        </td>`;
     // Names only (no descriptions) as chips, so the column scans quickly.
     const practices = list.length
       ? `<ul class="intervention-review-chips">${list.map(name => `<li>${escapeXml(name)}</li>`).join('')}</ul>`
       : '<span class="intervention-review-none">No intervention selected yet</span>';
     return `
-      <tr class="intervention-review-row intervention-review-row-${f.valence}">
+      <tr class="intervention-review-row intervention-review-row-${f.valence}" draggable="true" data-factor-id="${f.id}">
+        ${orderCell}
         <td class="intervention-review-factor" data-label="Factor">
           <span class="intervention-review-factor-top">
             <span class="planner-note-tag planner-note-tag-${f.valence}">${f.valence === 'risk' ? 'Risk' : 'Protective'}</span>
@@ -1700,8 +1785,9 @@ function interventionsHtml() {
   });
   return `
     <h3>Interventions</h3>
+    <p class="intervention-review-reorder-hint">Drag a factor, or use its arrows, to put them in the order you'll work on them. Its interventions move with it, and the printed plan follows this order.</p>
     <table class="intervention-review-table">
-      <thead><tr><th scope="col">Factor</th><th scope="col">Intervention(s)</th></tr></thead>
+      <thead><tr><th scope="col"><span class="sr-only">Order</span></th><th scope="col">Factor</th><th scope="col">Intervention(s)</th></tr></thead>
       <tbody>${rows.join('')}</tbody>
     </table>`;
 }
@@ -1777,40 +1863,28 @@ function checklistLinks(it) {
   return it.linkText && it.linkHref ? [{ text: it.linkText, href: it.linkHref }] : [];
 }
 
-function updatePhase3Progress() {
-  const c = plannerState.data.planner.phase3Checklist;
-  const items = phase3ChecklistItems();
-  const done = items.filter((_, i) => plannerState.phase3Checks[i]).length;
-  const el = document.getElementById('plannerPhase3Progress');
-  if (el) el.textContent = `${done} of ${items.length} ${c.progressLabel || 'complete'}`;
-}
-
 function phase3ChecklistHtml() {
   const c = plannerState.data.planner.phase3Checklist;
   const items = phase3ChecklistItems();
   if (!items.length) return '';
-  const rows = items.map((it, i) => {
-    const checked = !!plannerState.phase3Checks[i];
+  const rows = items.map(it => {
     const link = checklistLinks(it)
       .map(l => `<a class="planner-checklist-link" href="${escapeXml(l.href)}" target="_blank" rel="noopener">${escapeXml(l.text)} →</a>`)
       .join('');
     return `
-      <li class="planner-checklist-item${checked ? ' is-done' : ''}">
-        <label>
-          <input type="checkbox" class="planner-checklist-input" data-check-index="${i}"${checked ? ' checked' : ''}/>
-          <span class="planner-checklist-box" aria-hidden="true"></span>
+      <li class="planner-checklist-item">
+        <div class="planner-checklist-row">
           ${it.icon ? `<span class="planner-checklist-icon" aria-hidden="true">${icon(it.icon, 'icon-sm')}</span>` : ''}
           <span class="planner-checklist-text">
             <strong>${escapeXml(it.text)}</strong>
             ${it.detail ? `<span class="planner-checklist-detail">${escapeXml(it.detail)}</span>` : ''}
           </span>
-        </label>${link ? `<div class="planner-checklist-link-row">${link}</div>` : ''}
+        </div>${link ? `<div class="planner-checklist-link-row">${link}</div>` : ''}
       </li>`;
   }).join('');
   return `
     <div class="planner-checklist-head">
       <h3>${escapeXml(c.heading)}</h3>
-      <span class="planner-checklist-progress" id="plannerPhase3Progress" aria-live="polite"></span>
     </div>
     ${c.intro ? `<p class="planner-checklist-intro">${escapeXml(c.intro)}</p>` : ''}
     <ul class="planner-checklist-list">${rows}</ul>`;
@@ -1820,9 +1894,9 @@ function phase3ChecklistPrintHtml() {
   const c = plannerState.data.planner.phase3Checklist;
   const items = phase3ChecklistItems();
   if (!items.length) return '';
-  return `<h3>${escapeXml(c.heading)}</h3><ul class="print-checklist">${items.map((it, i) => `
+  return `<h3>${escapeXml(c.heading)}</h3>${c.intro ? `<p>${escapeXml(c.intro)}</p>` : ''}<ul class="print-checklist">${items.map(it => `
     <li>
-      <span class="print-check-title">${plannerState.phase3Checks[i] ? '☑' : '☐'} ${escapeXml(it.text)}</span>
+      <span class="print-check-title">${escapeXml(it.text)}</span>
       ${it.detail ? `<span class="print-check-detail">${escapeXml(it.detail)}</span>` : ''}
       ${checklistLinks(it).length ? `<span class="print-check-link">${checklistLinks(it).map(l => `${escapeXml(l.text)} →`).join('&nbsp;&nbsp;·&nbsp;&nbsp;')}</span>` : ''}
     </li>`).join('')}</ul>`;
@@ -1859,7 +1933,7 @@ function buildEmailPlanSummary(data) {
   const checklist = phase3ChecklistItems();
   if (checklist.length) {
     lines.push('', `${data.planner.phase3Checklist.heading}:`);
-    checklist.forEach((it, i) => lines.push(`  [${plannerState.phase3Checks[i] ? 'x' : ' '}] ${it.text}`));
+    checklist.forEach(it => lines.push(`  - ${it.text}`));
   }
   return lines.join('\n');
 }
@@ -1949,7 +2023,6 @@ function generatePlan() {
   const checklistEl = document.getElementById('plannerPhase3Checklist');
   checklistEl.innerHTML = phase3ChecklistHtml();
   checklistEl.hidden = !phase3ChecklistItems().length;
-  updatePhase3Progress();
   [1, 2, 3].forEach(n => {
     const el = document.getElementById(`plannerPhase${n}CommentInput`);
     if (el && document.activeElement !== el) el.value = plannerState.phaseComments[n - 1] || '';
