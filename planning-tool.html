@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=69" />
+  <link rel="stylesheet" href="styles.css?v=70" />
 </head>
 <body>
 <script src="icons.js?v=2"></script>
@@ -125,9 +125,13 @@
       <div class="planner-stepper" id="plannerStepper"></div>
       <button type="button" class="planner-restart-link" id="plannerRestartLink"></button>
     </div>
+    <!-- Shown on the five level steps: they can be done in any order -->
+    <p class="planner-order-note" id="plannerOrderNote" hidden></p>
 
     <div class="planner-step-header" id="plannerStepHeader">
       <h3 id="plannerStepTitle"></h3>
+      <!-- The level's definition (same text as on Start Here) on its own step -->
+      <p class="planner-step-definition" id="plannerStepDefinition" hidden></p>
       <p id="plannerStepHint"></p>
       <p class="planner-step-goal" id="plannerStepGoal"></p>
     </div>
@@ -202,6 +206,8 @@
          intervention picker (dropdown + write-in), so every factor ends up
          with at least one assigned strategy/practice (multiple allowed) -->
     <div class="intervention-step" id="plannerResourcePlanSection" hidden>
+      <!-- Opens in a new tab so the plan in progress isn't lost -->
+      <p class="planner-library-link" id="plannerLibraryLink"></p>
       <div id="interventionFactorsList" class="intervention-factors-list"></div>
     </div>
 
@@ -274,7 +280,7 @@
 </footer>
 
 <script src="content-loader.js?v=3"></script>
-<script src="planner.js?v=69"></script>
+<script src="planner.js?v=70"></script>
 <script src="goal-banner.js?v=3"></script>
 </body>
 </html>

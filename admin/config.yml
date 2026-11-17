@@ -352,7 +352,7 @@ collections:
                   - {label: "Label", name: "label", widget: "string"}
                   - {label: "Risk Placeholder (example shown in the input box and on Start Here)", name: "placeholderRisk", widget: "string"}
                   - {label: "Protective Placeholder (example shown in the input box and on Start Here)", name: "placeholderProtective", widget: "string"}
-                  - {label: "Description (Start Here circle map)", name: "description", widget: "text", required: false}
+                  - {label: "Definition (shown on Start Here and on this level's own step)", name: "description", widget: "text", required: false}
               - label: "Step 1: Start Here (a short guided tour before Community / Structural)"
                 name: "orientation"
                 widget: "object"
@@ -395,6 +395,13 @@ collections:
                       - {label: "Hint", name: "hint", widget: "string"}
                       - {label: "'Risk example' Label", name: "riskLabel", widget: "string"}
                       - {label: "'Protective example' Label", name: "protectiveLabel", widget: "string"}
+              - {label: "'Any order' note (shown on the five level steps)", name: "levelOrderNote", widget: "string"}
+              - label: "Treatment Library link (top of Select Interventions; opens in a new tab)"
+                name: "libraryLink"
+                widget: "object"
+                fields:
+                  - {label: "Link Text", name: "text", widget: "string"}
+                  - {label: "Hint (beside the link)", name: "hint", widget: "string", required: false}
               - label: "Link to the Treatment Roadmap (under the intro)"
                 name: "roadmapLink"
                 widget: "object"

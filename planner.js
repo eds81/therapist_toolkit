@@ -54,59 +54,14 @@ const NON_RING_STEP_KEYS = ['orientation', 'topFactors', 'resourcePlan', 'review
 // early; this version number tells the loader to shift it.
 const PLANNER_STEPS_VERSION = 2;
 
-// Which Treatment Roadmap phase each step belongs to (-1 = "Start"), so the
-// stepper can group its steps under the roadmap's three phases.
-function stepPhaseIndex(key) {
-  if (key === 'orientation') return -1;
-  if (key === 'resourcePlan') return 1;
-  if (key === 'review') return 2;
-  return 0; // the five rings + choosing top factors = Phase 1 (case conceptualization)
-}
 
-// How much a given factor is impacting the client (risk) or how strong a
-// support it is (protective). Drives phase-priority scoring and sort order.
-const WEIGHT_LEVELS = [
-  { value: 1, label: 'Minimal' },
-  { value: 2, label: 'Mild' },
-  { value: 3, label: 'Moderate' },
-  { value: 4, label: 'High' },
-  { value: 5, label: 'Severe' }
-];
-const DEFAULT_WEIGHT = 3;
-
-// Same ramp used for the chip border colors (styles.css .planner-chip-*.w*)
-// — capped at the site's existing risk/protective accent colors (#C0392B /
-// #5E9A56) rather than inventing new, more jarring hues.
-const CHIP_COLOR_BY_WEIGHT = {
-  risk: {
-    1: 'hsl(6, 45%, 88%)',
-    2: 'hsl(6, 50%, 78%)',
-    3: 'hsl(6, 55%, 65%)',
-    4: 'hsl(6, 60%, 50%)',
-    5: 'hsl(6, 64%, 36%)'
-  },
-  protective: {
-    1: 'hsl(112, 28%, 85%)',
-    2: 'hsl(112, 28%, 75%)',
-    3: 'hsl(112, 28%, 62%)',
-    4: 'hsl(112, 28%, 48%)',
-    5: 'hsl(112, 28%, 34%)'
-  }
+// One color per side for factor pills, connectors and rings. (Factors used to
+// carry a 1–5 rating that shaded these; pilot clinicians preferred to sort
+// their factors afterward instead, so the rating was removed.)
+const FACTOR_COLORS = {
+  risk: { fill: 'hsl(6, 55%, 77%)', stroke: 'hsl(6, 55%, 65%)', text: 'hsl(6, 60%, 22%)' },
+  protective: { fill: 'hsl(112, 28%, 74%)', stroke: 'hsl(112, 28%, 60%)', text: 'hsl(112, 35%, 18%)' }
 };
-
-// Small filled/unfilled dot row showing a factor's severity (1–5), colored
-// with the exact same weight ramp used for its pill on the ecological map —
-// reused on Select Interventions so the clinician-assigned severity (and its
-// color darkness) stays visible while picking strategies for that factor.
-function severityDotsHtml(valence, weight) {
-  const label = WEIGHT_LEVELS[weight - 1] ? WEIGHT_LEVELS[weight - 1].label : '';
-  const color = CHIP_COLOR_BY_WEIGHT[valence][weight] || CHIP_COLOR_BY_WEIGHT[valence][DEFAULT_WEIGHT];
-  const dots = [1, 2, 3, 4, 5].map(n => {
-    const filled = n <= weight;
-    return `<span class="intervention-severity-dot${filled ? ' filled' : ''}"${filled ? ` style="background:${color}"` : ''}></span>`;
-  }).join('');
-  return `<span class="intervention-severity" title="Severity: ${label} (${weight}/5)" aria-label="Severity ${weight} of 5, ${label}">${dots}</span>`;
-}
 
 // Every ring outline is drawn at the same thickness — only color changes
 // with what's mapped to a given ring.
@@ -136,12 +91,10 @@ const MAP_PILL_GAP = 36; // gap between the outer ring's edge and the pill zone
 // center and stopping at that pill's own ring — see stackColumn() below.
 const MAP_CONNECTOR_WIDTH = 3;
 const MAP_ENDPOINT_DOT_R = 4;
-// Pills are laid out top-down: the weight dots sit in their own row above
-// the text, then the (possibly multi-line) text follows below.
-const MAP_PILL_TOP_PAD = 16;   // pill top edge -> dot row
-const MAP_PILL_DOT_TEXT_GAP = 26; // dot row -> first text baseline
+// Pills are laid out top-down: padding, then the (possibly multi-line) text.
+const MAP_PILL_TOP_PAD = 26;      // pill top edge -> first text baseline
 const MAP_PILL_BOTTOM_PAD = 14;   // last text baseline -> pill bottom
-const MAP_PILL_H = MAP_PILL_TOP_PAD + MAP_PILL_DOT_TEXT_GAP + MAP_PILL_BOTTOM_PAD; // minimum (single-line) height
+const MAP_PILL_H = MAP_PILL_TOP_PAD + MAP_PILL_BOTTOM_PAD; // minimum (single-line) height
 
 function mapRingRadius(ringRadii, ring) {
   return ringRadii[ring];
@@ -286,12 +239,10 @@ function mapRingVisual(ring) {
   const riskFactors = plannerState.factors[ring].risk;
   const protFactors = plannerState.factors[ring].protective;
   const hasRisk = riskFactors.length > 0, hasProt = protFactors.length > 0;
-  const riskMax = hasRisk ? Math.max(...riskFactors.map(f => f.weight)) : 0;
-  const protMax = hasProt ? Math.max(...protFactors.map(f => f.weight)) : 0;
   let stroke = 'var(--cream-dark)';
   if (hasRisk && hasProt) stroke = 'var(--teal)';
-  else if (hasRisk) stroke = CHIP_COLOR_BY_WEIGHT.risk[riskMax];
-  else if (hasProt) stroke = CHIP_COLOR_BY_WEIGHT.protective[protMax];
+  else if (hasRisk) stroke = FACTOR_COLORS.risk.stroke;
+  else if (hasProt) stroke = FACTOR_COLORS.protective.stroke;
   return { stroke, strokeWidth: RING_STROKE_WIDTH, hasRisk, hasProt };
 }
 
@@ -310,12 +261,12 @@ function buildEcoMapSvg(opts) {
 
   // One pill per ring per side — never more than 5 pills on either side. A
   // ring with several factors gets one pill with a row per factor, each row
-  // keeping its own severity color, weight dots, and remove button.
+  // with its own remove button.
   function pillsFor(valence) {
     const rings = onlyCurrentRing && currentRing ? [currentRing] : RING_ORDER;
     const pills = [];
     rings.forEach(ring => {
-      const rows = plannerState.factors[ring][valence].map((f, idx) => ({ idx, id: f.id, text: f.text, weight: f.weight }));
+      const rows = plannerState.factors[ring][valence].map((f, idx) => ({ idx, id: f.id, text: f.text }));
       if (rows.length) pills.push({ ring, id: `${valence}-${ring}`, rows }); // group id drives hover/highlight
     });
     return pills;
@@ -334,8 +285,7 @@ function buildEcoMapSvg(opts) {
         return { ...r, lines, h: MAP_PILL_H + (lines.length - 1) * MAP_PILL_LINE_H };
       });
       const h = rows.reduce((sum, r) => sum + r.h, 0);
-      const weight = Math.max(...rows.map(r => r.weight)); // connector takes the strongest row's color
-      return { ...g, rows, w: uniformW, h, weight };
+      return { ...g, rows, w: uniformW, h };
     });
   }
   const riskPills = preparedPills('risk');
@@ -416,7 +366,7 @@ function buildEcoMapSvg(opts) {
     let lines = '', pillsHtml = '';
     records.forEach(rec => {
       const { item, w, h, y, pillX, lineStartX, entryX, entryY } = rec;
-      const color = CHIP_COLOR_BY_WEIGHT[valence][item.weight];
+      const color = FACTOR_COLORS[valence].stroke;
 
       // One straight line, pill to ring — never an elbow. A small terminal
       // dot caps the endpoint so the ring it belongs to reads
@@ -433,28 +383,14 @@ function buildEcoMapSvg(opts) {
 
       let rowTop = pillTop;
       const rowsHtml = item.rows.map((row, ri) => {
-        const rowColor = CHIP_COLOR_BY_WEIGHT[valence][row.weight];
-        const textColor = row.weight >= 5 ? '#FFFFFF' : (valence === 'risk' ? 'hsl(6,55%,24%)' : 'hsl(112,35%,20%)');
-        // Laid out from the row's top edge down: dots first, then the
-        // (possibly multi-line) text below them.
-        const dotY = rowTop + MAP_PILL_TOP_PAD;
-        const firstLineY = dotY + MAP_PILL_DOT_TEXT_GAP;
+        const rowColor = FACTOR_COLORS[valence].fill;
+        const textColor = FACTOR_COLORS[valence].text;
+        const firstLineY = rowTop + MAP_PILL_TOP_PAD;
 
-        // Each dot gets a generously-sized invisible hit circle around the
-        // small visible one, so the weight is actually clickable/tappable.
-        const dots = Array.from({ length: 5 }, (_, di) => {
-          const dotX = valence === 'risk' ? (pillX + 21 + di * 10) : (pillX + w - 21 - (4 - di) * 10);
-          return `
-            <g class="eco-wdot-hit" data-ring="${item.ring}" data-valence="${valence}" data-index="${row.idx}" data-value="${di + 1}">
-              <circle cx="${dotX.toFixed(1)}" cy="${dotY.toFixed(1)}" r="9" fill="transparent"/>
-              <circle class="eco-wdot${di < row.weight ? ' filled' : ''}" cx="${dotX.toFixed(1)}" cy="${dotY.toFixed(1)}" r="3.6"/>
-            </g>`;
-        }).join('');
-
-        // Outside the pill on the page background, aligned with this row's
-        // dot row — always a fixed dark color so it never blends in.
+        // Outside the pill on the page background, level with this row's
+        // first line of text — always a fixed dark color so it never blends in.
         const removeBtn = locked ? '' : `
-          <g class="eco-pill-remove" data-ring="${item.ring}" data-valence="${valence}" data-index="${row.idx}" transform="translate(${removeX.toFixed(1)},${dotY.toFixed(1)})" style="color:var(--text)">
+          <g class="eco-pill-remove" data-ring="${item.ring}" data-valence="${valence}" data-index="${row.idx}" transform="translate(${removeX.toFixed(1)},${(firstLineY - 6).toFixed(1)})" style="color:var(--text)">
             <circle r="9" fill="transparent"/>
             <line x1="-4" y1="-4" x2="4" y2="4"/><line x1="-4" y1="4" x2="4" y2="-4"/>
           </g>`;
@@ -471,7 +407,7 @@ function buildEcoMapSvg(opts) {
         const html = `
           <g class="eco-pill-row" style="color:${textColor}">
             <rect class="eco-pill-row-bg" x="${pillX.toFixed(1)}" y="${rowTop.toFixed(1)}" width="${w.toFixed(1)}" height="${row.h.toFixed(1)}" fill="${rowColor}" clip-path="url(#${clipId})"/>
-            ${divider}${textHtml}${dots}
+            ${divider}${textHtml}
           </g>${removeBtn}`;
         rowTop += row.h;
         return html;
@@ -545,12 +481,12 @@ function loadPersistedPlannerState() {
     const saved = JSON.parse(raw);
     if (!saved || !saved.factors) return;
     plannerState.nextFactorId = saved.nextFactorId || 1;
-    // Upgrade factors saved before weighting/ids existed (plain strings, or
-    // objects missing an id) into the current {id, text, weight} shape.
+    // Upgrade factors saved in older shapes (plain strings, objects missing
+    // an id, or with the retired 1–5 rating) into the current {id, text} shape.
     const toFactor = f => {
-      if (typeof f === 'string') f = { text: f, weight: DEFAULT_WEIGHT };
+      if (typeof f === 'string') f = { text: f };
       if (!f.id) f.id = plannerState.nextFactorId++;
-      return f;
+      return { id: f.id, text: f.text };
     };
     RING_ORDER.forEach(r => {
       if (!saved.factors[r]) return;
@@ -656,6 +592,16 @@ function renderPlanner(data) {
   document.getElementById('plannerSubheading').textContent = p.subheading || '';
   document.getElementById('plannerIntro').innerHTML = String(p.intro || '').split(/\n\s*\n/)
     .map(para => `<p>${escapeXml(para.trim())}</p>`).join('');
+  // Five level steps: a note that they can be done in any order.
+  const orderNote = document.getElementById('plannerOrderNote');
+  orderNote.innerHTML = p.levelOrderNote ? `${icon('ic-compass', 'icon-sm')}<span>${escapeXml(p.levelOrderNote)}</span>` : '';
+
+  // Select Interventions: the Treatment Library, in a new tab.
+  const lib = p.libraryLink;
+  document.getElementById('plannerLibraryLink').innerHTML = lib && lib.text
+    ? `${icon('ic-book-open', 'icon-sm')}<a href="resource-library.html" target="_blank" rel="noopener">${escapeXml(lib.text)} <span class="sr-only">(opens in a new tab)</span>${icon('i-arrow-right', 'icon-xs')}</a>${lib.hint ? `<span class="planner-library-link-hint">${escapeXml(lib.hint)}</span>` : ''}`
+    : '';
+
   const rl = p.roadmapLink;
   const rlEl = document.getElementById('plannerRoadmapLink');
   if (rl && rl.text) {
@@ -690,10 +636,6 @@ function renderPlanner(data) {
   document.getElementById('plannerEmailBtn').textContent = p.emailPlan.buttonLabel;
   document.getElementById('plannerEmailHint').textContent = p.emailPlan.hint;
 
-  function weightOptionsHtml() {
-    return WEIGHT_LEVELS.map(w => `<option value="${w.value}"${w.value === 3 ? ' selected' : ''}>${w.value} — ${w.label}</option>`).join('');
-  }
-
   function rowsHtml(valence) {
     return p.rings.map(r => `
       <div class="planner-row" data-ring="${r.key}">
@@ -701,10 +643,6 @@ function renderPlanner(data) {
         <div class="planner-input-group">
           <input type="text" class="planner-input" data-ring="${r.key}" data-valence="${valence}"
                  placeholder="${valence === 'risk' ? r.placeholderRisk : r.placeholderProtective}" />
-          <select class="planner-weight-select" data-ring="${r.key}" data-valence="${valence}"
-                  title="${valence === 'risk' ? 'How much is this impacting the client?' : 'How strong is this protective factor?'}">
-            ${weightOptionsHtml()}
-          </select>
           <button type="button" class="planner-add-btn planner-add-btn-${valence}" data-ring="${r.key}" data-valence="${valence}" aria-label="${p.addButtonLabel}">${icon('i-plus', 'icon-xs')}</button>
         </div>
       </div>`).join('');
@@ -719,28 +657,7 @@ function renderPlanner(data) {
   const STEP_ICONS = { orientation: 'ic-compass', community: 'ic-building', school: 'ic-school', family: 'ic-home', peer: 'ic-users', client: 'ic-user',
     topFactors: 'ic-star', resourcePlan: 'ic-tool', review: 'ic-clipboard' };
 
-  // The roadmap's phases sit above the steps they cover, so the planner
-  // visibly moves through Phase 1 → 2 → 3.
-  const groups = [];
-  STEP_KEYS.forEach(key => {
-    const ph = stepPhaseIndex(key);
-    if (!groups.length || groups[groups.length - 1].phase !== ph) groups.push({ phase: ph, count: 0 });
-    groups[groups.length - 1].count++;
-  });
-  const phaseBarHtml = groups.map(g => {
-    let name = orient.stepperGroupLabel || 'Start', sub = '';
-    if (g.phase >= 0) {
-      const title = (roadmapPhases[g.phase] && roadmapPhases[g.phase].title) || `Phase ${g.phase + 1}`;
-      const m = title.match(/^(Phase\s*\d+)\s*[:\-–]\s*(.+)$/i);
-      name = m ? m[1] : title;
-      sub = m ? m[2] : '';
-    }
-    return `<div class="planner-phase-seg planner-phase-seg-${g.phase + 1}" data-phase="${g.phase}" style="flex:${g.count}">
-      <span class="planner-phase-seg-name">${escapeXml(name)}</span>${sub ? `<span class="planner-phase-seg-sub">${escapeXml(sub)}</span>` : ''}
-    </div>`;
-  }).join('');
   document.getElementById('plannerStepper').innerHTML = `
-    <div class="planner-phase-bar" aria-hidden="true">${phaseBarHtml}</div>
     <div class="planner-stepper-steps">${stepLabels.map((label, i) => `
       <button type="button" class="planner-step-item" data-step-index="${i}" data-ring="${STEP_KEYS[i]}" aria-label="Step ${i + 1}: ${label}">
         <span class="planner-step-dot">${icon(STEP_ICONS[STEP_KEYS[i]] || 'ic-clipboard', 'step-icon')}</span>
@@ -1061,10 +978,6 @@ function initPlanner() {
       item.classList.toggle('is-done', i < plannerState.currentStep);
       item.classList.add('is-clickable'); // free navigation — every step is reachable at any time
     });
-    const currentPhase = stepPhaseIndex(STEP_KEYS[plannerState.currentStep]);
-    document.querySelectorAll('.planner-phase-seg').forEach(seg => {
-      seg.classList.toggle('is-current', parseInt(seg.dataset.phase, 10) === currentPhase);
-    });
   }
 
   // When you move to another step from further down the page, bring the new
@@ -1136,7 +1049,7 @@ function initPlanner() {
     // Review gets the same "Step X of Y: Label" header as every other step —
     // no separate custom heading/intro. The last three steps conclude the
     // mapping activity as three named phases.
-    let title, hint;
+    let title, hint, definition = '';
     if (isOrientation) {
       title = `Step ${index + 1} of ${STEP_KEYS.length}: ${(p.orientation && p.orientation.title) || 'Start Here'}`;
       hint = (p.orientation && p.orientation.hint) || '';
@@ -1147,6 +1060,7 @@ function initPlanner() {
       const ringData = p.rings.find(r => r.key === stepKey);
       title = `Step ${index + 1} of ${STEP_KEYS.length}: ${ringData.label}`;
       hint = p.stepHint;
+      definition = ringData.description || '';
     } else if (isTopFactorsStep) {
       title = `Step ${index + 1} of ${STEP_KEYS.length}: Identify Top Factors Impacting the Client`;
       hint = 'Drag — or click — your top risk and protective factors into the boxes below. At least 3 of each is a good start — add a 4th, 5th, or more with the + button or by dropping in extra factors from the lists above.';
@@ -1155,6 +1069,12 @@ function initPlanner() {
       hint = 'Type to choose a strategy or practice for each factor below, or write in your own — add as many as you need per factor.';
     }
     document.getElementById('plannerStepTitle').textContent = title;
+    // Each level's definition comes from the same planner.rings[].description
+    // used on Start Here, so it's written (and edited in the CMS) once.
+    const defEl = document.getElementById('plannerStepDefinition');
+    defEl.textContent = definition;
+    defEl.hidden = !definition;
+    document.getElementById('plannerOrderNote').hidden = !isRingStep || !p.levelOrderNote;
     document.getElementById('plannerStepHint').textContent = hint;
     // Same goal reminder on every step, worded for what that step asks of you.
     const goalStepKey = isRingStep ? 'ring' : stepKey;
@@ -1181,7 +1101,7 @@ function initPlanner() {
   }
 
   // The factor rows stay visible (as reference) on both curation steps, so
-  // adding/removing/reweighting a factor from there must refresh whichever
+  // adding/removing a factor from there must refresh whichever
   // curation step is currently showing — otherwise its pool goes stale.
   function refreshActiveCurationStep() {
     const key = STEP_KEYS[plannerState.currentStep];
@@ -1192,12 +1112,10 @@ function initPlanner() {
     if (key === 'review') generatePlan();
   }
 
-  function addFactor(ring, valence, text, weight) {
+  function addFactor(ring, valence, text) {
     text = text.trim();
     if (!text) return;
-    weight = parseInt(weight, 10);
-    if (!weight || weight < 1 || weight > 5) weight = DEFAULT_WEIGHT;
-    plannerState.factors[ring][valence].push({ id: plannerState.nextFactorId++, text, weight });
+    plannerState.factors[ring][valence].push({ id: plannerState.nextFactorId++, text });
     renderEcoMap();
     updateGenerateState();
     refreshActiveCurationStep();
@@ -1223,8 +1141,7 @@ function initPlanner() {
     btn.addEventListener('click', () => {
       const { ring, valence } = btn.dataset;
       const input = layout.querySelector(`.planner-input[data-ring="${ring}"][data-valence="${valence}"]`);
-      const weightSelect = layout.querySelector(`.planner-weight-select[data-ring="${ring}"][data-valence="${valence}"]`);
-      addFactor(ring, valence, input.value, weightSelect.value);
+      addFactor(ring, valence, input.value);
       input.value = '';
       input.focus();
     });
@@ -1234,29 +1151,14 @@ function initPlanner() {
     input.addEventListener('keydown', e => {
       if (e.key !== 'Enter') return;
       e.preventDefault();
-      const weightSelect = layout.querySelector(`.planner-weight-select[data-ring="${input.dataset.ring}"][data-valence="${input.dataset.valence}"]`);
-      addFactor(input.dataset.ring, input.dataset.valence, input.value, weightSelect.value);
+      addFactor(input.dataset.ring, input.dataset.valence, input.value);
       input.value = '';
     });
   });
 
-  function setFactorWeight(ring, valence, index, weight) {
-    const factor = plannerState.factors[ring][valence][index];
-    if (!factor) return;
-    factor.weight = parseInt(weight, 10);
-    renderEcoMap();
-    refreshActiveCurationStep();
-    persistPlannerState();
-  }
-
   const ecoMapEl = document.getElementById('plannerEcoMap');
   if (ecoMapEl) {
     ecoMapEl.addEventListener('click', e => {
-      const dot = e.target.closest('.eco-wdot-hit');
-      if (dot) {
-        setFactorWeight(dot.dataset.ring, dot.dataset.valence, parseInt(dot.dataset.index, 10), parseInt(dot.dataset.value, 10));
-        return;
-      }
       const removeBtn = e.target.closest('.eco-pill-remove');
       if (!removeBtn) return;
       removeFactor(removeBtn.dataset.ring, removeBtn.dataset.valence, parseInt(removeBtn.dataset.index, 10));
@@ -1278,7 +1180,7 @@ function initPlanner() {
     if (!section) return;
 
     const poolChipHtml = f => `
-      <span class="planner-chip planner-chip-${f.valence} w${f.weight} planner-pool-chip" draggable="true" data-id="${f.id}" data-valence="${f.valence}">
+      <span class="planner-chip planner-chip-${f.valence} planner-pool-chip" draggable="true" data-id="${f.id}" data-valence="${f.valence}">
         <span class="planner-chip-text">${f.text}</span>
         <span class="planner-chip-ring-tag">${f.ringLabel}</span>
       </span>`;
@@ -1314,7 +1216,7 @@ function initPlanner() {
         }
         return `<div class="planner-slot is-filled" data-valence="${valence}" data-slot-index="${i}">
           <span class="planner-slot-num">${i + 1}</span>
-          <span class="planner-chip planner-chip-${valence} w${found.weight}">
+          <span class="planner-chip planner-chip-${valence}">
             <span class="planner-chip-text">${found.text}</span>
             <span class="planner-chip-ring-tag">${found.ringLabel}</span>
             <button type="button" class="planner-chip-remove" data-clear-slot="${valence}:${i}" aria-label="Remove">${icon('i-x', 'icon-xs')}</button>
@@ -1429,7 +1331,7 @@ function initPlanner() {
           <div class="intervention-factor-header">
             <span class="planner-note-tag planner-note-tag-${f.valence}">${f.valence === 'risk' ? 'Risk' : 'Protective'}</span>
             <strong class="intervention-factor-name">${escapeXml(f.text)}</strong>
-            ${severityDotsHtml(f.valence, f.weight)}
+            <span class="intervention-factor-ring">${escapeXml(f.ringLabel)}</span>
           </div>
           <div class="intervention-input-row">
             <div class="intervention-combo">
@@ -1748,7 +1650,7 @@ function allFactorsHtml() {
   const listFor = valence => {
     const items = allFactorsList(valence);
     if (!items.length) return `<p class="planner-resource-empty">No ${valence === 'risk' ? 'risk' : 'protective'} factors entered.</p>`;
-    return `<ol class="planner-top-list">${items.map(it => `<li>${it.text} <em>(${it.ringLabel} · ${it.weight}/5)</em></li>`).join('')}</ol>`;
+    return `<ol class="planner-top-list">${items.map(it => `<li>${escapeXml(it.text)} <em>(${escapeXml(it.ringLabel)})</em></li>`).join('')}</ol>`;
   };
   return `
     <h3>Factors</h3>
@@ -1761,12 +1663,12 @@ function allFactorsHtml() {
 function topContributorsPrintHtml() {
   const listFor = valence => {
     const items = plannerState.topContributors[valence].map(id => id !== null ? topContributorFactor(valence, id) : null).filter(Boolean);
-    return items.length ? items.map(it => `${it.text} (${it.ringLabel} · ${it.weight}/5)`).join('; ') : 'None selected';
+    return items.length ? items.map(it => `${escapeXml(it.text)} (${escapeXml(it.ringLabel)})`).join('; ') : 'None selected';
   };
   return `<h3>Top Contributors</h3><ul><li><strong>Top Risk Factors:</strong> ${listFor('risk')}</li><li><strong>Top Protective Factors:</strong> ${listFor('protective')}</li></ul>`;
 }
 
-// Each top factor shown with its severity, its ecological placement (which
+// Each top factor shown with its ecological placement (which
 // ring it was entered under), and whatever intervention(s) were picked for
 // it — the curated counterpart to the full list in "Factors" above.
 function interventionsHtml() {
@@ -1791,7 +1693,6 @@ function interventionsHtml() {
           </span>
           <span class="intervention-review-meta">
             <span class="intervention-review-ring">${escapeXml(f.ringLabel)}</span>
-            ${severityDotsHtml(f.valence, f.weight)}
           </span>
         </td>
         <td class="intervention-review-practice-cell" data-label="Intervention(s)">${practices}</td>
@@ -1812,7 +1713,7 @@ function myInterventionsPrintHtml() {
     const list = plannerState.interventionsByFactor[f.id] || [];
     const practices = list.map(name => `<li>${escapeXml(name)}</li>`).join('');
     return `<tr>
-      <td><strong>${f.valence === 'risk' ? 'Risk' : 'Protective'}</strong> · ${escapeXml(f.text)}<br><span class="print-int-meta">${escapeXml(f.ringLabel)} · ${f.weight}/5</span></td>
+      <td><strong>${f.valence === 'risk' ? 'Risk' : 'Protective'}</strong> · ${escapeXml(f.text)}<br><span class="print-int-meta">${escapeXml(f.ringLabel)}</span></td>
       <td>${list.length ? `<ul>${practices}</ul>` : '<em>No intervention selected yet</em>'}</td>
     </tr>`;
   });
@@ -1927,7 +1828,7 @@ function phase3ChecklistPrintHtml() {
     </li>`).join('')}</ul>`;
 }
 
-// Opt-in "Email My Plan" — a plain-text mailto summary (factors, severities,
+// Opt-in "Email My Plan" — a plain-text mailto summary (factors and
 // interventions), not the formatted PDF. No backend exists on this static
 // site to send mail directly, so this opens the clinician's own email
 // client, pre-filled, and lets them review/send it themselves — the same
@@ -1942,8 +1843,8 @@ function buildEmailPlanSummary(data) {
     const protective = plannerState.factors[ring].protective;
     if (!risk.length && !protective.length) return;
     lines.push(`${plannerState.ringLabelByKey[ring]}:`);
-    risk.forEach(f => lines.push(`  Risk: ${f.text} (${f.weight}/5)`));
-    protective.forEach(f => lines.push(`  Protective: ${f.text} (${f.weight}/5)`));
+    risk.forEach(f => lines.push(`  Risk: ${f.text}`));
+    protective.forEach(f => lines.push(`  Protective: ${f.text}`));
   });
 
   const factors = selectedTopContributors();
@@ -2011,12 +1912,10 @@ function generatePlan() {
       const factors = plannerState.factors[ring][valence];
       if (!factors.length) return;
       const rec = RING_RECOMMENDATIONS[ring][valence];
-      const maxWeight = Math.max(...factors.map(f => f.weight));
-      notes.push({ ringLabel: ringLabelByKey[ring], valence, text: rec.planNote, weight: maxWeight });
+      notes.push({ ringLabel: ringLabelByKey[ring], valence, text: rec.planNote });
     });
   });
-
-  notes.sort((a, b) => b.weight - a.weight);
+  // Notes follow the ecological levels in mapping order (community → client).
 
   // A plain, unscored, clickable strip — all three cards look the same
   // until hovered/focused or clicked (see initPhaseStripNav/styles.css).
@@ -2099,7 +1998,7 @@ function printTimestamp() {
 
 function buildPrintSheet(data, ringLabelByKey, phases, notes) {
 
-  const fmtFactors = list => list.map(f => `${f.text} (${f.weight}/5)`).join(', ');
+  const fmtFactors = list => list.map(f => f.text).join(', ');
   const factorsHtml = RING_ORDER.map(ring => {
     const risk = plannerState.factors[ring].risk;
     const protective = plannerState.factors[ring].protective;

@@ -44,7 +44,7 @@
     "emailPlan": {
       "buttonLabel": "Email My Plan to the Rise Team",
       "address": "feedback@riseagainstsuicide.org",
-      "hint": "Opt-in — opens your email client with a plain-text summary of what you entered (factors, severities, and interventions), not the formatted PDF. Please remove or de-identify any client details before sending. Sharing this helps the Rise and toolkit development team improve the service."
+      "hint": "Opt-in — opens your email client with a plain-text summary of what you entered (factors and interventions), not the formatted PDF. Please remove or de-identify any client details before sending. Sharing this helps the Rise and toolkit development team improve the service."
     },
     "reviewButtonLabel": "Review Plan",
     "reviewHeading": "Review Your Client Ecological Formulation",
@@ -129,7 +129,7 @@
             {
               "icon": "ic-layers",
               "title": "Map the client's ecosystem",
-              "text": "Add risk and protective factors at each level, and rate how strongly each one affects the client.",
+              "text": "Add risk and protective factors at each level, in whatever order best fits your client.",
               "where": "Steps 2–6"
             },
             {
@@ -223,6 +223,11 @@
     "roadmapLink": {
       "text": "View the Treatment Roadmap",
       "hint": "A high-level overview of the three phases this plan follows."
+    },
+    "levelOrderNote": "You can do this in any order, whichever best reflects your client and your process.",
+    "libraryLink": {
+      "text": "Browse the Treatment Library",
+      "hint": "Opens in a new tab, so you won't lose your progress here."
     }
   },
   "resourceCategories": [
