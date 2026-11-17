@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=68" />
+  <link rel="stylesheet" href="styles.css?v=69" />
 </head>
 <body>
 <script src="icons.js?v=2"></script>
@@ -81,6 +81,7 @@
   </div>
   <nav class="nav-tools" aria-label="Toolkit tools">
     <div class="nav-tools-inner">
+      <a href="roadmap.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-map"/></svg><span>Treatment Roadmap</span></a>
       <a href="planning-tool.html" class="nav-tool active" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#ic-target"/></svg><span>Treatment Planning Tool</span></a>
       <a href="safety-plan.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-shield"/></svg><span>Make A Safety Plan</span></a>
       <a href="resource-library.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-book-open"/></svg><span>Treatment Library</span></a>
@@ -91,6 +92,7 @@
   </nav>
   <div class="nav-mobile" id="navMobile">
     <span class="nav-mobile-label">Toolkit tools</span>
+    <a href="roadmap.html"><svg class="icon" aria-hidden="true"><use href="#ic-map"/></svg><span>Treatment Roadmap</span></a>
     <a href="planning-tool.html" class="active" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#ic-target"/></svg><span>Treatment Planning Tool</span></a>
     <a href="safety-plan.html"><svg class="icon" aria-hidden="true"><use href="#ic-shield"/></svg><span>Make A Safety Plan</span></a>
     <a href="resource-library.html"><svg class="icon" aria-hidden="true"><use href="#ic-book-open"/></svg><span>Treatment Library</span></a>
@@ -108,18 +110,9 @@
     <h1 data-fade data-delay="1" id="plannerHeading"></h1>
     <p class="planner-subheading" data-fade data-delay="1" id="plannerSubheading"></p>
     <div class="planner-intro" data-fade data-delay="2" id="plannerIntro"></div>
+    <!-- Back to the high-level overview on its own tab -->
+    <p class="planner-roadmap-link" data-fade data-delay="2" id="plannerRoadmapLink"></p>
     <div class="goal-banner" data-goal-banner="planner" hidden></div>
-  </div>
-</section>
-
-<!-- TREATMENT ROADMAP — your toolkit across a Rise treatment. The planner's
-     steps below follow these same three phases. -->
-<section class="journey planner-roadmap" id="roadmap">
-  <div class="section-inner">
-    <div class="section-label" data-fade id="journeyLabel"></div>
-    <h2 data-fade data-delay="1" id="journeyHeading"></h2>
-    <p class="section-intro" data-fade data-delay="2" id="journeyIntro"></p>
-    <div class="journey-phases" data-fade data-delay="3" id="journeyPhases"></div>
   </div>
 </section>
 
@@ -280,8 +273,8 @@
   </div>
 </footer>
 
-<script src="content-loader.js?v=2"></script>
-<script src="planner.js?v=68"></script>
+<script src="content-loader.js?v=3"></script>
+<script src="planner.js?v=69"></script>
 <script src="goal-banner.js?v=3"></script>
 </body>
 </html>

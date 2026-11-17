@@ -9,7 +9,8 @@ const SITE_CONTENT_FILES = [
   'site',                 // site-wide: goal banner + footer
   'home',                 // hero + toolkit FAQ
   'about',                // about, why, toolkit/roadmap, research, team
-  'planner',              // Planning Tool
+  'roadmap',              // Treatment Roadmap (phases also used by the Planning Tool)
+  'planner',              // Treatment Planning Tool
   'safety-plan',          // Make A Safety Plan
   'community-resources',  // Community Resources
   'schools',              // Navigating Schools

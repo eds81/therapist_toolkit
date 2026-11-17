@@ -136,12 +136,12 @@ function render(data) {
 }
 
 // ── Old deep links ───────────────────────────
-// Sections that moved off this page: the Treatment Roadmap and ecosystem now
-// live on the Treatment Planning Tool page, and the schools tab has its own page.
+// Sections that moved off this page: the Treatment Roadmap now has its own tab
+// (the ecosystem lives in the Treatment Planning Tool), and the schools tab has its own page.
 function redirectOldLinks() {
   const hash = window.location.hash.replace('#', '');
   if (hash === 'tab-schools') { window.location.replace('schools.html'); return true; }
-  if (['tab-roadmap', 'toolkit', 'howToUse', 'about'].includes(hash)) { window.location.replace('planning-tool.html#roadmap'); return true; }
+  if (['tab-roadmap', 'toolkit', 'howToUse', 'about'].includes(hash)) { window.location.replace('roadmap.html'); return true; }
   return false;
 }
 

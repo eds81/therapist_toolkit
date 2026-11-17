@@ -656,7 +656,11 @@ function renderPlanner(data) {
   document.getElementById('plannerSubheading').textContent = p.subheading || '';
   document.getElementById('plannerIntro').innerHTML = String(p.intro || '').split(/\n\s*\n/)
     .map(para => `<p>${escapeXml(para.trim())}</p>`).join('');
-  renderRoadmapBand(data);
+  const rl = p.roadmapLink;
+  const rlEl = document.getElementById('plannerRoadmapLink');
+  if (rl && rl.text) {
+    rlEl.innerHTML = `<a href="roadmap.html">${icon('ic-map', 'icon-sm')}<span>${escapeXml(rl.text)}</span> ${icon('i-arrow-right', 'icon-xs')}</a>${rl.hint ? `<span class="planner-roadmap-link-hint">${escapeXml(rl.hint)}</span>` : ''}`;
+  } else rlEl.hidden = true;
   renderOrientation(data);
   renderExtensionLinks(p);
   document.getElementById('plannerDisclaimer').innerHTML = `${icon('i-shield', 'icon-sm')}<span>${p.disclaimer}</span>`;
@@ -743,60 +747,6 @@ function renderPlanner(data) {
         <span class="planner-step-label">${label}</span>
       </button>`).join('')}
     </div>`;
-}
-
-// ── Treatment Roadmap band (top of the page) ──
-// One card per phase: what happens, the roadmap's focus items, the toolkit
-// tools that do the most work, sample interventions, and a button that jumps
-// to that phase's steps in the planner below.
-const TOOL_ICONS = { planner: 'ic-target', safety: 'ic-shield', library: 'ic-book-open', community: 'ic-map-pin', schools: 'ic-school', selfcare: 'ic-heart' };
-const PHASE_ICONS = ['ic-search', 'ic-tool', 'ic-flag'];
-const PHASE_FIRST_STEP = [STEP_KEYS.indexOf(RING_ORDER[0]), STEP_KEYS.indexOf('resourcePlan'), STEP_KEYS.indexOf('review')];
-
-function renderRoadmapBand(data) {
-  const journey = data.journey;
-  const phases = (data.toolkit && data.toolkit.tabs.roadmap.phases) || [];
-  if (!journey) { document.getElementById('roadmap').hidden = true; return; }
-  const toolByKey = {};
-  ((data.tour && data.tour.tools) || []).forEach(t => { toolByKey[t.key] = t; });
-  const ext = data.planner.extension;
-  const chip = key => {
-    const t = toolByKey[key];
-    if (!t) return '';
-    const href = key === 'planner' ? '#planner' : t.href;
-    return `<a class="journey-chip journey-chip-${key}" href="${href}">${icon(TOOL_ICONS[key] || 'ic-layers', 'icon-xs')}${escapeXml(t.title)}</a>`;
-  };
-  document.getElementById('journeyLabel').textContent = journey.sectionLabel;
-  document.getElementById('journeyHeading').textContent = journey.heading;
-  document.getElementById('journeyIntro').textContent = journey.intro;
-  document.getElementById('journeyPhases').innerHTML = journey.phases.map((jp, i) => {
-    const ph = phases[i] || {};
-    let extHtml = '';
-    if (ext && ext.href && i === 1) extHtml = `<a class="journey-extension" href="${ext.href}" target="_blank" rel="noopener">${icon('ic-refresh', 'icon-xs')}${escapeXml(ext.phase2LinkText)}</a>`;
-    if (ext && ext.href && i === 2) extHtml = `<a class="journey-extension" href="${ext.href}" target="_blank" rel="noopener">${icon('ic-refresh', 'icon-xs')}${escapeXml(ext.phase3ButtonText)}</a>`;
-    return `
-      <div class="journey-phase journey-phase-${i + 1}">
-        <div class="journey-phase-head">
-          <span class="journey-phase-num">${i + 1}</span>
-          <div>
-            <strong>${escapeXml(ph.title || '')}</strong>
-            <span>${escapeXml(ph.sessions || '')}</span>
-          </div>
-        </div>
-        <p>${escapeXml(jp.note)}</p>
-        ${(ph.items || []).length ? `<ul class="journey-focus">${ph.items.map(it => `<li>${escapeXml(it)}</li>`).join('')}</ul>` : ''}
-        <div class="journey-chips">${jp.tools.map(chip).join('')}</div>
-        ${(ph.interventions || []).length ? `
-        <details class="journey-interventions">
-          <summary>Sample interventions</summary>
-          <ul>${ph.interventions.map(it => `<li>${escapeXml(it)}</li>`).join('')}</ul>
-        </details>` : ''}
-        <div class="journey-phase-actions">
-          <button type="button" class="journey-goto" data-goto-phase="${i}">${icon(PHASE_ICONS[i] || 'ic-flag', 'icon-xs')}Plan Phase ${i + 1} ${icon('i-arrow-right', 'icon-xs')}</button>
-          ${extHtml}
-        </div>
-      </div>`;
-  }).join('');
 }
 
 // ── Step 1: Start Here ──
@@ -1728,12 +1678,6 @@ function initPlanner() {
     const btn = e.target.closest('[data-goto-step]');
     if (btn) goToStep(parseInt(btn.dataset.gotoStep, 10));
   });
-  document.querySelectorAll('.journey-goto[data-goto-phase]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      goToStep(PHASE_FIRST_STEP[parseInt(btn.dataset.gotoPhase, 10)]);
-      document.getElementById('plannerDisclaimer').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-  });
 
   document.querySelectorAll('.planner-phase-comment-input').forEach(el => {
     el.addEventListener('input', () => {
@@ -2277,6 +2221,9 @@ window.addEventListener('beforeprint', () => {
   if (plannerState.data && STEP_KEYS[plannerState.currentStep] === 'review') generatePlan();
 });
 
+// The Treatment Roadmap used to be a section of this page (#roadmap); it now has its own tab.
+if (window.location.hash === '#roadmap') window.location.replace('roadmap.html');
+
 // ── Load content, render, then wire up interactions ──
 fetch('content/resources.json', { cache: 'no-cache' }) // always check for the latest library
   .then(res => res.json())
@@ -2294,7 +2241,13 @@ loadSiteContent()
     renderPlanner(data);
     renderFooter(data);
     loadPersistedPlannerState();
+    const stepParam = new URLSearchParams(window.location.search).get('step');
+    if (stepParam && STEP_KEYS.includes(stepParam)) {
+      plannerState.currentStep = STEP_KEYS.indexOf(stepParam);
+      plannerState.openedFromLink = true;
+    }
     initPlanner();
+    if (plannerState.openedFromLink) document.getElementById('plannerDisclaimer').scrollIntoView({ block: 'start' });
     initPhaseStripNav();
     initFadeObserver();
   });
