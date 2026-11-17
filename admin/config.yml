@@ -543,6 +543,14 @@ collections:
               - {label: "Heading", name: "heading", widget: "string"}
               - {label: "Subheading", name: "sub", widget: "text"}
               - {label: "PDF Notice", name: "pdfNotice", widget: "text", hint: "Shown at the top of the page — update or remove once PDFs are fully uploaded."}
+              - label: "How This List Was Curated (DRAFT — CU team to finalize)"
+                name: "curation"
+                widget: "object"
+                required: false
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - {label: "Text", name: "text", widget: "text", hint: "DRAFT text — the CU team will finalize this. Shown at the top of the Treatment Library; leave blank to hide it."}
+                  - {label: "Status (internal, not shown)", name: "status", widget: "select", options: ["draft", "final"], required: false}
           - label: "Search & Filter Labels"
             name: "filters"
             widget: "object"
@@ -551,6 +559,8 @@ collections:
               - {label: "Audience Filter Label", name: "audienceLabel", widget: "string"}
               - {label: "Type Filter Label", name: "typeLabel", widget: "string"}
               - {label: "Theme Filter Label", name: "themeLabel", widget: "string"}
+              - {label: "Modality Filter Label (Practices tab)", name: "modalityLabel", widget: "string"}
+              - {label: "'Untagged' option label (practices with no modality yet)", name: "untaggedLabel", widget: "string"}
               - {label: "Clear Filters Label", name: "clearLabel", widget: "string"}
               - label: "Audience Options (must match the Audience values used below)"
                 name: "audienceOptions"
@@ -564,6 +574,27 @@ collections:
                 name: "themeOptions"
                 widget: "list"
                 field: {label: "Option", name: "option", widget: "string"}
+              - label: "Modality Options (e.g. CBT, DBT, ACT — must match the Modality values used below)"
+                name: "modalityOptions"
+                widget: "list"
+                field: {label: "Option", name: "option", widget: "string"}
+          - label: "Handout Slots (labels for each practice's two handouts)"
+            name: "handouts"
+            widget: "object"
+            fields:
+              - {label: "Heading", name: "heading", widget: "string"}
+              - label: "Therapist handout"
+                name: "therapist"
+                widget: "object"
+                fields:
+                  - {label: "Label", name: "label", widget: "string"}
+                  - {label: "Hint (shown when the handout has no title)", name: "hint", widget: "string"}
+              - label: "Client handout"
+                name: "client"
+                widget: "object"
+                fields:
+                  - {label: "Label", name: "label", widget: "string"}
+                  - {label: "Hint (shown when the handout has no title)", name: "hint", widget: "string"}
           - label: "Tabs (Practices vs. Handouts & Tools)"
             name: "tabs"
             widget: "object"
@@ -614,6 +645,26 @@ collections:
                   - {label: "Group", name: "group", widget: "select", options: [{label: "For therapists", value: "therapist"}, {label: "For clients & families", value: "client"}, {label: "Research", value: "research"}, {label: "More resources", value: "other"}]}
                   - {label: "Link Name", name: "label", widget: "string"}
                   - {label: "Web Address (blank = coming soon)", name: "url", widget: "string", required: false}
+              - label: "Modality (Evidence-Based Practices only — select all that apply; leave empty for 'Untagged')"
+                name: "modality"
+                widget: "list"
+                required: false
+                hint: "Each entry must match a Modality Option under Search & Filter Labels exactly (e.g. CBT, DBT, ACT)."
+                field: {label: "Modality", name: "modality", widget: "string"}
+              - label: "Therapist Handout (Evidence-Based Practices only — describes the skill and how to teach it; hidden until a file is added)"
+                name: "therapistHandout"
+                widget: "object"
+                required: false
+                fields:
+                  - {label: "Title (optional)", name: "title", widget: "string", required: false}
+                  - {label: "File", name: "file", widget: "file", required: false, media_folder: "/resources", public_folder: "/resources"}
+              - label: "Client Handout (Evidence-Based Practices only — the activity itself; hidden until a file is added)"
+                name: "clientHandout"
+                widget: "object"
+                required: false
+                fields:
+                  - {label: "Title (optional)", name: "title", widget: "string", required: false}
+                  - {label: "File", name: "file", widget: "file", required: false, media_folder: "/resources", public_folder: "/resources"}
               - {label: "Source Framework (internal, not shown on the site — e.g. Meza, ECCA)", name: "source", widget: "string", required: false}
               - {label: "Team Review Status (internal, not shown on the site)", name: "reviewStatus", widget: "select", required: false, options: ["Yes", "Maybe", "Probably not", "Undecided"]}
               - label: "Related Resources (Evidence-Based Practices only — titles of other library items)"

@@ -42,8 +42,14 @@ const reslibState = {
   data: null,
   tab: 'practices',
   search: '',
-  filters: { theme: new Set(), type: new Set(), audience: new Set() }
+  filters: { theme: new Set(), type: new Set(), audience: new Set(), modality: new Set() }
 };
+
+// Modality filter (Practices): a strategy can span several modalities, so
+// item.modality is a list. "Untagged" matches strategies with none yet.
+// TODO(CU team): tag each strategy's modality in the CMS (Treatment Library
+// → Resources → Modality) and finalize the options list (filters.modalityOptions).
+const UNTAGGED = '__untagged__';
 
 // Which filter groups each tab offers, in order. Options come from the CMS
 // filter lists; the Handouts & Tools type list leaves out practices and the
@@ -52,7 +58,11 @@ const reslibState = {
 function filterGroups(tab) {
   const f = reslibState.data.filters;
   const hidden = new Set((reslibState.data.tabs && reslibState.data.tabs.hiddenAudiences) || []);
-  if (tab === 'practices') return [{ key: 'theme', label: f.themeLabel, options: f.themeOptions }];
+  if (tab === 'practices') return [
+    // showAll: list every modality even before any strategy is tagged with it
+    { key: 'modality', label: f.modalityLabel || 'Modality', options: [...(f.modalityOptions || []), UNTAGGED], showAll: true },
+    { key: 'theme', label: f.themeLabel, options: f.themeOptions },
+  ];
   return [
     { key: 'type', label: f.typeLabel, options: f.typeOptions.filter(o => o !== PRACTICE_TYPE && !hiddenTypes().has(o)) },
     { key: 'audience', label: f.audienceLabel, options: f.audienceOptions.filter(o => !hidden.has(o)) },
@@ -62,6 +72,7 @@ function filterGroups(tab) {
 
 function valuesOf(item, key) {
   if (key === 'type') return [item.type];
+  if (key === 'modality') return item.modality && item.modality.length ? item.modality : [UNTAGGED];
   return item[key] || [];
 }
 
@@ -116,17 +127,21 @@ function renderFilters() {
     const sel = reslibState.filters[g.key];
     const base = items.filter(i => matches(i, g.key)).filter(isListed);
     const chips = g.options.map(opt => {
-      if (!items.some(i => valuesOf(i, g.key).includes(opt))) return '';
+      if (!g.showAll && !items.some(i => valuesOf(i, g.key).includes(opt))) return '';
       const n = base.filter(i => valuesOf(i, g.key).includes(opt)).length;
       const on = sel.has(opt);
-      return `<button type="button" class="reslib-chip${on ? ' active' : ''}" data-group="${g.key}" data-value="${escHtml(opt)}" aria-pressed="${on}"${!n && !on ? ' disabled' : ''}>${opt}<span class="reslib-chip-count">${n}</span></button>`;
+      const label = opt === UNTAGGED ? (reslibState.data.filters.untaggedLabel || 'Untagged') : opt;
+      return `<button type="button" class="reslib-chip${on ? ' active' : ''}" data-group="${g.key}" data-value="${escHtml(opt)}" aria-pressed="${on}"${!n && !on ? ' disabled' : ''}>${escHtml(label)}<span class="reslib-chip-count">${n}</span></button>`;
     }).join('');
     return chips ? `
-      <div class="reslib-filter-group">
+      <div class="reslib-filter-group" role="group" aria-label="${escHtml(g.label)}">
         <span class="reslib-filter-label">${g.label}</span>
         <div class="reslib-chips">${chips}</div>
       </div>` : '';
   }).join('');
+  // Phones: how many filters are on, shown on the Filters button
+  const active = Object.values(reslibState.filters).reduce((n, set) => n + set.size, 0);
+  document.getElementById('reslibFilterCount').textContent = active ? `(${active})` : '';
 }
 
 function renderResults() {
@@ -242,6 +257,52 @@ function practiceLinksHtml(item) {
   return `<h4>Resources</h4><div class="reslib-link-groups">${groups}</div>`;
 }
 
+// Two handout slots per strategy: a Therapist handout (the skill and how to
+// teach it) and a Client handout (the activity itself). Each slot only shows
+// once it has a file; the CU team supplies the handouts in the CMS.
+function handoutsHtml(item) {
+  const h = reslibState.data.handouts || {};
+  const slot = key => {
+    const v = item[key === 'therapist' ? 'therapistHandout' : 'clientHandout'];
+    const url = v && (v.file || v.url);
+    if (!url) return '';
+    const cfg = h[key] || {};
+    return `
+      <a class="reslib-handout reslib-handout-${key}" href="${escHtml(url)}" target="_blank" rel="noopener">
+        <span class="reslib-handout-icon">${icon(key === 'therapist' ? 'ic-user' : 'ic-users', 'icon-sm')}</span>
+        <span class="reslib-handout-text">
+          <strong>${escHtml(cfg.label || (key === 'therapist' ? 'Therapist handout' : 'Client handout'))}</strong>
+          <span>${escHtml(v.title || cfg.hint || '')}</span>
+        </span>
+        ${icon('i-download', 'icon-sm')}
+      </a>`;
+  };
+  const slots = slot('therapist') + slot('client');
+  return slots ? `<h4>${escHtml(h.heading || 'Handouts')}</h4><div class="reslib-handouts">${slots}</div>` : '';
+}
+
+// DRAFT — the "How this list was curated" text is a draft for the CU team to
+// finalize. It lives in one place: content/resources.json → intro.curation
+// (CMS: Treatment Library → Page Intro → How This List Was Curated).
+function renderCuration(intro) {
+  const c = intro.curation;
+  const el = document.getElementById('reslibCuration');
+  if (!c || !c.text) { el.hidden = true; return; }
+  el.innerHTML = `${icon('ic-search', 'icon-sm')}<div>${c.heading ? `<strong>${escHtml(c.heading)}</strong>` : ''}<p>${escHtml(c.text)}</p></div>`;
+  el.hidden = false;
+}
+
+// Phones: the filter sidebar collapses behind a "Filters" button.
+function initFilterToggle() {
+  const btn = document.getElementById('reslibFilterToggle');
+  const sidebar = document.getElementById('reslibSidebar');
+  btn.addEventListener('click', () => {
+    const open = !sidebar.classList.contains('is-open');
+    sidebar.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', String(open));
+  });
+}
+
 function fileHtml(item) {
   if (item.fileUrl) return `<a class="btn btn-primary reslib-download" href="${item.fileUrl}" target="_blank" rel="noopener">${icon('i-download', 'icon-sm')} Download PDF</a>`;
   if (item.type === PRACTICE_TYPE) return '';
@@ -263,6 +324,7 @@ function openDetail(idOrItem) {
     <div class="reslib-card-audience">
       ${item.audience.map(a => `<span class="reslib-audience-tag">${icon(AUDIENCE_ICON[a] || 'i-star', 'icon-xs')}${a}</span>`).join('')}
     </div>
+    ${isPractice && item.modality && item.modality.length ? `<p class="reslib-modality"><span>${escHtml(reslibState.data.filters.modalityLabel || 'Modality')}:</span> ${item.modality.map(escHtml).join(', ')}</p>` : ''}
 
     <h4>Description</h4>
     <p>${item.description || (isPractice ? '<em>A full write-up for this practice is coming soon.</em>' : '')}</p>
@@ -272,6 +334,8 @@ function openDetail(idOrItem) {
     ${item.evidence ? `<h4>Why it works</h4><p>${item.evidence}</p>` : ''}
 
     ${isPractice ? practiceLinksHtml(item) : ''}
+
+    ${isPractice ? handoutsHtml(item) : ''}
 
     ${relatedResourcesHtml(item)}
 
@@ -336,12 +400,14 @@ fetch('content/resources.json', { cache: 'no-cache' }) // always check for the l
       if (!item.id) item.id = 'item-' + (item.title || i).toString().toLowerCase().replace(/[^a-z0-9]+/g, '-');
       if (!Array.isArray(item.audience)) item.audience = [];
       if (!Array.isArray(item.theme)) item.theme = [];
+      if (item.type === PRACTICE_TYPE && !Array.isArray(item.modality)) item.modality = [];
     });
     reslibState.data = data;
 
     document.getElementById('reslibHeading').textContent = data.intro.heading;
     document.getElementById('reslibSub').textContent = data.intro.sub;
     document.getElementById('reslibPdfNotice').textContent = data.intro.pdfNotice;
+    renderCuration(data.intro);
     document.getElementById('reslibSearch').placeholder = data.filters.searchPlaceholder;
     document.getElementById('reslibClearBtn').textContent = data.filters.clearLabel;
 
@@ -353,6 +419,7 @@ fetch('content/resources.json', { cache: 'no-cache' }) // always check for the l
     initTabsAndFilters();
     initSearchAndClear();
     initModal();
+    initFilterToggle();
     initMobileNav();
     openLinkedPractice();
   });

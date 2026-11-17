@@ -7,10 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=71" />
+  <link rel="stylesheet" href="styles.css?v=72" />
 </head>
 <body>
-<script src="icons.js?v=3"></script>
+<script src="icons.js?v=4"></script>
 
 <!-- SVG SPRITE -->
 <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
@@ -100,6 +100,9 @@
   <div class="section-inner">
     <h1 id="reslibHeading"></h1>
     <p class="section-intro" id="reslibSub"></p>
+    <!-- "How this list was curated" (DRAFT text for the CU team to finalize;
+         edited in the CMS under Treatment Library → Page Intro → Curation) -->
+    <div class="reslib-curation" id="reslibCuration" hidden></div>
     <div class="goal-banner" data-goal-banner="library" hidden></div>
     <p class="reslib-pdf-notice" id="reslibPdfNotice"></p>
   </div>
@@ -117,8 +120,14 @@
       <input type="text" id="reslibSearch" />
     </div>
 
+    <!-- Phones: the filters collapse behind this button -->
+    <button type="button" class="reslib-filter-toggle" id="reslibFilterToggle" aria-expanded="false" aria-controls="reslibSidebar">
+      <svg class="icon-sm" aria-hidden="true"><use href="#ic-filter"/></svg>
+      <span>Filters</span><span class="reslib-filter-toggle-count" id="reslibFilterCount"></span>
+    </button>
+
     <div class="reslib-layout">
-      <aside class="reslib-sidebar">
+      <aside class="reslib-sidebar" id="reslibSidebar" aria-label="Filters">
         <div id="reslibFilters"></div>
         <button type="button" class="reslib-clear" id="reslibClearBtn"></button>
       </aside>
@@ -156,7 +165,7 @@
   </div>
 </div>
 
-<script src="resource-library.js?v=8"></script>
+<script src="resource-library.js?v=9"></script>
 <script src="goal-banner.js?v=3"></script>
 </body>
 </html>

@@ -2,13 +2,20 @@
   "intro": {
     "heading": "Treatment Library",
     "sub": "Search for treatment resources including evidence-based practices, worksheets, handouts and assessment tools, to use in your therapy practice. Everything here is selected to help reduce youth suicidal thoughts and behaviors.",
-    "pdfNotice": "PDF files for each resource are being finalized and will appear here as they're added. Items below show what each resource is and why it's included, even before its file is uploaded."
+    "pdfNotice": "PDF files for each resource are being finalized and will appear here as they're added. Items below show what each resource is and why it's included, even before its file is uploaded.",
+    "curation": {
+      "heading": "How this list was curated",
+      "text": "Strategies in this treatment library were drawn from two primary sources: a review paper that extracted core common elements from evidence-based treatments targeting youth suicidality and the Evidence-based Concordant Care Assessment (ECCA) tool, which overviews content and technique strategies utilized in youth mental health treatment.",
+      "status": "draft"
+    }
   },
   "filters": {
     "searchPlaceholder": "Search resources by name or keyword…",
     "audienceLabel": "Who is it for?",
     "typeLabel": "Resource type",
     "themeLabel": "Theme",
+    "modalityLabel": "Modality",
+    "untaggedLabel": "Untagged",
     "clearLabel": "Clear filters",
     "audienceOptions": [
       "Clinician",
@@ -33,6 +40,11 @@
       "Community & Referrals",
       "Relapse Prevention & Transition",
       "Engagement & Treatment Process"
+    ],
+    "modalityOptions": [
+      "CBT",
+      "DBT",
+      "ACT"
     ]
   },
   "tabs": {
@@ -322,7 +334,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "Meza & ECCA",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-elicit-client-issues-concerns",
@@ -341,7 +354,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "Meza",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-agenda-setting",
@@ -360,7 +374,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-treatment-goal-setting-review",
@@ -379,7 +394,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-tracking-review-client-s-progress",
@@ -398,7 +414,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-homework-assignment-review",
@@ -417,7 +434,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "Meza & ECCA",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-individualized-flexible-treatment-delivery",
@@ -436,7 +454,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "Meza",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-therapeutic-alliance-relationship-building",
@@ -466,7 +485,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "Meza",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-addressing-treatment-barriers",
@@ -501,7 +521,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-digital-app-based-tools",
@@ -520,7 +541,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "Meza",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-commitment-to-safety",
@@ -546,7 +568,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "Meza",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-safety-planning",
@@ -592,7 +615,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "Meza",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-means-safety-lethal-means-restriction",
@@ -633,7 +657,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "Meza",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-safety-skills",
@@ -653,7 +678,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-distress-tolerance",
@@ -689,7 +715,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "Meza",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-emotion-regulation",
@@ -720,7 +747,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "Meza",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-impulse-control",
@@ -771,7 +799,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "Meza",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-mindfulness",
@@ -802,7 +831,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "Meza",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-problem-solving",
@@ -843,7 +873,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "Meza & ECCA",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-interpersonal-effectiveness-skills",
@@ -874,7 +905,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "Meza & ECCA",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-assertiveness-training",
@@ -910,7 +942,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-behavioral-activation-activity-scheduling",
@@ -941,7 +974,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "Meza & ECCA",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-cognitive-restructuring",
@@ -992,7 +1026,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "Meza",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-exposure",
@@ -1018,7 +1053,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "Meza",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-trauma-narrative",
@@ -1064,7 +1100,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-modeling",
@@ -1083,7 +1120,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-skills-practice-role-play",
@@ -1102,7 +1140,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-performance-feedback",
@@ -1121,7 +1160,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-positive-reinforcement-rewards",
@@ -1141,7 +1181,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-live-caregiver-youth-coaching",
@@ -1167,7 +1208,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-antecedent-management",
@@ -1187,7 +1229,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-differential-reinforcement-planned-ignoring",
@@ -1207,7 +1250,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Probably not"
+      "reviewStatus": "Probably not",
+      "modality": []
     },
     {
       "id": "ebp-redirection-distraction",
@@ -1227,7 +1271,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Probably not"
+      "reviewStatus": "Probably not",
+      "modality": []
     },
     {
       "id": "ebp-following-the-child-s-lead",
@@ -1247,7 +1292,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Probably not"
+      "reviewStatus": "Probably not",
+      "modality": []
     },
     {
       "id": "ebp-parent-child-quality-time",
@@ -1278,7 +1324,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-effective-commands",
@@ -1298,7 +1345,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Probably not"
+      "reviewStatus": "Probably not",
+      "modality": []
     },
     {
       "id": "ebp-consequences",
@@ -1318,7 +1366,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Probably not"
+      "reviewStatus": "Probably not",
+      "modality": []
     },
     {
       "id": "ebp-behavioral-contracting",
@@ -1338,7 +1387,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-caregiver-coping",
@@ -1379,7 +1429,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-youth-education-academic-support",
@@ -1405,7 +1456,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-end-of-session-positive",
@@ -1424,7 +1476,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-progressive-muscle-relaxation",
@@ -1465,7 +1518,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-if-then-planning",
@@ -1485,7 +1539,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-facing-your-inner-critic",
@@ -1505,7 +1560,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-self-compassion",
@@ -1525,7 +1581,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-affect-identification-feeling-thermometer",
@@ -1551,7 +1608,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-feeling-thermometer",
@@ -1571,7 +1629,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Undecided"
+      "reviewStatus": "Undecided",
+      "modality": []
     },
     {
       "id": "ebp-common-reactions-to-trauma",
@@ -1590,7 +1649,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-caregiver-emotion-coaching",
@@ -1610,7 +1670,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-caregiver-support-for-safety-plan",
@@ -1632,7 +1693,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-drawing-on-strengths",
@@ -1652,7 +1714,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-chain-functional-analysis",
@@ -1672,7 +1735,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-praise-reinforcement",
@@ -1692,7 +1756,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "ECCA",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-crisis-survival-skills",
@@ -1712,7 +1777,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-diary-card-youth",
@@ -1732,7 +1798,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-motivational-interviewing",
@@ -1751,7 +1818,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-pros-cons",
@@ -1771,7 +1839,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-thanks-notes",
@@ -1791,7 +1860,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-hope-box",
@@ -1811,7 +1881,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-dialectical-thinking",
@@ -1831,7 +1902,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-cognitive-defusion",
@@ -1872,7 +1944,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-diary-card-parent",
@@ -1892,7 +1965,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-worry-time",
@@ -1918,7 +1992,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     },
     {
       "id": "ebp-silver-linings",
@@ -1938,7 +2013,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-taking-ownership",
@@ -1957,7 +2033,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-gratitude",
@@ -1977,7 +2054,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-identifying-thoughts-feelings-behaviors",
@@ -1997,7 +2075,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-stimulus-control",
@@ -2017,7 +2096,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-coping-cards",
@@ -2037,7 +2117,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-family-album",
@@ -2057,7 +2138,8 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Maybe"
+      "reviewStatus": "Maybe",
+      "modality": []
     },
     {
       "id": "ebp-counseling-about-disinhibiting-effects-of-substances",
@@ -2077,7 +2159,19 @@
       "relatedResources": [],
       "fileUrl": "",
       "source": "",
-      "reviewStatus": "Yes"
+      "reviewStatus": "Yes",
+      "modality": []
     }
-  ]
+  ],
+  "handouts": {
+    "heading": "Handouts",
+    "therapist": {
+      "label": "Therapist handout",
+      "hint": "Describes the skill and how to teach it"
+    },
+    "client": {
+      "label": "Client handout",
+      "hint": "The activity itself"
+    }
+  }
 }

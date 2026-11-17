@@ -2720,3 +2720,40 @@ a.journey-goto { text-decoration: none; }
   .intervention-order-btns { flex-direction: row; margin-left: auto; gap: 6px; }
   .intervention-order-btn { width: 36px; height: 32px; }
 }
+
+/* =============================================
+   TREATMENT LIBRARY — curation note, modality, handout slots, phone filters
+   ============================================= */
+.reslib-curation {
+  display: flex; gap: 12px; align-items: flex-start; max-width: 760px; margin: 0 0 22px;
+  background: var(--white); border: 1.5px solid var(--cream-dark); border-radius: var(--radius-sm); padding: 14px 16px;
+}
+.reslib-curation > svg { stroke: var(--teal); flex-shrink: 0; margin-top: 2px; }
+.reslib-curation strong { display: block; font-size: 14px; color: var(--teal-dark); margin-bottom: 4px; }
+.reslib-curation p { font-size: 14px; color: var(--text-mid); line-height: 1.6; margin: 0; }
+.reslib-modality { font-size: 13px; color: var(--text-mid); margin: 8px 0 0; }
+.reslib-modality span { font-weight: 800; color: var(--text-light); text-transform: uppercase; letter-spacing: .05em; font-size: 11px; }
+.reslib-handouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-bottom: 18px; }
+.reslib-handout {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: var(--radius-sm);
+  border: 2px solid var(--cream-dark); background: var(--white); text-decoration: none; transition: border-color .15s, background .15s;
+}
+.reslib-handout:hover { border-color: var(--teal); background: var(--teal-light); }
+.reslib-handout:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.reslib-handout > svg { stroke: var(--teal); margin-left: auto; flex-shrink: 0; }
+.reslib-handout-icon { width: 34px; height: 34px; border-radius: 8px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.reslib-handout-icon svg { stroke: var(--teal-dark); }
+.reslib-handout-text strong { display: block; font-size: 14px; color: var(--teal-dark); }
+.reslib-handout-text span { font-size: 12px; color: var(--text-light); }
+.reslib-filter-toggle {
+  display: none; align-items: center; gap: 8px; margin: 0 0 14px; font-family: var(--font); font-size: 14px; font-weight: 800;
+  color: var(--teal-dark); background: var(--white); border: 2px solid var(--cream-dark); border-radius: 100px; padding: 8px 16px; cursor: pointer;
+}
+.reslib-filter-toggle svg { stroke: currentColor; }
+.reslib-filter-toggle[aria-expanded="true"] { border-color: var(--teal); background: var(--teal-light); }
+.reslib-filter-toggle:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+@media (max-width: 800px) {
+  .reslib-filter-toggle { display: inline-flex; }
+  .reslib-sidebar { display: none; }
+  .reslib-sidebar.is-open { display: flex; }
+}
