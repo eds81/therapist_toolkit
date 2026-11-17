@@ -14,7 +14,8 @@ const SITE_CONTENT_FILES = [
   'safety-plan',          // Make A Safety Plan
   'community-resources',  // Community Resources
   'schools',              // Navigating Schools
-  'self-care'             // Self-Care & Support
+  'self-care',            // Self-Care & Support
+  'consultation'          // Consultation (Talk to Someone + peer therapists)
 ];
 
 // cache: 'no-cache' makes the browser check with the server for a newer copy

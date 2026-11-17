@@ -4,7 +4,7 @@
    ============================================= */
 
 :root {
-  --nav-h: 130px; /* sticky header height: top row + tools row (68px below 1200px) */
+  --nav-h: 140px; /* sticky header height: top row + tools row (68px below 1200px) */
   --teal:       #0091A8;
   --teal-dark:  #006E82;
   --teal-light: #D6F0F4;
@@ -2655,7 +2655,9 @@ body.scgate-open { overflow: hidden; }
    ============================================= */
 .nav-tools-inner { gap: 2px; }
 .nav-tool {
-  flex: 1 1 0; min-width: 0; height: auto; min-height: 60px; padding: 8px 6px 6px;
+  /* fixed height with room for a two-line label, so the header is the same
+     height at every width (sticky elements rely on --nav-h) */
+  flex: 1 1 0; min-width: 0; height: 70px; padding: 6px 6px 5px;
   flex-direction: column; justify-content: center; gap: 4px;
   white-space: normal; text-align: center; font-size: 12.5px; line-height: 1.2;
 }
@@ -2757,3 +2759,13 @@ a.journey-goto { text-decoration: none; }
   .reslib-sidebar { display: none; }
   .reslib-sidebar.is-open { display: flex; }
 }
+
+/* =============================================
+   CONSULTATION tab (moved from Self-Care) + Self-Care card that links to it
+   ============================================= */
+.consultation-page .section-inner { padding-top: 48px; }
+.consultation-panel .consult-hero h2 { font-size: clamp(28px, 4vw, 40px); }
+a.sc-item-link { text-decoration: none; color: inherit; display: block; transition: border-color .15s, box-shadow .15s; }
+a.sc-item-link:hover { box-shadow: var(--shadow-md); }
+a.sc-item-link h4::after { content: ' →'; color: var(--teal); }
+a.sc-item-link:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }

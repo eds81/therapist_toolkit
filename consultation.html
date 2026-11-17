@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consultation | Therapist Toolkit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=73" />
+</head>
+<body>
+<script src="icons.js?v=4"></script>
+
+<!-- SVG SPRITE -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+  </symbol>
+  <symbol id="i-play-circle" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>
+  </symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+    <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+  </symbol>
+  <symbol id="i-calendar-check" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+    <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+    <path d="M9 16l2 2 4-4"/>
+  </symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.87 3.58-7 8-7s8 3.13 8 7"/>
+  </symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2L4 5v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V5l-8-3z"/>
+    <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+  </symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+  </symbol>
+  <symbol id="i-help-circle" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+    <line x1="12" y1="17" x2="12.01" y2="17"/>
+  </symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>
+  </symbol>
+  <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="19" y1="12" x2="5" y2="12"/><polyline points="11 18 5 12 11 6"/>
+  </symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+  </symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+  </symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="4"/>
+    <line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+  </symbol>
+</svg>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- NAV -->
+<header class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">
+      <span class="logo-rise">Therapist Toolkit</span>
+      <span class="logo-sub">Rise Against Suicide × CU Boulder</span>
+    </a>
+    <a href="about.html" class="nav-about"><svg class="icon" aria-hidden="true"><use href="#ic-info"/></svg><span>About Our Partnership</span></a>
+    <button class="nav-hamburger" aria-label="Open menu" id="hamburgerBtn">
+      <svg class="icon"><use href="#i-menu"/></svg>
+    </button>
+  </div>
+  <nav class="nav-tools" aria-label="Toolkit tools">
+    <div class="nav-tools-inner">
+      <a href="roadmap.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-map"/></svg><span>Treatment Roadmap</span></a>
+      <a href="planning-tool.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-target"/></svg><span>Treatment Planning Tool</span></a>
+      <a href="safety-plan.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-shield"/></svg><span>Make A Safety Plan</span></a>
+      <a href="resource-library.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-book-open"/></svg><span>Treatment Library</span></a>
+      <a href="find-referral.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-map-pin"/></svg><span>Community Resources</span></a>
+      <a href="schools.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-school"/></svg><span>Navigating Schools</span></a>
+      <a href="self-care.html" class="nav-tool"><svg class="icon" aria-hidden="true"><use href="#ic-heart"/></svg><span>Self-Care &amp; Support</span></a>
+      <a href="consultation.html" class="nav-tool active" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#ic-message"/></svg><span>Consultation</span></a>
+    </div>
+  </nav>
+  <div class="nav-mobile" id="navMobile">
+    <span class="nav-mobile-label">Toolkit tools</span>
+    <a href="roadmap.html"><svg class="icon" aria-hidden="true"><use href="#ic-map"/></svg><span>Treatment Roadmap</span></a>
+    <a href="planning-tool.html"><svg class="icon" aria-hidden="true"><use href="#ic-target"/></svg><span>Treatment Planning Tool</span></a>
+    <a href="safety-plan.html"><svg class="icon" aria-hidden="true"><use href="#ic-shield"/></svg><span>Make A Safety Plan</span></a>
+    <a href="resource-library.html"><svg class="icon" aria-hidden="true"><use href="#ic-book-open"/></svg><span>Treatment Library</span></a>
+    <a href="find-referral.html"><svg class="icon" aria-hidden="true"><use href="#ic-map-pin"/></svg><span>Community Resources</span></a>
+    <a href="schools.html"><svg class="icon" aria-hidden="true"><use href="#ic-school"/></svg><span>Navigating Schools</span></a>
+    <a href="self-care.html"><svg class="icon" aria-hidden="true"><use href="#ic-heart"/></svg><span>Self-Care &amp; Support</span></a>
+    <a href="consultation.html" class="active" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#ic-message"/></svg><span>Consultation</span></a>
+    <a href="about.html" class="nav-mobile-about"><svg class="icon" aria-hidden="true"><use href="#ic-info"/></svg><span>About Our Partnership</span></a>
+  </div>
+</header>
+
+  <!-- Access gate: this is a UX gate for a prototype, not secure authentication. -->
+  <div class="scgate-backdrop" id="scGateBackdrop">
+    <div class="scgate-modal" role="dialog" aria-modal="true" aria-labelledby="scGateHeading">
+      <button type="button" class="scgate-close" id="scGateClose" aria-label="Close and leave this page">
+        <svg class="icon-sm"><use href="#i-x"/></svg>
+      </button>
+      <div class="scgate-icon" aria-hidden="true"><svg class="icon"><use href="#i-lock"/></svg></div>
+      <h2 id="scGateHeading"></h2>
+      <p id="scGateIntro"></p>
+      <form id="scGateForm" novalidate>
+        <label for="scGatePassword" class="scgate-label" id="scGateLabel"></label>
+        <input type="password" id="scGatePassword" class="scgate-input" autocomplete="off" />
+        <p class="scgate-error" id="scGateError" role="alert" hidden></p>
+        <button type="submit" class="btn btn-primary scgate-submit" id="scGateSubmit"></button>
+      </form>
+    </div>
+  </div>
+
+<!-- CONSULTATION — "Talk to Someone" (moved from Self-Care & Support, unchanged) -->
+<section class="selfcare-page consultation-page">
+  <div class="section-inner" id="scMainContent" hidden>
+    <!-- TALK TO SOMEONE -->
+    <div class="consultation-panel" id="panel-consult">
+      <div class="consult-hero">
+        <div class="consult-eyebrow" id="scConsultEyebrow"></div>
+        <h2 id="scConsultHeading"></h2>
+        <p class="consult-lead" id="scConsultIntro"></p>
+      </div>
+
+      <div class="consult-need">
+        <h3 id="scConsultNeedLabel"></h3>
+        <div class="consult-need-pills" id="scConsultNeedPills" role="group" aria-labelledby="scConsultNeedLabel"></div>
+        <p class="sr-only" id="scConsultAnnounce" aria-live="polite"></p>
+      </div>
+
+      <div class="consult-grid" id="scConsultGrid"></div>
+      <p class="consult-placeholder-note" id="scConsultNote"></p>
+
+      <!-- Peer Therapist One-on-One Support -->
+      <div class="selfcare-sub" id="peers">
+        <h4 id="scPeerHeading"></h4>
+        <p class="selfcare-sub-intro" id="scPeerIntro"></p>
+        <p class="consult-placeholder-note" id="scPeerNote"></p>
+        <div class="peer-grid" id="scPeerGrid"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-left" id="footerLeft"></div>
+    <div class="footer-right" id="footerRight"></div>
+  </div>
+</footer>
+
+<script src="content-loader.js?v=4"></script>
+<script src="consultation.js?v=1"></script>
+</body>
+</html>

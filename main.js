@@ -57,7 +57,7 @@ const TOOL_PREVIEWS = {
   selfcare: `
     <div class="pv-selfcare">
       <div class="pv-breathe"><span>Breathe</span></div>
-      <div class="pv-pills"><span>Talk to someone</span><span>Wall of wins</span><span>Peer support</span></div>
+      <div class="pv-pills"><span>Self-care tips</span><span>Wall of wins</span><span>Mindfulness</span></div>
     </div>`,
 };
 

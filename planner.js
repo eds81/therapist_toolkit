@@ -2009,6 +2009,7 @@ function generatePlan() {
       <a class="btn btn-outline" href="find-referral.html" target="_blank" rel="noopener">Community Resources</a>
       <a class="btn btn-outline" href="schools.html" target="_blank" rel="noopener">Navigating Schools</a>
       <a class="btn btn-outline" href="self-care.html" target="_blank" rel="noopener">Self Care and Support for Therapists</a>
+      <a class="btn btn-outline" href="consultation.html" target="_blank" rel="noopener">Consultation</a>
       <a class="btn btn-outline" href="safety-plan.html" target="_blank" rel="noopener">Make a Safety Plan For Your Client</a>
     </div>`;
 

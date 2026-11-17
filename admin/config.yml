@@ -923,6 +923,7 @@ collections:
                   - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
                   - {label: "Title", name: "title", widget: "string"}
                   - {label: "Body", name: "body", widget: "text"}
+                  - {label: "Link (optional — makes the card a link, e.g. consultation.html)", name: "href", widget: "string", required: false}
               - label: "Why This Matters"
                 name: "why"
                 widget: "object"
@@ -963,45 +964,6 @@ collections:
                     fields:
                       - {label: "Author", name: "author", widget: "string"}
                       - {label: "Text", name: "text", widget: "text"}
-              - label: "Talk to Someone (placeholder contact links — update once real ones exist)"
-                name: "consult"
-                widget: "object"
-                fields:
-                  - {label: "Eyebrow", name: "eyebrow", widget: "string"}
-                  - {label: "Heading", name: "heading", widget: "string"}
-                  - {label: "Intro", name: "intro", widget: "text"}
-                  - label: "Need Picker"
-                    name: "needPicker"
-                    widget: "object"
-                    fields:
-                      - {label: "Label", name: "label", widget: "string"}
-                      - label: "Options (fixed set of 4 — do not add or remove)"
-                        name: "options"
-                        widget: "list"
-                        fields:
-                          - {label: "Pill Label", name: "label", widget: "string"}
-                          - {label: "Matches Card (peer / tamar / rise — must match a card Key below)", name: "matchKey", widget: "string"}
-                  - label: "Contact Cards (fixed set of 3 — do not add or remove)"
-                    name: "cards"
-                    widget: "list"
-                    fields:
-                      - {label: "Key (do not change — peer / tamar / rise)", name: "key", widget: "string"}
-                      - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
-                      - {label: "Title", name: "title", widget: "string"}
-                      - {label: "Subtitle", name: "subtitle", widget: "string"}
-                      - label: "Best For (fixed set of 2 — do not add or remove)"
-                        name: "bestFor"
-                        widget: "list"
-                        field: {label: "Item", name: "item", widget: "string"}
-                      - {label: "Format", name: "format", widget: "string"}
-                      - {label: "Reply Time", name: "reply", widget: "string"}
-                      - {label: "Note", name: "note", widget: "string"}
-                      - {label: "Button Label", name: "buttonLabel", widget: "string"}
-                      - {label: "Mailto (used if no scheduling URL is set)", name: "mailto", widget: "string"}
-                      - {label: "Scheduling URL (optional — overrides the mailto on the button)", name: "schedulingUrl", widget: "string", required: false}
-                      - {label: "Secondary Line Text", name: "secondaryText", widget: "string"}
-                      - {label: "Secondary Line Link (leave blank for plain text, no link)", name: "secondaryHref", widget: "string", required: false}
-                  - {label: "Prototype Note", name: "prototypeNote", widget: "text"}
               - label: "Tab Labels"
                 name: "tabs"
                 widget: "object"
@@ -1009,8 +971,7 @@ collections:
                   - {label: "Overview", name: "overview", widget: "string"}
                   - {label: "Why It Matters", name: "why", widget: "string"}
                   - {label: "Wall of Wins", name: "wins", widget: "string"}
-                  - {label: "Talk to Someone", name: "consult", widget: "string"}
-              - label: "Password Screen (text only — the password itself is set in selfcare.js)"
+              - label: "Password Screen (text only — also used by the Consultation page; the password itself is set in selfcare.js and consultation.js)"
                 name: "gate"
                 widget: "object"
                 fields:
@@ -1040,21 +1001,71 @@ collections:
                     name: "post"
                     widget: "object"
                     fields: *mindful_fields
-              - label: "Peer Therapist One-on-One Support"
-                name: "peerTherapists"
+
+      - file: "content/consultation.json"
+        name: "consultation"
+        label: "Consultation"
+        fields:
+          - label: "Page"
+            name: "consultationPage"
+            widget: "object"
+            fields:
+              - {label: "Nav Label", name: "navLabel", widget: "string"}
+              - {label: "Section Label", name: "sectionLabel", widget: "string"}
+          - label: "Talk to Someone (placeholder contact links — update once real ones exist)"
+            name: "consult"
+            widget: "object"
+            fields:
+              - {label: "Eyebrow", name: "eyebrow", widget: "string"}
+              - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Intro", name: "intro", widget: "text"}
+              - label: "Need Picker"
+                name: "needPicker"
                 widget: "object"
                 fields:
-                  - {label: "Heading", name: "heading", widget: "string"}
-                  - {label: "Intro", name: "intro", widget: "text"}
-                  - {label: "Prototype Note (leave blank to hide)", name: "prototypeNote", widget: "text", required: false}
-                  - label: "Peer Therapists"
-                    name: "list"
+                  - {label: "Label", name: "label", widget: "string"}
+                  - label: "Options (fixed set of 4 — do not add or remove)"
+                    name: "options"
                     widget: "list"
-                    summary: "{{name}}"
                     fields:
-                      - {label: "Name", name: "name", widget: "string"}
-                      - {label: "Role & Background", name: "role", widget: "string"}
-                      - {label: "Bio", name: "bio", widget: "text"}
+                      - {label: "Pill Label", name: "label", widget: "string"}
+                      - {label: "Matches Card (peer / tamar / rise — must match a card Key below)", name: "matchKey", widget: "string"}
+              - label: "Contact Cards (fixed set of 3 — do not add or remove)"
+                name: "cards"
+                widget: "list"
+                fields:
+                  - {label: "Key (do not change — peer / tamar / rise)", name: "key", widget: "string"}
+                  - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
+                  - {label: "Title", name: "title", widget: "string"}
+                  - {label: "Subtitle", name: "subtitle", widget: "string"}
+                  - label: "Best For (fixed set of 2 — do not add or remove)"
+                    name: "bestFor"
+                    widget: "list"
+                    field: {label: "Item", name: "item", widget: "string"}
+                  - {label: "Format", name: "format", widget: "string"}
+                  - {label: "Reply Time", name: "reply", widget: "string"}
+                  - {label: "Note", name: "note", widget: "string"}
+                  - {label: "Button Label", name: "buttonLabel", widget: "string"}
+                  - {label: "Mailto (used if no scheduling URL is set)", name: "mailto", widget: "string"}
+                  - {label: "Scheduling URL (optional — overrides the mailto on the button)", name: "schedulingUrl", widget: "string", required: false}
+                  - {label: "Secondary Line Text", name: "secondaryText", widget: "string"}
+                  - {label: "Secondary Line Link (leave blank for plain text, no link)", name: "secondaryHref", widget: "string", required: false}
+              - {label: "Prototype Note", name: "prototypeNote", widget: "text"}
+          - label: "Peer Therapist One-on-One Support"
+            name: "peerTherapists"
+            widget: "object"
+            fields:
+              - {label: "Heading", name: "heading", widget: "string"}
+              - {label: "Intro", name: "intro", widget: "text"}
+              - {label: "Prototype Note (leave blank to hide)", name: "prototypeNote", widget: "text", required: false}
+              - label: "Peer Therapists"
+                name: "list"
+                widget: "list"
+                summary: "{{name}}"
+                fields:
+                  - {label: "Name", name: "name", widget: "string"}
+                  - {label: "Role & Background", name: "role", widget: "string"}
+                  - {label: "Bio", name: "bio", widget: "text"}
 
       - file: "content/site.json"
         name: "siteWide"
