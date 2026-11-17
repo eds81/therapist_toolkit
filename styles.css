@@ -2769,3 +2769,33 @@ a.sc-item-link { text-decoration: none; color: inherit; display: block; transiti
 a.sc-item-link:hover { box-shadow: var(--shadow-md); }
 a.sc-item-link h4::after { content: ' →'; color: var(--teal); }
 a.sc-item-link:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+
+/* Home "What's Inside": eight tools — two rows of four on wide screens */
+.tour-grid { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1100px) { .tour-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .tour-grid { grid-template-columns: 1fr; } }
+/* Treatment Roadmap preview: three phases side by side */
+.pv-roadmap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; max-width: 240px; }
+.pv-phase { background: var(--white); border-radius: 8px; border-top: 4px solid var(--teal); padding: 7px 7px 8px; display: flex; flex-direction: column; gap: 5px; box-shadow: var(--shadow-sm); }
+.pv-phase-1 { border-top-color: var(--orange); } .pv-phase-2 { border-top-color: var(--green-dark); }
+.pv-phase-num { width: 16px; height: 16px; border-radius: 50%; color: var(--white); font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; background: var(--teal); }
+.pv-phase-1 .pv-phase-num { background: var(--orange); } .pv-phase-2 .pv-phase-num { background: var(--green-dark); }
+.pv-phase-title { font-size: 8.5px; font-weight: 800; color: var(--text); line-height: 1.2; min-height: 30px; }
+.pv-phase .pv-bar { flex: none; width: 100%; height: 5px; }
+.pv-phase .pv-bar-short { width: 65%; }
+/* Consultation preview: need picker + the best-fit contact */
+.pv-consult { position: relative; background: var(--white); border: 2px solid var(--teal); border-radius: 8px; padding: 8px 10px; display: flex; flex-direction: column; gap: 5px; }
+.pv-consult-badge { position: absolute; top: 6px; right: 6px; font-size: 7.5px; font-weight: 900; text-transform: uppercase; color: var(--white); background: var(--teal); border-radius: 100px; padding: 1px 6px; }
+.pv-consult-icon { width: 16px; height: 16px; border-radius: 4px; background: var(--teal-light); }
+.pv-consult-title { font-size: 9.5px; font-weight: 900; color: var(--text); }
+.pv-consult .pv-bar { flex: none; height: 5px; }
+.pv-consult-btn { align-self: flex-start; font-size: 8.5px; font-weight: 800; color: var(--white); background: var(--teal); border-radius: 100px; padding: 2px 9px; }
+
+/* "Use it" on the What's Inside cards: set apart from the description */
+.tour-when {
+  display: flex; align-items: flex-start; gap: 8px; margin-top: 14px !important;
+  background: var(--teal-light); border-radius: var(--radius-sm); padding: 9px 12px;
+  font-size: 13px !important; color: var(--teal-dark) !important; line-height: 1.45 !important;
+}
+.tour-when svg { stroke: var(--teal-dark); flex-shrink: 0; margin-top: 2px; }
+.tour-when strong { display: block; font-size: 10.5px; font-weight: 900; text-transform: uppercase; letter-spacing: .07em; color: var(--teal); margin-bottom: 1px; }

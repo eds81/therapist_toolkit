@@ -10,6 +10,16 @@ function icon(id, extraClass) {
 // Simplified sketches of each tool's real screen, so the card shows what the
 // tool looks like. Purely decorative (the card text says what it does).
 const TOOL_PREVIEWS = {
+  // The three phases side by side, in their roadmap colors
+  roadmap: `
+    <div class="pv-roadmap">
+      ${['Assess &amp; Understand', 'Train &amp; Teach Skills', 'Consolidate &amp; Next Steps'].map((t, i) => `
+        <div class="pv-phase pv-phase-${i + 1}">
+          <span class="pv-phase-num">${i + 1}</span>
+          <span class="pv-phase-title">${t}</span>
+          <span class="pv-bar"></span><span class="pv-bar pv-bar-short"></span>
+        </div>`).join('')}
+    </div>`,
   planner: `
     <svg viewBox="0 0 240 130" class="pv-svg">
       <circle cx="120" cy="65" r="56" class="pv-ring"/><circle cx="120" cy="65" r="42" class="pv-ring"/>
@@ -54,6 +64,18 @@ const TOOL_PREVIEWS = {
         <div class="pv-crisis">In a crisis: call or text 988</div>
       </div>
     </div>`,
+  // The "What do you need?" picker highlighting the best-fit contact
+  consultation: `
+    <div class="pv-stack">
+      <div class="pv-chips"><span>Talk through a case</span><span class="is-on">Clinical guidance</span><span>Decompress</span></div>
+      <div class="pv-consult">
+        <span class="pv-consult-badge">Best fit</span>
+        <span class="pv-consult-icon"></span>
+        <span class="pv-consult-title">Licensed clinical psychologist</span>
+        <span class="pv-bar pv-bar-long"></span>
+        <span class="pv-consult-btn">Schedule a call</span>
+      </div>
+    </div>`,
   selfcare: `
     <div class="pv-selfcare">
       <div class="pv-breathe"><span>Breathe</span></div>
@@ -62,7 +84,7 @@ const TOOL_PREVIEWS = {
 };
 
 // One icon per tool, used wherever that tool is named on the home page.
-const TOOL_ICONS = { planner: 'ic-target', safety: 'ic-shield', library: 'ic-book-open', community: 'ic-map-pin', schools: 'ic-school', selfcare: 'ic-heart' };
+const TOOL_ICONS = { roadmap: 'ic-map', consultation: 'ic-message', planner: 'ic-target', safety: 'ic-shield', library: 'ic-book-open', community: 'ic-map-pin', schools: 'ic-school', selfcare: 'ic-heart' };
 
 // An external link opens in a new tab.
 function linkAttrs(href) {
@@ -115,12 +137,12 @@ function render(data) {
   document.getElementById('tourHeading').textContent = tour.heading;
   document.getElementById('tourIntro').textContent = tour.intro;
   document.getElementById('tourGrid').innerHTML = tour.tools.map((t, i) => `
-    <a class="tour-card tour-card-${t.key}" href="${t.href}" data-fade data-delay="${(i % 3) + 1}">
+    <a class="tour-card tour-card-${t.key}" href="${t.href}" data-fade data-delay="${(i % 4) + 1}">
       <div class="tour-preview" aria-hidden="true">${TOOL_PREVIEWS[t.key] || ''}</div>
       <div class="tour-body">
         <h3 class="tour-title">${icon(TOOL_ICONS[t.key] || 'ic-layers', 'icon-sm')}<span>${t.title}</span></h3>
         <p>${t.tagline}</p>
-        <p class="tour-when"><strong>${tour.useWhenLabel}:</strong> ${t.useWhen}</p>
+        <p class="tour-when">${icon('ic-clock', 'icon-xs')}<span><strong>${tour.useWhenLabel}</strong>${t.useWhen}</span></p>
         <span class="tour-open">${tour.openLabel} ${t.title} ${icon('i-arrow-right', 'icon-xs')}</span>
       </div>
     </a>`).join('');

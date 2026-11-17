@@ -70,12 +70,12 @@ collections:
               - {label: "Intro", name: "intro", widget: "text"}
               - {label: "'Use it' Label", name: "useWhenLabel", widget: "string"}
               - {label: "'Open' Link Label", name: "openLabel", widget: "string"}
-              - label: "Tools (keep all six keys — each key draws that tool's preview picture)"
+              - label: "Tools (keep all eight keys — each key draws that tool's preview picture)"
                 name: "tools"
                 widget: "list"
                 summary: "{{title}}"
                 fields:
-                  - {label: "Key (do not change)", name: "key", widget: "select", options: ["planner", "safety", "library", "community", "schools", "selfcare"]}
+                  - {label: "Key (do not change)", name: "key", widget: "select", options: ["roadmap", "planner", "safety", "library", "community", "schools", "selfcare", "consultation"]}
                   - {label: "Title", name: "title", widget: "string"}
                   - {label: "What it does", name: "tagline", widget: "text"}
                   - {label: "When to use it", name: "useWhen", widget: "string"}
@@ -277,7 +277,6 @@ collections:
             name: "roadmapPage"
             widget: "object"
             fields:
-              - {label: "Nav Label", name: "navLabel", widget: "string"}
               - {label: "Section Label", name: "sectionLabel", widget: "string"}
               - {label: "Heading", name: "heading", widget: "string"}
               - {label: "Intro", name: "intro", widget: "text"}
@@ -332,7 +331,6 @@ collections:
             name: "planner"
             widget: "object"
             fields:
-              - {label: "Nav Label", name: "navLabel", widget: "string"}
               - {label: "Section Label", name: "sectionLabel", widget: "string"}
               - {label: "Heading", name: "heading", widget: "string"}
               - {label: "Subheading", name: "subheading", widget: "string", required: false}
@@ -505,7 +503,6 @@ collections:
             name: "safetyPlanPage"
             widget: "object"
             fields:
-              - {label: "Nav Label", name: "navLabel", widget: "string"}
               - {label: "Section Label", name: "sectionLabel", widget: "string"}
               - {label: "Heading", name: "heading", widget: "string"}
               - {label: "Intro", name: "intro", widget: "text"}
@@ -688,7 +685,6 @@ collections:
             name: "referralPage"
             widget: "object"
             fields:
-              - {label: "Nav Label", name: "navLabel", widget: "string"}
               - {label: "Section Label", name: "sectionLabel", widget: "string"}
               - {label: "Heading", name: "heading", widget: "string"}
               - {label: "Intro", name: "intro", widget: "text"}
@@ -767,7 +763,6 @@ collections:
             name: "schoolsPage"
             widget: "object"
             fields:
-              - {label: "Nav Label", name: "navLabel", widget: "string"}
               - {label: "Section Label", name: "sectionLabel", widget: "string"}
               - {label: "Heading", name: "heading", widget: "string"}
               - {label: "Intro", name: "intro", widget: "text"}
@@ -905,7 +900,6 @@ collections:
             name: "selfCarePage"
             widget: "object"
             fields:
-              - {label: "Nav Label", name: "navLabel", widget: "string"}
               - {label: "Section Label", name: "sectionLabel", widget: "string"}
               - {label: "Heading", name: "heading", widget: "string"}
               - {label: "Therapist Concern (quoted)", name: "concern", widget: "string", required: false}
@@ -1010,7 +1004,6 @@ collections:
             name: "consultationPage"
             widget: "object"
             fields:
-              - {label: "Nav Label", name: "navLabel", widget: "string"}
               - {label: "Section Label", name: "sectionLabel", widget: "string"}
           - label: "Talk to Someone (placeholder contact links — update once real ones exist)"
             name: "consult"
@@ -1069,7 +1062,7 @@ collections:
 
       - file: "content/site.json"
         name: "siteWide"
-        label: "Site-wide (goal banner & footer)"
+        label: "Site-wide (navigation, goal banner & footer)"
         fields:
           - label: "The Goal (banner shown on the tool pages — reducing suicidal thoughts and behaviors)"
             name: "goal"
@@ -1088,6 +1081,20 @@ collections:
                   - {label: "Treatment Library", name: "library", widget: "text"}
                   - {label: "Community Resources", name: "referral", widget: "text"}
                   - {label: "Navigating Schools", name: "schools", widget: "text"}
+          - label: "Navigation (the tab names in the header and phone menu, on every page)"
+            name: "nav"
+            widget: "object"
+            fields:
+              - {label: "'About' link (top right)", name: "aboutLabel", widget: "string"}
+              - {label: "Phone menu heading", name: "toolsHeading", widget: "string"}
+              - label: "Tool tabs (fixed set of 8, in this order — rename the labels; don't change the pages)"
+                name: "tools"
+                widget: "list"
+                allow_add: false
+                summary: "{{label}}"
+                fields:
+                  - {label: "Page (do not change)", name: "page", widget: "select", options: ["roadmap.html", "planning-tool.html", "safety-plan.html", "resource-library.html", "find-referral.html", "schools.html", "self-care.html", "consultation.html"]}
+                  - {label: "Tab name", name: "label", widget: "string", hint: "Keep it short — tab names wrap to two lines at most on laptops."}
           - label: "Footer"
             name: "footer"
             widget: "object"

@@ -16,5 +16,43 @@
     "orgName": "Therapist Toolkit",
     "subLine": "Rise Against Suicide × University of Colorado Boulder",
     "fundingText": "Funded by the CU Boulder Office for Public & Community Engaged Scholarship."
+  },
+  "nav": {
+    "toolsHeading": "Toolkit tools",
+    "aboutLabel": "About Our Partnership",
+    "tools": [
+      {
+        "page": "roadmap.html",
+        "label": "Treatment Roadmap"
+      },
+      {
+        "page": "planning-tool.html",
+        "label": "Treatment Planning Tool"
+      },
+      {
+        "page": "safety-plan.html",
+        "label": "Make A Safety Plan"
+      },
+      {
+        "page": "resource-library.html",
+        "label": "Treatment Library"
+      },
+      {
+        "page": "find-referral.html",
+        "label": "Community Resources"
+      },
+      {
+        "page": "schools.html",
+        "label": "Navigating Schools"
+      },
+      {
+        "page": "self-care.html",
+        "label": "Self-Care & Support"
+      },
+      {
+        "page": "consultation.html",
+        "label": "Consultation"
+      }
+    ]
   }
 }
