@@ -1,6 +1,14 @@
 {
   "consultationPage": {
-    "sectionLabel": "Consultation"
+    "sectionLabel": "Consultation",
+    "gate": {
+      "heading": "Consultation",
+      "intro": "Enter password to continue",
+      "label": "Password",
+      "buttonLabel": "Continue",
+      "errorText": "That password didn't work — please try again."
+    },
+    "photoPlaceholder": "Photo coming soon"
   },
   "consult": {
     "eyebrow": "Talk to Someone",
@@ -30,57 +38,48 @@
     "cards": [
       {
         "key": "peer",
-        "icon": "i-users",
         "title": "A peer therapist",
         "subtitle": "Another Rise therapist · informal",
         "bestFor": [
           "Gut-check a tricky case",
           "Talk through a hard week with someone who gets it"
         ],
-        "format": "Phone or video, 20–30 min",
-        "reply": "Within 2 business days",
-        "note": "Not a substitute for supervision",
         "buttonLabel": "Request a peer consult",
         "mailto": "mailto:peersupport@riseagainstsuicide.org",
         "schedulingUrl": "",
-        "secondaryText": "Or browse peer therapists ↓",
-        "secondaryHref": "#peers"
+        "secondaryText": "Click to browse peer therapists ↓",
+        "secondaryHref": "#peers",
+        "photo": ""
       },
       {
         "key": "tamar",
-        "icon": "i-calendar-check",
         "title": "Dr. Tamar Kodish",
         "subtitle": "Licensed clinical psychologist",
         "bestFor": [
           "Risk assessment and safety planning questions",
           "Clinical consultation or personal support"
         ],
-        "format": "Scheduled video call, 30 min",
-        "reply": "Pick a time on the calendar",
-        "note": "Bring de-identified case details",
         "buttonLabel": "Schedule with Dr. Tamar",
         "mailto": "mailto:tamar@riseagainstsuicide.org",
         "schedulingUrl": "",
         "secondaryText": "Opens the scheduling tool",
-        "secondaryHref": ""
+        "secondaryHref": "",
+        "photo": ""
       },
       {
         "key": "rise",
-        "icon": "i-chat",
         "title": "The Rise team",
         "subtitle": "Program staff · case support",
         "bestFor": [
           "Resources, referrals, or billing questions",
           "General check-ins or program support"
         ],
-        "format": "Email, reviewed on business days",
-        "reply": "Within 1 business day",
-        "note": "For non-urgent logistics, not crisis response",
         "buttonLabel": "Email the Rise team",
         "mailto": "mailto:referral@riseagainstsuicide.org",
         "schedulingUrl": "",
         "secondaryText": "referral@riseagainstsuicide.org",
-        "secondaryHref": "mailto:referral@riseagainstsuicide.org"
+        "secondaryHref": "mailto:referral@riseagainstsuicide.org",
+        "photo": ""
       }
     ],
     "prototypeNote": "Contact links and the scheduling link below are placeholders for this prototype — swap in real addresses and links via the CMS."
@@ -93,18 +92,22 @@
       {
         "name": "Peer Therapist Profile",
         "role": "Role & background to be added",
-        "bio": "Bio coming soon."
+        "bio": "Bio coming soon.",
+        "photo": ""
       },
       {
         "name": "Peer Therapist Profile",
         "role": "Role & background to be added",
-        "bio": "Bio coming soon."
+        "bio": "Bio coming soon.",
+        "photo": ""
       },
       {
         "name": "Peer Therapist Profile",
         "role": "Role & background to be added",
-        "bio": "Bio coming soon."
+        "bio": "Bio coming soon.",
+        "photo": ""
       }
-    ]
+    ],
+    "showWithCard": "peer"
   }
 }

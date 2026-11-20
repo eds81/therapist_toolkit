@@ -10,35 +10,109 @@
         "label": "Community / Structural",
         "placeholderRisk": "e.g. limited healthcare access",
         "placeholderProtective": "e.g. community resources",
-        "description": "The systems and conditions around the client and their family: access to care, the neighborhood, community organizations, and structural factors like poverty, discrimination and policy."
+        "description": "The systems and conditions around the client and their family: access to care, the neighborhood, community organizations, and structural factors like poverty, discrimination and policy.",
+        "protectiveOptions": [
+          "community resources",
+          "access to mental health care",
+          "culturally affirming community",
+          "faith or cultural community",
+          "youth programs or mentors",
+          "safe neighborhood"
+        ],
+        "riskOptions": [
+          "limited healthcare access",
+          "financial stress or poverty",
+          "discrimination or racism",
+          "community violence",
+          "unstable housing",
+          "lack of transportation"
+        ]
       },
       {
         "key": "school",
         "label": "School",
         "placeholderRisk": "e.g. academic stress",
         "placeholderProtective": "e.g. trusted teacher",
-        "description": "Where the client spends most of their day: academics, school climate, belonging, and the staff who know them."
+        "description": "Where the client spends most of their day: academics, school climate, belonging, and the staff who know them.",
+        "protectiveOptions": [
+          "trusted teacher",
+          "school connectedness",
+          "school counselor support",
+          "extracurricular activities",
+          "academic strengths"
+        ],
+        "riskOptions": [
+          "academic stress",
+          "bullying or cyberbullying",
+          "school disconnection or absences",
+          "disciplinary action",
+          "unsupportive school climate"
+        ]
       },
       {
         "key": "family",
         "label": "Family",
         "placeholderRisk": "e.g. family conflict",
         "placeholderProtective": "e.g. supportive caregiver",
-        "description": "The client's home and caregivers: relationships, communication, supervision, and stress at home."
+        "description": "The client's home and caregivers: relationships, communication, supervision, and stress at home.",
+        "protectiveOptions": [
+          "supportive caregiver",
+          "family connectedness",
+          "open communication at home",
+          "stable home",
+          "caregiver involved in treatment"
+        ],
+        "riskOptions": [
+          "family conflict",
+          "caregiver mental health or substance use",
+          "family history of suicide",
+          "abuse or neglect",
+          "parental separation or loss"
+        ]
       },
       {
         "key": "peer",
         "label": "Peer",
         "placeholderRisk": "e.g. social isolation",
         "placeholderProtective": "e.g. close friend",
-        "description": "Friends, classmates, romantic relationships and online connections."
+        "description": "Friends, classmates, romantic relationships and online connections.",
+        "protectiveOptions": [
+          "close friend",
+          "positive peer group",
+          "sense of belonging",
+          "supportive online community",
+          "team or club membership"
+        ],
+        "riskOptions": [
+          "social isolation",
+          "peer rejection or conflict",
+          "romantic breakup",
+          "loss of a peer to suicide",
+          "harmful online interactions"
+        ]
       },
       {
         "key": "client",
         "label": "Client (Individual)",
         "placeholderRisk": "e.g. hopelessness / SI / non-suicidal self-injury (NSSI)",
         "placeholderProtective": "e.g. coping + treatment skills",
-        "description": "The young person at the center: their thoughts, feelings and behaviors, history, coping skills and strengths."
+        "description": "The young person at the center: their thoughts, feelings and behaviors, history, coping skills and strengths.",
+        "protectiveOptions": [
+          "coping + treatment skills",
+          "reasons for living",
+          "problem-solving skills",
+          "willingness to seek help",
+          "hope for the future",
+          "self-esteem"
+        ],
+        "riskOptions": [
+          "hopelessness",
+          "suicidal thoughts",
+          "non-suicidal self-injury (NSSI)",
+          "depression or anxiety",
+          "substance use",
+          "prior suicide attempt"
+        ]
       }
     ],
     "emailPlan": {
@@ -54,6 +128,7 @@
     "phase3Checklist": {
       "heading": "Phase 3 Checklist",
       "intro": "Activities to complete before your final session with the client.",
+      "progressLabel": "complete",
       "items": [
         {
           "text": "Assess and consolidate skills, and promote self-efficacy",
@@ -104,71 +179,85 @@
     "orientation": {
       "stepLabel": "Start Here",
       "title": "Start Here",
-      "hint": "A quick tour: the five levels, then what each phase is for. Use Next, or skip it.",
-      "stepperGroupLabel": "Start",
+      "hint": "A quick look at how this tool works, in four parts. Use Next, or skip it.",
       "levels": {
-        "heading": "Youth at the center: the five levels you'll map",
-        "intro": "Your client sits at the center of an ecosystem. In the planner, you map the risk and protective factors at each level, working from the outside in.",
+        "heading": "The five levels",
         "hint": "Click a ring or a level to see what belongs there.",
         "riskLabel": "Risk example",
-        "protectiveLabel": "Protective example"
+        "protectiveLabel": "Protective example",
+        "toggleLabel": "See the five levels"
       },
       "tour": {
         "skipLabel": "Skip intro",
         "backLabel": "Back",
         "nextLabel": "Next",
         "startLabel": "Start mapping",
-        "whyLabel": "Why this phase",
-        "doLabel": "What you do in the planner"
+        "stepWord": "Part",
+        "stepsLabel": "The four parts",
+        "coversLabel": "In the planner",
+        "plannerStepWord": "Step",
+        "plannerStepsWord": "Steps"
       },
-      "phases": [
+      "note": "What you enter stays in this browser. Remove or de-identify client details before you print or share.",
+      "steps": [
         {
-          "intention": "Understand what is driving the client's suicidal thoughts and behaviors, and keep them safe.",
-          "tasks": [
-            {
-              "icon": "ic-layers",
-              "title": "Map the client's ecosystem",
-              "text": "Add risk and protective factors at each level, in whatever order best fits your client.",
-              "where": "Steps 2–6"
-            },
-            {
-              "icon": "ic-star",
-              "title": "Choose the top factors",
-              "text": "Pick the factors most tied to suicidal thoughts and behaviors. These become your treatment targets.",
-              "where": "Step 7"
-            }
-          ]
+          "icon": "ic-layers",
+          "title": "Map the factors",
+          "shortTitle": "Map the factors",
+          "summary": "Add your client's protective and risk factors at five levels.",
+          "bullets": [
+            "Start with protective factors.",
+            "Go in any order, and skip any level that doesn’t apply."
+          ],
+          "showLevels": true
         },
         {
-          "intention": "Build skills that target those drivers, so the client can manage suicidal thoughts when they come up.",
-          "tasks": [
-            {
-              "icon": "ic-tool",
-              "title": "Select interventions",
-              "text": "Match evidence-based practices from the Treatment Library to each top factor.",
-              "where": "Step 8"
-            }
-          ]
+          "icon": "ic-star",
+          "title": "Choose the top factors",
+          "shortTitle": "Top factors",
+          "summary": "Pick the protective factors to amplify and the risk factors to reduce.",
+          "bullets": [
+            "Drag or click them into the Top Protective and Top Risk boxes.",
+            "These become your treatment targets."
+          ],
+          "showLevels": false
         },
         {
-          "intention": "Make the progress last after Rise ends, and link the client to their next step in care.",
-          "tasks": [
-            {
-              "icon": "ic-clipboard",
-              "title": "Review and print your plan",
-              "text": "See your full three-phase plan, add notes for each phase, and download a PDF.",
-              "where": "Step 9"
-            },
-            {
-              "icon": "ic-check-circle",
-              "title": "Wrap up with the Phase 3 checklist",
-              "text": "Re-screen, revisit the safety plan, link to care, and file an extension if needed.",
-              "where": "Step 9"
-            }
-          ]
+          "icon": "ic-tool",
+          "title": "Select interventions",
+          "shortTitle": "Interventions",
+          "summary": "Choose at least one intervention for each top factor.",
+          "bullets": [
+            "Start with protective factors. Under each one, Quick Add buttons let you choose how to reinforce it: add it to the safety plan, build self-compassion, put it in a hope kit, or reinforce it generally.",
+            "Pick practices from the Treatment Library, or write in your own."
+          ],
+          "showLevels": false
+        },
+        {
+          "icon": "ic-clipboard",
+          "title": "Review your plan",
+          "shortTitle": "Review",
+          "summary": "Make sure your plan is complete and ready to use.",
+          "bullets": [
+            "Review your full plan: your map, your top factors, and the interventions for each. Reorder the factors if your priorities change.",
+            "Add notes, then download a PDF or email a de-identified summary."
+          ],
+          "showLevels": false
         }
       ],
-      "note": "What you enter stays in this browser. Remove or de-identify client details before you print or share."
+      "timeline": {
+        "heading": "When to use this tool",
+        "sessions": 12,
+        "buildFrom": 2,
+        "buildTo": 4,
+        "buildLabel": "Build your plan",
+        "readyLabel": "Plan ready",
+        "followLabel": "Follow your plan",
+        "buildText": "Get to know your client and build your treatment plan.",
+        "followText": "By session 4, you will have a plan to guide sessions 4–12. Things will come up and priorities may shift, so revisit and adjust the plan as you go.",
+        "srText": "Timeline: sessions 2 to 4 build the plan; the plan is ready at session 4; sessions 4 to 12 follow the plan.",
+        "sessionsWord": "Sessions"
+      }
     },
     "emptyStateText": "Add at least one risk or protective factor above, then generate a plan.",
     "outputHeadings": {
@@ -180,9 +269,9 @@
       "label": "Goal",
       "statement": "Reduce the client's suicidal thoughts and behaviors",
       "steps": {
-        "ring": "As you map this level, ask: what here raises or lowers the client's suicidal thoughts and behaviors?",
+        "ring": "As you map this level, ask: what here protects the client, and what raises their suicidal thoughts and behaviors?",
         "topFactors": "Choose the factors most closely tied to the client's suicidal thoughts and behaviors. These become the focus of treatment.",
-        "resourcePlan": "Pick interventions that directly target what drives the client's suicidal thoughts and behaviors, or strengthen what protects against them.",
+        "resourcePlan": "Pick interventions that strengthen what protects the client, and that target what drives their suicidal thoughts and behaviors.",
         "review": "Every phase of this plan works toward one outcome: reducing the client's suicidal thoughts and behaviors.",
         "orientation": "Keep one question in mind as you go: what raises or lowers this client's suicidal thoughts and behaviors?"
       },
@@ -226,7 +315,42 @@
     "libraryLink": {
       "text": "Browse the Treatment Library",
       "hint": "Opens in a new tab, so you won't lose your progress here."
-    }
+    },
+    "strengthsFirst": {
+      "heading": "Lead with strengths",
+      "text": "Protective factors come first throughout this tool. Amplifying your client's strengths, and reinforcing what's already working, is empowering for them and builds hope for better outcomes."
+    },
+    "factorGroups": {
+      "protective": {
+        "heading": "Protective factors to amplify",
+        "hint": "Strengths to build on and reinforce. Start here."
+      },
+      "risk": {
+        "heading": "Risk factors to reduce",
+        "hint": "What raises your client's suicide risk and needs attention."
+      }
+    },
+    "topFactorsHint": "Drag, or click, your top protective and risk factors into the boxes below. Start with the strengths you want to amplify. At least 3 of each is a good start; add more with the + button or by dropping in extra factors from the lists above.",
+    "protectiveQuickAddLabel": "Quick add",
+    "protectiveQuickAdds": [
+      {
+        "label": "Integrate into the safety plan",
+        "safetyPlan": true
+      },
+      {
+        "label": "Self compassion",
+        "safetyPlan": false
+      },
+      {
+        "label": "Pull into hope kit",
+        "safetyPlan": false
+      },
+      {
+        "label": "Reinforce generally",
+        "safetyPlan": false
+      }
+    ],
+    "exampleSelectLabel": "Or pick a common example…"
   },
   "resourceCategories": [
     {

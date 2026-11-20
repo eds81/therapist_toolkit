@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=76" />
+  <link rel="stylesheet" href="styles.css?v=99" />
 </head>
 <body>
 <script src="icons.js?v=5"></script>
@@ -120,6 +120,8 @@
     <div class="planner-intro" data-fade data-delay="2" id="plannerIntro"></div>
     <!-- Back to the high-level overview on its own tab -->
     <p class="planner-roadmap-link" data-fade data-delay="2" id="plannerRoadmapLink"></p>
+    <!-- Lead with strengths: protective factors come first throughout the tool -->
+    <div class="planner-strengths" data-fade data-delay="2" id="plannerStrengths" hidden></div>
     <div class="goal-banner" data-goal-banner="planner" hidden></div>
   </div>
 </section>
@@ -153,13 +155,13 @@
     <div class="planner-orient" id="plannerOrientationSection" hidden></div>
 
     <div class="planner-layout" id="plannerLayout">
-      <div class="planner-col planner-col-risk">
-        <h3 class="planner-col-heading planner-col-heading-risk" id="plannerRiskLabel"></h3>
-        <div class="planner-rows" id="plannerRiskRows"></div>
-      </div>
       <div class="planner-col planner-col-protective">
         <h3 class="planner-col-heading planner-col-heading-protective" id="plannerProtectiveLabel"></h3>
         <div class="planner-rows" id="plannerProtectiveRows"></div>
+      </div>
+      <div class="planner-col planner-col-risk">
+        <h3 class="planner-col-heading planner-col-heading-risk" id="plannerRiskLabel"></h3>
+        <div class="planner-rows" id="plannerRiskRows"></div>
       </div>
     </div>
 
@@ -180,32 +182,32 @@
          reuses identically for the printed/downloaded plan. -->
     <div class="planner-ecomap-wrap" id="plannerEcoMapWrap">
       <div class="planner-ecomap-titles">
-        <span class="planner-ecomap-title planner-ecomap-title-risk" id="plannerEcoMapRiskTitle"></span>
         <span class="planner-ecomap-title planner-ecomap-title-protective" id="plannerEcoMapProtectiveTitle"></span>
+        <span class="planner-ecomap-title planner-ecomap-title-risk" id="plannerEcoMapRiskTitle"></span>
       </div>
       <div id="plannerEcoMap"></div>
     </div>
 
-    <!-- STEP 6: TOP CONTRIBUTORS — drag/click the top 3 risk + top 3 protective factors -->
+    <!-- STEP 6: TOP CONTRIBUTORS — drag/click the top protective + top risk factors (protective first) -->
     <div class="planner-topfactors" id="plannerTopFactorsSection" hidden>
       <div class="planner-topfactors-pool">
-        <div class="planner-pool-col">
-          <h4 class="planner-pool-heading planner-col-heading-risk">All Risk Factors</h4>
-          <div class="planner-pool" id="plannerRiskPool"></div>
-        </div>
         <div class="planner-pool-col">
           <h4 class="planner-pool-heading planner-col-heading-protective">All Protective Factors</h4>
           <div class="planner-pool" id="plannerProtectivePool"></div>
         </div>
+        <div class="planner-pool-col">
+          <h4 class="planner-pool-heading planner-col-heading-risk">All Risk Factors</h4>
+          <div class="planner-pool" id="plannerRiskPool"></div>
+        </div>
       </div>
       <div class="planner-topfactors-slots">
         <div class="planner-slots-col">
-          <h4 class="planner-pool-heading planner-col-heading-risk">Top Risk Factors</h4>
-          <div class="planner-slots" id="plannerRiskSlots" data-valence="risk"></div>
-        </div>
-        <div class="planner-slots-col">
           <h4 class="planner-pool-heading planner-col-heading-protective">Top Protective Factors</h4>
           <div class="planner-slots" id="plannerProtectiveSlots" data-valence="protective"></div>
+        </div>
+        <div class="planner-slots-col">
+          <h4 class="planner-pool-heading planner-col-heading-risk">Top Risk Factors</h4>
+          <div class="planner-slots" id="plannerRiskSlots" data-valence="risk"></div>
         </div>
       </div>
     </div>
@@ -289,7 +291,8 @@
 </footer>
 
 <script src="content-loader.js?v=4"></script>
-<script src="planner.js?v=73"></script>
+<script src="characters.js?v=2"></script>
+<script src="planner.js?v=92"></script>
 <script src="goal-banner.js?v=3"></script>
 <script src="nav-labels.js?v=1"></script>
 </body>

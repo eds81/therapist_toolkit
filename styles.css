@@ -599,7 +599,8 @@ a.how-to-use-step:hover { box-shadow: var(--shadow-md); transform: translateY(-2
   font-size: 11px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
   color: var(--white); background: var(--teal); padding: 4px 12px; border-radius: 100px;
 }
-.consult-card.is-active .consult-card-badge { display: inline-flex; }
+/* "Best fit" only when a "What do you need?" pill picked the card */
+.consult-card.is-best-fit .consult-card-badge { display: inline-flex; }
 .consult-icon {
   width: 42px; height: 42px; border-radius: 10px; background: var(--teal-light);
   display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
@@ -613,11 +614,6 @@ a.how-to-use-step:hover { box-shadow: var(--shadow-md); transform: translateY(-2
   padding-left: 18px; position: relative; margin-bottom: 4px;
 }
 .consult-card-bestfor li::before { content: '•'; position: absolute; left: 0; color: var(--teal); }
-.consult-card-dl { width: 100%; border-top: 1px solid var(--cream-dark); margin-bottom: 20px; }
-.consult-card.is-active .consult-card-dl { border-top-color: var(--teal-light); }
-.consult-card-dl-row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; font-size: 12px; }
-.consult-card-dl-row dt { font-weight: 800; color: var(--text-light); text-transform: uppercase; letter-spacing: .03em; }
-.consult-card-dl-row dd { color: var(--text-mid); text-align: right; }
 .consult-card-actions { margin-top: auto; width: 100%; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
 .consult-card-btn { width: 100%; text-align: center; }
 .consult-card.is-active .consult-card-btn { background: var(--teal); color: var(--white); border-color: var(--teal); }
@@ -1074,7 +1070,7 @@ body.scgate-open { overflow: hidden; }
 .planner-checklist-text { display: flex; flex-direction: column; gap: 2px; }
 .planner-checklist-text strong { font-size: 15px; color: var(--text); }
 .planner-checklist-detail { font-size: 13px; color: var(--text-mid); line-height: 1.5; }
-.planner-checklist-link-row { padding-left: 0; margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.planner-checklist-link-row { padding-left: 34px; margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px 18px; }
 .planner-checklist-link { font-size: 13px; font-weight: 800; color: var(--teal); }
 .planner-checklist-link:hover { text-decoration: underline; }
 
@@ -2338,7 +2334,7 @@ body.scgate-open { overflow: hidden; }
 .aim-top { display: flex; align-items: flex-start; justify-content: space-between; }
 .aim-icon { width: 30px; height: 30px; stroke: rgba(255,255,255,.85); }
 /* checklist links line up with the item text when the item has an icon (box 22 + gap 12 + icon 32 + gap 12) */
-.planner-checklist-item:has(.planner-checklist-icon) .planner-checklist-link-row { padding-left: 44px; }
+.planner-checklist-item:has(.planner-checklist-icon) .planner-checklist-link-row { padding-left: 78px; }
 
 /* =============================================
    HOME — linked partner badges, Discover outcomes link, team photo
@@ -2421,10 +2417,6 @@ body.scgate-open { overflow: hidden; }
 .planner-orient { margin-bottom: 24px; }
 .po-tour { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 22px 28px 24px; }
 .po-tour-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
-.po-dots { display: flex; gap: 6px; }
-.po-dot { width: 28px; height: 6px; border-radius: 3px; background: var(--cream-dark); transition: background .2s; }
-.po-dot.is-done { background: #9CC9D0; }
-.po-dot.is-current { background: var(--teal); }
 .po-skip {
   display: inline-flex; align-items: center; gap: 5px; background: none; border: none; cursor: pointer;
   font-family: var(--font); font-size: 13px; font-weight: 800; color: var(--text-light); text-decoration: underline; padding: 4px 0;
@@ -2483,30 +2475,37 @@ body.scgate-open { overflow: hidden; }
 .po-level-chip-4.is-active { background: #8ED4DF; border-color: #8ED4DF; color: var(--teal-dark); }
 .po-level-chip-5.is-active { background: var(--green); border-color: var(--green); }
 
-/* slides 2–4: one Treatment Roadmap phase each, in that phase's color */
-.po-dot-1.is-current, .po-dot-1.is-done { background: var(--orange); }
-.po-dot-2.is-current, .po-dot-2.is-done { background: var(--green-dark); }
-.po-dot-3.is-current, .po-dot-3.is-done { background: var(--teal); }
-.po-phase { --ph: var(--teal); --ph-bg: var(--teal-light); --ph-ink: var(--teal-dark); max-width: 820px; }
-.po-phase-1 { --ph: var(--orange); --ph-bg: #FEF0E6; --ph-ink: #A6531A; }
-.po-phase-2 { --ph: var(--green-dark); --ph-bg: var(--green-light); --ph-ink: hsl(112,35%,26%); }
-.po-phase-head { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
-.po-phase-badge { width: 64px; height: 64px; border-radius: 18px; background: var(--ph); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.po-phase-badge svg { width: 30px; height: 30px; stroke: var(--white); }
-.po-phase-kicker { display: block; font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .07em; color: var(--ph-ink); margin-bottom: 2px; }
-.po-phase h4 { margin-bottom: 0; color: var(--text); font-size: 24px; }
-.po-phase-why { background: var(--ph-bg); border-left: 5px solid var(--ph); border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 20px; }
-.po-phase-why span { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .07em; color: var(--ph-ink); margin-bottom: 4px; }
-.po-phase-why span svg { stroke: currentColor; }
-.po-phase-why p { font-size: 18px; font-weight: 800; color: var(--text); line-height: 1.45; }
-.po-phase-do { display: block; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .07em; color: var(--text-light); margin-bottom: 10px; }
-.po-tasks { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
-.po-task { display: flex; gap: 12px; align-items: flex-start; border: 2px solid var(--cream-dark); border-radius: var(--radius-sm); padding: 14px; }
-.po-task-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--ph-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.po-task-icon svg { width: 20px; height: 20px; stroke: var(--ph-ink); }
-.po-task strong { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 15px; color: var(--text); margin-bottom: 3px; }
-.po-task strong em { font-style: normal; font-size: 11px; font-weight: 800; color: var(--ph-ink); background: var(--ph-bg); border-radius: 100px; padding: 1px 8px; }
-.po-task p { font-size: 14px; color: var(--text-mid); line-height: 1.5; }
+/* four steps: a strip across the top (jump to any step), one slide per step */
+.po-stepnav { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; flex: 1; margin: 0; padding: 0; }
+.po-stepnav-btn {
+  width: 100%; display: flex; align-items: center; gap: 8px; text-align: left; font-family: var(--font); cursor: pointer;
+  background: var(--cream); border: 2px solid transparent; border-radius: var(--radius-sm); padding: 7px 10px;
+  font-size: 13px; font-weight: 800; color: var(--text-mid); line-height: 1.2; transition: background .15s, border-color .15s, color .15s;
+}
+.po-stepnav-btn b {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+  background: var(--white); border: 2px solid var(--cream-dark); font-size: 12px; font-weight: 900; color: var(--text-light);
+}
+.po-stepnav-btn:hover { border-color: #B9E2E9; }
+.po-stepnav-btn:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.po-stepnav-btn.is-done b { background: var(--teal-light); border-color: var(--teal-light); color: var(--teal-dark); }
+.po-stepnav-btn.is-current { background: var(--white); border-color: var(--teal); color: var(--teal-dark); }
+.po-stepnav-btn.is-current b { background: var(--teal); border-color: var(--teal); color: var(--white); }
+.po-tour-top { align-items: flex-start; }
+.po-skip { margin-top: 8px; flex-shrink: 0; }
+.po-stepslide { max-width: 980px; }
+.po-stepslide-head { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+.po-step-badge { width: 58px; height: 58px; border-radius: 16px; background: var(--teal); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.po-step-badge svg { width: 28px; height: 28px; stroke: var(--white); }
+.po-step-kicker { display: block; font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; color: var(--teal); margin-bottom: 2px; }
+.po-stepslide h4 { margin-bottom: 0; color: var(--text); font-size: 24px; }
+.po-step-summary { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.45; margin-bottom: 12px; max-width: 760px; }
+.po-step-list { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-bottom: 4px; }
+.po-step-list li { position: relative; padding-left: 24px; font-size: 15px; color: var(--text-mid); line-height: 1.5; }
+.po-step-list li::before { content: ''; position: absolute; left: 3px; top: 6px; width: 10px; height: 5px; border-left: 2.5px solid var(--teal); border-bottom: 2.5px solid var(--teal); transform: rotate(-45deg); }
+.po-levels { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--cream-dark); }
+.po-levels-heading { font-size: 16px; color: var(--teal-dark); margin-bottom: 2px; }
+.po-levels .po-hint { margin: 0 0 14px !important; }
 .po-note { display: flex; align-items: flex-start; gap: 6px; margin-top: 16px; font-size: 13px; color: var(--text-light); }
 .po-note svg { stroke: currentColor; flex-shrink: 0; margin-top: 2px; }
 @media (max-width: 760px) {
@@ -2516,10 +2515,6 @@ body.scgate-open { overflow: hidden; }
 }
 @media (max-width: 520px) {
   .po-tour { padding: 18px 16px 20px; }
-  .po-dot { width: 18px; }
-  .po-phase-badge { width: 52px; height: 52px; border-radius: 14px; }
-  .po-phase h4 { font-size: 20px; }
-  .po-phase-why p { font-size: 16px; }
   .po-examples { grid-template-columns: 1fr; }
   .po-count { display: none; }
 }
@@ -2690,10 +2685,27 @@ a.journey-goto { text-decoration: none; }
 /* With the roadmap on its own tab, the tool follows the header directly */
 .planner-header + .planner > .section-inner { padding-top: 8px; }
 
-/* Treatment Plan — Phase 3 as a plain list (no checkboxes) */
-.planner-checklist-row { display: flex; align-items: flex-start; gap: 12px; }
-.planner-checklist-item:hover { border-color: var(--cream-dark); }
-.planner-checklist-icon { margin-top: 0; }
+/* Treatment Plan — Phase 3 checklist: click to check off and track progress */
+.planner-checklist-progress {
+  font-size: 12px; font-weight: 800; color: var(--teal-dark); background: var(--teal-light);
+  padding: 3px 12px; border-radius: 100px; white-space: nowrap;
+}
+.planner-checklist-item:hover { border-color: var(--teal); }
+.planner-checklist-item.is-done { background: var(--teal-light); border-color: #B9E2E9; }
+.planner-checklist-item label { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+.planner-checklist-input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.planner-checklist-box {
+  flex-shrink: 0; width: 22px; height: 22px; margin-top: 1px; border-radius: 6px;
+  border: 2px solid var(--teal); background: var(--white); position: relative;
+}
+.planner-checklist-input:checked + .planner-checklist-box { background: var(--teal); }
+.planner-checklist-input:checked + .planner-checklist-box::after {
+  content: ''; position: absolute; left: 6px; top: 2px; width: 6px; height: 11px;
+  border: solid var(--white); border-width: 0 3px 3px 0; transform: rotate(45deg);
+}
+.planner-checklist-input:focus-visible + .planner-checklist-box { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.planner-checklist-item.is-done .planner-checklist-text strong { color: var(--teal-dark); }
+.planner-checklist-icon { margin-top: -4px; }
 
 /* Treatment Plan — reorder top factors (drag handle + Move up / Move down) */
 .intervention-review-reorder-hint { font-size: 13px; color: var(--text-light); margin: -4px 0 6px; }
@@ -2799,3 +2811,390 @@ a.sc-item-link:focus-visible { outline: 3px solid var(--yellow); outline-offset:
 }
 .tour-when svg { stroke: var(--teal-dark); flex-shrink: 0; margin-top: 2px; }
 .tour-when strong { display: block; font-size: 10.5px; font-weight: 900; text-transform: uppercase; letter-spacing: .07em; color: var(--teal); margin-bottom: 1px; }
+
+@media (max-width: 760px) {
+  .po-tour-top { flex-direction: column-reverse; align-items: stretch; gap: 8px; }
+  .po-skip { align-self: flex-end; margin-top: 0; }
+  .po-stepnav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .po-step-summary { font-size: 16px; }
+  .po-stepslide h4 { font-size: 20px; }
+}
+
+/* Home cards: just an arrow to open (the whole card is the link) */
+.tour-open { align-self: flex-end; width: 38px; height: 38px; border-radius: 50%; justify-content: center; padding-top: 0 !important; margin-top: auto; background: var(--teal-light); color: var(--teal-dark); transition: background .15s, color .15s; }
+.tour-body > .tour-when { margin-bottom: 14px; }
+.tour-card:hover .tour-open { background: var(--teal); color: var(--white); }
+.tour-open svg { stroke: currentColor; width: 18px; height: 18px; }
+
+/* Consultation: photos (placeholders until added) and selectable contact cards */
+.consult-card { cursor: pointer; }
+.consult-card a, .consult-card button { cursor: pointer; }
+.consult-photo, .peer-photo { overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.consult-photo { width: 84px; height: 84px; border-radius: 50%; margin-bottom: 14px; }
+.peer-photo { width: 96px; height: 96px; border-radius: 50%; margin-bottom: 14px; }
+.consult-photo img, .peer-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.consult-photo.is-placeholder, .peer-photo.is-placeholder {
+  flex-direction: column; gap: 2px; background: var(--white); border: 2px dashed #9CC9D0; color: var(--text-light); text-align: center;
+}
+.consult-photo.is-placeholder svg, .peer-photo.is-placeholder svg { width: 26px; height: 26px; stroke: #9CC9D0; }
+.consult-photo.is-placeholder span, .peer-photo.is-placeholder span { font-size: 9px; font-weight: 800; line-height: 1.15; padding: 0 8px; }
+#peers[hidden] { display: none !important; }
+#peers { scroll-margin-top: calc(var(--nav-h) + 16px); }
+/* Start Here: slides are only as tall as their content */
+.po-slide { min-height: 0; }
+
+/* =============================================
+   TREATMENT PLANNING TOOL — protective factors first ("lead with strengths")
+   ============================================= */
+.planner-strengths {
+  display: flex; gap: 12px; align-items: flex-start; max-width: 820px; margin: 0 0 22px;
+  background: var(--green-light); border-left: 5px solid var(--green-dark); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 14px 18px;
+}
+.planner-strengths > svg { stroke: hsl(112,35%,26%); flex-shrink: 0; margin-top: 2px; }
+.planner-strengths strong { display: block; font-size: 15px; color: hsl(112,35%,22%); margin-bottom: 2px; }
+.planner-strengths p { font-size: 14px; color: hsl(112,30%,20%); line-height: 1.55; margin: 0; }
+
+/* Interventions (step 8 and the Treatment Plan): protective group first */
+.intervention-group { margin-top: 18px; }
+.intervention-group + .intervention-group { margin-top: 30px; }
+.intervention-group-head { margin: 22px 0 8px; }
+.intervention-group-head:first-child { margin-top: 0; }
+.intervention-group-heading { display: flex; align-items: center; gap: 8px; font-size: 17px; margin-bottom: 2px; }
+.intervention-group-protective .intervention-group-heading, .intervention-group-head-protective .intervention-group-heading { color: hsl(112,35%,26%); }
+.intervention-group-protective .intervention-group-heading svg, .intervention-group-head-protective .intervention-group-heading svg { stroke: var(--green-dark); }
+.intervention-group-risk .intervention-group-heading, .intervention-group-head-risk .intervention-group-heading { color: #A23B2C; }
+.intervention-group-risk .intervention-group-heading svg, .intervention-group-head-risk .intervention-group-heading svg { stroke: #C0392B; }
+.intervention-group-hint { font-size: 13px; color: var(--text-light); margin: 0 0 6px; }
+
+/* Step 8: quick-add options on protective factors */
+.intervention-quick { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 10px; }
+.intervention-quick-label { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; color: hsl(112,35%,26%); }
+.intervention-quick-btn {
+  display: inline-flex; align-items: center; gap: 5px; font-family: var(--font); font-size: 13px; font-weight: 800; cursor: pointer;
+  color: hsl(112,35%,24%); background: var(--white); border: 1.5px solid #BEE0B7; border-radius: 100px; padding: 5px 12px; transition: background .15s, border-color .15s;
+}
+.intervention-quick-btn svg { stroke: currentColor; }
+.intervention-quick-btn:hover { background: var(--green-light); border-color: var(--green); }
+.intervention-quick-btn[aria-pressed="true"] { background: var(--green-dark); border-color: var(--green-dark); color: var(--white); }
+.intervention-quick-btn.is-safety { border-color: #9CC9D0; color: var(--teal-dark); }
+.intervention-quick-btn.is-safety[aria-pressed="true"] { background: var(--teal); border-color: var(--teal); color: var(--white); }
+.intervention-quick-btn:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+
+/* Steps 2–6: pick a common example */
+.planner-example-select {
+  margin-top: 8px; width: 100%; max-width: 100%; font-family: var(--font); font-size: 13px; font-weight: 700; color: var(--text-mid);
+  background: var(--white); border: 1.5px dashed var(--cream-dark); border-radius: 100px; padding: 7px 12px; cursor: pointer;
+}
+.planner-example-select:hover { border-color: var(--teal); }
+.planner-example-select:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+
+/* Make A Safety Plan: protective factors from the Treatment Planning Tool */
+.sp-from-planner { background: var(--green-light); border-radius: var(--radius-sm); padding: 14px 16px; margin: 4px 0 18px; max-width: 760px; }
+.sp-from-planner-head { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
+.sp-from-planner-head > svg { stroke: var(--green-dark); flex-shrink: 0; margin-top: 2px; }
+.sp-from-planner-head strong { display: block; font-size: 14px; color: hsl(112,35%,22%); }
+.sp-from-planner-head p { font-size: 13px; color: hsl(112,30%,22%); margin: 2px 0 0; line-height: 1.5; }
+.sp-from-planner-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.sp-from-planner-list li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; background: var(--white); border-radius: 8px; padding: 8px 12px; }
+.sp-from-planner-text { font-size: 14px; font-weight: 700; color: var(--text); }
+.sp-from-planner-text em { font-style: normal; font-size: 12px; font-weight: 700; color: var(--text-light); margin-left: 8px; }
+.sp-from-planner-btn {
+  display: inline-flex; align-items: center; gap: 5px; font-family: var(--font); font-size: 12px; font-weight: 800; cursor: pointer;
+  color: var(--white); background: var(--green-dark); border: none; border-radius: 100px; padding: 5px 12px;
+}
+.sp-from-planner-btn svg { stroke: currentColor; }
+.sp-from-planner-btn:disabled { background: transparent; color: var(--green-dark); cursor: default; }
+.sp-from-planner-btn:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+
+/* Select Interventions: two columns — the factor on the left; the
+   type-or-choose box with Quick Add right under it on the right */
+.intervention-factor-row { display: grid; grid-template-columns: minmax(200px, 1fr) minmax(260px, 2fr); align-items: center; }
+.intervention-factor-header { grid-column: 1; min-width: 0; }
+.intervention-input-row { grid-column: 2; min-width: 0; }
+.intervention-quick { grid-column: 2; margin-top: 0; }
+.intervention-selected-list { grid-column: 1 / -1; }
+@media (max-width: 700px) {
+  .intervention-factor-row { grid-template-columns: 1fr; }
+  .intervention-factor-header, .intervention-input-row, .intervention-quick { grid-column: 1; }
+}
+
+/* =============================================
+   START HERE — Parts 1–4, planner-step links, illustrations, timeline
+   ============================================= */
+.po-stepslide-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(220px, 1fr); gap: 24px; align-items: center; }
+.po-illus-wrap { display: flex; justify-content: center; }
+.po-illus { width: 100%; max-width: 360px; height: auto; display: block; }
+.po-covers { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 14px; }
+.po-covers-label { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; color: var(--text-light); }
+.po-jump {
+  display: inline-flex; align-items: center; gap: 6px; font-family: var(--font); font-size: 13px; font-weight: 800; cursor: pointer;
+  color: var(--teal-dark); background: var(--white); border: 1.5px solid #B9E2E9; border-radius: 100px; padding: 4px 11px 4px 5px;
+}
+.po-jump b { width: 20px; height: 20px; border-radius: 50%; background: var(--teal-light); display: inline-flex; align-items: center; justify-content: center; font-size: 11px; }
+.po-jump:hover { border-color: var(--teal); background: var(--teal-light); }
+.po-jump:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+
+/* When to use this tool: sessions 1–12 */
+.po-timeline { background: var(--cream); border-radius: var(--radius-sm); padding: 14px 18px 16px; margin-bottom: 18px; }
+.po-tl-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.po-tl-head svg { stroke: var(--teal); }
+.po-tl-head strong { font-size: 15px; color: var(--teal-dark); }
+.po-tl-track { position: relative; display: grid; grid-template-columns: repeat(var(--sessions), minmax(0, 1fr)); grid-template-rows: 24px 30px; align-items: center; column-gap: 0; }
+.po-tl-band { grid-row: 1; height: 22px; border-radius: 11px; display: flex; align-items: center; padding: 0 10px; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .05em; white-space: nowrap; overflow: hidden; transform-origin: left center; }
+.po-tl-build { grid-column: var(--build-from) / calc(var(--build-to) + 1); background: var(--orange); color: var(--white); }
+.po-tl-follow { grid-column: var(--build-to) / calc(var(--follow-to) + 1); background: var(--teal); color: var(--white); margin-left: 50%; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.po-tl-dot { grid-row: 2; justify-self: center; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; color: var(--text-light); background: var(--white); border: 2px solid var(--cream-dark); }
+.po-tl-dot.is-build { border-color: var(--orange); color: #A6531A; }
+.po-tl-dot.is-follow { border-color: #9CC9D0; color: var(--teal-dark); }
+.po-tl-flag { grid-row: 1; justify-self: end; position: relative; z-index: 2; display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 900; color: var(--white); background: var(--teal-dark); border-radius: 100px; padding: 3px 9px; transform: translate(50%, -26px); white-space: nowrap; }
+.po-tl-flag svg { stroke: currentColor; }
+.po-tl-build-text { font-size: 14px; color: var(--text-mid); margin: 12px 0 4px; }
+.po-tl-follow-text { font-size: 17px; font-weight: 900; color: var(--teal-dark); line-height: 1.4; margin: 0; }
+.po-timeline { padding-top: 34px; }
+.po-timeline.is-playing .po-tl-build { animation: poGrow .9s ease-out .2s both; }
+.po-timeline.is-playing .po-tl-flag { animation: poPop .45s ease-out 1.1s both; }
+.po-timeline.is-playing .po-tl-follow { animation: poGrow 1.4s ease-out 1.5s both; }
+.po-timeline.is-playing .po-tl-follow-text { animation: poFadeUp .6s ease-out 2.6s both; }
+@keyframes poGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes poPop { 0% { opacity: 0; transform: translate(50%, -26px) scale(.4); } 70% { transform: translate(50%, -26px) scale(1.12); } 100% { opacity: 1; transform: translate(50%, -26px) scale(1); } }
+@keyframes poFadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .po-timeline.is-playing .po-tl-build, .po-timeline.is-playing .po-tl-flag, .po-timeline.is-playing .po-tl-follow, .po-timeline.is-playing .po-tl-follow-text { animation: none; }
+}
+@media (max-width: 760px) {
+  .po-stepslide-grid { grid-template-columns: 1fr; }
+  .po-illus-wrap { order: -1; }
+  .po-illus { max-width: 280px; }
+  .po-tl-band span { display: none; }
+  .po-tl-dot { width: 20px; height: 20px; font-size: 10px; }
+  .po-tl-follow-text { font-size: 15px; }
+}
+
+/* Consultation: larger photos, centered in each card */
+.consult-photo { width: 120px; height: 120px; align-self: center; margin: 4px auto 16px; }
+.peer-photo { width: 132px; height: 132px; align-self: center; margin: 4px auto 16px; }
+.consult-photo.is-placeholder svg, .peer-photo.is-placeholder svg { width: 36px; height: 36px; }
+.consult-photo.is-placeholder span, .peer-photo.is-placeholder span { font-size: 11px; }
+/* timeline bands meet at the middle of the "plan ready" session (half a column) */
+.po-tl-build { margin-right: calc(50% / (var(--build-to) - var(--build-from) + 1)); border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.po-tl-follow { margin-left: calc(50% / (var(--follow-to) - var(--build-to) + 1)); }
+@media (max-width: 760px) { .po-tl-head { margin-bottom: 34px; } }
+
+/* Start Here, Part 1: the five-level map folds away behind a toggle */
+.po-levels { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--cream-dark); }
+.po-levels-toggle {
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer; list-style: none;
+  font-size: 15px; font-weight: 800; color: var(--teal-dark); background: var(--teal-light); border-radius: 100px; padding: 7px 16px;
+}
+.po-levels-toggle::-webkit-details-marker { display: none; }
+.po-levels-toggle::after { content: '+'; font-size: 18px; line-height: 1; margin-left: 2px; }
+.po-levels[open] .po-levels-toggle::after { content: '–'; }
+.po-levels-toggle svg { stroke: currentColor; }
+.po-levels-toggle:hover { background: #C2E7EE; }
+.po-levels-toggle:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.po-levels[open] .po-hint { margin-top: 12px !important; }
+
+/* Step 7: reorder the selected top factors (drag, or up/down buttons) */
+.planner-slot.is-filled { cursor: grab; }
+.planner-slot.is-filled.is-dragging { opacity: .45; }
+.planner-slot-order { display: inline-flex; flex-direction: column; gap: 2px; margin-right: 2px; }
+.planner-slot-move {
+  width: 22px; height: 17px; border-radius: 5px; border: 1.5px solid var(--cream-dark); background: var(--white); color: var(--teal-dark);
+  display: inline-flex; align-items: center; justify-content: center; padding: 0; cursor: pointer;
+}
+.planner-slot-move svg { width: 11px; height: 11px; stroke: currentColor; }
+.planner-slot-move:hover:not(:disabled) { border-color: var(--teal); background: var(--teal-light); }
+.planner-slot-move:disabled { opacity: .3; cursor: default; }
+.planner-slot-move:focus-visible { outline: 3px solid var(--yellow); outline-offset: 1px; }
+
+/* Consultation: hovering a card highlights it */
+.consult-card { transition: background .15s, border-color .15s, box-shadow .15s, transform .15s, opacity .15s; }
+.consult-card:hover { background: var(--white); border-color: var(--teal); box-shadow: var(--shadow-md); transform: translateY(-2px); opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .consult-card:hover { transform: none; } }
+
+/* Treatment Roadmap: an animated scene at the top of each phase card */
+.journey-illus { margin: -20px -20px 14px; background: var(--white); border-radius: var(--radius) var(--radius) 0 0; border-bottom: 1px solid var(--cream-dark); display: flex; justify-content: center; }
+.journey-illus-svg { width: 100%; max-width: 300px; height: auto; display: block; }
+
+/* Home "Eight tools, one goal": the card shows the preview, title and arrow;
+   the description and "Use it" tip appear over the preview on hover/focus.
+   Touch screens (no hover) always show them, under the title. */
+.tour-card { position: relative; }
+.tour-body { flex-direction: row; align-items: center; justify-content: space-between; gap: 12px; order: 2; }
+.tour-body .tour-title { margin-bottom: 0; }
+.tour-body .tour-open { margin: 0; flex-shrink: 0; }
+.tour-reveal { order: 3; padding: 0 20px 18px; }
+.tour-tagline { font-size: 14px; color: var(--text-mid); line-height: 1.5; margin: 0; }
+.tour-reveal .tour-when { margin-top: 10px !important; }
+@media (hover: hover) {
+  .tour-reveal {
+    position: absolute; top: 0; left: 0; right: 0; height: 160px; padding: 16px 18px; z-index: 1;
+    display: flex; flex-direction: column; justify-content: center;
+    background: rgba(255, 255, 255, .97); border-bottom: 2px solid var(--teal-light);
+    opacity: 0; transform: translateY(8px); pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  .tour-card:hover .tour-reveal, .tour-card:focus-visible .tour-reveal { opacity: 1; transform: none; }
+}
+@media (hover: hover) and (prefers-reduced-motion: reduce) { .tour-reveal { transition: none; transform: none; } }
+
+/* Treatment Roadmap phase cards: a smooth color bar across the rounded top
+   (a thick top border tapered unevenly into the rounded corners) */
+.journey-phase { border-top: none; position: relative; overflow: hidden; }
+.journey-phase::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: var(--teal); z-index: 2; }
+.journey-phase-1::before { background: var(--orange); }
+.journey-phase-2::before { background: var(--green-dark); }
+.journey-phase-3::before { background: var(--teal); }
+/* …and the same color down both sides of the animation, framing it */
+.journey-phase .journey-illus { --phase-color: var(--teal); box-shadow: inset 4px 0 0 var(--phase-color), inset -4px 0 0 var(--phase-color); }
+.journey-phase-1 .journey-illus { --phase-color: var(--orange); }
+.journey-phase-2 .journey-illus { --phase-color: var(--green-dark); }
+.journey-phase-3 .journey-illus { --phase-color: var(--teal); }
+/* …and around the whole card, so the scene and the text read as one framed card */
+.planner-roadmap .journey-phase { --phase-color: var(--teal); box-shadow: inset 0 0 0 4px var(--phase-color); }
+.planner-roadmap .journey-phase-1 { --phase-color: var(--orange); }
+.planner-roadmap .journey-phase-2 { --phase-color: var(--green-dark); }
+.planner-roadmap .journey-phase-3 { --phase-color: var(--teal); }
+/* the divider under the scene sits inside the frame (no notch in the side lines) */
+.journey-phase .journey-illus { border-bottom: none; box-shadow: inset 4px 0 0 var(--phase-color), inset -4px 0 0 var(--phase-color), inset 0 -1px 0 var(--cream-dark); }
+
+/* =============================================
+   TREATMENT ROADMAP — a road across the top of the phase cards
+   ============================================= */
+.roadmap-road { margin: 8px 0 -6px; }
+.roadmap-road-svg { width: 100%; height: auto; display: block; overflow: visible; }
+/* each card hangs from its milestone: a short dotted connector up to the road */
+.roadmap-stops .journey-phase { margin-top: 18px; overflow: visible; }
+.roadmap-stops .journey-phase > .journey-illus { border-radius: var(--radius) var(--radius) 0 0; overflow: hidden; }
+.roadmap-stops .journey-phase::after {
+  content: ''; position: absolute; top: -20px; left: 50%; width: 0; height: 20px;
+  border-left: 3px dotted var(--phase-color); transform: translateX(-50%);
+}
+.roadmap-stops .journey-phase::before { border-radius: var(--radius) var(--radius) 0 0; }
+@media (max-width: 900px) {
+  /* phones/tablets: the road runs down the left, linking the stacked cards */
+  .roadmap-road { display: none; }
+  .roadmap-stops { position: relative; padding-left: 34px; }
+  .roadmap-stops::before {
+    content: ''; position: absolute; left: 6px; top: 0; bottom: 0; width: 16px; border-radius: 8px;
+    background: #4A5560 repeating-linear-gradient(to bottom, transparent 0 10px, rgba(255,255,255,.85) 10px 22px) center / 2px 100% no-repeat;
+  }
+  .roadmap-stops .journey-phase { margin-top: 0; }
+  .roadmap-stops .journey-phase::after {
+    top: 22px; left: -20px; width: 20px; height: 0; border-left: none; border-top: 3px dotted var(--phase-color); transform: none;
+  }
+}
+
+/* Road v2: session markers, and the phase the dot is in lights up */
+.road-seg { opacity: 0; transition: opacity .4s ease; }
+.road-seg.is-active { opacity: .55; }
+.road-session circle, .road-session text { transition: fill .3s ease, stroke .3s ease; }
+.road-session.is-passed circle { fill: #FDF3D3; stroke: #C9A227; }
+.road-session.is-current circle { fill: #F5C842; stroke: #FFFFFF; }
+.road-session.is-current text { fill: #2B2B2B; }
+.road-pin-shape { transition: transform .35s ease; transform-box: fill-box; transform-origin: 50% 100%; }
+.road-pin.is-active .road-pin-shape { transform: scale(1.25); }
+.roadmap-stops .journey-phase { transition: transform .35s ease, box-shadow .35s ease; }
+.roadmap-stops .journey-phase.is-current-phase { transform: translateY(-6px); box-shadow: inset 0 0 0 4px var(--phase-color), 0 14px 30px rgba(0, 0, 0, .13); }
+@media (prefers-reduced-motion: reduce) {
+  .road-seg, .road-pin-shape, .roadmap-stops .journey-phase { transition: none; }
+}
+@media (max-width: 900px) { .roadmap-stops .journey-phase.is-current-phase { transform: none; } }
+
+/* Road v3: hover, click or drag along the road to move the dot */
+.roadmap-road-svg { cursor: pointer; touch-action: pan-y; border-radius: 16px; }
+.roadmap-road-svg:focus { outline: none; }
+.roadmap-road-svg:focus-visible { outline: 3px solid var(--yellow); outline-offset: 4px; }
+.roadmap-road-svg.is-scrubbing .road-dot circle { stroke: var(--teal-dark); }
+.roadmap-road-hint { font-size: 13px; font-weight: 700; color: var(--text-light); text-align: center; margin: 2px 0 0; }
+.road-sessions, .road-pins { pointer-events: none; }
+
+/* Phase card outlines v2: one continuous border around each card (instead of a
+   top bar + side lines + inset shadow pieced together), and a thicker ring when
+   the phase is highlighted (the road dot is in it, or it's hovered/focused). */
+.journey-phase { --phase-color: var(--teal); --phase-border: 3px; }
+.journey-phase-1 { --phase-color: var(--orange); }
+.journey-phase-2 { --phase-color: var(--green-dark); }
+.journey-phase-3 { --phase-color: var(--teal); }
+.journey-phase, .planner-roadmap .journey-phase, .roadmap-stops .journey-phase {
+  border: var(--phase-border) solid var(--phase-color);
+  box-shadow: 0 0 0 0 var(--phase-color), var(--shadow-sm);
+}
+.journey-phase::before, .roadmap-stops .journey-phase::before { display: none; }
+.journey-phase .journey-illus, .roadmap-stops .journey-phase > .journey-illus {
+  margin: -20px -20px 14px;
+  border-radius: calc(var(--radius) - var(--phase-border)) calc(var(--radius) - var(--phase-border)) 0 0;
+  box-shadow: inset 0 -1px 0 var(--cream-dark);
+}
+.roadmap-stops .journey-phase::after { top: calc(-18px - var(--phase-border)); height: 18px; }
+.roadmap-stops .journey-phase { transition: transform .35s ease, box-shadow .3s ease; }
+.roadmap-stops .journey-phase.is-current-phase,
+.journey-phase:hover, .journey-phase:focus-within {
+  box-shadow: 0 0 0 3px var(--phase-color), 0 14px 30px rgba(0, 0, 0, .13);
+}
+@media (max-width: 900px) {
+  .roadmap-stops .journey-phase::after { top: 22px; left: calc(-20px - var(--phase-border)); height: 0; }
+}
+
+/* hint sits above the road, clear of the card connectors */
+.roadmap-road-hint { text-align: right; margin: 0 0 -4px; }
+
+/* =============================================
+   START HERE — "When to use this tool" as a small road (matches the Roadmap):
+   sessions 1–12 on the road, the build stretch (orange) and follow stretch
+   (teal), a "Plan ready" pin at the hand-off, and two cards underneath.
+   ============================================= */
+.po-timeline { padding: 16px 20px 20px; }
+.po-tl-head { margin-bottom: 4px; }
+.po-tl-road { display: grid; grid-template-columns: repeat(var(--sessions), minmax(0, 1fr)); grid-template-rows: 40px 34px; align-items: center; position: relative; }
+.po-tl-asphalt, .po-tl-stretch, .po-tl-dashes { grid-row: 2; height: 34px; border-radius: 17px; }
+.po-tl-asphalt { grid-column: 1 / -1; background: #4A5560; box-shadow: 0 0 0 4px #D9D1BF; }
+.po-tl-stretch { position: relative; z-index: 1; transform-origin: left center; }
+.po-tl-build { grid-column: var(--build-from) / calc(var(--build-to) + 1); background: var(--orange);
+  margin: 0 calc(50% / (var(--build-to) - var(--build-from) + 1)); border-radius: 17px 0 0 17px; margin-left: 0; }
+.po-tl-follow { grid-column: var(--build-to) / calc(var(--follow-to) + 1); background: var(--teal);
+  margin-left: calc(50% / (var(--follow-to) - var(--build-to) + 1)); border-radius: 0 17px 17px 0; }
+.po-tl-dashes { grid-column: 1 / -1; height: 2px; margin: 0 14px; z-index: 2; opacity: .7;
+  background: repeating-linear-gradient(to right, #FFFFFF 0 12px, transparent 12px 22px); }
+.po-tl-dot { grid-row: 2; justify-self: center; z-index: 3; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 11.5px; font-weight: 900; background: #FFFFFF; color: #4A5560; border: 2px solid #4A5560; }
+.po-tl-dot.is-build { border-color: #FFFFFF; color: #A6531A; }
+.po-tl-dot.is-follow { border-color: #FFFFFF; color: var(--teal-dark); }
+.po-tl-pin { grid-row: 1; justify-self: center; z-index: 4; display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--teal-dark); align-self: end; margin-bottom: -6px; }
+.po-tl-pin-label { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; font-size: 11px; font-weight: 900; color: #FFFFFF; background: var(--teal-dark); border-radius: 100px; padding: 3px 9px; }
+.po-tl-pin-label svg { stroke: currentColor; }
+.po-tl-pin svg { display: block; }
+.po-tl-cards { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 12px; margin-top: 16px; }
+.po-tl-card { background: var(--white); border-radius: var(--radius-sm); padding: 12px 16px 14px; border: 2px solid var(--cream-dark); border-top: 5px solid var(--orange); }
+.po-tl-card.is-follow { border-color: #9CC9D0; border-top-color: var(--teal); }
+.po-tl-card-tag { display: block; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; color: #A6531A; }
+.po-tl-card.is-follow .po-tl-card-tag { color: var(--teal-dark); }
+.po-tl-card-range { display: block; font-size: 15px; font-weight: 900; color: var(--text); margin: 2px 0 6px; }
+.po-tl-card p { font-size: 14px; color: var(--text-mid); line-height: 1.5; margin: 0; }
+.po-tl-card.is-follow p { font-size: 15px; font-weight: 700; color: var(--teal-dark); }
+.po-timeline.is-playing .po-tl-build { animation: poGrow .9s ease-out .2s both; }
+.po-timeline.is-playing .po-tl-pin { animation: poPop .45s ease-out 1.1s both; }
+.po-timeline.is-playing .po-tl-follow { animation: poGrow 1.4s ease-out 1.5s both; }
+.po-timeline.is-playing .po-tl-card { animation: poFadeUp .5s ease-out both; }
+.po-timeline.is-playing .po-tl-card.is-build { animation-delay: .5s; }
+.po-timeline.is-playing .po-tl-card.is-follow { animation-delay: 2.2s; }
+@media (prefers-reduced-motion: reduce) { .po-timeline.is-playing .po-tl-build, .po-timeline.is-playing .po-tl-pin, .po-timeline.is-playing .po-tl-follow, .po-timeline.is-playing .po-tl-card { animation: none; } }
+@media (max-width: 760px) {
+  .po-tl-head { margin-bottom: 4px; }
+  .po-tl-road { grid-template-rows: 40px 26px; }
+  .po-tl-asphalt, .po-tl-stretch { height: 26px; border-radius: 13px; }
+  .po-tl-build { border-radius: 13px 0 0 13px; } .po-tl-follow { border-radius: 0 13px 13px 0; }
+  .po-tl-dot { width: 19px; height: 19px; font-size: 9.5px; border-width: 1.5px; }
+  .po-tl-dashes { display: none; }
+  .po-tl-cards { grid-template-columns: 1fr; }
+}
+/* the pin stands on the road at the hand-off session, clear of the heading */
+.po-tl-road { grid-template-rows: 54px 34px; }
+.po-tl-pin { grid-row: 1 / 3; align-self: end; margin-bottom: 30px; }
+@media (max-width: 760px) {
+  .po-tl-road { grid-template-rows: 56px 26px; }
+  .po-tl-pin { margin-bottom: 22px; }
+}
+@keyframes poPinDrop { 0% { opacity: 0; transform: translateY(-14px) scale(.6); } 70% { opacity: 1; transform: translateY(0) scale(1.08); } 100% { opacity: 1; transform: none; } }
+.po-tl-pin { transform-origin: 50% 100%; }
+.po-timeline.is-playing .po-tl-pin { animation: poPinDrop .5s ease-out 1.1s both; }

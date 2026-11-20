@@ -9,7 +9,13 @@
       "buttonText": "Open the Treatment Planning Tool",
       "href": "planning-tool.html"
     },
-    "planPhaseLabel": "Plan Phase"
+    "planPhaseLabel": "Plan Phase",
+    "road": {
+      "startLabel": "Start",
+      "endLabel": "Next step in care",
+      "hint": "Hover or click along the road to explore the sessions.",
+      "sliderLabel": "Treatment session"
+    }
   },
   "journey": {
     "sectionLabel": "Treatment Roadmap",

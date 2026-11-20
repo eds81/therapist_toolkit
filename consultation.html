@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=76" />
+  <link rel="stylesheet" href="styles.css?v=99" />
 </head>
 <body>
 <script src="icons.js?v=5"></script>
@@ -161,7 +161,8 @@
       <p class="consult-placeholder-note" id="scConsultNote"></p>
 
       <!-- Peer Therapist One-on-One Support -->
-      <div class="selfcare-sub" id="peers">
+      <!-- Shown only while the peer therapist card is selected (consultation.js) -->
+      <div class="selfcare-sub" id="peers" hidden>
         <h4 id="scPeerHeading"></h4>
         <p class="selfcare-sub-intro" id="scPeerIntro"></p>
         <p class="consult-placeholder-note" id="scPeerNote"></p>
@@ -180,7 +181,7 @@
 </footer>
 
 <script src="content-loader.js?v=4"></script>
-<script src="consultation.js?v=1"></script>
+<script src="consultation.js?v=3"></script>
 <script src="nav-labels.js?v=1"></script>
 </body>
 </html>

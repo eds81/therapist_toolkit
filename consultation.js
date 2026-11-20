@@ -8,9 +8,18 @@ function icon(id, extraClass) {
   return `<svg class="icon${extraClass ? ' ' + extraClass : ''}"><use href="#${id}"/></svg>`;
 }
 
+// A photo, or a labeled placeholder until one is added in the CMS.
+function photoHtml(src, alt, placeholder, cls) {
+  return src
+    ? `<div class="${cls}"><img src="${src}" alt="${alt}" /></div>`
+    : `<div class="${cls} is-placeholder" role="img" aria-label="${placeholder}">${icon('i-user')}<span>${placeholder}</span></div>`;
+}
+
 function render(data) {
   const consult = data.consult;
   const peers = data.peerTherapists;
+  const page = data.consultationPage || {};
+  const photoText = page.photoPlaceholder || 'Photo coming soon';
 
   document.getElementById('scConsultEyebrow').textContent = consult.eyebrow;
   document.getElementById('scConsultHeading').textContent = consult.heading;
@@ -26,15 +35,10 @@ function render(data) {
     return `
     <div class="consult-card" data-key="${card.key}">
       <span class="consult-card-badge">Best fit</span>
-      <div class="consult-icon">${icon(card.icon)}</div>
+      ${photoHtml(card.photo, card.title, photoText, 'consult-photo')}
       <h4 class="consult-card-title">${card.title}</h4>
       <p class="consult-card-subtitle">${card.subtitle}</p>
       <ul class="consult-card-bestfor">${card.bestFor.map(b => `<li>${b}</li>`).join('')}</ul>
-      <dl class="consult-card-dl">
-        <div class="consult-card-dl-row"><dt>Format</dt><dd>${card.format}</dd></div>
-        <div class="consult-card-dl-row"><dt>Reply</dt><dd>${card.reply}</dd></div>
-        <div class="consult-card-dl-row"><dt>Note</dt><dd>${card.note}</dd></div>
-      </dl>
       <div class="consult-card-actions">
         <a class="btn btn-outline consult-card-btn" href="${href}">${card.buttonLabel}</a>
         ${secondary}
@@ -48,15 +52,15 @@ function render(data) {
   document.getElementById('scPeerNote').textContent = peers.prototypeNote;
   document.getElementById('scPeerGrid').innerHTML = peers.list.map(t => `
     <div class="peer-card">
-      <div class="peer-avatar" aria-hidden="true">${icon('i-user')}</div>
+      ${photoHtml(t.photo, t.name, photoText, 'peer-photo')}
       <span class="peer-tag">${icon('i-users', 'icon-xs')}One-on-One Peer Support</span>
       <h5>${t.name}</h5>
       <p class="peer-role">${t.role}</p>
       <p class="peer-bio">${t.bio}</p>
     </div>`).join('');
 
-  // The password screen's text is shared with Self-Care & Support.
-  const gate = data.selfCarePage.gate;
+  // This page's own password-screen text (falls back to Self-Care's).
+  const gate = page.gate || data.selfCarePage.gate;
   document.getElementById('scGateHeading').textContent = gate.heading;
   document.getElementById('scGateIntro').textContent = gate.intro;
   document.getElementById('scGateLabel').textContent = gate.label;
@@ -121,41 +125,74 @@ function initGate() {
 
 initGate();
 
-// ── Talk to Someone — need picker ─────────────
-// Highlights whichever contact card best matches the pill the user picked.
-// The "active" pill is tracked by its own index (not by matchKey), since
-// two pills can point at the same card — clicking the already-active pill
-// clears the selection back to the neutral state.
-function initConsultNeedPicker(consult) {
+// ── Talk to Someone — choosing a contact ─────
+// • Hovering a card highlights it (CSS). Hovering the peer therapist card
+//   also shows the Peer Therapist One-on-One Support profiles below; they
+//   stay open while you move down to them, until another card is hovered or
+//   another choice is made.
+// • Clicking a card selects it. A "What do you need?" pill selects its
+//   best-fit card — only then does the card show the "Best fit" badge.
+// • Clicking the selected card (or the active pill) again clears it.
+function initConsultPicker(consult, peers) {
   const pills = Array.from(document.querySelectorAll('.consult-need-pill'));
   const cards = Array.from(document.querySelectorAll('.consult-card'));
   const announceEl = document.getElementById('scConsultAnnounce');
-  if (!pills.length || !cards.length) return;
+  const peerSection = document.getElementById('peers');
+  const peerKey = (peers && peers.showWithCard) || 'peer';
+  if (!cards.length) return;
 
-  let activeIndex = null;
+  let activePill = null; // index of the pressed pill, if a pill made the choice
+  let activeKey = null;  // the selected card's key
+  let hoverKey = null;   // the last card hovered (sticky — see above)
 
   function update() {
-    const activeKey = activeIndex != null ? consult.needPicker.options[activeIndex].matchKey : null;
-    pills.forEach((pill, i) => pill.setAttribute('aria-pressed', String(i === activeIndex)));
+    pills.forEach((pill, i) => pill.setAttribute('aria-pressed', String(i === activePill)));
     cards.forEach(card => {
       const isMatch = !!activeKey && card.dataset.key === activeKey;
       card.classList.toggle('is-active', isMatch);
+      card.classList.toggle('is-best-fit', isMatch && activePill !== null);
       card.classList.toggle('is-dimmed', !!activeKey && !isMatch);
+      card.setAttribute('aria-current', isMatch ? 'true' : 'false');
     });
-    if (activeKey) {
-      const card = consult.cards.find(c => c.key === activeKey);
-      announceEl.textContent = card ? `Best fit: ${card.title}` : '';
-    } else {
-      announceEl.textContent = '';
-    }
+    const showPeers = activeKey === peerKey || (hoverKey === peerKey && (activeKey === null || activeKey === peerKey));
+    if (peerSection) peerSection.hidden = !showPeers;
+  }
+  function announce() {
+    const card = activeKey && consult.cards.find(c => c.key === activeKey);
+    const showPeers = peerSection && !peerSection.hidden;
+    announceEl.textContent = card ? `${activePill !== null ? 'Best fit' : 'Selected'}: ${card.title}${showPeers ? '. Peer therapist profiles are shown below.' : ''}` : '';
   }
 
   pills.forEach((pill, i) => {
     pill.addEventListener('click', () => {
-      activeIndex = activeIndex === i ? null : i;
-      update();
+      if (activePill === i) { activePill = null; activeKey = null; }
+      else { activePill = i; activeKey = consult.needPicker.options[i].matchKey; }
+      hoverKey = null;
+      update(); announce();
     });
   });
+
+  cards.forEach(card => {
+    card.addEventListener('click', e => {
+      // links and buttons inside the card keep doing their own thing
+      if (e.target.closest('a, button')) return;
+      activePill = null;
+      activeKey = activeKey === card.dataset.key ? null : card.dataset.key;
+      update(); announce();
+    });
+    card.addEventListener('mouseenter', () => { hoverKey = card.dataset.key; update(); });
+  });
+
+  // "Click to browse peer therapists ↓" (and an old #peers link): select the peer card and show them
+  function revealPeers(scroll) {
+    activePill = null; activeKey = peerKey; update(); announce();
+    if (scroll && peerSection) peerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  document.querySelectorAll('.consult-card-secondary[href="#peers"]').forEach(a => {
+    a.addEventListener('click', e => { e.preventDefault(); revealPeers(true); });
+  });
+  if (window.location.hash === '#peers') revealPeers(true);
+  update();
 }
 
 // ── Scroll progress bar ──────────────────────
@@ -188,7 +225,5 @@ navMobile.querySelectorAll('a').forEach(a => {
 
 loadSiteContent().then(data => {
   render(data);
-  initConsultNeedPicker(data.consult);
-  // #peers (the "Or browse peer therapists" link, or an old Self-Care link)
-  if (window.location.hash === '#peers') document.getElementById('peers').scrollIntoView();
+  initConsultPicker(data.consult, data.peerTherapists);
 });

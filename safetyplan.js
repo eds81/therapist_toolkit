@@ -12,6 +12,10 @@ function printTimestamp() {
   return `<p class="print-timestamp">Generated ${stamp}</p>`;
 }
 
+function escapeText(str) {
+  return String(str == null ? '' : str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 function icon(id, extraClass) {
   return `<svg class="icon${extraClass ? ' ' + extraClass : ''}"><use href="#${id}"/></svg>`;
 }
@@ -150,6 +154,64 @@ function initSafetyPlan() {
     `;
   }
 
+  // ── From the Treatment Planning Tool ──
+  // Protective factors marked "Integrate into the safety plan" on the
+  // planner's Select Interventions step (read from this browser's saved
+  // planner progress), each with a button to add it to the current step.
+  const PLANNER_STORAGE_KEY = 'therapistToolkitPlannerState';
+  function plannerSafetyFactors() {
+    const planner = spState.data.planner || {};
+    const option = (planner.protectiveQuickAdds || []).find(q => q && q.safetyPlan);
+    if (!option) return [];
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(PLANNER_STORAGE_KEY) || 'null'); } catch (e) { /* ignore */ }
+    if (!saved || !saved.factors) return [];
+    const byFactor = saved.interventionsByFactor || {};
+    const list = [];
+    (planner.rings || []).forEach(r => {
+      const factors = (saved.factors[r.key] && saved.factors[r.key].protective) || [];
+      factors.forEach(f => {
+        const picked = byFactor[f.id] || byFactor[String(f.id)] || [];
+        if (f && f.text && picked.includes(option.label)) list.push({ text: f.text, ringLabel: r.label });
+      });
+    });
+    return list;
+  }
+
+  function renderFromPlanner() {
+    const el = document.getElementById('spFromPlanner');
+    const key = STEP_KEYS[spState.currentStep];
+    const factors = key === 'review' ? [] : plannerSafetyFactors();
+    if (!factors.length) { el.hidden = true; el.innerHTML = ''; return; }
+    const cfg = p.fromPlanner || {};
+    const stepLabel = (p.steps.find(s => s.key === key) || {}).stepLabel || '';
+    el.innerHTML = `
+      <div class="sp-from-planner-head">
+        ${icon('ic-shield', 'icon-sm')}
+        <div>
+          <strong>${escapeText(cfg.heading || 'From your Treatment Planning Tool')}</strong>
+          ${cfg.intro ? `<p>${escapeText(cfg.intro)}</p>` : ''}
+        </div>
+      </div>
+      <ul class="sp-from-planner-list">${factors.map(f => {
+        const added = spState.items[key].some(t => t.toLowerCase() === f.text.toLowerCase());
+        return `<li>
+          <span class="sp-from-planner-text">${escapeText(f.text)}<em>${escapeText(f.ringLabel)}</em></span>
+          <button type="button" class="sp-from-planner-btn" data-factor-text="${escapeText(f.text)}"${added ? ' disabled' : ''}>
+            ${added ? `${icon('ic-check-circle', 'icon-xs')}${escapeText(cfg.addedLabel || 'Added')}` : `${icon('i-plus', 'icon-xs')}${escapeText((cfg.addLabel || 'Add to') + ' ' + stepLabel)}`}
+          </button>
+        </li>`;
+      }).join('')}</ul>`;
+    el.hidden = false;
+  }
+  document.getElementById('spFromPlanner').addEventListener('click', e => {
+    const btn = e.target.closest('.sp-from-planner-btn');
+    if (!btn || btn.disabled) return;
+    addItem(STEP_KEYS[spState.currentStep], btn.dataset.factorText);
+  });
+  // The planner open in another tab: pick up its changes right away.
+  window.addEventListener('storage', e => { if (e.key === PLANNER_STORAGE_KEY) renderFromPlanner(); });
+
   function addItem(key, text) {
     text = text.trim();
     if (!text) return;
@@ -158,6 +220,7 @@ function initSafetyPlan() {
     updateActionState();
     buildPrintSheet();
     persistSpState();
+    renderFromPlanner();
   }
 
   function removeItem(key, index) {
@@ -166,6 +229,7 @@ function initSafetyPlan() {
     updateActionState();
     buildPrintSheet();
     persistSpState();
+    renderFromPlanner();
   }
 
   function goToStep(index) {
@@ -194,6 +258,7 @@ function initSafetyPlan() {
 
     renderStepperState();
     persistSpState();
+    renderFromPlanner();
   }
 
   section.querySelectorAll('.planner-add-btn').forEach(btn => {

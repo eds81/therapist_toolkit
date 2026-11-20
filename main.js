@@ -139,11 +139,15 @@ function render(data) {
   document.getElementById('tourGrid').innerHTML = tour.tools.map((t, i) => `
     <a class="tour-card tour-card-${t.key}" href="${t.href}" data-fade data-delay="${(i % 4) + 1}">
       <div class="tour-preview" aria-hidden="true">${TOOL_PREVIEWS[t.key] || ''}</div>
+      <!-- Description + "Use it": shown over the preview on hover/focus (always
+           shown on touch screens, and always read by screen readers) -->
+      <div class="tour-reveal">
+        <p class="tour-tagline">${t.tagline}</p>
+        <p class="tour-when">${icon('ic-clock', 'icon-xs')}<span><strong>${tour.useWhenLabel}</strong>${t.useWhen}</span></p>
+      </div>
       <div class="tour-body">
         <h3 class="tour-title">${icon(TOOL_ICONS[t.key] || 'ic-layers', 'icon-sm')}<span>${t.title}</span></h3>
-        <p>${t.tagline}</p>
-        <p class="tour-when">${icon('ic-clock', 'icon-xs')}<span><strong>${tour.useWhenLabel}</strong>${t.useWhen}</span></p>
-        <span class="tour-open">${tour.openLabel} ${t.title} ${icon('i-arrow-right', 'icon-xs')}</span>
+        <span class="tour-open" aria-hidden="true">${icon('i-arrow-right', 'icon-sm')}</span>
       </div>
     </a>`).join('');
 

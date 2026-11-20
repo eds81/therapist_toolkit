@@ -45,6 +45,11 @@ function practiceDescription(name) {
 
 // ── Planner: Client Ecological Formulation & Treatment Plan ──
 const RING_ORDER = ['community', 'school', 'family', 'peer', 'client'];
+// Protective factors come first everywhere in this tool — inputs, the map
+// (left side), top factors, interventions, the plan, print and email — to
+// lead with the client's strengths and amplify them.
+const VALENCE_ORDER = ['protective', 'risk'];
+const MAP_LEFT_VALENCE = 'protective';
 // A "Start here" orientation comes first, then one step per ring. Two
 // curation steps sit between entering factors and the final review: pick
 // the top contributors, then choose interventions for each.
@@ -307,8 +312,11 @@ function buildEcoMapSvg(opts) {
   // it's wherever the risk-side margin puts it.
   const riskW = riskPills.length ? riskPills[0].w : MAP_PILL_MIN_W;
   const protW = protPills.length ? protPills[0].w : MAP_PILL_MIN_W;
-  const leftMargin = outerR + MAP_PILL_GAP + riskW + 20;
-  const rightMargin = outerR + MAP_PILL_GAP + protW + 20;
+  // Protective pills on the left (read first), risk pills on the right.
+  const leftW = MAP_LEFT_VALENCE === 'risk' ? riskW : protW;
+  const rightW = MAP_LEFT_VALENCE === 'risk' ? protW : riskW;
+  const leftMargin = outerR + MAP_PILL_GAP + leftW + 20;
+  const rightMargin = outerR + MAP_PILL_GAP + rightW + 20;
   const vbW = leftMargin + rightMargin;
   const cx = leftMargin;
 
@@ -352,8 +360,9 @@ function buildEcoMapSvg(opts) {
     const records = stacked.map(({ item, y }) => {
       const { w, h } = item;
       const ringR = ringRadii[item.ring];
-      const pillX = valence === 'risk' ? (cx - outerR - MAP_PILL_GAP - w) : (cx + outerR + MAP_PILL_GAP);
-      const lineStartX = valence === 'risk' ? pillX + w : pillX;
+      const onLeft = valence === MAP_LEFT_VALENCE;
+      const pillX = onLeft ? (cx - outerR - MAP_PILL_GAP - w) : (cx + outerR + MAP_PILL_GAP);
+      const lineStartX = onLeft ? pillX + w : pillX;
       // Aim straight at the circle's center and stop where that line meets
       // this pill's own ring: center + (unit vector toward the pill) × r.
       const vx = lineStartX - cx, vy = y - cy;
@@ -379,7 +388,7 @@ function buildEcoMapSvg(opts) {
       const pillTop = y - h / 2;
       const clipId = `${idPrefix}-pillclip-${item.id}`;
       const textX = pillX + 14;
-      const removeX = valence === 'risk' ? pillX - 12 : pillX + w + 12;
+      const removeX = valence === MAP_LEFT_VALENCE ? pillX - 12 : pillX + w + 12;
 
       let rowTop = pillTop;
       const rowsHtml = item.rows.map((row, ri) => {
@@ -449,6 +458,7 @@ const plannerState = {
   interventionsByFactor: {}, // factor id -> array of intervention strings; each top factor gets its own list
   phaseComments: ['', '', ''], // freeform notes per Phase 1/2/3, shown on Review and in the printed plan
   planOrder: [], // top-factor ids in the order the clinician arranged them on the Treatment Plan
+  phase3Checks: [], // checked state of each Phase 3 checklist item, by index
   ringLabelByKey: {}
 };
 RING_ORDER.forEach(k => { plannerState.factors[k] = { risk: [], protective: [] }; });
@@ -469,7 +479,8 @@ function persistPlannerState() {
       topContributors: plannerState.topContributors,
       interventionsByFactor: plannerState.interventionsByFactor,
       phaseComments: plannerState.phaseComments,
-      planOrder: plannerState.planOrder
+      planOrder: plannerState.planOrder,
+      phase3Checks: plannerState.phase3Checks
     }));
   } catch (e) { /* localStorage unavailable (private browsing, quota, etc.) — fail silently */ }
 }
@@ -518,6 +529,9 @@ function loadPersistedPlannerState() {
     }
     if (Array.isArray(saved.phaseComments)) {
       plannerState.phaseComments = [0, 1, 2].map(i => saved.phaseComments[i] || '');
+    }
+    if (Array.isArray(saved.phase3Checks)) {
+      plannerState.phase3Checks = saved.phase3Checks.map(Boolean);
     }
     if (Array.isArray(saved.planOrder)) {
       plannerState.planOrder = saved.planOrder.filter(id => typeof id === 'number');
@@ -602,6 +616,14 @@ function renderPlanner(data) {
     ? `${icon('ic-book-open', 'icon-sm')}<a href="resource-library.html" target="_blank" rel="noopener">${escapeXml(lib.text)} <span class="sr-only">(opens in a new tab)</span>${icon('i-arrow-right', 'icon-xs')}</a>${lib.hint ? `<span class="planner-library-link-hint">${escapeXml(lib.hint)}</span>` : ''}`
     : '';
 
+  // Lead with strengths: protective factors come first throughout the tool.
+  const st = p.strengthsFirst;
+  const stEl = document.getElementById('plannerStrengths');
+  if (st && st.text) {
+    stEl.innerHTML = `${icon('ic-sun', 'icon-sm')}<div>${st.heading ? `<strong>${escapeXml(st.heading)}</strong>` : ''}<p>${escapeXml(st.text)}</p></div>`;
+    stEl.hidden = false;
+  }
+
   const rl = p.roadmapLink;
   const rlEl = document.getElementById('plannerRoadmapLink');
   if (rl && rl.text) {
@@ -636,6 +658,18 @@ function renderPlanner(data) {
   document.getElementById('plannerEmailBtn').textContent = p.emailPlan.buttonLabel;
   document.getElementById('plannerEmailHint').textContent = p.emailPlan.hint;
 
+  // A dropdown of common examples under each input — choosing one adds it to
+  // the map right away (CMS: each level's Protective / Risk example options).
+  function exampleSelectHtml(r, valence) {
+    const opts = (valence === 'risk' ? r.riskOptions : r.protectiveOptions) || [];
+    if (!opts.length) return '';
+    const kind = valence === 'risk' ? 'risk' : 'protective';
+    return `<select class="planner-example-select" data-ring="${r.key}" data-valence="${valence}" aria-label="Add a common ${kind} factor for ${escapeXml(r.label)}">
+      <option value="">${escapeXml(p.exampleSelectLabel || 'Or pick a common example…')}</option>
+      ${opts.map(o => `<option value="${escapeXml(o)}">${escapeXml(o)}</option>`).join('')}
+    </select>`;
+  }
+
   function rowsHtml(valence) {
     return p.rings.map(r => `
       <div class="planner-row" data-ring="${r.key}">
@@ -645,6 +679,7 @@ function renderPlanner(data) {
                  placeholder="${valence === 'risk' ? r.placeholderRisk : r.placeholderProtective}" />
           <button type="button" class="planner-add-btn planner-add-btn-${valence}" data-ring="${r.key}" data-valence="${valence}" aria-label="${p.addButtonLabel}">${icon('i-plus', 'icon-xs')}</button>
         </div>
+        ${exampleSelectHtml(r, valence)}
       </div>`).join('');
   }
 
@@ -667,12 +702,143 @@ function renderPlanner(data) {
 }
 
 // ── Step 1: Start Here ──
-// A short guided tour, one slide at a time: the five levels (circle map),
-// then one slide per Treatment Roadmap phase — why the phase matters, and what
-// you do for it in the planner. Back/Next move through it; "Skip intro" and
-// the last slide's "Start mapping" go to the first mapping step.
+// A short guided tour of the tool's four steps — map the factors (with the
+// five-level circle map), choose the top factors, select interventions,
+// review the plan — one slide each. A strip across the top shows all four
+// and jumps to any of them; Back/Next move through them; "Skip intro" and the
+// last slide's "Start mapping" go to the first mapping step.
 const ORIENT_RING_ICONS = { community: 'ic-building', school: 'ic-school', family: 'ic-home', peer: 'ic-users', client: 'ic-user' };
 const ORIENT_RING_RADII = [140, 113, 86, 59, 32]; // community (outer) → client (center)
+
+
+// The therapist and client characters (and orientEase) live in characters.js,
+// shared with the Treatment Roadmap page.
+
+// Part 1 pills: all share one 6s cycle so they arrive one after another,
+// rest together, then fade out as a group before the loop starts again.
+function orientPill(fromX, fromY, toX, toY, w, fill, order) {
+  const start = 0.06 + order * 0.16, land = start + 0.14;
+  const ease = '.45 0 .55 1';
+  return `
+  <g opacity="0">
+    <rect x="${-w / 2}" y="-9" width="${w}" height="18" rx="9" fill="${fill}"/>
+    <animateTransform attributeName="transform" type="translate"
+      values="${fromX} ${fromY}; ${fromX} ${fromY}; ${toX} ${toY}; ${toX} ${toY}"
+      keyTimes="0; ${start.toFixed(2)}; ${land.toFixed(2)}; 1" calcMode="spline" keySplines="0 0 1 1; ${ease}; 0 0 1 1" dur="6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0"
+      keyTimes="0; ${start.toFixed(2)}; ${(start + 0.05).toFixed(2)}; .86; .95; 1" calcMode="spline" keySplines="0 0 1 1; ${ease}; 0 0 1 1; ${ease}; 0 0 1 1" dur="6s" repeatCount="indefinite"/>
+  </g>`;
+}
+const ORIENT_ILLUSTRATIONS = [
+  // Part 1 — placing protective and risk factors on the five-level circles
+  `<svg viewBox="-56 0 416 230" class="po-illus" aria-hidden="true">
+    <g transform="translate(250 112)">
+      ${[78, 62, 46, 30, 14].map((r, i) => `<circle r="${r}" fill="${['#E6F0F1', '#D3E8EC', '#BFE0E6', '#A9D7E0', '#CFE6CB'][i]}" stroke="#FFFFFF" stroke-width="2"/>`).join('')}
+    </g>
+    ${orientPill(130, 82, 196, 60, 46, ORIENT_GREEN_LIGHT, 0)}
+    ${orientPill(130, 82, 208, 150, 52, ORIENT_GREEN, 1)}
+    ${orientPill(130, 82, 300, 74, 40, ORIENT_RED_LIGHT, 2)}
+    ${orientPill(130, 82, 292, 160, 38, ORIENT_RED, 3)}
+    ${orientClient(16, 210, 'talk')}
+    ${orientTherapist(80, 210, [34, -16], '0 0 0; -16 0 0; 0 0 0')}
+  </svg>`,
+  // Part 2 — choosing the top factors (a star lands on a card, which moves up)
+  `<svg viewBox="-56 0 416 230" class="po-illus" aria-hidden="true">
+    <rect x="160" y="22" width="180" height="58" rx="12" fill="#FFFFFF" stroke="${ORIENT_GREEN}" stroke-width="2" stroke-dasharray="6 5"/>
+    <text x="250" y="16" text-anchor="middle" font-size="11" font-weight="800" fill="${ORIENT_GREEN}" font-family="Nunito, sans-serif">TOP FACTORS</text>
+    ${[0, 1, 2].map(i => `<rect x="176" y="${110 + i * 34}" width="148" height="24" rx="12" fill="${i === 1 ? ORIENT_RED_LIGHT : ORIENT_GREEN_LIGHT}"/>`).join('')}
+    <g>
+      <rect x="176" y="110" width="148" height="24" rx="12" fill="${ORIENT_GREEN}"/>
+      <animateTransform attributeName="transform" type="translate" values="0 0; 0 0; 0 -72; 0 -72; 0 0" keyTimes="0; .25; .5; .9; 1" dur="4s" repeatCount="indefinite"/>
+    </g>
+    <g transform="translate(330 104)">
+      <polygon points="0,-11 3.2,-3.5 11,-3.4 4.8,1.6 7,9.5 0,4.8 -7,9.5 -4.8,1.6 -11,-3.4 -3.2,-3.5" fill="#F5C842" stroke="#B7950B" stroke-width="1">
+        <animateTransform attributeName="transform" type="scale" values="0; 1.3; 1; 1; 0" keyTimes="0; .15; .25; .9; 1" dur="4s" repeatCount="indefinite"/>
+      </polygon>
+    </g>
+    ${orientTherapist(90, 210, [40, -26], '0 0 0; -10 0 0; 0 0 0')}
+  </svg>`,
+  // Part 3 — the Select Interventions screen in miniature: click into the
+  // "Type or choose" box, the practice list opens, the highlight moves to one,
+  // it's added as an intervention chip, then a Quick Add option turns on.
+  `<svg viewBox="-56 0 416 230" class="po-illus" aria-hidden="true" font-family="Nunito, sans-serif">
+    <rect x="128" y="10" width="226" height="210" rx="14" fill="#FFFFFF" stroke="#E3DCCB" stroke-width="2"/>
+    <rect x="142" y="24" width="64" height="16" rx="8" fill="${ORIENT_GREEN_LIGHT}"/>
+    <text x="174" y="35.5" text-anchor="middle" font-size="8.5" font-weight="900" fill="${ORIENT_GREEN}">PROTECTIVE</text>
+    <text x="214" y="36.5" font-size="13" font-weight="800" fill="#2B2B2B">close friend</text>
+    <rect x="142" y="50" width="198" height="26" rx="13" fill="#FFFFFF" stroke="#D9D1BF" stroke-width="1.5">
+      <animate attributeName="stroke" values="#D9D1BF; #D9D1BF; ${ORIENT_TEAL}; ${ORIENT_TEAL}; #D9D1BF; #D9D1BF" keyTimes="0; .1; .14; .5; .54; 1" dur="6s" repeatCount="indefinite"/>
+    </rect>
+    <text x="156" y="67" font-size="10.5" font-weight="700" fill="#9A9384">Type or choose a practice…</text>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; .14; .18; .48; .52; 1" dur="6s" repeatCount="indefinite"/>
+      <rect x="142" y="80" width="198" height="86" rx="10" fill="#FFFFFF" stroke="${ORIENT_TEAL}" stroke-width="1.5"/>
+      <rect x="148" y="86" width="186" height="22" rx="6" fill="#D6F0F4">
+        <animateTransform attributeName="transform" type="translate" values="0 0; 0 0; 0 26; 0 26" keyTimes="0; .26; .34; 1" dur="6s" repeatCount="indefinite"/>
+        <animate attributeName="fill" values="#D6F0F4; #D6F0F4; ${ORIENT_TEAL}; #D6F0F4" keyTimes="0; .4; .43; .46" dur="6s" repeatCount="indefinite"/>
+      </rect>
+      <text x="158" y="101" font-size="10.5" font-weight="700" fill="#2B2B2B">Behavioral Activation</text>
+      <text x="158" y="127" font-size="10.5" font-weight="800" fill="#2B2B2B">Problem Solving</text>
+      <text x="158" y="153" font-size="10.5" font-weight="700" fill="#2B2B2B">Safety Planning</text>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0; 0; 1; 1; 0" keyTimes="0; .52; .56; .95; 1" dur="6s" repeatCount="indefinite"/>
+      <rect x="142" y="84" width="112" height="22" rx="11" fill="#D6F0F4"/>
+      <text x="153" y="99" font-size="10.5" font-weight="800" fill="${ORIENT_TEAL_DARK}">Problem Solving</text>
+      <path d="M241 91 l6 6 M247 91 l-6 6" stroke="${ORIENT_TEAL_DARK}" stroke-width="1.6" stroke-linecap="round"/>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0; 0; 1; 1; 0" keyTimes="0; .56; .6; .95; 1" dur="6s" repeatCount="indefinite"/>
+      <text x="142" y="130" font-size="8.5" font-weight="900" fill="${ORIENT_GREEN}">QUICK ADD</text>
+      <rect x="142" y="138" width="98" height="22" rx="11" fill="#FFFFFF" stroke="#BEE0B7" stroke-width="1.5">
+        <animate attributeName="fill" values="#FFFFFF; #FFFFFF; ${ORIENT_GREEN}; ${ORIENT_GREEN}; #FFFFFF" keyTimes="0; .76; .79; .95; 1" dur="6s" repeatCount="indefinite"/>
+      </rect>
+      <text x="191" y="153" text-anchor="middle" font-size="10" font-weight="800" fill="${ORIENT_GREEN}">Self compassion
+        <animate attributeName="fill" values="${ORIENT_GREEN}; ${ORIENT_GREEN}; #FFFFFF; #FFFFFF; ${ORIENT_GREEN}" keyTimes="0; .76; .79; .95; 1" dur="6s" repeatCount="indefinite"/>
+      </text>
+      <rect x="246" y="138" width="94" height="22" rx="11" fill="#FFFFFF" stroke="#BEE0B7" stroke-width="1.5"/>
+      <text x="293" y="153" text-anchor="middle" font-size="10" font-weight="800" fill="${ORIENT_GREEN}">Pull into hope kit</text>
+      <rect x="142" y="166" width="168" height="22" rx="11" fill="#FFFFFF" stroke="#9CC9D0" stroke-width="1.5"/>
+      <text x="226" y="181" text-anchor="middle" font-size="10" font-weight="800" fill="${ORIENT_TEAL_DARK}">Integrate into the safety plan</text>
+    </g>
+    <g>
+      <path d="M0 0 L0 15 L4 11 L7.5 18 L10 17 L6.5 10 L12 10 Z" fill="#2B2B2B" stroke="#FFFFFF" stroke-width="1.2" stroke-linejoin="round"/>
+      <animateTransform attributeName="transform" type="translate"
+        values="118 120; 250 60; 250 60; 250 98; 250 124; 250 124; 290 150; 210 146; 210 146; 118 120"
+        keyTimes="0; .1; .2; .28; .36; .5; .66; .74; .9; 1" dur="6s" repeatCount="indefinite"/>
+    </g>
+    ${orientTherapist(66, 214, [34, -18], '0 0 0; -10 0 0; 0 0 0')}
+  </svg>`,
+  // Part 4 — the plan goes back into the work with the client: the therapist
+  // checks over the plan on her clipboard (it faces her, not the client),
+  // then an activity from it comes down to the table between them, and the
+  // client responds. The client works with the plan without seeing it.
+  `<svg viewBox="-56 0 416 230" class="po-illus" aria-hidden="true">
+    <rect x="186" y="34" width="112" height="146" rx="10" fill="#FFFFFF" stroke="${ORIENT_TEAL}" stroke-width="3"/>
+    <rect x="218" y="26" width="48" height="16" rx="5" fill="${ORIENT_TEAL}"/>
+    ${[0, 1, 2, 3].map(i => `
+      <rect x="222" y="${64 + i * 28}" width="62" height="8" rx="4" fill="#E3DCCB"/>
+      <path d="M200 ${68 + i * 28} l5 5 l9 -10" stroke="${i < 2 ? ORIENT_GREEN : ORIENT_RED}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="24 60" stroke-dashoffset="28">
+        <animate attributeName="stroke-dashoffset" values="28; 28; 0; 0; 28" keyTimes="0; ${(0.04 + i * 0.09).toFixed(2)}; ${(0.12 + i * 0.09).toFixed(2)}; .92; 1" dur="6s" repeatCount="indefinite"/>
+      </path>`).join('')}
+    <rect x="34" y="176" width="64" height="7" rx="3.5" fill="#C9B79C"/>
+    <rect x="62" y="183" width="8" height="27" rx="3" fill="#C9B79C"/>
+    <g opacity="0">
+      <animateTransform attributeName="transform" type="translate" values="230 96; 230 96; 66 162; 66 162; 66 162" keyTimes="0; .44; .64; .92; 1" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; .44; .48; .9; .96; 1" dur="6s" repeatCount="indefinite"/>
+      <rect x="-20" y="-14" width="40" height="28" rx="5" fill="#FFFFFF" stroke="${ORIENT_GREEN}" stroke-width="2"/>
+      <rect x="-20" y="-14" width="40" height="7" rx="3" fill="${ORIENT_GREEN}"/>
+      <circle cx="-9" cy="3.5" r="4" fill="#F5C842"/>
+      <rect x="-1" y="0" width="15" height="3.5" rx="1.75" fill="#E3DCCB"/><rect x="-1" y="6" width="11" height="3.5" rx="1.75" fill="#E3DCCB"/>
+    </g>
+    ${orientClient(20, 210, 'check', 0.68)}
+    ${orientTherapist(124, 210, [40, -20], '0 0 0; -8 0 0; 0 0 0')}
+  </svg>`,
+];
+
+// Which planner steps each part covers (Part 1 = the five levels, …).
+ORIENT_ILLUSTRATIONS.forEach((svg, i) => { ORIENT_ILLUSTRATIONS[i] = orientEase(svg); });
+const ORIENT_PART_STEPS = [RING_ORDER, ['topFactors'], ['resourcePlan'], ['review']];
 
 function renderOrientation(data) {
   const p = data.planner;
@@ -693,60 +859,105 @@ function renderOrientation(data) {
         : `<text class="po-ring-label po-ring-label-${i + 1}" data-level="${r.key}" x="150" y="154">${escapeXml(r.label.replace(/\s*\(.*\)/, ''))}</text>`).join('')}
     </svg>`;
 
-  const levelsSlide = `
-    <div class="po-slide-text">
-      <h4>${escapeXml(lv.heading || '')}</h4>
-      <p>${escapeXml(lv.intro || '')}</p>
+  // The five-level circle map, folded away by default to keep Part 1 simple.
+  const levelsBlock = `
+    <details class="po-levels">
+      <summary class="po-levels-toggle">${icon('ic-layers', 'icon-sm')}${escapeXml(lv.toggleLabel || lv.heading || 'See the five levels')}</summary>
       ${lv.hint ? `<p class="po-hint">${escapeXml(lv.hint)}</p>` : ''}
-    </div>
-    <div class="po-levels-layout">
-      <div class="po-map-wrap">${ringSvg}</div>
-      <div>
-        <div class="po-level-chips" role="tablist" aria-label="Levels">
-          ${rings.map((r, i) => `<button type="button" class="po-level-chip po-level-chip-${i + 1}" role="tab" data-level="${r.key}" aria-selected="false">${icon(ORIENT_RING_ICONS[r.key] || 'ic-layers', 'icon-xs')}${escapeXml(r.label)}</button>`).join('')}
-        </div>
-        <div class="po-level-detail" role="tabpanel" aria-live="polite"></div>
-      </div>
-    </div>`;
-
-  const roadmapPhases = (data.toolkit && data.toolkit.tabs.roadmap.phases) || [];
-  const PHASE_ICONS = ['ic-search', 'ic-tool', 'ic-flag'];
-  const phaseSlide = (ph, i) => {
-    const rp = roadmapPhases[i] || {};
-    const m = String(rp.title || `Phase ${i + 1}`).match(/^(Phase\s*\d+)\s*[:\-–]\s*(.+)$/i);
-    const last = i === o.phases.length - 1;
-    return `
-    <div class="po-phase po-phase-${i + 1}">
-      <div class="po-phase-head">
-        <span class="po-phase-badge">${icon(PHASE_ICONS[i] || 'ic-flag')}</span>
+      <div class="po-levels-layout">
+        <div class="po-map-wrap">${ringSvg}</div>
         <div>
-          <span class="po-phase-kicker">${escapeXml(m ? m[1] : `Phase ${i + 1}`)}${rp.sessions ? ` · ${escapeXml(rp.sessions)}` : ''}</span>
-          <h4>${escapeXml(m ? m[2] : rp.title || '')}</h4>
+          <div class="po-level-chips" role="tablist" aria-label="Levels">
+            ${rings.map((r, i) => `<button type="button" class="po-level-chip po-level-chip-${i + 1}" role="tab" data-level="${r.key}" aria-selected="false">${icon(ORIENT_RING_ICONS[r.key] || 'ic-layers', 'icon-xs')}${escapeXml(r.label)}</button>`).join('')}
+          </div>
+          <div class="po-level-detail" role="tabpanel" aria-live="polite"></div>
         </div>
       </div>
-      <div class="po-phase-why">
-        <span>${icon('ic-target', 'icon-xs')}${escapeXml(t.whyLabel || 'Why this phase')}</span>
-        <p>${escapeXml(ph.intention)}</p>
-      </div>
-      <span class="po-phase-do">${escapeXml(t.doLabel || 'What you do in the planner')}</span>
-      <div class="po-tasks">${(ph.tasks || []).map(tk => `
-        <div class="po-task">
-          <span class="po-task-icon">${icon(tk.icon || 'ic-check-circle')}</span>
-          <div>
-            <strong>${escapeXml(tk.title)}${tk.where ? `<em>${escapeXml(tk.where)}</em>` : ''}</strong>
-            <p>${escapeXml(tk.text)}</p>
+    </details>`;
+
+  const steps = o.steps || [];
+  // The planner step names (as in the step bar) and numbers each part covers.
+  const STEP_NAMES = { topFactors: 'Top Factors', resourcePlan: 'Interventions', review: 'Treatment Plan' };
+  const stepName = key => STEP_NAMES[key] || (p.rings.find(r => r.key === key) || {}).label || key;
+  const partSteps = i => (ORIENT_PART_STEPS[i] || []).map(key => ({ key, num: STEP_KEYS.indexOf(key) + 1 })).filter(x => x.num > 0);
+  const stepRange = list => !list.length ? '' : list.length === 1
+    ? `${t.plannerStepWord || 'Step'} ${list[0].num}`
+    : `${t.plannerStepsWord || 'Steps'} ${list[0].num}–${list[list.length - 1].num}`;
+
+  const stepSlide = (st, i) => {
+    const covers = partSteps(i);
+    return `
+    <div class="po-stepslide">
+      <div class="po-stepslide-grid">
+        <div>
+          <div class="po-stepslide-head">
+            <span class="po-step-badge" aria-hidden="true">${icon(st.icon || 'ic-check-circle')}</span>
+            <div>
+              <span class="po-step-kicker">${escapeXml(t.stepWord || 'Part')} ${i + 1} of ${steps.length}${covers.length ? ` · ${escapeXml(stepRange(covers))}` : ''}</span>
+              <h4>${escapeXml(st.title)}</h4>
+            </div>
           </div>
-        </div>`).join('')}
+          ${st.summary ? `<p class="po-step-summary">${escapeXml(st.summary)}</p>` : ''}
+          ${(st.bullets || []).length ? `<ul class="po-step-list">${st.bullets.map(x => `<li>${escapeXml(x)}</li>`).join('')}</ul>` : ''}
+          ${covers.length ? `
+          <div class="po-covers">
+            <span class="po-covers-label">${escapeXml(t.coversLabel || 'In the planner')}:</span>
+            ${covers.map(c => `<button type="button" class="po-jump" data-goto-step="${c.num - 1}"><b>${c.num}</b>${escapeXml(stepName(c.key))}</button>`).join('')}
+          </div>` : ''}
+        </div>
+        <div class="po-illus-wrap">${ORIENT_ILLUSTRATIONS[i] || ''}</div>
       </div>
-      ${last && o.note ? `<p class="po-note">${icon('ic-lock', 'icon-xs')}<span>${escapeXml(o.note)}</span></p>` : ''}
+      ${st.showLevels ? levelsBlock : ''}
+      ${i === steps.length - 1 && o.note ? `<p class="po-note">${icon('ic-lock', 'icon-xs')}<span>${escapeXml(o.note)}</span></p>` : ''}
     </div>`;
   };
 
-  const slides = [levelsSlide, ...(o.phases || []).map(phaseSlide)];
+  // When to use this tool: build the plan over sessions 2–4; by session 4 the
+  // plan is ready, and sessions 4–12 follow it. Animated once each time Start
+  // Here is shown.
+  const tl = o.timeline;
+  const total = (tl && tl.sessions) || 12;
+  const sw = (tl && tl.sessionsWord) || 'Sessions';
+  const timelineHtml = tl ? `
+    <div class="po-timeline" style="--sessions:${total}; --build-from:${tl.buildFrom}; --build-to:${tl.buildTo}; --follow-to:${total}">
+      <div class="po-tl-head">
+        ${icon('ic-clock', 'icon-sm')}
+        <strong>${escapeXml(tl.heading || '')}</strong>
+      </div>
+      <div class="po-tl-road" aria-hidden="true">
+        <span class="po-tl-asphalt"></span>
+        <span class="po-tl-stretch po-tl-build"></span>
+        <span class="po-tl-stretch po-tl-follow"></span>
+        <span class="po-tl-dashes"></span>
+        ${Array.from({ length: total }, (_, n) => `<span class="po-tl-dot${n + 1 >= tl.buildFrom && n + 1 <= tl.buildTo ? ' is-build' : ''}${n + 1 > tl.buildTo ? ' is-follow' : ''}" style="grid-column:${n + 1}">${n + 1}</span>`).join('')}
+        <span class="po-tl-pin" style="grid-column:${tl.buildTo}">
+          <span class="po-tl-pin-label">${icon('ic-flag', 'icon-xs')}${escapeXml(tl.readyLabel || '')}</span>
+          <svg viewBox="0 0 20 24" width="20" height="24"><path d="M10 23 C2 14 1 11 1 9 A9 9 0 0 1 19 9 C19 11 18 14 10 23 Z" fill="currentColor" stroke="#FFFFFF" stroke-width="2"/><circle cx="10" cy="9" r="3.2" fill="#FFFFFF"/></svg>
+        </span>
+      </div>
+      <div class="po-tl-cards">
+        <div class="po-tl-card is-build">
+          <span class="po-tl-card-tag">${escapeXml(tl.buildLabel || '')}</span>
+          <span class="po-tl-card-range">${escapeXml(sw)} ${tl.buildFrom}–${tl.buildTo}</span>
+          <p>${escapeXml(tl.buildText || '')}</p>
+        </div>
+        <div class="po-tl-card is-follow">
+          <span class="po-tl-card-tag">${escapeXml(tl.followLabel || '')}</span>
+          <span class="po-tl-card-range">${escapeXml(sw)} ${tl.buildTo}–${total}</span>
+          <p>${escapeXml(tl.followText || '')}</p>
+        </div>
+      </div>
+      <p class="sr-only">${escapeXml(tl.srText || '')}</p>
+    </div>` : '';
+
+  const slides = steps.map(stepSlide);
   el.innerHTML = `
     <div class="po-tour">
+      ${timelineHtml}
       <div class="po-tour-top">
-        <div class="po-dots" aria-hidden="true">${slides.map((_, i) => `<span class="po-dot po-dot-${i}" data-dot="${i}"></span>`).join('')}</div>
+        <ol class="po-stepnav" aria-label="${escapeXml(t.stepsLabel || 'The four steps')}">
+          ${steps.map((st, i) => `<li><button type="button" class="po-stepnav-btn" data-slide-to="${i}"><b>${i + 1}</b><span>${escapeXml(st.shortTitle || st.title)}</span></button></li>`).join('')}
+        </ol>
         <button type="button" class="po-skip" data-goto-step="${firstRingStep}">${escapeXml(t.skipLabel || 'Skip intro')} ${icon('i-arrow-right', 'icon-xs')}</button>
       </div>
       ${slides.map((html, i) => `<div class="po-slide" data-slide="${i}" hidden>${html}</div>`).join('')}
@@ -763,10 +974,11 @@ function renderOrientation(data) {
   const show = i => {
     current = Math.max(0, Math.min(slides.length - 1, i));
     el.querySelectorAll('.po-slide').forEach(sl => { sl.hidden = parseInt(sl.dataset.slide, 10) !== current; });
-    el.querySelectorAll('.po-dot').forEach(d => {
-      const n = parseInt(d.dataset.dot, 10);
-      d.classList.toggle('is-current', n === current);
-      d.classList.toggle('is-done', n < current);
+    el.querySelectorAll('.po-stepnav-btn').forEach(btn => {
+      const n = parseInt(btn.dataset.slideTo, 10);
+      btn.classList.toggle('is-current', n === current);
+      btn.classList.toggle('is-done', n < current);
+      if (n === current) btn.setAttribute('aria-current', 'step'); else btn.removeAttribute('aria-current');
     });
     el.querySelector('.po-back').style.visibility = current === 0 ? 'hidden' : 'visible';
     const last = current === slides.length - 1;
@@ -774,9 +986,23 @@ function renderOrientation(data) {
     el.querySelector('.po-start').hidden = !last;
     el.querySelector('.po-count').textContent = `${current + 1} of ${slides.length}`;
   };
+  el.querySelectorAll('.po-stepnav-btn').forEach(btn => {
+    btn.addEventListener('click', () => show(parseInt(btn.dataset.slideTo, 10)));
+  });
   el.querySelector('.po-back').addEventListener('click', () => show(current - 1));
   el.querySelector('.po-next').addEventListener('click', () => show(current + 1));
-  plannerState.resetOrientationTour = () => show(0);
+  plannerState.resetOrientationTour = () => {
+    show(0);
+    // replay the timeline animation each time Start Here is shown
+    const tlEl = el.querySelector('.po-timeline');
+    if (tlEl) { tlEl.classList.remove('is-playing'); void tlEl.offsetWidth; tlEl.classList.add('is-playing'); }
+  };
+  // Reduced motion: hold every illustration still.
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    el.querySelectorAll('svg.po-illus').forEach(svg => {
+      try { svg.pauseAnimations(); svg.setCurrentTime(1.6); } catch (e) { /* ignore */ }
+    });
+  }
   show(0);
 
   // ── five levels: click a ring or a level chip to see it (hover previews on the map) ──
@@ -798,8 +1024,8 @@ function renderOrientation(data) {
       <h5>${icon(ORIENT_RING_ICONS[key] || 'ic-layers', 'icon-sm')}${escapeXml(r.label)}</h5>
       ${r.description ? `<p>${escapeXml(r.description)}</p>` : ''}
       <div class="po-examples">
-        <span class="po-eg po-eg-risk"><b>${escapeXml(lv.riskLabel || p.riskColumnLabel)}</b>${escapeXml(stripEg(r.placeholderRisk))}</span>
         <span class="po-eg po-eg-protective"><b>${escapeXml(lv.protectiveLabel || p.protectiveColumnLabel)}</b>${escapeXml(stripEg(r.placeholderProtective))}</span>
+        <span class="po-eg po-eg-risk"><b>${escapeXml(lv.riskLabel || p.riskColumnLabel)}</b>${escapeXml(stripEg(r.placeholderRisk))}</span>
       </div>`;
   }
   el.querySelectorAll('.po-ring').forEach(ring => {
@@ -1063,7 +1289,7 @@ function initPlanner() {
       definition = ringData.description || '';
     } else if (isTopFactorsStep) {
       title = `Step ${index + 1} of ${STEP_KEYS.length}: Identify Top Factors Impacting the Client`;
-      hint = 'Drag — or click — your top risk and protective factors into the boxes below. At least 3 of each is a good start — add a 4th, 5th, or more with the + button or by dropping in extra factors from the lists above.';
+      hint = p.topFactorsHint || 'Drag, or click, your top protective and risk factors into the boxes below. Start with the strengths you want to amplify. At least 3 of each is a good start; add more with the + button or by dropping in extra factors from the lists above.';
     } else {
       title = `Step ${index + 1} of ${STEP_KEYS.length}: Select Interventions`;
       hint = 'Type to choose a strategy or practice for each factor below, or write in your own — add as many as you need per factor.';
@@ -1147,6 +1373,18 @@ function initPlanner() {
     });
   });
 
+  // Picking a common example adds it (unless it's already on the map), then resets.
+  layout.querySelectorAll('.planner-example-select').forEach(sel => {
+    sel.addEventListener('change', () => {
+      const { ring, valence } = sel.dataset;
+      const text = sel.value;
+      if (text && !plannerState.factors[ring][valence].some(f => f.text.toLowerCase() === text.toLowerCase())) {
+        addFactor(ring, valence, text);
+      }
+      sel.value = '';
+    });
+  });
+
   layout.querySelectorAll('.planner-input').forEach(input => {
     input.addEventListener('keydown', e => {
       if (e.key !== 'Enter') return;
@@ -1198,7 +1436,9 @@ function initPlanner() {
       const poolEl = document.getElementById(valence === 'risk' ? 'plannerRiskPool' : 'plannerProtectivePool');
       poolEl.innerHTML = pool.length
         ? pool.map(poolChipHtml).join('')
-        : `<p class="planner-pool-empty">No ${valence === 'risk' ? 'risk' : 'protective'} factors entered yet — add some in the steps above.</p>`;
+        : `<p class="planner-pool-empty">${RING_ORDER.some(r => plannerState.factors[r][valence].length)
+            ? `All your ${valence === 'risk' ? 'risk' : 'protective'} factors are selected below.`
+            : `No ${valence === 'risk' ? 'risk' : 'protective'} factors entered yet — add some in the steps above.`}</p>`;
 
       const slotsEl = document.getElementById(valence === 'risk' ? 'plannerRiskSlots' : 'plannerProtectiveSlots');
       slotsEl.innerHTML = slots.map((id, i) => {
@@ -1214,8 +1454,16 @@ function initPlanner() {
             ${removable ? `<button type="button" class="planner-chip-remove" data-clear-slot="${valence}:${i}" aria-label="Remove this slot">${icon('i-x', 'icon-xs')}</button>` : ''}
           </div>`;
         }
-        return `<div class="planner-slot is-filled" data-valence="${valence}" data-slot-index="${i}">
+        // A selected factor can be reordered: drag it onto another slot, or
+        // use its up/down buttons (keyboard and screen-reader friendly).
+        const lastFilled = slots.reduce((m, sid, j) => (sid !== null ? j : m), -1);
+        const firstFilled = slots.findIndex(sid => sid !== null);
+        return `<div class="planner-slot is-filled" draggable="true" data-valence="${valence}" data-slot-index="${i}" data-factor-id="${found.id}">
           <span class="planner-slot-num">${i + 1}</span>
+          <span class="planner-slot-order">
+            <button type="button" class="planner-slot-move" data-slot-move="${valence}:${i}:-1" aria-label="Move up: ${escapeXml(found.text)}"${i === firstFilled ? ' disabled' : ''}>${icon('i-arrow-up', 'icon-xs')}</button>
+            <button type="button" class="planner-slot-move" data-slot-move="${valence}:${i}:1" aria-label="Move down: ${escapeXml(found.text)}"${i === lastFilled ? ' disabled' : ''}>${icon('i-arrow-down', 'icon-xs')}</button>
+          </span>
           <span class="planner-chip planner-chip-${valence}">
             <span class="planner-chip-text">${found.text}</span>
             <span class="planner-chip-ring-tag">${found.ringLabel}</span>
@@ -1249,6 +1497,27 @@ function initPlanner() {
     persistPlannerState();
   }
 
+  // Reorder the selected top factors within one list. Moving onto a filled
+  // slot swaps the two; the Treatment Plan's order follows (and vice versa).
+  function moveTopSlot(valence, from, to) {
+    const slots = plannerState.topContributors[valence];
+    if (to < 0 || to >= slots.length || from === to || slots[from] === null) return false;
+    [slots[from], slots[to]] = [slots[to], slots[from]];
+    syncPlanOrderFromSlots(valence);
+    renderTopFactorsStep();
+    persistPlannerState();
+    return true;
+  }
+  // Step 7 → Treatment Plan: that list's plan order becomes the slot order.
+  function syncPlanOrderFromSlots(valence) {
+    const ids = plannerState.topContributors[valence].filter(id => id !== null);
+    const others = VALENCE_ORDER.filter(v => v !== valence);
+    const byValence = {};
+    others.forEach(v => { byValence[v] = topFactorGroup(v).map(f => f.id); });
+    byValence[valence] = ids;
+    plannerState.planOrder = VALENCE_ORDER.flatMap(v => byValence[v]);
+  }
+
   function addTopFactorSlot(valence) {
     plannerState.topContributors[valence].push(null);
     renderTopFactorsStep();
@@ -1264,12 +1533,40 @@ function initPlanner() {
         clearTopContributor(valence, parseInt(idx, 10));
         return;
       }
+      const moveBtn = e.target.closest('[data-slot-move]');
+      if (moveBtn) {
+        if (moveBtn.disabled) return;
+        const [valence, idx, dir] = moveBtn.dataset.slotMove.split(':');
+        const from = parseInt(idx, 10), step = parseInt(dir, 10);
+        // skip past empty slots so a move always lands on the next selected factor
+        const slots = plannerState.topContributors[valence];
+        let to = from + step;
+        while (to >= 0 && to < slots.length && slots[to] === null) to += step;
+        if (to < 0 || to >= slots.length) return;
+        const id = slots[from];
+        if (moveTopSlot(valence, from, to)) {
+          const again = topFactorsSection.querySelector(`.planner-slot[data-factor-id="${id}"] [data-slot-move$=":${step}"]`);
+          const other = topFactorsSection.querySelector(`.planner-slot[data-factor-id="${id}"] [data-slot-move$=":${-step}"]`);
+          (again && !again.disabled ? again : other)?.focus();
+          const announce = document.getElementById('plannerReorderAnnounce');
+          const f = findFactorById(valence, id);
+          if (announce && f) announce.textContent = `Moved "${f.text}" to position ${to + 1}.`;
+        }
+        return;
+      }
       const addSlotBtn = e.target.closest('[data-add-slot]');
       if (addSlotBtn) { addTopFactorSlot(addSlotBtn.dataset.addSlot); return; }
       const poolChip = e.target.closest('.planner-pool-chip');
       if (poolChip) placeTopContributor(poolChip.dataset.valence, parseInt(poolChip.dataset.id, 10));
     });
     topFactorsSection.addEventListener('dragstart', e => {
+      const slotEl = e.target.closest('.planner-slot.is-filled');
+      if (slotEl) {
+        e.dataTransfer.setData('text/plain', JSON.stringify({ valence: slotEl.dataset.valence, fromSlot: parseInt(slotEl.dataset.slotIndex, 10) }));
+        e.dataTransfer.effectAllowed = 'move';
+        slotEl.classList.add('is-dragging');
+        return;
+      }
       const chip = e.target.closest('.planner-pool-chip');
       if (!chip) return;
       e.dataTransfer.setData('text/plain', JSON.stringify({ id: parseInt(chip.dataset.id, 10), valence: chip.dataset.valence }));
@@ -1284,6 +1581,9 @@ function initPlanner() {
       e.preventDefault();
       container.classList.add('is-over');
     });
+    topFactorsSection.addEventListener('dragend', () => {
+      topFactorsSection.querySelectorAll('.is-dragging, .is-over').forEach(el => el.classList.remove('is-dragging', 'is-over'));
+    });
     topFactorsSection.addEventListener('dragleave', e => {
       const container = e.target.closest('.planner-slots');
       if (container) container.classList.remove('is-over');
@@ -1296,6 +1596,14 @@ function initPlanner() {
       let payload;
       try { payload = JSON.parse(e.dataTransfer.getData('text/plain')); } catch (err) { return; }
       if (!payload || payload.valence !== container.dataset.valence) return;
+      // A selected factor dragged within its list: swap with the slot it lands on.
+      if (payload.fromSlot !== undefined) {
+        const target = e.target.closest('.planner-slot');
+        const slots = plannerState.topContributors[payload.valence];
+        const to = target ? parseInt(target.dataset.slotIndex, 10) : slots.length - 1;
+        moveTopSlot(payload.valence, payload.fromSlot, to);
+        return;
+      }
       const emptySlot = e.target.closest('.planner-slot:not(.is-filled)');
       placeTopContributor(payload.valence, payload.id, emptySlot ? parseInt(emptySlot.dataset.slotIndex, 10) : undefined);
     });
@@ -1315,19 +1623,40 @@ function initPlanner() {
     if (!container) return;
     const factors = selectedTopContributors();
     if (!factors.length) {
-      container.innerHTML = `<p class="planner-pool-empty">Pick your top risk and protective factors on the previous step first — each one gets its own intervention here.</p>`;
+      container.innerHTML = `<p class="planner-pool-empty">Pick your top protective and risk factors on the previous step first — each one gets its own intervention here.</p>`;
       return;
     }
 
+    // Protective factors first, under their own heading, then risk factors.
+    const quickAdds = (p.protectiveQuickAdds || []).filter(q => q && q.label);
+    let lastValence = null;
     container.innerHTML = factors.map(f => {
+      let groupHead = '';
+      if (f.valence !== lastValence) {
+        lastValence = f.valence;
+        const lbl = factorGroupLabels(f.valence);
+        groupHead = `<div class="intervention-group-head intervention-group-head-${f.valence}">
+          <h4 class="intervention-group-heading">${icon(f.valence === 'protective' ? 'ic-shield' : 'ic-alert', 'icon-sm')}${escapeXml(lbl.heading)}</h4>
+          ${lbl.hint ? `<p class="intervention-group-hint">${escapeXml(lbl.hint)}</p>` : ''}
+        </div>`;
+      }
       const chosen = plannerState.interventionsByFactor[f.id] || [];
       const chipsHtml = chosen.map((text, i) => `
         <span class="planner-chip planner-chip-neutral">
           <span class="planner-chip-text">${escapeXml(text)}</span>
           <button type="button" class="planner-chip-remove" data-remove-intervention="${f.id}:${i}" aria-label="Remove">${icon('i-x', 'icon-xs')}</button>
         </span>`).join('');
-      return `
-        <div class="intervention-factor-row">
+      // Protective factors: one-click ways to amplify them (toggle on/off).
+      const quickHtml = f.valence === 'protective' && quickAdds.length ? `
+          <div class="intervention-quick" role="group" aria-label="Quick add for ${escapeXml(f.text)}">
+            <span class="intervention-quick-label">${escapeXml(p.protectiveQuickAddLabel || 'Quick add')}:</span>
+            ${quickAdds.map(q => {
+              const on = chosen.includes(q.label);
+              return `<button type="button" class="intervention-quick-btn${q.safetyPlan ? ' is-safety' : ''}" data-quick-factor="${f.id}" data-quick-label="${escapeXml(q.label)}" aria-pressed="${on}">${icon(on ? 'ic-check-circle' : (q.safetyPlan ? 'ic-shield' : 'i-plus'), 'icon-xs')}${escapeXml(q.label)}</button>`;
+            }).join('')}
+          </div>` : '';
+      return groupHead + `
+        <div class="intervention-factor-row intervention-factor-row-${f.valence}">
           <div class="intervention-factor-header">
             <span class="planner-note-tag planner-note-tag-${f.valence}">${f.valence === 'risk' ? 'Risk' : 'Protective'}</span>
             <strong class="intervention-factor-name">${escapeXml(f.text)}</strong>
@@ -1340,7 +1669,7 @@ function initPlanner() {
                      data-factor-id="${f.id}" placeholder="Type or choose a strategy/practice…" />
             </div>
             <button type="button" class="btn btn-primary intervention-add-btn" data-factor-id="${f.id}">Add</button>
-          </div>
+          </div>${quickHtml}
           ${chipsHtml ? `<div class="intervention-selected-list">${chipsHtml}</div>` : ''}
         </div>`;
     }).join('');
@@ -1491,6 +1820,18 @@ function initPlanner() {
         interventionFactorsList.querySelector(`.intervention-input[data-factor-id="${fid}"]`)?.focus();
         return;
       }
+      // Quick add (protective factors): toggle the option on or off
+      const quick = e.target.closest('.intervention-quick-btn');
+      if (quick) {
+        const fid = quick.dataset.quickFactor;
+        const label = quick.dataset.quickLabel;
+        const list = plannerState.interventionsByFactor[fid] || [];
+        const at = list.indexOf(label);
+        closeCombo();
+        if (at === -1) addIntervention(fid, label); else removeIntervention(fid, at);
+        interventionFactorsList.querySelector(`.intervention-quick-btn[data-quick-factor="${fid}"][data-quick-label="${CSS.escape(label)}"]`)?.focus();
+        return;
+      }
       const removeBtn = e.target.closest('[data-remove-intervention]');
       if (removeBtn) {
         const [fid, idx] = removeBtn.dataset.removeIntervention.split(':');
@@ -1544,6 +1885,7 @@ function initPlanner() {
     plannerState.interventionsByFactor = {};
     plannerState.phaseComments = ['', '', ''];
     plannerState.planOrder = [];
+    plannerState.phase3Checks = [];
     document.querySelectorAll('.planner-phase-comment-input').forEach(el => { el.value = ''; });
     document.getElementById('plannerOutput').hidden = true;
     document.getElementById('plannerDownloadBtn').hidden = true;
@@ -1588,6 +1930,21 @@ function initPlanner() {
     });
   });
 
+  // Phase 3 checklist — delegated so it survives generatePlan() re-rendering
+  // the list. Updates state, the progress count, the printed plan and the
+  // email summary in place (keeps keyboard focus on the checkbox).
+  document.getElementById('plannerPhase3Checklist').addEventListener('change', e => {
+    const box = e.target.closest('.planner-checklist-input');
+    if (!box) return;
+    const i = parseInt(box.dataset.checkIndex, 10);
+    plannerState.phase3Checks[i] = box.checked;
+    box.closest('.planner-checklist-item').classList.toggle('is-done', box.checked);
+    updatePhase3Progress();
+    buildPrintSheet(plannerState.data, plannerState.ringLabelByKey, plannerState.data.toolkit.tabs.roadmap.phases, plannerState.lastNotes || []);
+    document.getElementById('plannerEmailBtn').href = buildEmailPlanHref(plannerState.data);
+    persistPlannerState();
+  });
+
   // ── Treatment Plan: reorder top factors (drag-and-drop, or Move up /
   // Move down buttons). Delegated on the container, which survives
   // generatePlan() re-rendering the table. ──
@@ -1596,10 +1953,10 @@ function initPlanner() {
   function afterMove(factorId, focusDir) {
     persistPlannerState();
     generatePlan(); // re-renders the table, the printed plan and the email summary
-    const order = selectedTopContributors();
+    const movedFactor = selectedTopContributors().find(f => f.id === factorId);
+    const order = movedFactor ? topFactorGroup(movedFactor.valence) : [];
     const pos = order.findIndex(f => f.id === factorId);
-    const moved = order[pos];
-    if (moved && reorderAnnounce) reorderAnnounce.textContent = `Moved "${moved.text}" to position ${pos + 1} of ${order.length}.`;
+    if (movedFactor && reorderAnnounce) reorderAnnounce.textContent = `Moved "${movedFactor.text}" to position ${pos + 1} of ${order.length} ${movedFactor.valence} factors.`;
     // Keep keyboard focus on the moved factor's button (or the other one at an end).
     if (focusDir) {
       const btn = reorderEl.querySelector(`.intervention-order-btn[data-factor-id="${factorId}"][data-move="${focusDir}"]`);
@@ -1611,22 +1968,25 @@ function initPlanner() {
     const btn = e.target.closest('.intervention-order-btn');
     if (!btn || btn.disabled) return;
     const id = parseInt(btn.dataset.factorId, 10);
-    const ids = selectedTopContributors().map(f => f.id);
-    const from = ids.indexOf(id);
+    const f = selectedTopContributors().find(x => x.id === id);
+    if (!f) return;
+    const from = topFactorGroup(f.valence).findIndex(x => x.id === id);
     if (moveTopFactor(id, from + (btn.dataset.move === 'up' ? -1 : 1))) afterMove(id, btn.dataset.move);
   });
-  let draggingId = null;
+  let draggingId = null, draggingValence = null;
   reorderEl.addEventListener('dragstart', e => {
     const row = e.target.closest('.intervention-review-row');
     if (!row) return;
     draggingId = parseInt(row.dataset.factorId, 10);
+    draggingValence = row.dataset.valence;
     row.classList.add('is-dragging');
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', String(draggingId));
   });
   reorderEl.addEventListener('dragover', e => {
     const row = e.target.closest('.intervention-review-row');
-    if (draggingId === null || !row) return;
+    // rows only move within their own list (protective or risk)
+    if (draggingId === null || !row || row.dataset.valence !== draggingValence) return;
     e.preventDefault();
     const after = e.clientY > row.getBoundingClientRect().top + row.offsetHeight / 2;
     reorderEl.querySelectorAll('.intervention-review-row').forEach(r => r.classList.remove('drop-before', 'drop-after'));
@@ -1634,9 +1994,9 @@ function initPlanner() {
   });
   reorderEl.addEventListener('drop', e => {
     const row = e.target.closest('.intervention-review-row');
-    if (draggingId === null || !row) return;
+    if (draggingId === null || !row || row.dataset.valence !== draggingValence) return;
     e.preventDefault();
-    const ids = selectedTopContributors().map(f => f.id);
+    const ids = topFactorGroup(draggingValence).map(f => f.id);
     const targetId = parseInt(row.dataset.factorId, 10);
     const after = row.classList.contains('drop-after');
     let to = ids.indexOf(targetId) + (after ? 1 : 0);
@@ -1671,37 +2031,54 @@ function topContributorFactor(valence, id) {
 // tagged with its valence — the Select Intervention step and the generated
 // "My Interventions" output both key off this same list.
 function selectedTopContributors() {
-  const list = [];
-  ['risk', 'protective'].forEach(valence => {
-    plannerState.topContributors[valence].forEach(id => {
-      if (id === null) return;
-      const f = topContributorFactor(valence, id);
-      if (f) list.push({ ...f, valence });
-    });
-  });
-  // The clinician's own order from the Treatment Plan (planOrder); factors
-  // not placed there yet keep their default spot (risk, then protective).
+  // Protective factors first, then risk (VALENCE_ORDER); within each group,
+  // the clinician's own order from the Treatment Plan (planOrder), with
+  // factors not placed there yet keeping their slot order.
   const rank = id => {
     const i = plannerState.planOrder.indexOf(id);
     return i === -1 ? Infinity : i;
   };
-  return list
-    .map((f, i) => ({ f, i }))
-    .sort((a, b) => (rank(a.f.id) - rank(b.f.id)) || (a.i - b.i))
-    .map(x => x.f);
+  const list = [];
+  VALENCE_ORDER.forEach(valence => {
+    const group = [];
+    plannerState.topContributors[valence].forEach(id => {
+      if (id === null) return;
+      const f = topContributorFactor(valence, id);
+      if (f) group.push({ ...f, valence });
+    });
+    group
+      .map((f, i) => ({ f, i }))
+      .sort((x, y) => (rank(x.f.id) - rank(y.f.id)) || (x.i - y.i))
+      .forEach(x => list.push(x.f));
+  });
+  return list;
 }
 
-// Move one top factor to a new position on the Treatment Plan. Its
-// interventions are keyed by factor id, so they move with it.
+// The top factors of one kind (protective or risk), in plan order.
+function topFactorGroup(valence) {
+  return selectedTopContributors().filter(f => f.valence === valence);
+}
+
+// Move one top factor to a new position within its own group (protective
+// and risk are reordered separately). Its interventions are keyed by factor
+// id, so they move with it.
 function moveTopFactor(factorId, toIndex) {
-  const ids = selectedTopContributors().map(f => f.id);
+  const all = selectedTopContributors();
+  const factor = all.find(f => f.id === factorId);
+  if (!factor) return false;
+  const ids = all.filter(f => f.valence === factor.valence).map(f => f.id);
   const from = ids.indexOf(factorId);
-  if (from === -1) return false;
   toIndex = Math.max(0, Math.min(ids.length - 1, toIndex));
   if (toIndex === from) return false;
   ids.splice(from, 1);
   ids.splice(toIndex, 0, factorId);
-  plannerState.planOrder = ids;
+  const groups = {};
+  VALENCE_ORDER.forEach(v => { groups[v] = v === factor.valence ? ids : all.filter(f => f.valence === v).map(f => f.id); });
+  plannerState.planOrder = VALENCE_ORDER.flatMap(v => groups[v]);
+  // Step 7's slots follow the same order (selected factors first, empty slots after).
+  const slots = plannerState.topContributors[factor.valence];
+  const empties = slots.length - ids.length;
+  plannerState.topContributors[factor.valence] = ids.concat(Array(Math.max(0, empties)).fill(null));
   return true;
 }
 
@@ -1727,8 +2104,8 @@ function allFactorsHtml() {
   return `
     <h3>Factors</h3>
     <div class="planner-top-contributors">
-      <div><h4 class="planner-col-heading-risk">Risk Factors</h4>${listFor('risk')}</div>
       <div><h4 class="planner-col-heading-protective">Protective Factors</h4>${listFor('protective')}</div>
+      <div><h4 class="planner-col-heading-risk">Risk Factors</h4>${listFor('risk')}</div>
     </div>`;
 }
 
@@ -1737,25 +2114,41 @@ function topContributorsPrintHtml() {
     const items = plannerState.topContributors[valence].map(id => id !== null ? topContributorFactor(valence, id) : null).filter(Boolean);
     return items.length ? items.map(it => `${escapeXml(it.text)} (${escapeXml(it.ringLabel)})`).join('; ') : 'None selected';
   };
-  return `<h3>Top Contributors</h3><ul><li><strong>Top Risk Factors:</strong> ${listFor('risk')}</li><li><strong>Top Protective Factors:</strong> ${listFor('protective')}</li></ul>`;
+  return `<h3>Top Contributors</h3><ul><li><strong>Top Protective Factors:</strong> ${listFor('protective')}</li><li><strong>Top Risk Factors:</strong> ${listFor('risk')}</li></ul>`;
 }
 
 // Each top factor shown with its ecological placement (which
 // ring it was entered under), and whatever intervention(s) were picked for
 // it — the curated counterpart to the full list in "Factors" above.
+// Labels for the two groups of top factors (CMS: planner.factorGroups).
+function factorGroupLabels(valence) {
+  const g = (plannerState.data.planner.factorGroups || {})[valence] || {};
+  return {
+    heading: g.heading || (valence === 'protective' ? 'Protective factors to amplify' : 'Risk factors to reduce'),
+    hint: g.hint || ''
+  };
+}
+
+// The Treatment Plan's interventions, as two separate tables — protective
+// factors (to amplify) first, then risk factors (to reduce). Each table can
+// be reordered on its own by dragging a row or with Move up / Move down.
 function interventionsHtml() {
-  const factors = selectedTopContributors();
-  if (!factors.length) {
+  const all = selectedTopContributors();
+  if (!all.length) {
     return `<h3>Interventions</h3><p class="planner-resource-empty">No top factors selected yet — go back to the Top Contributors step to add some.</p>`;
   }
-  // Two columns — each top factor on the left, the intervention(s) chosen
-  // for it on the right — so it's clear which strategy targets which factor.
-  const rows = factors.map((f, i) => {
-    const list = plannerState.interventionsByFactor[f.id] || [];
-    const name = escapeXml(f.text);
-    // Reorder: drag the row by its handle, or use Move up / Move down
-    // (keyboard and screen-reader friendly).
-    const orderCell = `
+  const tableFor = valence => {
+    const factors = all.filter(f => f.valence === valence);
+    const lbl = factorGroupLabels(valence);
+    if (!factors.length) {
+      return `<div class="intervention-group intervention-group-${valence}">
+        <h4 class="intervention-group-heading">${escapeXml(lbl.heading)}</h4>
+        <p class="planner-resource-empty">No ${valence} factors selected yet.</p></div>`;
+    }
+    const rows = factors.map((f, i) => {
+      const list = plannerState.interventionsByFactor[f.id] || [];
+      const name = escapeXml(f.text);
+      const orderCell = `
         <td class="intervention-review-order" data-label="Order">
           <span class="intervention-order-handle" aria-hidden="true" title="Drag to reorder">${icon('ic-grip', 'icon-sm')}</span>
           <span class="intervention-order-num" aria-hidden="true">${i + 1}</span>
@@ -1764,17 +2157,15 @@ function interventionsHtml() {
             <button type="button" class="intervention-order-btn" data-move="down" data-factor-id="${f.id}" aria-label="Move down: ${name}"${i === factors.length - 1 ? ' disabled' : ''}>${icon('i-arrow-down', 'icon-xs')}</button>
           </span>
         </td>`;
-    // Names only (no descriptions) as chips, so the column scans quickly.
-    const practices = list.length
-      ? `<ul class="intervention-review-chips">${list.map(name => `<li>${escapeXml(name)}</li>`).join('')}</ul>`
-      : '<span class="intervention-review-none">No intervention selected yet</span>';
-    return `
-      <tr class="intervention-review-row intervention-review-row-${f.valence}" draggable="true" data-factor-id="${f.id}">
+      const practices = list.length
+        ? `<ul class="intervention-review-chips">${list.map(n => `<li>${escapeXml(n)}</li>`).join('')}</ul>`
+        : '<span class="intervention-review-none">No intervention selected yet</span>';
+      return `
+      <tr class="intervention-review-row intervention-review-row-${f.valence}" draggable="true" data-factor-id="${f.id}" data-valence="${f.valence}">
         ${orderCell}
         <td class="intervention-review-factor" data-label="Factor">
           <span class="intervention-review-factor-top">
-            <span class="planner-note-tag planner-note-tag-${f.valence}">${f.valence === 'risk' ? 'Risk' : 'Protective'}</span>
-            <strong class="intervention-review-factor-text">${escapeXml(f.text)}</strong>
+            <strong class="intervention-review-factor-text">${name}</strong>
           </span>
           <span class="intervention-review-meta">
             <span class="intervention-review-ring">${escapeXml(f.ringLabel)}</span>
@@ -1782,32 +2173,44 @@ function interventionsHtml() {
         </td>
         <td class="intervention-review-practice-cell" data-label="Intervention(s)">${practices}</td>
       </tr>`;
-  });
+    });
+    return `
+      <div class="intervention-group intervention-group-${valence}">
+        <h4 class="intervention-group-heading">${icon(valence === 'protective' ? 'ic-shield' : 'ic-alert', 'icon-sm')}${escapeXml(lbl.heading)}</h4>
+        ${lbl.hint ? `<p class="intervention-group-hint">${escapeXml(lbl.hint)}</p>` : ''}
+        <table class="intervention-review-table">
+          <thead><tr><th scope="col"><span class="sr-only">Order</span></th><th scope="col">${valence === 'protective' ? 'Protective factor' : 'Risk factor'}</th><th scope="col">Intervention(s)</th></tr></thead>
+          <tbody>${rows.join('')}</tbody>
+        </table>
+      </div>`;
+  };
   return `
     <h3>Interventions</h3>
-    <p class="intervention-review-reorder-hint">Drag a factor, or use its arrows, to put them in the order you'll work on them. Its interventions move with it, and the printed plan follows this order.</p>
-    <table class="intervention-review-table">
-      <thead><tr><th scope="col"><span class="sr-only">Order</span></th><th scope="col">Factor</th><th scope="col">Intervention(s)</th></tr></thead>
-      <tbody>${rows.join('')}</tbody>
-    </table>`;
+    <p class="intervention-review-reorder-hint">Drag a factor, or use its arrows, to put each list in the order you will work on it. Its interventions move with it, and the printed plan follows this order.</p>
+    ${VALENCE_ORDER.map(tableFor).join('')}`;
 }
 
 function myInterventionsPrintHtml() {
-  const factors = selectedTopContributors();
-  if (!factors.length) return `<h3>My Interventions</h3><p>No top factors selected.</p>`;
-  const rows = factors.map(f => {
-    const list = plannerState.interventionsByFactor[f.id] || [];
-    const practices = list.map(name => `<li>${escapeXml(name)}</li>`).join('');
-    return `<tr>
-      <td><strong>${f.valence === 'risk' ? 'Risk' : 'Protective'}</strong> · ${escapeXml(f.text)}<br><span class="print-int-meta">${escapeXml(f.ringLabel)}</span></td>
+  const all = selectedTopContributors();
+  if (!all.length) return `<h3>My Interventions</h3><p>No top factors selected.</p>`;
+  const tableFor = valence => {
+    const factors = all.filter(f => f.valence === valence);
+    if (!factors.length) return '';
+    const rows = factors.map(f => {
+      const list = plannerState.interventionsByFactor[f.id] || [];
+      const practices = list.map(name => `<li>${escapeXml(name)}</li>`).join('');
+      return `<tr>
+      <td>${escapeXml(f.text)}<br><span class="print-int-meta">${escapeXml(f.ringLabel)}</span></td>
       <td>${list.length ? `<ul>${practices}</ul>` : '<em>No intervention selected yet</em>'}</td>
     </tr>`;
-  });
-  return `<h3>My Interventions</h3>
+    });
+    return `<h4 class="print-int-group">${escapeXml(factorGroupLabels(valence).heading)}</h4>
     <table class="print-int-table">
-      <thead><tr><th>Factor</th><th>Intervention(s)</th></tr></thead>
+      <thead><tr><th>${valence === 'protective' ? 'Protective factor' : 'Risk factor'}</th><th>Intervention(s)</th></tr></thead>
       <tbody>${rows.join('')}</tbody>
     </table>`;
+  };
+  return `<h3>My Interventions</h3>${VALENCE_ORDER.map(tableFor).join('')}`;
 }
 
 // ── Treatment goal (reducing suicidal ideation) — shown on every step, under each
@@ -1863,28 +2266,43 @@ function checklistLinks(it) {
   return it.linkText && it.linkHref ? [{ text: it.linkText, href: it.linkHref }] : [];
 }
 
+// Progress count shown beside the Phase 3 heading.
+function updatePhase3Progress() {
+  const c = plannerState.data.planner.phase3Checklist;
+  const items = phase3ChecklistItems();
+  const done = items.filter((_, i) => plannerState.phase3Checks[i]).length;
+  const el = document.getElementById('plannerPhase3Progress');
+  if (el) el.textContent = `${done} of ${items.length} ${c.progressLabel || 'complete'}`;
+}
+
+// Phase 3 checklist: click an item to check it off and track progress. The
+// checked state is saved with the plan and shown in the PDF and email.
 function phase3ChecklistHtml() {
   const c = plannerState.data.planner.phase3Checklist;
   const items = phase3ChecklistItems();
   if (!items.length) return '';
-  const rows = items.map(it => {
+  const rows = items.map((it, i) => {
+    const checked = !!plannerState.phase3Checks[i];
     const link = checklistLinks(it)
       .map(l => `<a class="planner-checklist-link" href="${escapeXml(l.href)}" target="_blank" rel="noopener">${escapeXml(l.text)} →</a>`)
       .join('');
     return `
-      <li class="planner-checklist-item">
-        <div class="planner-checklist-row">
+      <li class="planner-checklist-item${checked ? ' is-done' : ''}">
+        <label>
+          <input type="checkbox" class="planner-checklist-input" data-check-index="${i}"${checked ? ' checked' : ''}/>
+          <span class="planner-checklist-box" aria-hidden="true"></span>
           ${it.icon ? `<span class="planner-checklist-icon" aria-hidden="true">${icon(it.icon, 'icon-sm')}</span>` : ''}
           <span class="planner-checklist-text">
             <strong>${escapeXml(it.text)}</strong>
             ${it.detail ? `<span class="planner-checklist-detail">${escapeXml(it.detail)}</span>` : ''}
           </span>
-        </div>${link ? `<div class="planner-checklist-link-row">${link}</div>` : ''}
+        </label>${link ? `<div class="planner-checklist-link-row">${link}</div>` : ''}
       </li>`;
   }).join('');
   return `
     <div class="planner-checklist-head">
       <h3>${escapeXml(c.heading)}</h3>
+      <span class="planner-checklist-progress" id="plannerPhase3Progress" aria-live="polite"></span>
     </div>
     ${c.intro ? `<p class="planner-checklist-intro">${escapeXml(c.intro)}</p>` : ''}
     <ul class="planner-checklist-list">${rows}</ul>`;
@@ -1894,9 +2312,10 @@ function phase3ChecklistPrintHtml() {
   const c = plannerState.data.planner.phase3Checklist;
   const items = phase3ChecklistItems();
   if (!items.length) return '';
-  return `<h3>${escapeXml(c.heading)}</h3>${c.intro ? `<p>${escapeXml(c.intro)}</p>` : ''}<ul class="print-checklist">${items.map(it => `
+  const done = items.filter((_, i) => plannerState.phase3Checks[i]).length;
+  return `<h3>${escapeXml(c.heading)} <span class="print-check-progress">(${done} of ${items.length} ${escapeXml(c.progressLabel || 'complete')})</span></h3><ul class="print-checklist">${items.map((it, i) => `
     <li>
-      <span class="print-check-title">${escapeXml(it.text)}</span>
+      <span class="print-check-title">${plannerState.phase3Checks[i] ? '☑' : '☐'} ${escapeXml(it.text)}</span>
       ${it.detail ? `<span class="print-check-detail">${escapeXml(it.detail)}</span>` : ''}
       ${checklistLinks(it).length ? `<span class="print-check-link">${checklistLinks(it).map(l => `${escapeXml(l.text)} →`).join('&nbsp;&nbsp;·&nbsp;&nbsp;')}</span>` : ''}
     </li>`).join('')}</ul>`;
@@ -1917,23 +2336,25 @@ function buildEmailPlanSummary(data) {
     const protective = plannerState.factors[ring].protective;
     if (!risk.length && !protective.length) return;
     lines.push(`${plannerState.ringLabelByKey[ring]}:`);
-    risk.forEach(f => lines.push(`  Risk: ${f.text}`));
     protective.forEach(f => lines.push(`  Protective: ${f.text}`));
+    risk.forEach(f => lines.push(`  Risk: ${f.text}`));
   });
 
   const factors = selectedTopContributors();
-  if (factors.length) {
-    lines.push('', 'Top Factors & Interventions:');
-    factors.forEach(f => {
+  VALENCE_ORDER.forEach(valence => {
+    const group = factors.filter(f => f.valence === valence);
+    if (!group.length) return;
+    lines.push('', `${factorGroupLabels(valence).heading}:`);
+    group.forEach(f => {
       const list = plannerState.interventionsByFactor[f.id] || [];
-      lines.push(`  ${f.valence === 'risk' ? 'Risk' : 'Protective'} · ${f.text}: ${list.length ? list.join(', ') : 'no intervention selected yet'}`);
+      lines.push(`  ${f.text}: ${list.length ? list.join(', ') : 'no intervention selected yet'}`);
     });
-  }
+  });
 
   const checklist = phase3ChecklistItems();
   if (checklist.length) {
     lines.push('', `${data.planner.phase3Checklist.heading}:`);
-    checklist.forEach(it => lines.push(`  - ${it.text}`));
+    checklist.forEach((it, i) => lines.push(`  [${plannerState.phase3Checks[i] ? 'x' : ' '}] ${it.text}`));
   }
   return lines.join('\n');
 }
@@ -1982,7 +2403,7 @@ function generatePlan() {
   const notes = [];
 
   RING_ORDER.forEach(ring => {
-    ['risk', 'protective'].forEach(valence => {
+    VALENCE_ORDER.forEach(valence => {
       const factors = plannerState.factors[ring][valence];
       if (!factors.length) return;
       const rec = RING_RECOMMENDATIONS[ring][valence];
@@ -2024,10 +2445,12 @@ function generatePlan() {
   const checklistEl = document.getElementById('plannerPhase3Checklist');
   checklistEl.innerHTML = phase3ChecklistHtml();
   checklistEl.hidden = !phase3ChecklistItems().length;
+  updatePhase3Progress();
   [1, 2, 3].forEach(n => {
     const el = document.getElementById(`plannerPhase${n}CommentInput`);
     if (el && document.activeElement !== el) el.value = plannerState.phaseComments[n - 1] || '';
   });
+  plannerState.lastNotes = notes;
   buildPrintSheet(data, ringLabelByKey, phases, notes);
 
   // generatePlan() can also run on page load to restore a previously-generated

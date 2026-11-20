@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=76" />
+  <link rel="stylesheet" href="styles.css?v=99" />
 </head>
 <body>
 <script src="icons.js?v=5"></script>
@@ -121,7 +121,9 @@
   <div class="section-inner">
     <h2 data-fade id="journeyHeading"></h2>
     <p class="section-intro" data-fade data-delay="1" id="journeyIntro"></p>
-    <div class="journey-phases" data-fade data-delay="2" id="journeyPhases"></div>
+    <!-- The road: start → one milestone per phase → next step in care -->
+    <div class="roadmap-road" data-fade data-delay="2" id="roadmapRoad"></div>
+    <div class="journey-phases roadmap-stops" data-fade data-delay="2" id="journeyPhases"></div>
   </div>
 </section>
 
@@ -147,7 +149,8 @@
 </footer>
 
 <script src="content-loader.js?v=4"></script>
-<script src="roadmap.js?v=1"></script>
+<script src="characters.js?v=2"></script>
+<script src="roadmap.js?v=9"></script>
 <script src="goal-banner.js?v=3"></script>
 <script src="nav-labels.js?v=1"></script>
 </body>

@@ -64,6 +64,12 @@
     "downloadButtonLabel": "Download / Print Plan",
     "downloadHint": "Opens your browser's print dialog — choose “Save as PDF” as the destination to download it.",
     "resetButtonLabel": "Start Over",
-    "emptyStateText": "Nothing entered yet — fill in at least one step to download or print the plan."
+    "emptyStateText": "Nothing entered yet — fill in at least one step to download or print the plan.",
+    "fromPlanner": {
+      "heading": "From your Treatment Planning Tool",
+      "intro": "Protective factors you chose to integrate into the safety plan. Add each one to the step where it fits.",
+      "addLabel": "Add to",
+      "addedLabel": "Added"
+    }
   }
 }

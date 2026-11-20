@@ -69,7 +69,6 @@ collections:
               - {label: "Heading", name: "heading", widget: "string"}
               - {label: "Intro", name: "intro", widget: "text"}
               - {label: "'Use it' Label", name: "useWhenLabel", widget: "string"}
-              - {label: "'Open' Link Label", name: "openLabel", widget: "string"}
               - label: "Tools (keep all eight keys — each key draws that tool's preview picture)"
                 name: "tools"
                 widget: "list"
@@ -281,6 +280,14 @@ collections:
               - {label: "Heading", name: "heading", widget: "string"}
               - {label: "Intro", name: "intro", widget: "text"}
               - {label: "'Plan Phase' button word (as in 'Plan Phase 2')", name: "planPhaseLabel", widget: "string"}
+              - label: "The road (across the top of the phase cards)"
+                name: "road"
+                widget: "object"
+                fields:
+                  - {label: "Start label", name: "startLabel", widget: "string"}
+                  - {label: "Finish label", name: "endLabel", widget: "string"}
+                  - {label: "Hint under the road", name: "hint", widget: "string", required: false}
+                  - {label: "Screen-reader label for the road", name: "sliderLabel", widget: "string"}
               - label: "Call-to-Action into the Treatment Planning Tool"
                 name: "cta"
                 widget: "object"
@@ -350,13 +357,14 @@ collections:
                   - {label: "Label", name: "label", widget: "string"}
                   - {label: "Risk Placeholder (example shown in the input box and on Start Here)", name: "placeholderRisk", widget: "string"}
                   - {label: "Protective Placeholder (example shown in the input box and on Start Here)", name: "placeholderProtective", widget: "string"}
+                  - {label: "Common protective factors (the 'pick a common example' dropdown — DRAFT, for the team to review)", name: "protectiveOptions", widget: "list", required: false, field: {label: "Option", name: "option", widget: "string"}}
+                  - {label: "Common risk factors (the 'pick a common example' dropdown — DRAFT, for the team to review)", name: "riskOptions", widget: "list", required: false, field: {label: "Option", name: "option", widget: "string"}}
                   - {label: "Definition (shown on Start Here and on this level's own step)", name: "description", widget: "text", required: false}
-              - label: "Step 1: Start Here (a short guided tour before Community / Structural)"
+              - label: "Step 1: Start Here (a short tour of the tool's four steps, before Community / Structural)"
                 name: "orientation"
                 widget: "object"
                 fields:
                   - {label: "Stepper Label", name: "stepLabel", widget: "string"}
-                  - {label: "Stepper Group Label (above the step)", name: "stepperGroupLabel", widget: "string"}
                   - {label: "Step Title", name: "title", widget: "string"}
                   - {label: "Step Hint", name: "hint", widget: "text"}
                   - label: "Tour Buttons & Labels"
@@ -367,33 +375,81 @@ collections:
                       - {label: "Back Button", name: "backLabel", widget: "string"}
                       - {label: "Next Button", name: "nextLabel", widget: "string"}
                       - {label: "Last Slide Button", name: "startLabel", widget: "string"}
-                      - {label: "'Why this phase' Label", name: "whyLabel", widget: "string"}
-                      - {label: "'What you do in the planner' Label", name: "doLabel", widget: "string"}
-                  - label: "Phase Slides (slides 2–4, one per phase; titles, sessions and colors come from the Roadmap Phases)"
-                    name: "phases"
-                    widget: "list"
+                      - {label: "'Part' word (as in 'Part 2 of 4')", name: "stepWord", widget: "string"}
+                      - {label: "Part strip label (for screen readers)", name: "stepsLabel", widget: "string"}
+                      - {label: "'In the planner' label (before each part's step links)", name: "coversLabel", widget: "string"}
+                      - {label: "'Step' word (as in 'Step 7')", name: "plannerStepWord", widget: "string"}
+                      - {label: "'Steps' word (as in 'Steps 2–6')", name: "plannerStepsWord", widget: "string"}
+                  - label: "When to use this tool (timeline at the top of Start Here)"
+                    name: "timeline"
+                    widget: "object"
                     fields:
-                      - {label: "Why this phase", name: "intention", widget: "text"}
-                      - label: "What you do in the planner"
-                        name: "tasks"
-                        widget: "list"
-                        summary: "{{title}}"
-                        fields:
-                          - {label: "Icon", name: "icon", widget: "select", options: ["ic-layers", "ic-star", "ic-tool", "ic-clipboard", "ic-check-circle", "ic-target", "ic-compass", "ic-search", "ic-flag", "ic-book-open", "ic-edit", "ic-shield"]}
-                          - {label: "Title", name: "title", widget: "string"}
-                          - {label: "Text", name: "text", widget: "string"}
-                          - {label: "Where (e.g. 'Step 7')", name: "where", widget: "string", required: false}
+                      - {label: "Heading", name: "heading", widget: "string"}
+                      - {label: "Number of sessions", name: "sessions", widget: "number", value_type: "int", min: 4, max: 20}
+                      - {label: "Build the plan from session", name: "buildFrom", widget: "number", value_type: "int", min: 1}
+                      - {label: "Plan ready by session", name: "buildTo", widget: "number", value_type: "int", min: 1}
+                      - {label: "'Build your plan' label", name: "buildLabel", widget: "string"}
+                      - {label: "'Plan ready' label", name: "readyLabel", widget: "string"}
+                      - {label: "'Follow your plan' label", name: "followLabel", widget: "string"}
+                      - {label: "'Sessions' word on the two cards", name: "sessionsWord", widget: "string"}
+                      - {label: "Build text", name: "buildText", widget: "text"}
+                      - {label: "Follow text (shown in bold)", name: "followText", widget: "text"}
+                      - {label: "Screen-reader description of the timeline", name: "srText", widget: "text"}
+                  - label: "The Four Parts (one slide each; each part's planner steps are listed automatically)"
+                    name: "steps"
+                    widget: "list"
+                    allow_add: false
+                    summary: "{{title}}"
+                    fields:
+                      - {label: "Icon", name: "icon", widget: "select", options: ["ic-layers", "ic-star", "ic-tool", "ic-clipboard", "ic-check-circle", "ic-target", "ic-compass", "ic-search", "ic-flag", "ic-book-open", "ic-edit", "ic-shield"]}
+                      - {label: "Title", name: "title", widget: "string"}
+                      - {label: "Short title (in the strip across the top)", name: "shortTitle", widget: "string"}
+                      - {label: "Summary", name: "summary", widget: "string"}
+                      - {label: "Points", name: "bullets", widget: "list", field: {label: "Point", name: "point", widget: "string"}}
+                      - {label: "Show the five-level circle map on this slide", name: "showLevels", widget: "boolean", default: false}
                   - {label: "Note (last slide)", name: "note", widget: "string", required: false}
-                  - label: "Slide 1: Five Levels Circle Map (each level's description, prompts and examples are edited under Ecological Levels)"
+                  - label: "Five Levels Circle Map (on the 'Map the factors' slide; each level's description and examples are edited under Ecological Levels)"
                     name: "levels"
                     widget: "object"
                     fields:
                       - {label: "Heading", name: "heading", widget: "string"}
-                      - {label: "Intro", name: "intro", widget: "text"}
+                      - {label: "Toggle label (the map is folded away until clicked)", name: "toggleLabel", widget: "string"}
                       - {label: "Hint", name: "hint", widget: "string"}
                       - {label: "'Risk example' Label", name: "riskLabel", widget: "string"}
                       - {label: "'Protective example' Label", name: "protectiveLabel", widget: "string"}
               - {label: "'Any order' note (shown on the five level steps)", name: "levelOrderNote", widget: "string"}
+              - {label: "Common-example dropdown prompt (five level steps)", name: "exampleSelectLabel", widget: "string"}
+              - label: "Lead with Strengths note (under the intro — protective factors come first throughout the tool)"
+                name: "strengthsFirst"
+                widget: "object"
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - {label: "Text", name: "text", widget: "text"}
+              - label: "Factor group headings (Select Interventions and the Treatment Plan; protective first)"
+                name: "factorGroups"
+                widget: "object"
+                fields:
+                  - label: "Protective"
+                    name: "protective"
+                    widget: "object"
+                    fields:
+                      - {label: "Heading", name: "heading", widget: "string"}
+                      - {label: "Hint", name: "hint", widget: "string", required: false}
+                  - label: "Risk"
+                    name: "risk"
+                    widget: "object"
+                    fields:
+                      - {label: "Heading", name: "heading", widget: "string"}
+                      - {label: "Hint", name: "hint", widget: "string", required: false}
+              - {label: "Top Factors step hint", name: "topFactorsHint", widget: "text"}
+              - {label: "Quick Add label (Select Interventions, protective factors)", name: "protectiveQuickAddLabel", widget: "string"}
+              - label: "Quick Add options for protective factors (Select Interventions)"
+                name: "protectiveQuickAdds"
+                widget: "list"
+                summary: "{{label}}"
+                fields:
+                  - {label: "Option", name: "label", widget: "string"}
+                  - {label: "Sends the factor to the Make A Safety Plan tool", name: "safetyPlan", widget: "boolean", default: false, hint: "Turn on for 'Integrate into the safety plan' only."}
               - label: "Treatment Library link (top of Select Interventions; opens in a new tab)"
                 name: "libraryLink"
                 widget: "object"
@@ -463,12 +519,13 @@ collections:
                     fields:
                       - {label: "In this phase (how this phase reduces suicidal thoughts and behaviors)", name: "focus", widget: "text"}
                       - {label: "Check (yes/no question for the therapist)", name: "check", widget: "string"}
-              - label: "Phase 3 Checklist (a plain list under Phase 3 on the Treatment Plan and in the printed plan)"
+              - label: "Phase 3 Checklist (clickable on the Treatment Plan to track progress; shown with check marks in the printed plan)"
                 name: "phase3Checklist"
                 widget: "object"
                 fields:
                   - {label: "Heading", name: "heading", widget: "string"}
                   - {label: "Intro", name: "intro", widget: "text"}
+                  - {label: "Progress Label (e.g. 'complete' in '2 of 4 complete')", name: "progressLabel", widget: "string"}
                   - label: "Items"
                     name: "items"
                     widget: "list"
@@ -528,6 +585,14 @@ collections:
               - {label: "Download Hint", name: "downloadHint", widget: "string"}
               - {label: "Reset Button Label", name: "resetButtonLabel", widget: "string"}
               - {label: "Empty State Text", name: "emptyStateText", widget: "string"}
+              - label: "From your Treatment Planning Tool (protective factors marked 'Integrate into the safety plan')"
+                name: "fromPlanner"
+                widget: "object"
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - {label: "Intro", name: "intro", widget: "text"}
+                  - {label: "Button text (before the step name, e.g. 'Add to')", name: "addLabel", widget: "string"}
+                  - {label: "Added label", name: "addedLabel", widget: "string"}
 
       - file: "content/resources.json"
         name: "resourceLibrary"
@@ -1005,6 +1070,16 @@ collections:
             widget: "object"
             fields:
               - {label: "Section Label", name: "sectionLabel", widget: "string"}
+              - {label: "Photo placeholder text (shown until a photo is added)", name: "photoPlaceholder", widget: "string"}
+              - label: "Password Screen (the password itself is set in consultation.js)"
+                name: "gate"
+                widget: "object"
+                fields:
+                  - {label: "Heading", name: "heading", widget: "string"}
+                  - {label: "Intro", name: "intro", widget: "string"}
+                  - {label: "Field Label", name: "label", widget: "string"}
+                  - {label: "Button Label", name: "buttonLabel", widget: "string"}
+                  - {label: "Error Text", name: "errorText", widget: "string"}
           - label: "Talk to Someone (placeholder contact links — update once real ones exist)"
             name: "consult"
             widget: "object"
@@ -1028,26 +1103,24 @@ collections:
                 widget: "list"
                 fields:
                   - {label: "Key (do not change — peer / tamar / rise)", name: "key", widget: "string"}
-                  - {label: "Icon", name: "icon", widget: "select", options: *icon_options}
+                  - {label: "Photo (optional — a placeholder shows until one is added)", name: "photo", widget: "image", required: false}
                   - {label: "Title", name: "title", widget: "string"}
                   - {label: "Subtitle", name: "subtitle", widget: "string"}
                   - label: "Best For (fixed set of 2 — do not add or remove)"
                     name: "bestFor"
                     widget: "list"
                     field: {label: "Item", name: "item", widget: "string"}
-                  - {label: "Format", name: "format", widget: "string"}
-                  - {label: "Reply Time", name: "reply", widget: "string"}
-                  - {label: "Note", name: "note", widget: "string"}
                   - {label: "Button Label", name: "buttonLabel", widget: "string"}
                   - {label: "Mailto (used if no scheduling URL is set)", name: "mailto", widget: "string"}
                   - {label: "Scheduling URL (optional — overrides the mailto on the button)", name: "schedulingUrl", widget: "string", required: false}
                   - {label: "Secondary Line Text", name: "secondaryText", widget: "string"}
                   - {label: "Secondary Line Link (leave blank for plain text, no link)", name: "secondaryHref", widget: "string", required: false}
               - {label: "Prototype Note", name: "prototypeNote", widget: "text"}
-          - label: "Peer Therapist One-on-One Support"
+          - label: "Peer Therapist One-on-One Support (shown when the matching contact card is selected)"
             name: "peerTherapists"
             widget: "object"
             fields:
+              - {label: "Show with card (Key of the contact card that reveals these profiles)", name: "showWithCard", widget: "string"}
               - {label: "Heading", name: "heading", widget: "string"}
               - {label: "Intro", name: "intro", widget: "text"}
               - {label: "Prototype Note (leave blank to hide)", name: "prototypeNote", widget: "text", required: false}
@@ -1056,6 +1129,7 @@ collections:
                 widget: "list"
                 summary: "{{name}}"
                 fields:
+                  - {label: "Photo (optional — a placeholder shows until one is added)", name: "photo", widget: "image", required: false}
                   - {label: "Name", name: "name", widget: "string"}
                   - {label: "Role & Background", name: "role", widget: "string"}
                   - {label: "Bio", name: "bio", widget: "text"}
