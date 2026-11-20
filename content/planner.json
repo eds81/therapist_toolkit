@@ -117,7 +117,7 @@
     ],
     "emailPlan": {
       "buttonLabel": "Email My Plan to the Rise Team",
-      "address": "feedback@riseagainstsuicide.org",
+      "address": "referral@riseagainstsuicide.org",
       "hint": "Opt-in — opens your email client with a plain-text summary of what you entered (factors and interventions), not the formatted PDF. Please remove or de-identify any client details before sending. Sharing this helps the Rise and toolkit development team improve the service."
     },
     "reviewButtonLabel": "Review Plan",

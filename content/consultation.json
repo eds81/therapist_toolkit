@@ -45,7 +45,7 @@
           "Talk through a hard week with someone who gets it"
         ],
         "buttonLabel": "Request a peer consult",
-        "mailto": "mailto:peersupport@riseagainstsuicide.org",
+        "mailto": "mailto:referral@riseagainstsuicide.org",
         "schedulingUrl": "",
         "secondaryText": "Click to browse peer therapists ↓",
         "secondaryHref": "#peers",
@@ -60,7 +60,7 @@
           "Clinical consultation or personal support"
         ],
         "buttonLabel": "Schedule with Dr. Tamar",
-        "mailto": "mailto:tamar@riseagainstsuicide.org",
+        "mailto": "mailto:referral@riseagainstsuicide.org",
         "schedulingUrl": "",
         "secondaryText": "Opens the scheduling tool",
         "secondaryHref": "",
